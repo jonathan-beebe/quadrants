@@ -1,88 +1,188 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { createItem } from '../storage'
 import './QuadrantCanvas.css'
 
 export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit }) {
-  const [dragItem, setDragItem] = useState(null)
-  const [dragOverQuadrant, setDragOverQuadrant] = useState(null)
+  const gridRef = useRef(null)
+  const quadrantRefs = useRef([null, null, null, null])
+  const [drag, setDrag] = useState(null) // { itemId, sourceIdx, offsetX, offsetY, x, y }
+  const [editingItem, setEditingItem] = useState(null) // { quadrantIdx, itemId }
+  const [editText, setEditText] = useState('')
+  const [addingQuadrant, setAddingQuadrant] = useState(null)
+  const [addText, setAddText] = useState('')
+  const addInputRef = useRef(null)
 
-  const updateQuadrant = useCallback(
-    (quadrantIdx, updater) => {
-      const updated = { ...framework }
-      updated.quadrants = updated.quadrants.map((q, i) =>
-        i === quadrantIdx ? { ...q, ...updater(q) } : q
-      )
-      onUpdate(updated)
+  const updateFramework = useCallback(
+    (updater) => {
+      const updated = updater(framework)
+      onUpdate({ ...updated, updatedAt: Date.now() })
     },
     [framework, onUpdate]
   )
 
-  const addItem = useCallback(
-    (quadrantIdx, text) => {
-      updateQuadrant(quadrantIdx, (q) => ({
-        items: [...q.items, createItem(text)],
-      }))
-    },
-    [updateQuadrant]
-  )
-
-  const editItem = useCallback(
-    (quadrantIdx, itemId, text) => {
-      updateQuadrant(quadrantIdx, (q) => ({
-        items: q.items.map((item) => (item.id === itemId ? { ...item, text } : item)),
-      }))
-    },
-    [updateQuadrant]
-  )
-
-  const deleteItem = useCallback(
-    (quadrantIdx, itemId) => {
-      updateQuadrant(quadrantIdx, (q) => ({
-        items: q.items.filter((item) => item.id !== itemId),
-      }))
-    },
-    [updateQuadrant]
-  )
-
-  const handleDragStart = useCallback((quadrantIdx, item) => {
-    setDragItem({ quadrantIdx, item })
-  }, [])
-
-  const handleDragOver = useCallback((e, quadrantIdx) => {
-    e.preventDefault()
-    setDragOverQuadrant(quadrantIdx)
-  }, [])
-
-  const handleDrop = useCallback(
-    (targetIdx) => {
-      if (!dragItem) return
-      if (dragItem.quadrantIdx === targetIdx) {
-        setDragItem(null)
-        setDragOverQuadrant(null)
-        return
+  // Determine which quadrant a page coordinate falls in
+  const getQuadrantAtPoint = useCallback((pageX, pageY) => {
+    for (let i = 0; i < 4; i++) {
+      const el = quadrantRefs.current[i]
+      if (!el) continue
+      const rect = el.getBoundingClientRect()
+      if (pageX >= rect.left && pageX <= rect.right && pageY >= rect.top && pageY <= rect.bottom) {
+        return { index: i, rect }
       }
+    }
+    return null
+  }, [])
 
-      const updated = { ...framework }
-      updated.quadrants = updated.quadrants.map((q, i) => {
-        if (i === dragItem.quadrantIdx) {
-          return { ...q, items: q.items.filter((item) => item.id !== dragItem.item.id) }
-        }
-        if (i === targetIdx) {
-          return { ...q, items: [...q.items, dragItem.item] }
-        }
-        return q
+  // Convert page coords to percentage within a quadrant's content area
+  const pageToQuadrantPercent = useCallback((pageX, pageY, rect) => {
+    const x = ((pageX - rect.left) / rect.width) * 100
+    const y = ((pageY - rect.top) / rect.height) * 100
+    return {
+      x: Math.max(2, Math.min(x, 85)),
+      y: Math.max(2, Math.min(y, 85)),
+    }
+  }, [])
+
+  // Pointer move/up handlers attached to window during drag
+  useEffect(() => {
+    if (!drag) return
+
+    const handleMove = (e) => {
+      setDrag((prev) => prev ? { ...prev, x: e.pageX, y: e.pageY } : null)
+    }
+
+    const handleUp = (e) => {
+      setDrag((prev) => {
+        if (!prev) return null
+        const target = getQuadrantAtPoint(e.pageX, e.pageY)
+        if (!target) return null // dropped outside — cancel
+
+        const { x, y } = pageToQuadrantPercent(
+          e.pageX - prev.grabX,
+          e.pageY - prev.grabY,
+          target.rect
+        )
+
+        updateFramework((fw) => {
+          const newQuadrants = fw.quadrants.map((q, i) => {
+            if (i === prev.sourceIdx && prev.sourceIdx !== target.index) {
+              return { ...q, items: q.items.filter((it) => it.id !== prev.itemId) }
+            }
+            return q
+          })
+
+          // Update position (and move to target quadrant if different)
+          if (prev.sourceIdx === target.index) {
+            newQuadrants[target.index] = {
+              ...newQuadrants[target.index],
+              items: newQuadrants[target.index].items.map((it) =>
+                it.id === prev.itemId ? { ...it, x, y } : it
+              ),
+            }
+          } else {
+            const item = fw.quadrants[prev.sourceIdx].items.find((it) => it.id === prev.itemId)
+            if (item) {
+              newQuadrants[target.index] = {
+                ...newQuadrants[target.index],
+                items: [...newQuadrants[target.index].items, { ...item, x, y }],
+              }
+            }
+          }
+
+          return { ...fw, quadrants: newQuadrants }
+        })
+
+        return null
       })
-      onUpdate(updated)
-      setDragItem(null)
-      setDragOverQuadrant(null)
+    }
+
+    window.addEventListener('pointermove', handleMove)
+    window.addEventListener('pointerup', handleUp)
+    return () => {
+      window.removeEventListener('pointermove', handleMove)
+      window.removeEventListener('pointerup', handleUp)
+    }
+  }, [drag, getQuadrantAtPoint, pageToQuadrantPercent, updateFramework])
+
+  const handlePointerDown = useCallback((e, quadrantIdx, item) => {
+    if (e.button !== 0) return
+    e.preventDefault()
+    const cardEl = e.currentTarget
+    const cardRect = cardEl.getBoundingClientRect()
+    setDrag({
+      itemId: item.id,
+      sourceIdx: quadrantIdx,
+      grabX: e.pageX - cardRect.left,
+      grabY: e.pageY - cardRect.top,
+      width: cardRect.width,
+      height: cardRect.height,
+      x: e.pageX,
+      y: e.pageY,
+    })
+  }, [])
+
+  const handleAddItem = useCallback(
+    (quadrantIdx) => {
+      if (!addText.trim()) return
+      updateFramework((fw) => ({
+        ...fw,
+        quadrants: fw.quadrants.map((q, i) =>
+          i === quadrantIdx
+            ? { ...q, items: [...q.items, createItem(addText.trim())] }
+            : q
+        ),
+      }))
+      setAddText('')
+      addInputRef.current?.focus()
     },
-    [dragItem, framework, onUpdate]
+    [addText, updateFramework]
   )
 
-  const handleDragEnd = useCallback(() => {
-    setDragItem(null)
-    setDragOverQuadrant(null)
+  const handleDeleteItem = useCallback(
+    (quadrantIdx, itemId) => {
+      updateFramework((fw) => ({
+        ...fw,
+        quadrants: fw.quadrants.map((q, i) =>
+          i === quadrantIdx
+            ? { ...q, items: q.items.filter((it) => it.id !== itemId) }
+            : q
+        ),
+      }))
+    },
+    [updateFramework]
+  )
+
+  const startEdit = useCallback((quadrantIdx, item) => {
+    setEditingItem({ quadrantIdx, itemId: item.id })
+    setEditText(item.text)
   }, [])
+
+  const saveEdit = useCallback(() => {
+    if (!editingItem) return
+    if (editText.trim()) {
+      updateFramework((fw) => ({
+        ...fw,
+        quadrants: fw.quadrants.map((q, i) =>
+          i === editingItem.quadrantIdx
+            ? {
+                ...q,
+                items: q.items.map((it) =>
+                  it.id === editingItem.itemId ? { ...it, text: editText.trim() } : it
+                ),
+              }
+            : q
+        ),
+      }))
+    }
+    setEditingItem(null)
+  }, [editingItem, editText, updateFramework])
+
+  // Find the dragged item for the ghost
+  let draggedItem = null
+  if (drag) {
+    const q = framework.quadrants[drag.sourceIdx]
+    draggedItem = q?.items.find((it) => it.id === drag.itemId)
+  }
 
   return (
     <div className="canvas">
@@ -111,21 +211,138 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit 
             <span>{framework.axisY}</span>
           </div>
         )}
-        <div className="canvas__grid">
+        <div className="canvas__grid" ref={gridRef}>
           {framework.quadrants.map((quadrant, idx) => (
-            <Quadrant
+            <div
               key={idx}
-              index={idx}
-              quadrant={quadrant}
-              isDragOver={dragOverQuadrant === idx}
-              onAdd={(text) => addItem(idx, text)}
-              onEdit={(itemId, text) => editItem(idx, itemId, text)}
-              onDelete={(itemId) => deleteItem(idx, itemId)}
-              onDragStart={(item) => handleDragStart(idx, item)}
-              onDragOver={(e) => handleDragOver(e, idx)}
-              onDrop={() => handleDrop(idx)}
-              onDragEnd={handleDragEnd}
-            />
+              className={`quadrant quadrant--${idx}`}
+              ref={(el) => (quadrantRefs.current[idx] = el)}
+            >
+              <div className="quadrant__header">
+                <h3 className="quadrant__title">{quadrant.label}</h3>
+                <div className="quadrant__header-actions">
+                  <span className="quadrant__count">{quadrant.items.length}</span>
+                  <button
+                    className="quadrant__add-btn"
+                    onClick={() => {
+                      setAddingQuadrant(addingQuadrant === idx ? null : idx)
+                      setAddText('')
+                      setTimeout(() => addInputRef.current?.focus(), 0)
+                    }}
+                    title="Add item"
+                  >
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <line x1="12" y1="5" x2="12" y2="19" />
+                      <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                  </button>
+                </div>
+              </div>
+
+              {addingQuadrant === idx && (
+                <form
+                  className="quadrant__add-form"
+                  onSubmit={(e) => {
+                    e.preventDefault()
+                    handleAddItem(idx)
+                  }}
+                >
+                  <input
+                    ref={addInputRef}
+                    type="text"
+                    value={addText}
+                    onChange={(e) => setAddText(e.target.value)}
+                    placeholder="Type and press Enter..."
+                    className="quadrant__add-input"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Escape') {
+                        setAddingQuadrant(null)
+                        setAddText('')
+                      }
+                    }}
+                    onBlur={() => {
+                      if (!addText.trim()) {
+                        setAddingQuadrant(null)
+                      }
+                    }}
+                  />
+                </form>
+              )}
+
+              <div className="quadrant__canvas">
+                {quadrant.items.map((item) => {
+                  const isDragging = drag?.itemId === item.id
+                  const isEditing =
+                    editingItem?.quadrantIdx === idx && editingItem?.itemId === item.id
+
+                  return (
+                    <div
+                      key={item.id}
+                      className={`card card--${idx} ${isDragging ? 'card--dragging' : ''}`}
+                      style={{ left: `${item.x ?? 10}%`, top: `${item.y ?? 10}%` }}
+                      onPointerDown={(e) => {
+                        if (isEditing) return
+                        handlePointerDown(e, idx, item)
+                      }}
+                    >
+                      {isEditing ? (
+                        <form
+                          className="card__edit"
+                          onSubmit={(e) => {
+                            e.preventDefault()
+                            saveEdit()
+                          }}
+                        >
+                          <input
+                            type="text"
+                            value={editText}
+                            onChange={(e) => setEditText(e.target.value)}
+                            onBlur={saveEdit}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Escape') setEditingItem(null)
+                            }}
+                            autoFocus
+                          />
+                        </form>
+                      ) : (
+                        <>
+                          <span
+                            className="card__text"
+                            onDoubleClick={() => startEdit(idx, item)}
+                          >
+                            {item.text}
+                          </span>
+                          <div className="card__actions">
+                            <button
+                              className="card__btn"
+                              onPointerDown={(e) => e.stopPropagation()}
+                              onClick={() => startEdit(idx, item)}
+                              title="Edit"
+                            >
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                              </svg>
+                            </button>
+                            <button
+                              className="card__btn card__btn--danger"
+                              onPointerDown={(e) => e.stopPropagation()}
+                              onClick={() => handleDeleteItem(idx, item.id)}
+                              title="Delete"
+                            >
+                              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                                <line x1="18" y1="6" x2="6" y2="18" />
+                                <line x1="6" y1="6" x2="18" y2="18" />
+                              </svg>
+                            </button>
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  )
+                })}
+              </div>
+            </div>
           ))}
         </div>
         {framework.axisX && (
@@ -134,133 +351,23 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit 
           </div>
         )}
       </div>
-    </div>
-  )
-}
 
-function Quadrant({
-  index,
-  quadrant,
-  isDragOver,
-  onAdd,
-  onEdit,
-  onDelete,
-  onDragStart,
-  onDragOver,
-  onDrop,
-  onDragEnd,
-}) {
-  const [newText, setNewText] = useState('')
-  const [editingId, setEditingId] = useState(null)
-  const [editText, setEditText] = useState('')
-  const inputRef = useRef(null)
-
-  const handleAdd = (e) => {
-    e.preventDefault()
-    if (!newText.trim()) return
-    onAdd(newText.trim())
-    setNewText('')
-    inputRef.current?.focus()
-  }
-
-  const startEdit = (item) => {
-    setEditingId(item.id)
-    setEditText(item.text)
-  }
-
-  const saveEdit = (itemId) => {
-    if (editText.trim()) {
-      onEdit(itemId, editText.trim())
-    }
-    setEditingId(null)
-  }
-
-  return (
-    <div
-      className={`quadrant quadrant--${index} ${isDragOver ? 'quadrant--drag-over' : ''}`}
-      onDragOver={onDragOver}
-      onDrop={onDrop}
-      onDragLeave={() => {}}
-    >
-      <div className="quadrant__header">
-        <h3 className="quadrant__title">{quadrant.label}</h3>
-        <span className="quadrant__count">{quadrant.items.length}</span>
-      </div>
-
-      <div className="quadrant__items">
-        {quadrant.items.map((item) => (
-          <div
-            key={item.id}
-            className="quadrant__item"
-            draggable
-            onDragStart={() => onDragStart(item)}
-            onDragEnd={onDragEnd}
-          >
-            {editingId === item.id ? (
-              <form
-                className="quadrant__item-edit"
-                onSubmit={(e) => {
-                  e.preventDefault()
-                  saveEdit(item.id)
-                }}
-              >
-                <input
-                  type="text"
-                  value={editText}
-                  onChange={(e) => setEditText(e.target.value)}
-                  onBlur={() => saveEdit(item.id)}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Escape') setEditingId(null)
-                  }}
-                  autoFocus
-                />
-              </form>
-            ) : (
-              <>
-                <span
-                  className="quadrant__item-text"
-                  onDoubleClick={() => startEdit(item)}
-                >
-                  {item.text}
-                </span>
-                <div className="quadrant__item-actions">
-                  <button
-                    className="quadrant__item-btn"
-                    onClick={() => startEdit(item)}
-                    title="Edit"
-                  >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                      <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-                    </svg>
-                  </button>
-                  <button
-                    className="quadrant__item-btn quadrant__item-btn--danger"
-                    onClick={() => onDelete(item.id)}
-                    title="Delete"
-                  >
-                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                      <line x1="18" y1="6" x2="6" y2="18" />
-                      <line x1="6" y1="6" x2="18" y2="18" />
-                    </svg>
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        ))}
-      </div>
-
-      <form className="quadrant__add" onSubmit={handleAdd}>
-        <input
-          ref={inputRef}
-          type="text"
-          value={newText}
-          onChange={(e) => setNewText(e.target.value)}
-          placeholder="Add item..."
-          className="quadrant__add-input"
-        />
-      </form>
+      {/* Floating ghost card while dragging */}
+      {drag && draggedItem && (
+        <div
+          className="card card--ghost"
+          style={{
+            left: drag.x - drag.grabX,
+            top: drag.y - drag.grabY,
+            width: drag.width,
+            position: 'fixed',
+            pointerEvents: 'none',
+            zIndex: 9999,
+          }}
+        >
+          <span className="card__text">{draggedItem.text}</span>
+        </div>
+      )}
     </div>
   )
 }

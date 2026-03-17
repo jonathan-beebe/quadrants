@@ -28,10 +28,12 @@ export function createFramework(template) {
   }
 }
 
-export function createItem(text) {
+export function createItem(text, x, y) {
   return {
     id: crypto.randomUUID(),
     text,
+    x: x ?? Math.random() * 60 + 10,
+    y: y ?? Math.random() * 50 + 10,
     createdAt: Date.now(),
   }
 }
