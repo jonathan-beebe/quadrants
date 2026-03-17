@@ -1,5 +1,7 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { loadFrameworks, saveFrameworks, createFramework } from './storage'
+import { encodeFramework, decodeFramework } from './sharing'
+import { defaultColors } from './colors'
 import Sidebar from './components/Sidebar'
 import QuadrantCanvas from './components/QuadrantCanvas'
 import FrameworkBuilder from './components/FrameworkBuilder'
@@ -13,6 +15,45 @@ export default function App() {
   const [editingFramework, setEditingFramework] = useState(null)
   const [reflectionMode, setReflectionMode] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const hashLoaded = useRef(false)
+
+  // Load framework from URL hash on mount
+  useEffect(() => {
+    if (hashLoaded.current) return
+    hashLoaded.current = true
+
+    const hash = window.location.hash.slice(1)
+    if (!hash) return
+
+    decodeFramework(hash).then((payload) => {
+      if (!payload) return
+      const fw = {
+        id: crypto.randomUUID(),
+        name: payload.name,
+        axisX: payload.axisX || '',
+        axisY: payload.axisY || '',
+        quadrants: payload.quadrants.map((q, i) => ({
+          label: q.label,
+          color: q.color || defaultColors[i],
+          items: (q.items || []).map((it) => ({
+            id: crypto.randomUUID(),
+            text: it.text,
+            x: it.x ?? 10,
+            y: it.y ?? 10,
+            createdAt: Date.now(),
+          })),
+        })),
+        createdAt: Date.now(),
+        updatedAt: Date.now(),
+      }
+      setFrameworks((prev) => [...prev, fw])
+      setActiveId(fw.id)
+      // Clear hash after import
+      history.replaceState(null, '', window.location.pathname)
+    }).catch(() => {
+      // Invalid hash, ignore
+    })
+  }, [])
 
   useEffect(() => {
     saveFrameworks(frameworks)
@@ -51,6 +92,13 @@ export default function App() {
     }
     setFrameworks((prev) => [...prev, dup])
     setActiveId(dup.id)
+  }, [])
+
+  const handleShare = useCallback(async (fw) => {
+    const hash = await encodeFramework(fw)
+    const url = `${window.location.origin}${window.location.pathname}#${hash}`
+    await navigator.clipboard.writeText(url)
+    return url
   }, [])
 
   const handleExport = useCallback((fw) => {
@@ -163,6 +211,7 @@ export default function App() {
             onUpdate={handleUpdate}
             onReflect={() => setReflectionMode(true)}
             onEdit={() => handleEditFramework(activeFramework)}
+            onShare={() => handleShare(activeFramework)}
           />
         ) : (
           <EmptyState
