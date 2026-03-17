@@ -1,3 +1,5 @@
+import { defaultColors } from './colors'
+
 const STORAGE_KEY = 'quadrants_frameworks'
 
 export function loadFrameworks() {
@@ -19,8 +21,9 @@ export function createFramework(template) {
     name: template.name,
     axisX: template.axisX || '',
     axisY: template.axisY || '',
-    quadrants: template.quadrants.map((label) => ({
+    quadrants: template.quadrants.map((label, i) => ({
       label,
+      color: template.colors?.[i] || defaultColors[i],
       items: [],
     })),
     createdAt: Date.now(),

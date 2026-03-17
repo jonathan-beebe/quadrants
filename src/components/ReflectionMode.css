@@ -55,10 +55,9 @@
   color: var(--text);
 }
 
-.reflect__tab--active.reflect__tab--0 { background: var(--q0-bg); border-color: var(--q0-border); color: var(--text); }
-.reflect__tab--active.reflect__tab--1 { background: var(--q1-bg); border-color: var(--q1-border); color: var(--text); }
-.reflect__tab--active.reflect__tab--2 { background: var(--q2-bg); border-color: var(--q2-border); color: var(--text); }
-.reflect__tab--active.reflect__tab--3 { background: var(--q3-bg); border-color: var(--q3-border); color: var(--text); }
+.reflect__tab--active {
+  color: var(--text);
+}
 
 .reflect__tab-count {
   font-size: 11px;
@@ -77,10 +76,6 @@
   flex-direction: column;
 }
 
-.reflect__panel--0 { background: var(--q0-bg); border-color: var(--q0-border); }
-.reflect__panel--1 { background: var(--q1-bg); border-color: var(--q1-border); }
-.reflect__panel--2 { background: var(--q2-bg); border-color: var(--q2-border); }
-.reflect__panel--3 { background: var(--q3-bg); border-color: var(--q3-border); }
 
 .reflect__label {
   font-size: 24px;

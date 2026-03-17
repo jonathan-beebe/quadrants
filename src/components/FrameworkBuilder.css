@@ -156,10 +156,6 @@
   transition: all var(--transition);
 }
 
-.builder__quadrant-input--0 { background: var(--q0-bg); border-color: var(--q0-border); }
-.builder__quadrant-input--1 { background: var(--q1-bg); border-color: var(--q1-border); }
-.builder__quadrant-input--2 { background: var(--q2-bg); border-color: var(--q2-border); }
-.builder__quadrant-input--3 { background: var(--q3-bg); border-color: var(--q3-border); }
 
 .builder__quadrant-input:focus {
   box-shadow: 0 0 0 2px var(--accent);

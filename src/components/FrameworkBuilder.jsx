@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import { templates } from '../templates'
+import { deriveColors, defaultColors } from '../colors'
 import './FrameworkBuilder.css'
 
 export default function FrameworkBuilder({ editing, onCreate, onCancel }) {
@@ -90,7 +91,11 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }) {
                     value={quadrants[i]}
                     onChange={(e) => setQuadrant(i, e.target.value)}
                     placeholder={`Quadrant ${i + 1}`}
-                    className={`builder__quadrant-input builder__quadrant-input--${i}`}
+                    className="builder__quadrant-input"
+                    style={{
+                      background: deriveColors(defaultColors[i]).bg,
+                      borderColor: deriveColors(defaultColors[i]).border,
+                    }}
                   />
                 ))}
               </div>

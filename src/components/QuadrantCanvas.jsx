@@ -1,5 +1,7 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { createItem } from '../storage'
+import { deriveColors, defaultColors } from '../colors'
+import ColorPicker from './ColorPicker'
 import './QuadrantCanvas.css'
 
 export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit }) {
@@ -179,6 +181,18 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit 
     setEditingItem(null)
   }, [editingItem, editText, updateFramework])
 
+  const handleColorChange = useCallback(
+    (quadrantIdx, color) => {
+      updateFramework((fw) => ({
+        ...fw,
+        quadrants: fw.quadrants.map((q, i) =>
+          i === quadrantIdx ? { ...q, color } : q
+        ),
+      }))
+    },
+    [updateFramework]
+  )
+
   // Find the dragged item for the ghost
   let draggedItem = null
   if (drag) {
@@ -214,15 +228,20 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit 
           </div>
         )}
         <div className="canvas__grid" ref={gridRef}>
-          {framework.quadrants.map((quadrant, idx) => (
+          {framework.quadrants.map((quadrant, idx) => {
+            const qColor = quadrant.color || defaultColors[idx]
+            const { bg, border } = deriveColors(qColor)
+            return (
             <div
               key={idx}
-              className={`quadrant quadrant--${idx}`}
+              className="quadrant"
+              style={{ background: bg, borderColor: border }}
               ref={(el) => (quadrantRefs.current[idx] = el)}
             >
               <div className="quadrant__header">
                 <h3 className="quadrant__title">{quadrant.label}</h3>
                 <div className="quadrant__header-actions">
+                  <ColorPicker color={qColor} onChange={(c) => handleColorChange(idx, c)} />
                   <span className="quadrant__count">{quadrant.items.length}</span>
                   <button
                     className="quadrant__add-btn"
@@ -280,7 +299,7 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit 
                   return (
                     <div
                       key={item.id}
-                      className={`card card--${idx} ${isDragging ? 'card--dragging' : ''}`}
+                      className={`card ${isDragging ? 'card--dragging' : ''}`}
                       style={{ left: `${item.x ?? 10}%`, top: `${item.y ?? 10}%` }}
                       onPointerDown={(e) => {
                         if (isEditing) return
@@ -345,7 +364,8 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit 
                 })}
               </div>
             </div>
-          ))}
+            )
+          })}
         </div>
         {framework.axisX && (
           <div className="canvas__axis-x">

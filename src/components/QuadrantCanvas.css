@@ -73,10 +73,6 @@
   transition: border-color var(--transition);
 }
 
-.quadrant--0 { background: var(--q0-bg); border-color: var(--q0-border); }
-.quadrant--1 { background: var(--q1-bg); border-color: var(--q1-border); }
-.quadrant--2 { background: var(--q2-bg); border-color: var(--q2-border); }
-.quadrant--3 { background: var(--q3-bg); border-color: var(--q3-border); }
 
 .quadrant__header {
   display: flex;

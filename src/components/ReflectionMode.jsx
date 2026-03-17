@@ -1,5 +1,6 @@
 import { useState, useRef, useCallback } from 'react'
 import { createItem } from '../storage'
+import { deriveColors, defaultColors } from '../colors'
 import './ReflectionMode.css'
 
 export default function ReflectionMode({ framework, onUpdate, onExit }) {
@@ -48,7 +49,11 @@ export default function ReflectionMode({ framework, onUpdate, onExit }) {
           {framework.quadrants.map((q, i) => (
             <button
               key={i}
-              className={`reflect__tab reflect__tab--${i} ${i === activeQuadrant ? 'reflect__tab--active' : ''}`}
+              className={`reflect__tab ${i === activeQuadrant ? 'reflect__tab--active' : ''}`}
+              style={i === activeQuadrant ? {
+                background: deriveColors(q.color || defaultColors[i]).bg,
+                borderColor: deriveColors(q.color || defaultColors[i]).border,
+              } : undefined}
               onClick={() => {
                 setActiveQuadrant(i)
                 inputRef.current?.focus()
@@ -60,7 +65,13 @@ export default function ReflectionMode({ framework, onUpdate, onExit }) {
           ))}
         </div>
 
-        <div className={`reflect__panel reflect__panel--${activeQuadrant}`}>
+        <div
+          className="reflect__panel"
+          style={{
+            background: deriveColors(quadrant.color || defaultColors[activeQuadrant]).bg,
+            borderColor: deriveColors(quadrant.color || defaultColors[activeQuadrant]).border,
+          }}
+        >
           <h2 className="reflect__label">{quadrant.label}</h2>
 
           <form className="reflect__form" onSubmit={handleAdd}>
