@@ -5,6 +5,7 @@ import './QuadrantCanvas.css'
 export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit }) {
   const gridRef = useRef(null)
   const quadrantRefs = useRef([null, null, null, null])
+  const canvasRefs = useRef([null, null, null, null])
   const [drag, setDrag] = useState(null) // { itemId, sourceIdx, offsetX, offsetY, x, y }
   const [editingItem, setEditingItem] = useState(null) // { quadrantIdx, itemId }
   const [editText, setEditText] = useState('')
@@ -27,7 +28,8 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit 
       if (!el) continue
       const rect = el.getBoundingClientRect()
       if (pageX >= rect.left && pageX <= rect.right && pageY >= rect.top && pageY <= rect.bottom) {
-        return { index: i, rect }
+        const canvasRect = canvasRefs.current[i]?.getBoundingClientRect() || rect
+        return { index: i, rect: canvasRect }
       }
     }
     return null
@@ -269,7 +271,7 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit 
                 </form>
               )}
 
-              <div className="quadrant__canvas">
+              <div className="quadrant__canvas" ref={(el) => (canvasRefs.current[idx] = el)}>
                 {quadrant.items.map((item) => {
                   const isDragging = drag?.itemId === item.id
                   const isEditing =
