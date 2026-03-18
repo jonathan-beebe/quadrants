@@ -58,7 +58,7 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
     <div className="relative" ref={ref}>
       <button
         ref={triggerRef}
-        className="w-[18px] h-[18px] rounded border-2 border-white/80 shadow-[0_0_0_1px_rgba(0,0,0,0.12)] cursor-pointer transition-transform duration-150 hover:scale-115"
+        className="w-[24px] h-[24px] rounded border-2 border-white/80 shadow-[0_0_0_1px_rgba(0,0,0,0.12)] cursor-pointer transition-transform duration-150 hover:scale-115"
         style={{ background: color }}
         onClick={() => setOpen(!open)}
         aria-label={`Change color (current: ${currentName})`}
