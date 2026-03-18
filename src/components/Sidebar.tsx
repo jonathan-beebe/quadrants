@@ -8,6 +8,7 @@ import {
 } from './Icons'
 import ThemeToggleButton from './atoms/ThemeToggleButton'
 import Caption from './atoms/Caption'
+import Button from './atoms/Button'
 import type { Framework } from '../types'
 
 interface SidebarProps {
@@ -102,30 +103,26 @@ export default function Sidebar({
           </div>
           <div className="flex items-center gap-1">
             <ThemeToggleButton darkMode={darkMode} onToggle={onToggleDark} />
-            <button
-              className="btn-icon text-text-secondary"
+            <Button
+              variant="icon"
               onClick={onToggle}
               aria-label="Close sidebar"
               aria-expanded="true"
             >
               <SidebarIcon size={18} />
-            </button>
+            </Button>
           </div>
         </div>
 
         <div className="px-4 py-3 flex flex-col gap-1.5">
-          <button className="btn-primary w-full justify-center" onClick={onNew}>
+          <Button className="w-full justify-center" onClick={onNew}>
             <PlusIcon />
             New Framework
-          </button>
-          <button
-            className="btn-ghost btn-sm"
-            onClick={onImport}
-            title="Import JSON"
-          >
+          </Button>
+          <Button variant="ghost" size="sm" onClick={onImport} title="Import JSON">
             <ImportIcon size={14} />
             Import
-          </button>
+          </Button>
         </div>
 
         <nav aria-label="Frameworks" className="flex-1 overflow-y-auto px-2 py-1">

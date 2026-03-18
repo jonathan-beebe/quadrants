@@ -4,6 +4,7 @@ import { deriveColors, defaultColors } from '../colors'
 import PageTitle from './atoms/PageTitle'
 import SectionLabel from './atoms/SectionLabel'
 import Caption from './atoms/Caption'
+import Button from './atoms/Button'
 import type { Framework, FrameworkTemplate } from '../types'
 
 interface FrameworkBuilderProps {
@@ -55,9 +56,9 @@ export default function FrameworkBuilder({
           <PageTitle as="h2">
             {editing ? 'Edit Framework' : 'Create Framework'}
           </PageTitle>
-          <button className="btn-ghost" onClick={onCancel}>
+          <Button variant="ghost" onClick={onCancel}>
             Cancel
-          </button>
+          </Button>
         </div>
 
         {!editing && (
@@ -145,12 +146,12 @@ export default function FrameworkBuilder({
           </div>
 
           <div className="flex justify-end gap-2 pt-2">
-            <button className="btn-secondary" type="button" onClick={onCancel}>
+            <Button variant="secondary" type="button" onClick={onCancel}>
               Cancel
-            </button>
-            <button className="btn-primary" type="submit" disabled={!isValid}>
+            </Button>
+            <Button type="submit" disabled={!isValid}>
               {editing ? 'Save Changes' : 'Create Framework'}
-            </button>
+            </Button>
           </div>
         </form>
       </div>

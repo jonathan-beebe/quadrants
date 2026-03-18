@@ -1,6 +1,7 @@
 import { Component } from 'react'
 import type { ErrorInfo, ReactNode } from 'react'
 import PageTitle from './atoms/PageTitle'
+import Button from './atoms/Button'
 
 interface ErrorBoundaryProps {
   children: ReactNode
@@ -39,12 +40,9 @@ export default class ErrorBoundary extends Component<
         <p className="text-text-secondary text-sm max-w-md">
           {this.state.error.message}
         </p>
-        <button
-          className="btn-primary"
-          onClick={() => this.setState({ error: null })}
-        >
+        <Button onClick={() => this.setState({ error: null })}>
           Try again
-        </button>
+        </Button>
       </div>
     )
   }

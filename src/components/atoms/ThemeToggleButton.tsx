@@ -1,4 +1,5 @@
 import { SunIcon, MoonIcon } from '../Icons'
+import Button from './Button'
 
 interface ThemeToggleButtonProps {
   darkMode: boolean
@@ -10,12 +11,12 @@ export default function ThemeToggleButton({
   onToggle,
 }: ThemeToggleButtonProps) {
   return (
-    <button
+    <Button
+      variant="icon"
       onClick={onToggle}
-      className="btn-icon text-text-secondary"
       aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
     >
       {darkMode ? <SunIcon /> : <MoonIcon />}
-    </button>
+    </Button>
   )
 }

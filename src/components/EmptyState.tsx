@@ -1,4 +1,5 @@
 import { QuadrantGridIcon } from './Icons'
+import Button from './atoms/Button'
 
 interface EmptyStateProps {
   onNew: () => void
@@ -15,9 +16,9 @@ export default function EmptyState({ onNew }: EmptyStateProps) {
         Create a new quadrant framework or select one from the sidebar to get
         started.
       </p>
-      <button className="btn-primary" onClick={onNew}>
+      <Button onClick={onNew}>
         Create Framework
-      </button>
+      </Button>
     </div>
   )
 }

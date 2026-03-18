@@ -9,6 +9,7 @@ import Card, { GhostCard, PLACEHOLDER } from './Card'
 import { EditIcon, ShareIcon, MaximizeIcon, PlusIcon } from './Icons'
 import Badge from './atoms/Badge'
 import PageTitle from './atoms/PageTitle'
+import Button from './atoms/Button'
 import type { Framework } from '../types'
 
 interface QuadrantCanvasProps {
@@ -121,18 +122,15 @@ export default function QuadrantCanvas({
       >
         <div className="flex items-center gap-2">
           <PageTitle>{framework.name}</PageTitle>
-          <button
-            className="btn-ghost btn-sm"
-            onClick={onEdit}
-            title="Edit framework"
-          >
+          <Button variant="ghost" size="sm" onClick={onEdit} title="Edit framework">
             <EditIcon size={14} />
             Edit
-          </button>
+          </Button>
         </div>
         <div className="flex gap-2">
-          <button
-            className="btn-secondary btn-sm"
+          <Button
+            variant="secondary"
+            size="sm"
             onClick={async () => {
               try {
                 await onShare(framework)
@@ -148,11 +146,11 @@ export default function QuadrantCanvas({
             <span aria-live="polite">
               {shareStatus === 'copied' ? 'Link copied!' : shareStatus === 'error' ? 'Share failed' : 'Share'}
             </span>
-          </button>
-          <button className="btn-secondary btn-sm" onClick={onReflect}>
+          </Button>
+          <Button variant="secondary" size="sm" onClick={onReflect}>
             <MaximizeIcon size={14} />
             Reflect
-          </button>
+          </Button>
         </div>
       </div>
 

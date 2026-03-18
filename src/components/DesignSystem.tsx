@@ -6,6 +6,7 @@ import Badge from './atoms/Badge'
 import PageTitle from './atoms/PageTitle'
 import SectionLabel from './atoms/SectionLabel'
 import Caption from './atoms/Caption'
+import Button from './atoms/Button'
 import ColorPicker from './ColorPicker'
 import Toast from './Toast'
 import {
@@ -174,26 +175,26 @@ export default function DesignSystem() {
           <div className="space-y-6">
             <DemoRow label="Primary">
               <div className="flex gap-3">
-                <button className="btn-primary">Create Framework</button>
-                <button className="btn-primary btn-sm">Small Primary</button>
+                <Button>Create Framework</Button>
+                <Button size="sm">Small Primary</Button>
               </div>
             </DemoRow>
             <DemoRow label="Secondary">
               <div className="flex gap-3">
-                <button className="btn-secondary">Cancel</button>
-                <button className="btn-secondary btn-sm">Small Secondary</button>
+                <Button variant="secondary">Cancel</Button>
+                <Button variant="secondary" size="sm">Small Secondary</Button>
               </div>
             </DemoRow>
             <DemoRow label="Ghost">
               <div className="flex gap-3">
-                <button className="btn-ghost">Edit</button>
-                <button className="btn-ghost btn-sm">Small Ghost</button>
+                <Button variant="ghost">Edit</Button>
+                <Button variant="ghost" size="sm">Small Ghost</Button>
               </div>
             </DemoRow>
             <DemoRow label="Icon">
               <div className="flex gap-3">
-                <button className="btn-icon text-text-secondary"><PlusIcon size={18} /></button>
-                <button className="btn-icon text-text-secondary"><EditIcon size={18} /></button>
+                <Button variant="icon" aria-label="Add"><PlusIcon size={18} /></Button>
+                <Button variant="icon" aria-label="Edit"><EditIcon size={18} /></Button>
                 <ThemeToggleButton darkMode={darkMode} onToggle={toggleDark} />
               </div>
             </DemoRow>
@@ -237,12 +238,9 @@ export default function DesignSystem() {
 
         <Subsection title="Toast">
           <div className="flex items-center gap-4">
-            <button
-              className="btn-secondary btn-sm"
-              onClick={() => setShowToast(true)}
-            >
+            <Button variant="secondary" size="sm" onClick={() => setShowToast(true)}>
               Show Toast
-            </button>
+            </Button>
             <Caption>
               Renders a fixed-position error alert at bottom of screen.
             </Caption>

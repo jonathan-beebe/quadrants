@@ -1,4 +1,5 @@
 import { useEffect, useRef, useCallback } from 'react'
+import Button from './atoms/Button'
 import type { Framework } from '../types'
 
 interface ConflictDialogProps {
@@ -72,15 +73,15 @@ export default function ConflictDialog({
           you like to do?
         </p>
         <div className="flex gap-2 justify-center">
-          <button ref={firstButtonRef} className="btn-secondary" onClick={onCancel}>
+          <Button ref={firstButtonRef} variant="secondary" onClick={onCancel}>
             Cancel
-          </button>
-          <button className="btn-secondary" onClick={onDuplicate}>
+          </Button>
+          <Button variant="secondary" onClick={onDuplicate}>
             Keep both
-          </button>
-          <button className="btn-primary" onClick={onReplace}>
+          </Button>
+          <Button onClick={onReplace}>
             Replace local
-          </button>
+          </Button>
         </div>
       </div>
     </div>
