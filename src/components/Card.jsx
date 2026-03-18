@@ -1,5 +1,4 @@
 import { useRef, useCallback, useEffect, useState } from 'react'
-import './Card.css'
 
 const DRAG_THRESHOLD = 4
 export const PLACEHOLDER = 'New item...'
@@ -10,7 +9,6 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
   const pendingRef = useRef(null)
   const [focused, setFocused] = useState(false)
 
-  // Auto-focus and select all text when autoFocus is set
   useEffect(() => {
     if (!autoFocus) return
     const el = textRef.current
@@ -23,7 +21,6 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
     sel.addRange(range)
   }, [autoFocus])
 
-  // Clean up pending listeners on unmount
   useEffect(() => {
     return () => {
       window.removeEventListener('pointermove', handlePendingMove)
@@ -31,7 +28,6 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
     }
   }, [])
 
-  // When focused, listen for clicks outside the card to blur
   useEffect(() => {
     if (!focused) return
     const handleOutsideDown = (e) => {
@@ -48,8 +44,7 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
     if (!cardEl) return
     const cardRect = cardEl.getBoundingClientRect()
     onDragStart({
-      pageX,
-      pageY,
+      pageX, pageY,
       grabX: pageX - cardRect.left,
       grabY: pageY - cardRect.top,
       width: cardRect.width,
@@ -80,17 +75,9 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
 
   const handleTextPointerDown = useCallback((e) => {
     if (e.button !== 0) return
-
-    // If already focused, allow normal text selection
-    if (focused) {
-      e.stopPropagation()
-      return
-    }
-
-    // Prevent default to stop immediate focus — we'll decide on move vs click
+    if (focused) { e.stopPropagation(); return }
     e.preventDefault()
     e.stopPropagation()
-
     pendingRef.current = { startX: e.pageX, startY: e.pageY }
     window.addEventListener('pointermove', handlePendingMove)
     window.addEventListener('pointerup', handlePendingUp)
@@ -104,31 +91,19 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
     const el = textRef.current
     if (!el) return
     const newText = el.textContent.trim()
-    if (!newText || newText === PLACEHOLDER) {
-      onDelete()
-      return
-    }
-    if (newText !== item.text) {
-      onChange(newText)
-    }
+    if (!newText || newText === PLACEHOLDER) { onDelete(); return }
+    if (newText !== item.text) onChange(newText)
   }, [item.text, onChange, onDelete])
 
   const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter') {
-      e.preventDefault()
-      textRef.current?.blur()
-    }
-    if (e.key === 'Escape') {
-      // Restore original or delete if placeholder
-      textRef.current.textContent = item.text
-      textRef.current?.blur()
-    }
+    if (e.key === 'Enter') { e.preventDefault(); textRef.current?.blur() }
+    if (e.key === 'Escape') { textRef.current.textContent = item.text; textRef.current?.blur() }
   }, [item.text])
 
   return (
     <div
       ref={cardRef}
-      className={`card ${isDragging ? 'card--dragging' : ''} ${focused ? 'card--focused' : ''}`}
+      className={`absolute w-max max-w-[180px] min-w-[60px] py-[7px] px-2.5 bg-white/85 dark:bg-white/10 border border-black/8 dark:border-white/10 rounded-lg shadow-sm text-[13px] leading-[1.4] flex items-start gap-1 transition-[box-shadow,opacity] duration-150 touch-none ${focused ? 'cursor-text' : 'cursor-grab'} ${isDragging ? 'opacity-30 pointer-events-none' : ''} hover:shadow hover:bg-white/95 dark:hover:bg-white/15`}
       style={{ left: `${item.x ?? 10}%`, top: `${item.y ?? 10}%` }}
       onPointerDown={(e) => {
         if (e.button !== 0 || focused) return
@@ -138,7 +113,7 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
     >
       <span
         ref={textRef}
-        className="card__text"
+        className={`flex-1 min-w-0 break-words outline-none rounded-sm ${focused ? 'cursor-text' : 'cursor-grab'}`}
         contentEditable
         suppressContentEditableWarning
         spellCheck={false}
@@ -150,7 +125,7 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
         {item.text}
       </span>
       <button
-        className="card__delete"
+        className="p-0 rounded-sm text-text-tertiary transition-all duration-150 cursor-pointer opacity-0 group-hover:opacity-100 shrink-0 mt-px hover:text-danger hover:bg-red-500/10 [div:hover>&]:opacity-100"
         onPointerDown={(e) => e.stopPropagation()}
         onClick={onDelete}
         title="Delete"
@@ -167,7 +142,7 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
 export function GhostCard({ drag, text }) {
   return (
     <div
-      className="card card--ghost"
+      className="absolute w-max max-w-[180px] min-w-[60px] py-[7px] px-2.5 bg-white dark:bg-gray-700 border border-black/8 dark:border-white/10 rounded-lg shadow-lg text-[13px] leading-[1.4] flex items-start gap-1 cursor-grabbing opacity-92"
       style={{
         left: drag.x - drag.grabX,
         top: drag.y - drag.grabY,
@@ -177,7 +152,7 @@ export function GhostCard({ drag, text }) {
         zIndex: 9999,
       }}
     >
-      <span className="card__text">{text}</span>
+      <span className="flex-1 min-w-0 break-words">{text}</span>
     </div>
   )
 }

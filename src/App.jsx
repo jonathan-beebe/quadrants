@@ -6,7 +6,6 @@ import Sidebar from './components/Sidebar'
 import QuadrantCanvas from './components/QuadrantCanvas'
 import FrameworkBuilder from './components/FrameworkBuilder'
 import ReflectionMode from './components/ReflectionMode'
-import './App.css'
 
 function getIdFromPath() {
   const path = window.location.pathname.slice(1)
@@ -42,9 +41,23 @@ export default function App() {
   const [editingFramework, setEditingFramework] = useState(null)
   const [reflectionMode, setReflectionMode] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
-  const [conflict, setConflict] = useState(null) // { existing, incoming }
+  const [conflict, setConflict] = useState(null)
+  const [darkMode, setDarkMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const saved = localStorage.getItem('quadrants_dark_mode')
+      if (saved !== null) return saved === 'true'
+      return window.matchMedia('(prefers-color-scheme: dark)').matches
+    }
+    return false
+  })
   const hashLoaded = useRef(false)
   const skipPush = useRef(false)
+
+  // Apply dark mode class
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode)
+    localStorage.setItem('quadrants_dark_mode', darkMode)
+  }, [darkMode])
 
   // Load framework from URL hash on mount
   useEffect(() => {
@@ -65,7 +78,6 @@ export default function App() {
         const existing = prev.find((f) => f.id === id)
 
         if (!existing) {
-          // No conflict — create new
           const fw = hydratePayload(payload, id)
           setTimeout(() => {
             setActiveId(fw.id)
@@ -74,7 +86,6 @@ export default function App() {
           return [...prev, fw]
         }
 
-        // Same name and same item count — treat as same, just open it
         const sameStructure =
           existing.name === payload.name &&
           existing.quadrants.every(
@@ -91,14 +102,11 @@ export default function App() {
           return prev
         }
 
-        // Conflict — defer to user
         const incoming = hydratePayload(payload, id)
         setTimeout(() => setConflict({ existing, incoming }), 0)
         return prev
       })
-    }).catch(() => {
-      // Invalid hash, ignore
-    })
+    }).catch(() => {})
   }, [])
 
   const handleConflictReplace = useCallback(() => {
@@ -130,7 +138,6 @@ export default function App() {
     setConflict(null)
   }, [conflict])
 
-  // Sync URL when activeId changes
   useEffect(() => {
     if (skipPush.current) {
       skipPush.current = false
@@ -142,7 +149,6 @@ export default function App() {
     }
   }, [activeId])
 
-  // Handle browser back/forward
   useEffect(() => {
     const handlePopState = () => {
       skipPush.current = true
@@ -232,9 +238,7 @@ export default function App() {
             setFrameworks((prev) => [...prev, imported])
             setActiveId(imported.id)
           }
-        } catch {
-          // Invalid JSON, ignore
-        }
+        } catch {}
       }
       reader.readAsText(file)
     }
@@ -278,11 +282,13 @@ export default function App() {
   }
 
   return (
-    <div className="app">
+    <div className="flex h-screen overflow-hidden">
       <Sidebar
         frameworks={frameworks}
         activeId={activeId}
         open={sidebarOpen}
+        darkMode={darkMode}
+        onToggleDark={() => setDarkMode((d) => !d)}
         onToggle={() => setSidebarOpen((s) => !s)}
         onSelect={setActiveId}
         onNew={() => {
@@ -294,7 +300,7 @@ export default function App() {
         onExport={handleExport}
         onImport={handleImport}
       />
-      <main className={`main ${sidebarOpen ? '' : 'main--full'}`}>
+      <main className={`flex-1 overflow-y-auto transition-[margin-left] duration-150 ease-in-out ${sidebarOpen ? 'ml-[280px]' : 'ml-0'}`}>
         {conflict ? (
           <ConflictDialog
             existing={conflict.existing}
@@ -333,25 +339,19 @@ export default function App() {
   )
 }
 
-function ConflictDialog({ existing, incoming, onReplace, onDuplicate, onCancel }) {
+function ConflictDialog({ existing, onReplace, onDuplicate, onCancel }) {
   return (
-    <div className="conflict">
-      <div className="conflict__container">
-        <h2>Framework already exists</h2>
-        <p>
+    <div className="flex items-center justify-center h-full p-10">
+      <div className="max-w-[420px] text-center">
+        <h2 className="text-lg font-semibold mb-2 text-text">Framework already exists</h2>
+        <p className="text-sm text-text-secondary mb-5 leading-relaxed">
           A framework named <strong>"{existing.name}"</strong> already exists locally
           but differs from the shared version. What would you like to do?
         </p>
-        <div className="conflict__actions">
-          <button className="btn btn--secondary" onClick={onCancel}>
-            Cancel
-          </button>
-          <button className="btn btn--secondary" onClick={onDuplicate}>
-            Keep both
-          </button>
-          <button className="btn btn--primary" onClick={onReplace}>
-            Replace local
-          </button>
+        <div className="flex gap-2 justify-center">
+          <button className="btn-secondary" onClick={onCancel}>Cancel</button>
+          <button className="btn-secondary" onClick={onDuplicate}>Keep both</button>
+          <button className="btn-primary" onClick={onReplace}>Replace local</button>
         </div>
       </div>
     </div>
@@ -360,8 +360,8 @@ function ConflictDialog({ existing, incoming, onReplace, onDuplicate, onCancel }
 
 function EmptyState({ onNew }) {
   return (
-    <div className="empty-state">
-      <div className="empty-state__icon">
+    <div className="flex flex-col items-center justify-center h-full gap-3 text-text-secondary text-center p-10">
+      <div className="text-text-tertiary mb-2">
         <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
           <rect x="3" y="3" width="7" height="7" rx="1" />
           <rect x="14" y="3" width="7" height="7" rx="1" />
@@ -369,11 +369,9 @@ function EmptyState({ onNew }) {
           <rect x="14" y="14" width="7" height="7" rx="1" />
         </svg>
       </div>
-      <h2>No framework selected</h2>
-      <p>Create a new quadrant framework or select one from the sidebar to get started.</p>
-      <button className="btn btn--primary" onClick={onNew}>
-        Create Framework
-      </button>
+      <h2 className="text-lg font-semibold text-text">No framework selected</h2>
+      <p className="text-sm max-w-[360px] mb-2">Create a new quadrant framework or select one from the sidebar to get started.</p>
+      <button className="btn-primary" onClick={onNew}>Create Framework</button>
     </div>
   )
 }
