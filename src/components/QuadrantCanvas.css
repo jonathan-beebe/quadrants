@@ -74,7 +74,7 @@
   flex-direction: column;
   border-radius: var(--radius-lg);
   border: 1px solid;
-  overflow: hidden;
+  overflow: visible;
   transition: border-color var(--transition);
 }
 
@@ -138,6 +138,6 @@
   flex: 1;
   position: relative;
   min-height: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 

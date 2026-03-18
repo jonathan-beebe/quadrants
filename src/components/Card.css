@@ -1,6 +1,7 @@
 /* Card */
 .card {
   position: absolute;
+  width: max-content;
   max-width: 180px;
   min-width: 60px;
   padding: 7px 10px;
