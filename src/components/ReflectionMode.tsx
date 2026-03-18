@@ -152,7 +152,7 @@ export default function ReflectionMode({
               onKeyDown={(e) => handleTabKeyDown(e, i)}
             >
               {q.label}
-              <span className="text-[11px] text-text-tertiary bg-black/6 dark:bg-white/10 px-1.5 rounded-full">
+              <span className="text-[11px] text-text-tertiary bg-black/6 dark:bg-white/10 px-1.5 rounded-full" aria-hidden="true">
                 {q.items.length}
               </span>
             </button>
