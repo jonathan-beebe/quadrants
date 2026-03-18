@@ -79,17 +79,17 @@ describe('Card', () => {
   })
 
   describe('accessibility', () => {
-    it('display span has role="button" and tabIndex', () => {
+    it('display button is focusable with correct role', () => {
       renderCard()
-      const span = screen.getByRole('button', { name: /edit item: test card/i })
-      expect(span).toBeInTheDocument()
-      expect(span.tabIndex).toBe(0)
+      const btn = screen.getByRole('button', { name: /edit item: test card/i })
+      expect(btn).toBeInTheDocument()
+      expect(btn.tagName).toBe('BUTTON')
     })
 
     it('display span has an aria-label', () => {
       renderCard()
       const span = screen.getByRole('button', { name: /edit item: test card/i })
-      expect(span).toHaveAttribute('aria-label', 'Edit item: Test card')
+      expect(span).toHaveAttribute('aria-label', 'Edit item: Test card. Press M to move.')
     })
 
     it('delete button has an aria-label', () => {

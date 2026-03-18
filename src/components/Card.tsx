@@ -260,7 +260,8 @@ export default function Card({
           ref={spanRef}
           type="button"
           className={`${textClasses} ${editing ? 'cursor-text' : 'cursor-grab'} bg-transparent border-none p-0 m-0 text-left text-inherit text-[inherit] leading-[inherit]`}
-          aria-label={`Edit item: ${item.text}`}
+          aria-label={`Edit item: ${item.text}. Press M to move.`}
+          aria-keyshortcuts="m"
           onPointerDown={handleTextPointerDown}
           onKeyDown={handleDisplayKeyDown}
         >

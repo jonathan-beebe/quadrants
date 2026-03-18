@@ -67,6 +67,7 @@ export default function FrameworkBuilder({
                 <button
                   key={t.name}
                   className="flex flex-col items-start p-3 px-4 bg-surface border border-border rounded-lg text-left transition-all duration-150 hover:border-accent hover:bg-accent-light"
+                  aria-label={`Apply template: ${t.name}`}
                   onClick={() => applyTemplate(t)}
                 >
                   <span className="text-[13px] font-medium">{t.name}</span>
