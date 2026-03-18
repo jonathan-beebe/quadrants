@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, within } from '@testing-library/react'
+import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Sidebar from '../components/Sidebar'
 import type { Framework } from '../types'
@@ -84,7 +84,7 @@ describe('Sidebar', () => {
     const user = userEvent.setup()
     const onToggleDark = vi.fn()
     render(<Sidebar {...defaultProps} onToggleDark={onToggleDark} />)
-    await user.click(screen.getByTitle('Toggle dark mode'))
+    await user.click(screen.getByRole('button', { name: /switch to dark mode/i }))
     expect(onToggleDark).toHaveBeenCalledOnce()
   })
 
@@ -92,13 +92,13 @@ describe('Sidebar', () => {
     const user = userEvent.setup()
     const onToggle = vi.fn()
     render(<Sidebar {...defaultProps} onToggle={onToggle} />)
-    await user.click(screen.getByTitle('Toggle sidebar'))
+    await user.click(screen.getByRole('button', { name: /close sidebar/i }))
     expect(onToggle).toHaveBeenCalledOnce()
   })
 
   it('shows an open sidebar button when closed', () => {
     render(<Sidebar {...defaultProps} open={false} />)
-    expect(screen.getByTitle('Open sidebar')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /open sidebar/i })).toBeInTheDocument()
   })
 
   it('highlights the active framework', () => {
@@ -126,19 +126,35 @@ describe('Sidebar', () => {
       />
     )
 
-    // Open context menu via the three-dot button
-    // The three-dot menu button is inside the framework row — find it
-    const frameworkRow = screen.getByText('Test Framework').closest('div[class*="relative"]')!
-    const menuButton = within(frameworkRow as HTMLElement).getAllByRole('button')[0]
+    // Open context menu via the actions button
+    const menuButton = screen.getByRole('button', { name: /actions for test framework/i })
     await user.click(menuButton)
 
     // Verify menu items appear
-    expect(screen.getByText('Duplicate')).toBeInTheDocument()
-    expect(screen.getByText('Export JSON')).toBeInTheDocument()
-    expect(screen.getByText('Delete')).toBeInTheDocument()
+    expect(screen.getByRole('menuitem', { name: 'Duplicate' })).toBeInTheDocument()
+    expect(screen.getByRole('menuitem', { name: 'Export JSON' })).toBeInTheDocument()
+    expect(screen.getByRole('menuitem', { name: 'Delete' })).toBeInTheDocument()
 
     // Click Duplicate
-    await user.click(screen.getByText('Duplicate'))
+    await user.click(screen.getByRole('menuitem', { name: 'Duplicate' }))
     expect(onDuplicate).toHaveBeenCalledWith(fw)
+  })
+
+  it('communicates expanded state on sidebar toggle', () => {
+    render(<Sidebar {...defaultProps} open={true} />)
+    const toggle = screen.getByRole('button', { name: /close sidebar/i })
+    expect(toggle).toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('communicates expanded state on context menu trigger', async () => {
+    const user = userEvent.setup()
+    const fw = makeFramework()
+    render(<Sidebar {...defaultProps} frameworks={[fw]} />)
+
+    const menuButton = screen.getByRole('button', { name: /actions for test framework/i })
+    expect(menuButton).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(menuButton)
+    expect(menuButton).toHaveAttribute('aria-expanded', 'true')
   })
 })
