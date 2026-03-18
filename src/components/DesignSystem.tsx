@@ -1,4 +1,5 @@
 import { useDarkMode } from '../hooks/useDarkMode'
+import ThemeToggleButton from './atoms/ThemeToggleButton'
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
   return (
@@ -40,13 +41,7 @@ export default function DesignSystem() {
             Back to app
           </a>
         </div>
-        <button
-          onClick={toggleDark}
-          className="btn-secondary btn-sm"
-          aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-        >
-          {darkMode ? 'Light mode' : 'Dark mode'}
-        </button>
+        <ThemeToggleButton darkMode={darkMode} onToggle={toggleDark} />
       </header>
 
       <main className="max-w-4xl mx-auto px-8 py-8">

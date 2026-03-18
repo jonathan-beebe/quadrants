@@ -1,13 +1,12 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
 import {
   QuadrantGridIcon,
-  SunIcon,
-  MoonIcon,
   SidebarIcon,
   PlusIcon,
   ImportIcon,
   MoreVerticalIcon,
 } from './Icons'
+import ThemeToggleButton from './atoms/ThemeToggleButton'
 import type { Framework } from '../types'
 
 interface SidebarProps {
@@ -101,13 +100,7 @@ export default function Sidebar({
             <span>Quadrants</span>
           </div>
           <div className="flex items-center gap-1">
-            <button
-              className="btn-icon text-text-secondary"
-              onClick={onToggleDark}
-              aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-            >
-              {darkMode ? <SunIcon /> : <MoonIcon />}
-            </button>
+            <ThemeToggleButton darkMode={darkMode} onToggle={onToggleDark} />
             <button
               className="btn-icon text-text-secondary"
               onClick={onToggle}
