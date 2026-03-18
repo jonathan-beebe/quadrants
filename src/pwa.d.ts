@@ -1,3 +1,5 @@
+declare const __COMMIT_HASH__: string
+
 declare module 'virtual:pwa-register/react' {
   import type { Dispatch, SetStateAction } from 'react'
 

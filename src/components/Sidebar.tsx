@@ -204,6 +204,10 @@ export default function Sidebar({
           ))}
           </ul>
         </nav>
+
+        <div className="px-4 py-3 border-t border-border">
+          <Caption>Version: {__COMMIT_HASH__}</Caption>
+        </div>
       </aside>
 
       {!open && (
