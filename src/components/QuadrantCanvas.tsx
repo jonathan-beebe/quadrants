@@ -1,10 +1,12 @@
-import { useState, useRef, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { createItem } from '../storage'
+import { addItem, removeItem, updateItemText, setQuadrantColor, moveItem } from '../logic/items'
 import { deriveColors, defaultColors } from '../colors'
+import useDragAndDrop from '../hooks/useDragAndDrop'
+import type { DropResult } from '../hooks/useDragAndDrop'
 import ColorPicker from './ColorPicker'
 import Card, { GhostCard, PLACEHOLDER } from './Card'
-import type { DragStartInfo, DragState } from './Card'
-import type { Framework, Item } from '../types'
+import type { Framework } from '../types'
 
 interface QuadrantCanvasProps {
   framework: Framework
@@ -24,11 +26,9 @@ export default function QuadrantCanvas({
   onShare,
 }: QuadrantCanvasProps) {
   const [shareStatus, setShareStatus] = useState<'copied' | 'error' | null>(null)
-  const gridRef = useRef<HTMLDivElement>(null)
+  const [autoFocusId, setAutoFocusId] = useState<string | null>(null)
   const quadrantRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null])
   const canvasRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null])
-  const [drag, setDrag] = useState<DragState | null>(null)
-  const [autoFocusId, setAutoFocusId] = useState<string | null>(null)
 
   const frameworkRef = useRef(framework)
   frameworkRef.current = framework
@@ -41,174 +41,52 @@ export default function QuadrantCanvas({
     [onUpdate],
   )
 
-  const getQuadrantAtPoint = useCallback(
-    (pageX: number, pageY: number) => {
-      for (let i = 0; i < 4; i++) {
-        const el = quadrantRefs.current[i]
-        if (!el) continue
-        const rect = el.getBoundingClientRect()
-        if (
-          pageX >= rect.left &&
-          pageX <= rect.right &&
-          pageY >= rect.top &&
-          pageY <= rect.bottom
-        ) {
-          const canvasRect =
-            canvasRefs.current[i]?.getBoundingClientRect() || rect
-          return { index: i, rect: canvasRect }
-        }
-      }
-      return null
-    },
-    [],
-  )
-
-  const pageToQuadrantPercent = useCallback(
-    (pageX: number, pageY: number, rect: DOMRect) => {
-      const x = ((pageX - rect.left) / rect.width) * 100
-      const y = ((pageY - rect.top) / rect.height) * 100
-      return {
-        x: Math.max(2, Math.min(x, 85)),
-        y: Math.max(2, Math.min(y, 85)),
-      }
-    },
-    [],
-  )
-
-  useEffect(() => {
-    if (!drag) return
-    const handleMove = (e: PointerEvent) => {
-      setDrag((prev) =>
-        prev ? { ...prev, x: e.pageX, y: e.pageY } : null,
+  const handleDrop = useCallback(
+    (result: DropResult) => {
+      updateFramework((fw) =>
+        moveItem(fw, result.sourceIdx, result.targetIdx, result.itemId, result.x, result.y),
       )
-    }
-    const handleUp = (e: PointerEvent) => {
-      setDrag((prev) => {
-        if (!prev) return null
-        const target = getQuadrantAtPoint(e.pageX, e.pageY)
-        if (!target) return null
-        const { x, y } = pageToQuadrantPercent(
-          e.pageX - prev.grabX,
-          e.pageY - prev.grabY,
-          target.rect,
-        )
-        updateFramework((fw) => {
-          const newQuadrants = fw.quadrants.map((q, i) => {
-            if (i === prev.sourceIdx && prev.sourceIdx !== target.index) {
-              return {
-                ...q,
-                items: q.items.filter((it) => it.id !== prev.itemId),
-              }
-            }
-            return q
-          })
-          if (prev.sourceIdx === target.index) {
-            newQuadrants[target.index] = {
-              ...newQuadrants[target.index],
-              items: newQuadrants[target.index].items.map((it) =>
-                it.id === prev.itemId ? { ...it, x, y } : it,
-              ),
-            }
-          } else {
-            const item = fw.quadrants[prev.sourceIdx].items.find(
-              (it) => it.id === prev.itemId,
-            )
-            if (item) {
-              newQuadrants[target.index] = {
-                ...newQuadrants[target.index],
-                items: [...newQuadrants[target.index].items, { ...item, x, y }],
-              }
-            }
-          }
-          return { ...fw, quadrants: newQuadrants }
-        })
-        return null
-      })
-    }
-    window.addEventListener('pointermove', handleMove)
-    window.addEventListener('pointerup', handleUp)
-    return () => {
-      window.removeEventListener('pointermove', handleMove)
-      window.removeEventListener('pointerup', handleUp)
-    }
-  }, [drag, getQuadrantAtPoint, pageToQuadrantPercent, updateFramework])
-
-  const handleDragStart = useCallback(
-    (quadrantIdx: number, item: Item, info: DragStartInfo) => {
-      setDrag({
-        itemId: item.id,
-        sourceIdx: quadrantIdx,
-        grabX: info.grabX,
-        grabY: info.grabY,
-        width: info.width,
-        height: info.height,
-        x: info.pageX,
-        y: info.pageY,
-      })
     },
-    [],
+    [updateFramework],
   )
+
+  const { drag, handleDragStart } = useDragAndDrop({
+    quadrantRefs,
+    canvasRefs,
+    onDrop: handleDrop,
+  })
 
   const handleAddItem = useCallback(
     (quadrantIdx: number) => {
       const newItem = createItem(PLACEHOLDER)
       setAutoFocusId(newItem.id)
-      updateFramework((fw) => ({
-        ...fw,
-        quadrants: fw.quadrants.map((q, i) =>
-          i === quadrantIdx ? { ...q, items: [...q.items, newItem] } : q,
-        ),
-      }))
+      updateFramework((fw) => addItem(fw, quadrantIdx, newItem))
     },
     [updateFramework],
   )
 
   const handleDeleteItem = useCallback(
     (quadrantIdx: number, itemId: string) => {
-      updateFramework((fw) => ({
-        ...fw,
-        quadrants: fw.quadrants.map((q, i) =>
-          i === quadrantIdx
-            ? { ...q, items: q.items.filter((it) => it.id !== itemId) }
-            : q,
-        ),
-      }))
+      updateFramework((fw) => removeItem(fw, quadrantIdx, itemId))
     },
     [updateFramework],
   )
 
   const handleEditItem = useCallback(
     (quadrantIdx: number, itemId: string, text: string) => {
-      updateFramework((fw) => ({
-        ...fw,
-        quadrants: fw.quadrants.map((q, i) =>
-          i === quadrantIdx
-            ? {
-                ...q,
-                items: q.items.map((it) =>
-                  it.id === itemId ? { ...it, text } : it,
-                ),
-              }
-            : q,
-        ),
-      }))
+      updateFramework((fw) => updateItemText(fw, quadrantIdx, itemId, text))
     },
     [updateFramework],
   )
 
   const handleColorChange = useCallback(
     (quadrantIdx: number, color: string) => {
-      updateFramework((fw) => ({
-        ...fw,
-        quadrants: fw.quadrants.map((q, i) =>
-          i === quadrantIdx ? { ...q, color } : q,
-        ),
-      }))
+      updateFramework((fw) => setQuadrantColor(fw, quadrantIdx, color))
     },
     [updateFramework],
   )
 
-  let draggedItem: Item | null = null
+  let draggedItem = null
   if (drag) {
     const q = framework.quadrants[drag.sourceIdx]
     draggedItem = q?.items.find((it) => it.id === drag.itemId) ?? null
@@ -299,10 +177,7 @@ export default function QuadrantCanvas({
           </div>
         )}
         <div className="flex-1 flex flex-col min-h-0">
-          <div
-            className="grid grid-cols-2 grid-rows-2 gap-3 flex-1 min-h-0"
-            ref={gridRef}
-          >
+          <div className="grid grid-cols-2 grid-rows-2 gap-3 flex-1 min-h-0">
             {framework.quadrants.map((quadrant, idx) => {
               const qColor = quadrant.color || defaultColors[idx]
               const { bg, border } = deriveColors(qColor)
