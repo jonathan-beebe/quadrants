@@ -1,14 +1,19 @@
 import { useState, useRef, useEffect } from 'react'
 import { colorPresets } from '../colors'
 
-export default function ColorPicker({ color, onChange }) {
+interface ColorPickerProps {
+  color: string
+  onChange: (color: string) => void
+}
+
+export default function ColorPicker({ color, onChange }: ColorPickerProps) {
   const [open, setOpen] = useState(false)
-  const ref = useRef(null)
+  const ref = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
     if (!open) return
-    const handleClick = (e) => {
-      if (ref.current && !ref.current.contains(e.target)) setOpen(false)
+    const handleClick = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
     }
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
@@ -30,7 +35,10 @@ export default function ColorPicker({ color, onChange }) {
                 key={c}
                 className={`w-[26px] h-[26px] rounded-md border-2 cursor-pointer transition-all duration-150 hover:scale-112 ${c === color ? 'border-text shadow-[0_0_0_2px_white,0_0_0_3px_var(--color-text)]' : 'border-transparent'}`}
                 style={{ background: c }}
-                onClick={() => { onChange(c); setOpen(false) }}
+                onClick={() => {
+                  onChange(c)
+                  setOpen(false)
+                }}
               />
             ))}
           </div>

@@ -2,6 +2,7 @@ import type { Framework } from '../types'
 
 interface ConflictDialogProps {
   existing: Framework
+  incoming: Framework
   onReplace: () => void
   onDuplicate: () => void
   onCancel: () => void

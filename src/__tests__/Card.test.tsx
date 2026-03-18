@@ -66,13 +66,13 @@ describe('Card', () => {
 
 describe('GhostCard', () => {
   it('renders the text content', () => {
-    const drag = { x: 100, y: 200, grabX: 10, grabY: 10, width: 150, height: 40 }
+    const drag = { itemId: 'i1', sourceIdx: 0, x: 100, y: 200, grabX: 10, grabY: 10, width: 150, height: 40 }
     render(<GhostCard drag={drag} text="Dragging item" />)
     expect(screen.getByText('Dragging item')).toBeInTheDocument()
   })
 
   it('positions itself based on drag state', () => {
-    const drag = { x: 100, y: 200, grabX: 10, grabY: 10, width: 150, height: 40 }
+    const drag = { itemId: 'i1', sourceIdx: 0, x: 100, y: 200, grabX: 10, grabY: 10, width: 150, height: 40 }
     const { container } = render(<GhostCard drag={drag} text="Test" />)
     const ghost = container.firstElementChild as HTMLElement
     expect(ghost.style.left).toBe('90px') // x - grabX

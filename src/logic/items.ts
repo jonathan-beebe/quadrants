@@ -1,4 +1,4 @@
-import type { Framework, Item, Quadrant } from '../types'
+import type { Framework, Item } from '../types'
 
 export function addItem(
   framework: Framework,

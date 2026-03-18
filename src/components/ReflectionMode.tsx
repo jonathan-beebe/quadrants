@@ -1,38 +1,69 @@
 import { useState, useRef, useCallback } from 'react'
 import { createItem } from '../storage'
 import { deriveColors, defaultColors } from '../colors'
+import type { Framework } from '../types'
 
-export default function ReflectionMode({ framework, onUpdate, onExit }) {
+interface ReflectionModeProps {
+  framework: Framework
+  onUpdate: (framework: Framework) => void
+  onExit: () => void
+}
+
+export default function ReflectionMode({
+  framework,
+  onUpdate,
+  onExit,
+}: ReflectionModeProps) {
   const [activeQuadrant, setActiveQuadrant] = useState(0)
   const [text, setText] = useState('')
-  const inputRef = useRef(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const handleAdd = useCallback(
-    (e) => {
+    (e: React.FormEvent) => {
       e.preventDefault()
       if (!text.trim()) return
       const updated = { ...framework }
       updated.quadrants = updated.quadrants.map((q, i) =>
-        i === activeQuadrant ? { ...q, items: [...q.items, createItem(text.trim())] } : q
+        i === activeQuadrant
+          ? { ...q, items: [...q.items, createItem(text.trim())] }
+          : q,
       )
       onUpdate(updated)
       setText('')
       inputRef.current?.focus()
     },
-    [text, activeQuadrant, framework, onUpdate]
+    [text, activeQuadrant, framework, onUpdate],
   )
 
-  const handleKeyDown = (e) => {
-    if (e.key === 'Tab') { e.preventDefault(); setActiveQuadrant((prev) => (prev + 1) % 4) }
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      setActiveQuadrant((prev) => (prev + 1) % 4)
+    }
     if (e.key === 'Escape') onExit()
   }
 
   const quadrant = framework.quadrants[activeQuadrant]
 
   return (
-    <div className="fixed inset-0 bg-bg z-[1000] flex items-center justify-center" onKeyDown={handleKeyDown}>
-      <button className="fixed top-5 right-5 p-2 rounded-lg text-text-secondary transition-all duration-150 hover:text-text hover:bg-border" onClick={onExit}>
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <div
+      className="fixed inset-0 bg-bg z-[1000] flex items-center justify-center"
+      onKeyDown={handleKeyDown}
+    >
+      <button
+        className="fixed top-5 right-5 p-2 rounded-lg text-text-secondary transition-all duration-150 hover:text-text hover:bg-border"
+        onClick={onExit}
+      >
+        <svg
+          width="20"
+          height="20"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
@@ -44,14 +75,24 @@ export default function ReflectionMode({ framework, onUpdate, onExit }) {
             <button
               key={i}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg text-[13px] font-medium transition-all duration-150 border ${i === activeQuadrant ? 'text-text border-current' : 'text-text-secondary border-transparent hover:bg-surface hover:text-text'}`}
-              style={i === activeQuadrant ? {
-                background: deriveColors(q.color || defaultColors[i]).bg,
-                borderColor: deriveColors(q.color || defaultColors[i]).border,
-              } : undefined}
-              onClick={() => { setActiveQuadrant(i); inputRef.current?.focus() }}
+              style={
+                i === activeQuadrant
+                  ? {
+                      background: deriveColors(q.color || defaultColors[i]).bg,
+                      borderColor: deriveColors(q.color || defaultColors[i])
+                        .border,
+                    }
+                  : undefined
+              }
+              onClick={() => {
+                setActiveQuadrant(i)
+                inputRef.current?.focus()
+              }}
             >
               {q.label}
-              <span className="text-[11px] text-text-tertiary bg-black/6 dark:bg-white/10 px-1.5 rounded-full">{q.items.length}</span>
+              <span className="text-[11px] text-text-tertiary bg-black/6 dark:bg-white/10 px-1.5 rounded-full">
+                {q.items.length}
+              </span>
             </button>
           ))}
         </div>
@@ -59,8 +100,12 @@ export default function ReflectionMode({ framework, onUpdate, onExit }) {
         <div
           className="p-6 rounded-xl border min-h-[400px] flex flex-col"
           style={{
-            background: deriveColors(quadrant.color || defaultColors[activeQuadrant]).bg,
-            borderColor: deriveColors(quadrant.color || defaultColors[activeQuadrant]).border,
+            background: deriveColors(
+              quadrant.color || defaultColors[activeQuadrant],
+            ).bg,
+            borderColor: deriveColors(
+              quadrant.color || defaultColors[activeQuadrant],
+            ).border,
           }}
         >
           <h2 className="text-2xl font-semibold mb-5">{quadrant.label}</h2>
@@ -82,12 +127,17 @@ export default function ReflectionMode({ framework, onUpdate, onExit }) {
 
           <div className="flex-1 flex flex-col gap-1.5">
             {quadrant.items.map((item) => (
-              <div key={item.id} className="py-2.5 px-3.5 bg-white/60 dark:bg-white/10 rounded-lg text-sm">
+              <div
+                key={item.id}
+                className="py-2.5 px-3.5 bg-white/60 dark:bg-white/10 rounded-lg text-sm"
+              >
                 {item.text}
               </div>
             ))}
             {quadrant.items.length === 0 && (
-              <div className="text-text-tertiary text-sm text-center py-8">No items yet. Start typing above.</div>
+              <div className="text-text-tertiary text-sm text-center py-8">
+                No items yet. Start typing above.
+              </div>
             )}
           </div>
         </div>

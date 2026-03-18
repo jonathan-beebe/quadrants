@@ -127,7 +127,6 @@ describe('Sidebar', () => {
     )
 
     // Open context menu via the three-dot button
-    const menuButtons = screen.getAllByRole('button')
     // The three-dot menu button is inside the framework row — find it
     const frameworkRow = screen.getByText('Test Framework').closest('div[class*="relative"]')!
     const menuButton = within(frameworkRow as HTMLElement).getAllByRole('button')[0]

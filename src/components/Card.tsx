@@ -1,12 +1,38 @@
 import { useRef, useCallback, useEffect, useState } from 'react'
+import type { Item } from '../types'
 
 const DRAG_THRESHOLD = 4
 export const PLACEHOLDER = 'New item...'
 
-export default function Card({ item, isDragging, autoFocus, onChange, onDelete, onDragStart }) {
-  const cardRef = useRef(null)
-  const textRef = useRef(null)
-  const pendingRef = useRef(null)
+export interface DragStartInfo {
+  pageX: number
+  pageY: number
+  grabX: number
+  grabY: number
+  width: number
+  height: number
+}
+
+interface CardProps {
+  item: Item
+  isDragging: boolean
+  autoFocus: boolean
+  onChange: (text: string) => void
+  onDelete: () => void
+  onDragStart: (info: DragStartInfo) => void
+}
+
+export default function Card({
+  item,
+  isDragging,
+  autoFocus,
+  onChange,
+  onDelete,
+  onDragStart,
+}: CardProps) {
+  const cardRef = useRef<HTMLDivElement>(null)
+  const textRef = useRef<HTMLSpanElement>(null)
+  const pendingRef = useRef<{ startX: number; startY: number } | null>(null)
   const [focused, setFocused] = useState(false)
 
   useEffect(() => {
@@ -17,8 +43,8 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
     const range = document.createRange()
     range.selectNodeContents(el)
     const sel = window.getSelection()
-    sel.removeAllRanges()
-    sel.addRange(range)
+    sel?.removeAllRanges()
+    sel?.addRange(range)
   }, [autoFocus])
 
   useEffect(() => {
@@ -26,12 +52,12 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
       window.removeEventListener('pointermove', handlePendingMove)
       window.removeEventListener('pointerup', handlePendingUp)
     }
-  }, [])
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   useEffect(() => {
     if (!focused) return
-    const handleOutsideDown = (e) => {
-      if (cardRef.current && !cardRef.current.contains(e.target)) {
+    const handleOutsideDown = (e: PointerEvent) => {
+      if (cardRef.current && !cardRef.current.contains(e.target as Node)) {
         textRef.current?.blur()
       }
     }
@@ -39,31 +65,38 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
     return () => window.removeEventListener('pointerdown', handleOutsideDown)
   }, [focused])
 
-  const fireDragStart = useCallback((pageX, pageY) => {
-    const cardEl = cardRef.current
-    if (!cardEl) return
-    const cardRect = cardEl.getBoundingClientRect()
-    onDragStart({
-      pageX, pageY,
-      grabX: pageX - cardRect.left,
-      grabY: pageY - cardRect.top,
-      width: cardRect.width,
-      height: cardRect.height,
-    })
-  }, [onDragStart])
+  const fireDragStart = useCallback(
+    (pageX: number, pageY: number) => {
+      const cardEl = cardRef.current
+      if (!cardEl) return
+      const cardRect = cardEl.getBoundingClientRect()
+      onDragStart({
+        pageX,
+        pageY,
+        grabX: pageX - cardRect.left,
+        grabY: pageY - cardRect.top,
+        width: cardRect.width,
+        height: cardRect.height,
+      })
+    },
+    [onDragStart],
+  )
 
-  const handlePendingMove = useCallback((e) => {
-    const p = pendingRef.current
-    if (!p) return
-    const dx = e.pageX - p.startX
-    const dy = e.pageY - p.startY
-    if (dx * dx + dy * dy > DRAG_THRESHOLD * DRAG_THRESHOLD) {
-      window.removeEventListener('pointermove', handlePendingMove)
-      window.removeEventListener('pointerup', handlePendingUp)
-      pendingRef.current = null
-      fireDragStart(p.startX, p.startY)
-    }
-  }, [fireDragStart])
+  const handlePendingMove = useCallback(
+    (e: PointerEvent) => {
+      const p = pendingRef.current
+      if (!p) return
+      const dx = e.pageX - p.startX
+      const dy = e.pageY - p.startY
+      if (dx * dx + dy * dy > DRAG_THRESHOLD * DRAG_THRESHOLD) {
+        window.removeEventListener('pointermove', handlePendingMove)
+        window.removeEventListener('pointerup', handlePendingUp)
+        pendingRef.current = null
+        fireDragStart(p.startX, p.startY)
+      }
+    },
+    [fireDragStart], // eslint-disable-line react-hooks/exhaustive-deps
+  )
 
   const handlePendingUp = useCallback(() => {
     window.removeEventListener('pointermove', handlePendingMove)
@@ -73,15 +106,21 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
     textRef.current?.focus()
   }, [handlePendingMove])
 
-  const handleTextPointerDown = useCallback((e) => {
-    if (e.button !== 0) return
-    if (focused) { e.stopPropagation(); return }
-    e.preventDefault()
-    e.stopPropagation()
-    pendingRef.current = { startX: e.pageX, startY: e.pageY }
-    window.addEventListener('pointermove', handlePendingMove)
-    window.addEventListener('pointerup', handlePendingUp)
-  }, [focused, handlePendingMove, handlePendingUp])
+  const handleTextPointerDown = useCallback(
+    (e: React.PointerEvent) => {
+      if (e.button !== 0) return
+      if (focused) {
+        e.stopPropagation()
+        return
+      }
+      e.preventDefault()
+      e.stopPropagation()
+      pendingRef.current = { startX: e.pageX, startY: e.pageY }
+      window.addEventListener('pointermove', handlePendingMove)
+      window.addEventListener('pointerup', handlePendingUp)
+    },
+    [focused, handlePendingMove, handlePendingUp],
+  )
 
   const handleFocus = useCallback(() => setFocused(true), [])
 
@@ -90,15 +129,27 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
     window.getSelection()?.removeAllRanges()
     const el = textRef.current
     if (!el) return
-    const newText = el.textContent.trim()
-    if (!newText || newText === PLACEHOLDER) { onDelete(); return }
+    const newText = (el.textContent ?? '').trim()
+    if (!newText || newText === PLACEHOLDER) {
+      onDelete()
+      return
+    }
     if (newText !== item.text) onChange(newText)
   }, [item.text, onChange, onDelete])
 
-  const handleKeyDown = useCallback((e) => {
-    if (e.key === 'Enter') { e.preventDefault(); textRef.current?.blur() }
-    if (e.key === 'Escape') { textRef.current.textContent = item.text; textRef.current?.blur() }
-  }, [item.text])
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        textRef.current?.blur()
+      }
+      if (e.key === 'Escape') {
+        if (textRef.current) textRef.current.textContent = item.text
+        textRef.current?.blur()
+      }
+    },
+    [item.text],
+  )
 
   return (
     <div
@@ -130,7 +181,16 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
         onClick={onDelete}
         title="Delete"
       >
-        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <svg
+          width="11"
+          height="11"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
         </svg>
@@ -139,7 +199,23 @@ export default function Card({ item, isDragging, autoFocus, onChange, onDelete, 
   )
 }
 
-export function GhostCard({ drag, text }) {
+export interface DragState {
+  itemId: string
+  sourceIdx: number
+  grabX: number
+  grabY: number
+  width: number
+  height: number
+  x: number
+  y: number
+}
+
+interface GhostCardProps {
+  drag: DragState
+  text: string
+}
+
+export function GhostCard({ drag, text }: GhostCardProps) {
   return (
     <div
       className="absolute w-max max-w-[180px] min-w-[60px] py-[7px] px-2.5 bg-white dark:bg-gray-700 border border-black/8 dark:border-white/10 rounded-lg shadow-lg text-[13px] leading-[1.4] flex items-start gap-1 cursor-grabbing opacity-92"
