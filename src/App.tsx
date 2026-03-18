@@ -11,6 +11,8 @@ import ConflictDialog from './components/ConflictDialog'
 import EmptyState from './components/EmptyState'
 import Toast from './components/Toast'
 import ErrorBoundary from './components/ErrorBoundary'
+import DesignSystem from './components/DesignSystem'
+import { isNamedRoute } from './logic/routing'
 import type { Framework, FrameworkTemplate } from './types'
 
 export default function App() {
@@ -112,6 +114,10 @@ export default function App() {
     setShowBuilder(false)
     setEditingFramework(null)
   }, [])
+
+  if (activeId === 'design-system') {
+    return <DesignSystem />
+  }
 
   if (reflectionMode && activeFramework) {
     return (

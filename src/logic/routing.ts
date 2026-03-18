@@ -1,6 +1,12 @@
+export const NAMED_ROUTES = ['design-system'] as const
+
 export function getIdFromPath(): string | null {
   const path = window.location.pathname.slice(1)
   return path || null
+}
+
+export function isNamedRoute(id: string | null): boolean {
+  return NAMED_ROUTES.includes(id as (typeof NAMED_ROUTES)[number])
 }
 
 export function getHashFromUrl(): string {
