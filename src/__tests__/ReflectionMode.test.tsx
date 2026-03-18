@@ -28,12 +28,12 @@ const defaultProps = {
 }
 
 describe('ReflectionMode', () => {
-  it('renders all quadrant tab buttons', () => {
+  it('renders all quadrant tabs', () => {
     render(<ReflectionMode {...defaultProps} />)
-    expect(screen.getByRole('button', { name: /Start/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Stop/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Continue/ })).toBeInTheDocument()
-    expect(screen.getByRole('button', { name: /Change/ })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: /Start/ })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: /Stop/ })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: /Continue/ })).toBeInTheDocument()
+    expect(screen.getByRole('tab', { name: /Change/ })).toBeInTheDocument()
   })
 
   it('shows the first quadrant by default', () => {
@@ -45,7 +45,7 @@ describe('ReflectionMode', () => {
     const user = userEvent.setup()
     render(<ReflectionMode {...defaultProps} />)
 
-    await user.click(screen.getByRole('button', { name: /Continue/ }))
+    await user.click(screen.getByRole('tab', { name: /Continue/ }))
     expect(screen.getByRole('heading', { level: 2 })).toHaveTextContent('Continue')
     expect(screen.getByText('Existing item')).toBeInTheDocument()
   })
@@ -90,9 +90,7 @@ describe('ReflectionMode', () => {
     const onExit = vi.fn()
     render(<ReflectionMode {...defaultProps} onExit={onExit} />)
 
-    // The close button is the first button (fixed top-right X)
-    const buttons = screen.getAllByRole('button')
-    await user.click(buttons[0])
+    await user.click(screen.getByRole('button', { name: /exit reflection mode/i }))
     expect(onExit).toHaveBeenCalledOnce()
   })
 
@@ -104,7 +102,13 @@ describe('ReflectionMode', () => {
   it('shows keyboard shortcut instructions', () => {
     render(<ReflectionMode {...defaultProps} />)
     expect(screen.getByText(/Enter to add/)).toBeInTheDocument()
-    expect(screen.getByText(/Tab to switch quadrant/)).toBeInTheDocument()
     expect(screen.getByText(/Esc to exit/)).toBeInTheDocument()
+  })
+
+  it('has proper dialog role and label', () => {
+    render(<ReflectionMode {...defaultProps} />)
+    const dialog = screen.getByRole('dialog')
+    expect(dialog).toHaveAttribute('aria-modal', 'true')
+    expect(dialog).toHaveAttribute('aria-label', expect.stringContaining('Test'))
   })
 })

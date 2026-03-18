@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { createItem } from '../storage'
 import { deriveColors, defaultColors } from '../colors'
 import { XIcon } from './Icons'
@@ -18,6 +18,16 @@ export default function ReflectionMode({
   const [activeQuadrant, setActiveQuadrant] = useState(0)
   const [text, setText] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
+  const overlayRef = useRef<HTMLDivElement>(null)
+  const previousFocusRef = useRef<HTMLElement | null>(null)
+
+  // Save previous focus and restore on exit
+  useEffect(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement
+    return () => {
+      previousFocusRef.current?.focus()
+    }
+  }, [])
 
   const handleAdd = useCallback(
     (e: React.FormEvent) => {
@@ -36,33 +46,71 @@ export default function ReflectionMode({
     [text, activeQuadrant, framework, onUpdate],
   )
 
-  const handleKeyDown = (e: React.KeyboardEvent) => {
-    if (e.key === 'Tab') {
-      e.preventDefault()
-      setActiveQuadrant((prev) => (prev + 1) % 4)
-    }
-    if (e.key === 'Escape') onExit()
-  }
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onExit()
+        return
+      }
+
+      // Focus trap: cycle focus within the overlay
+      if (e.key === 'Tab') {
+        const focusable = overlayRef.current?.querySelectorAll<HTMLElement>(
+          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
+        )
+        if (!focusable?.length) return
+
+        const first = focusable[0]
+        const last = focusable[focusable.length - 1]
+
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault()
+          last.focus()
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault()
+          first.focus()
+        }
+      }
+    },
+    [onExit],
+  )
+
+  const switchQuadrant = useCallback(
+    (idx: number) => {
+      setActiveQuadrant(idx)
+      inputRef.current?.focus()
+    },
+    [],
+  )
 
   const quadrant = framework.quadrants[activeQuadrant]
 
   return (
     <div
+      ref={overlayRef}
       className="fixed inset-0 bg-bg z-[1000] flex items-center justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-label={`Reflection mode: ${framework.name}`}
       onKeyDown={handleKeyDown}
     >
       <button
         className="fixed top-5 right-5 p-2 rounded-lg text-text-secondary transition-all duration-150 hover:text-text hover:bg-border"
         onClick={onExit}
+        aria-label="Exit reflection mode"
       >
         <XIcon size={20} />
       </button>
 
       <div className="w-full max-w-[600px] p-6">
-        <div className="flex gap-1 mb-6">
+        <div className="flex gap-1 mb-6" role="tablist" aria-label="Quadrants">
           {framework.quadrants.map((q, i) => (
             <button
               key={i}
+              role="tab"
+              aria-selected={i === activeQuadrant}
+              aria-controls={`quadrant-panel-${i}`}
+              id={`quadrant-tab-${i}`}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg text-[13px] font-medium transition-all duration-150 border ${i === activeQuadrant ? 'text-text border-current' : 'text-text-secondary border-transparent hover:bg-surface hover:text-text'}`}
               style={
                 i === activeQuadrant
@@ -73,10 +121,7 @@ export default function ReflectionMode({
                     }
                   : undefined
               }
-              onClick={() => {
-                setActiveQuadrant(i)
-                inputRef.current?.focus()
-              }}
+              onClick={() => switchQuadrant(i)}
             >
               {q.label}
               <span className="text-[11px] text-text-tertiary bg-black/6 dark:bg-white/10 px-1.5 rounded-full">
@@ -87,6 +132,9 @@ export default function ReflectionMode({
         </div>
 
         <div
+          id={`quadrant-panel-${activeQuadrant}`}
+          role="tabpanel"
+          aria-labelledby={`quadrant-tab-${activeQuadrant}`}
           className="p-6 rounded-xl border min-h-[400px] flex flex-col"
           style={{
             background: deriveColors(
@@ -106,29 +154,30 @@ export default function ReflectionMode({
               value={text}
               onChange={(e) => setText(e.target.value)}
               placeholder={`Add to "${quadrant.label}"...`}
+              aria-label={`Add item to ${quadrant.label}`}
               className="w-full py-3.5 px-4 border border-black/10 dark:border-white/10 rounded-lg text-base bg-white/70 dark:bg-white/10 outline-none transition-all duration-150 focus:border-accent focus:bg-white dark:focus:bg-white/15 focus:ring-[3px] focus:ring-accent/10 text-text"
               autoFocus
             />
             <span className="block mt-2 text-xs text-text-tertiary text-center">
-              Enter to add &middot; Tab to switch quadrant &middot; Esc to exit
+              Enter to add &middot; Esc to exit
             </span>
           </form>
 
-          <div className="flex-1 flex flex-col gap-1.5">
+          <ul className="flex-1 flex flex-col gap-1.5" aria-label={`Items in ${quadrant.label}`}>
             {quadrant.items.map((item) => (
-              <div
+              <li
                 key={item.id}
                 className="py-2.5 px-3.5 bg-white/60 dark:bg-white/10 rounded-lg text-sm"
               >
                 {item.text}
-              </div>
+              </li>
             ))}
             {quadrant.items.length === 0 && (
-              <div className="text-text-tertiary text-sm text-center py-8">
+              <li className="text-text-tertiary text-sm text-center py-8">
                 No items yet. Start typing above.
-              </div>
+              </li>
             )}
-          </div>
+          </ul>
         </div>
       </div>
     </div>
