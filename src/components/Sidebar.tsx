@@ -112,6 +112,7 @@ export default function Sidebar({
               className="btn-icon text-text-secondary"
               onClick={onToggle}
               aria-label="Close sidebar"
+              aria-expanded="true"
             >
               <SidebarIcon size={18} />
             </button>
