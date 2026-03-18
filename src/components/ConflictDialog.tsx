@@ -59,13 +59,14 @@ export default function ConflictDialog({
         role="dialog"
         aria-modal="true"
         aria-labelledby="conflict-dialog-title"
+        aria-describedby="conflict-dialog-desc"
         className="max-w-[420px] text-center"
         onKeyDown={handleKeyDown}
       >
         <h2 id="conflict-dialog-title" className="text-lg font-semibold mb-2 text-text">
           Framework already exists
         </h2>
-        <p className="text-sm text-text-secondary mb-5 leading-relaxed">
+        <p id="conflict-dialog-desc" className="text-sm text-text-secondary mb-5 leading-relaxed">
           A framework named <strong>&ldquo;{existing.name}&rdquo;</strong>{' '}
           already exists locally but differs from the shared version. What would
           you like to do?
