@@ -28,6 +28,7 @@ export default function QuadrantCanvas({
 }: QuadrantCanvasProps) {
   const [shareStatus, setShareStatus] = useState<'copied' | 'error' | null>(null)
   const [autoFocusId, setAutoFocusId] = useState<string | null>(null)
+  const [liveMessage, setLiveMessage] = useState('')
   const quadrantRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
   const canvasRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
 
@@ -57,20 +58,28 @@ export default function QuadrantCanvas({
     onDrop: handleDrop,
   })
 
+  const announce = useCallback((message: string) => {
+    setLiveMessage('')
+    requestAnimationFrame(() => setLiveMessage(message))
+  }, [])
+
   const handleAddItem = useCallback(
     (quadrantIdx: number) => {
       const newItem = createItem(PLACEHOLDER)
       setAutoFocusId(newItem.id)
       updateFramework((fw) => addItem(fw, quadrantIdx, newItem))
+      announce(`New item added to ${frameworkRef.current.quadrants[quadrantIdx].label}`)
     },
-    [updateFramework],
+    [updateFramework, announce],
   )
 
   const handleDeleteItem = useCallback(
     (quadrantIdx: number, itemId: string) => {
+      const item = frameworkRef.current.quadrants[quadrantIdx].items.find(i => i.id === itemId)
       updateFramework((fw) => removeItem(fw, quadrantIdx, itemId))
+      announce(`Item "${item?.text ?? ''}" deleted from ${frameworkRef.current.quadrants[quadrantIdx].label}`)
     },
-    [updateFramework],
+    [updateFramework, announce],
   )
 
   const handleEditItem = useCallback(
@@ -89,9 +98,12 @@ export default function QuadrantCanvas({
 
   const handleMoveItem = useCallback(
     (sourceIdx: number, itemId: string, targetIdx: number) => {
+      const item = frameworkRef.current.quadrants[sourceIdx].items.find(i => i.id === itemId)
+      const targetLabel = frameworkRef.current.quadrants[targetIdx].label
       updateFramework((fw) => moveItem(fw, sourceIdx, targetIdx, itemId, 10, 10))
+      announce(`Item "${item?.text ?? ''}" moved to ${targetLabel}`)
     },
-    [updateFramework],
+    [updateFramework, announce],
   )
 
   let draggedItem = null
@@ -229,6 +241,9 @@ export default function QuadrantCanvas({
       </div>
 
       {drag && draggedItem && <GhostCard drag={drag} text={draggedItem.text} />}
+      <div className="sr-only" aria-live="polite" role="status">
+        {liveMessage}
+      </div>
     </div>
   )
 }
