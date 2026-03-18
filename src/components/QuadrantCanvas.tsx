@@ -28,8 +28,8 @@ export default function QuadrantCanvas({
 }: QuadrantCanvasProps) {
   const [shareStatus, setShareStatus] = useState<'copied' | 'error' | null>(null)
   const [autoFocusId, setAutoFocusId] = useState<string | null>(null)
-  const quadrantRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null])
-  const canvasRefs = useRef<(HTMLDivElement | null)[]>([null, null, null, null])
+  const quadrantRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
+  const canvasRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
 
   const frameworkRef = useRef(framework)
   frameworkRef.current = framework
@@ -124,7 +124,9 @@ export default function QuadrantCanvas({
             }}
           >
             <ShareIcon size={14} />
-            {shareStatus === 'copied' ? 'Link copied!' : 'Share'}
+            <span aria-live="polite">
+              {shareStatus === 'copied' ? 'Link copied!' : shareStatus === 'error' ? 'Share failed' : 'Share'}
+            </span>
           </button>
           <button className="btn-secondary btn-sm" onClick={onReflect}>
             <MaximizeIcon size={14} />
@@ -147,8 +149,9 @@ export default function QuadrantCanvas({
               const qColor = quadrant.color || defaultColors[idx]
               const { bg, border } = deriveColors(qColor)
               return (
-                <div
+                <section
                   key={idx}
+                  aria-label={quadrant.label}
                   className="flex flex-col rounded-xl border overflow-visible transition-[border-color] duration-150"
                   style={{ background: bg, borderColor: border }}
                   ref={(el) => {
@@ -164,13 +167,16 @@ export default function QuadrantCanvas({
                         color={qColor}
                         onChange={(c) => handleColorChange(idx, c)}
                       />
-                      <span className="text-[11px] text-text-tertiary bg-black/6 dark:bg-white/10 px-[7px] py-px rounded-full">
+                      <span
+                        className="text-[11px] text-text-tertiary bg-black/6 dark:bg-white/10 px-[7px] py-px rounded-full"
+                        aria-label={`${quadrant.items.length} items in ${quadrant.label}`}
+                      >
                         {quadrant.items.length}
                       </span>
                       <button
                         className="p-[3px] rounded text-text-tertiary transition-all duration-150 hover:text-text-secondary hover:bg-black/6 dark:hover:bg-white/10"
                         onClick={() => handleAddItem(idx)}
-                        title="Add item"
+                        aria-label={`Add item to ${quadrant.label}`}
                       >
                         <PlusIcon size={14} />
                       </button>
@@ -196,7 +202,7 @@ export default function QuadrantCanvas({
                       />
                     ))}
                   </div>
-                </div>
+                </section>
               )
             })}
           </div>

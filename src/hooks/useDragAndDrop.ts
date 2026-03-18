@@ -16,8 +16,8 @@ export interface DropResult {
 }
 
 export interface UseDragAndDropOptions {
-  quadrantRefs: React.RefObject<(HTMLDivElement | null)[]>
-  canvasRefs: React.RefObject<(HTMLDivElement | null)[]>
+  quadrantRefs: React.RefObject<(HTMLElement | null)[]>
+  canvasRefs: React.RefObject<(HTMLElement | null)[]>
   onDrop: (result: DropResult) => void
 }
 
@@ -45,8 +45,8 @@ export function pageToQuadrantPercent(
 export function getQuadrantAtPoint(
   pageX: number,
   pageY: number,
-  quadrantEls: (HTMLDivElement | null)[],
-  canvasEls: (HTMLDivElement | null)[],
+  quadrantEls: (HTMLElement | null)[],
+  canvasEls: (HTMLElement | null)[],
 ): QuadrantTarget | null {
   for (let i = 0; i < 4; i++) {
     const el = quadrantEls[i]

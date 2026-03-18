@@ -98,8 +98,8 @@ describe('QuadrantCanvas', () => {
     const onUpdate = vi.fn()
     render(<QuadrantCanvas {...defaultProps} onUpdate={onUpdate} />)
 
-    // Each quadrant has an "Add item" button
-    const addButtons = screen.getAllByTitle('Add item')
+    // Each quadrant has an "Add item" button with aria-label
+    const addButtons = screen.getAllByRole('button', { name: /Add item to/ })
     expect(addButtons).toHaveLength(4)
 
     await user.click(addButtons[0])
