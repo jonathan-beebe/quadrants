@@ -324,6 +324,7 @@ interface GhostCardProps {
 export function GhostCard({ drag, text }: GhostCardProps) {
   return (
     <div
+      aria-hidden="true"
       className="absolute w-max max-w-[180px] min-w-[60px] py-[7px] px-2.5 bg-white dark:bg-gray-700 border border-black/8 dark:border-white/10 rounded-lg shadow-lg text-[13px] leading-[1.4] flex items-start gap-1 cursor-grabbing opacity-92"
       style={{
         left: drag.x - drag.grabX,
