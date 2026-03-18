@@ -131,20 +131,22 @@ export default function App() {
       >
         Skip to main content
       </a>
-      <Sidebar
-        frameworks={frameworks}
-        activeId={activeId}
-        open={sidebarOpen}
-        darkMode={darkMode}
-        onToggleDark={toggleDark}
-        onToggle={() => setSidebarOpen((s) => !s)}
-        onSelect={navigate}
-        onNew={openBuilder}
-        onDelete={handleDelete}
-        onDuplicate={handleDuplicate}
-        onExport={exportJson}
-        onImport={handleImport}
-      />
+      <div inert={conflict ? true : undefined}>
+        <Sidebar
+          frameworks={frameworks}
+          activeId={activeId}
+          open={sidebarOpen}
+          darkMode={darkMode}
+          onToggleDark={toggleDark}
+          onToggle={() => setSidebarOpen((s) => !s)}
+          onSelect={navigate}
+          onNew={openBuilder}
+          onDelete={handleDelete}
+          onDuplicate={handleDuplicate}
+          onExport={exportJson}
+          onImport={handleImport}
+        />
+      </div>
       <main
         id="main-content"
         className={`flex-1 overflow-y-auto transition-[margin-left] duration-150 ease-in-out ${sidebarOpen ? 'ml-[280px]' : 'ml-0'}`}
