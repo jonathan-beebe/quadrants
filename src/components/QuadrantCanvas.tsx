@@ -154,9 +154,17 @@ export default function QuadrantCanvas({
         </div>
       </div>
 
-      <div className="flex-1 flex min-h-0 relative">
+      <div
+        className="flex-1 flex min-h-0 relative"
+        role="group"
+        aria-label={[
+          'Quadrant grid',
+          framework.axisX && `horizontal axis: ${framework.axisX}`,
+          framework.axisY && `vertical axis: ${framework.axisY}`,
+        ].filter(Boolean).join(', ')}
+      >
         {framework.axisY && (
-          <div className="flex items-center justify-center shrink-0 w-6">
+          <div className="flex items-center justify-center shrink-0 w-6" aria-hidden="true">
             <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider -rotate-90 whitespace-nowrap">
               {framework.axisY}
             </span>
@@ -231,7 +239,7 @@ export default function QuadrantCanvas({
             })}
           </div>
           {framework.axisX && (
-            <div className="text-center pt-2 shrink-0">
+            <div className="text-center pt-2 shrink-0" aria-hidden="true">
               <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider">
                 {framework.axisX}
               </span>
