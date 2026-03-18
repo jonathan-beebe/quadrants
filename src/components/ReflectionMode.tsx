@@ -1,6 +1,7 @@
 import { useState, useRef, useCallback } from 'react'
 import { createItem } from '../storage'
 import { deriveColors, defaultColors } from '../colors'
+import { XIcon } from './Icons'
 import type { Framework } from '../types'
 
 interface ReflectionModeProps {
@@ -54,19 +55,7 @@ export default function ReflectionMode({
         className="fixed top-5 right-5 p-2 rounded-lg text-text-secondary transition-all duration-150 hover:text-text hover:bg-border"
         onClick={onExit}
       >
-        <svg
-          width="20"
-          height="20"
-          viewBox="0 0 24 24"
-          fill="none"
-          stroke="currentColor"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          <line x1="18" y1="6" x2="6" y2="18" />
-          <line x1="6" y1="6" x2="18" y2="18" />
-        </svg>
+        <XIcon size={20} />
       </button>
 
       <div className="w-full max-w-[600px] p-6">

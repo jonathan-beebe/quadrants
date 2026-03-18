@@ -1,4 +1,13 @@
 import { useState, useRef, useEffect } from 'react'
+import {
+  QuadrantGridIcon,
+  SunIcon,
+  MoonIcon,
+  SidebarIcon,
+  PlusIcon,
+  ImportIcon,
+  MoreVerticalIcon,
+} from './Icons'
 import type { Framework } from '../types'
 
 interface SidebarProps {
@@ -51,21 +60,7 @@ export default function Sidebar({
       >
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2 font-semibold text-[15px]">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <rect x="3" y="3" width="7" height="7" rx="1" />
-              <rect x="14" y="3" width="7" height="7" rx="1" />
-              <rect x="3" y="14" width="7" height="7" rx="1" />
-              <rect x="14" y="14" width="7" height="7" rx="1" />
-            </svg>
+            <QuadrantGridIcon size={20} />
             <span>Quadrants</span>
           </div>
           <div className="flex items-center gap-1">
@@ -74,79 +69,21 @@ export default function Sidebar({
               onClick={onToggleDark}
               title="Toggle dark mode"
             >
-              {darkMode ? (
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <circle cx="12" cy="12" r="5" />
-                  <line x1="12" y1="1" x2="12" y2="3" />
-                  <line x1="12" y1="21" x2="12" y2="23" />
-                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
-                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
-                  <line x1="1" y1="12" x2="3" y2="12" />
-                  <line x1="21" y1="12" x2="23" y2="12" />
-                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
-                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
-                </svg>
-              ) : (
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                >
-                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
-                </svg>
-              )}
+              {darkMode ? <SunIcon /> : <MoonIcon />}
             </button>
             <button
               className="btn-icon text-text-secondary"
               onClick={onToggle}
               title="Toggle sidebar"
             >
-              <svg
-                width="18"
-                height="18"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-              >
-                <rect x="3" y="3" width="18" height="18" rx="2" />
-                <line x1="9" y1="3" x2="9" y2="21" />
-              </svg>
+              <SidebarIcon size={18} />
             </button>
           </div>
         </div>
 
         <div className="px-4 py-3 flex flex-col gap-1.5">
           <button className="btn-primary w-full justify-center" onClick={onNew}>
-            <svg
-              width="16"
-              height="16"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <line x1="12" y1="5" x2="12" y2="19" />
-              <line x1="5" y1="12" x2="19" y2="12" />
-            </svg>
+            <PlusIcon />
             New Framework
           </button>
           <button
@@ -154,20 +91,7 @@ export default function Sidebar({
             onClick={onImport}
             title="Import JSON"
           >
-            <svg
-              width="14"
-              height="14"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            >
-              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
-              <polyline points="7 10 12 15 17 10" />
-              <line x1="12" y1="15" x2="12" y2="3" />
-            </svg>
+            <ImportIcon size={14} />
             Import
           </button>
         </div>
@@ -200,18 +124,7 @@ export default function Sidebar({
                   setMenuId(menuId === fw.id ? null : fw.id)
                 }}
               >
-                <svg
-                  width="16"
-                  height="16"
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                >
-                  <circle cx="12" cy="5" r="1" />
-                  <circle cx="12" cy="12" r="1" />
-                  <circle cx="12" cy="19" r="1" />
-                </svg>
+                <MoreVerticalIcon />
               </button>
               {menuId === fw.id && (
                 <div
@@ -261,19 +174,7 @@ export default function Sidebar({
           onClick={onToggle}
           title="Open sidebar"
         >
-          <svg
-            width="20"
-            height="20"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          >
-            <rect x="3" y="3" width="18" height="18" rx="2" />
-            <line x1="9" y1="3" x2="9" y2="21" />
-          </svg>
+          <SidebarIcon size={20} />
         </button>
       )}
     </>
