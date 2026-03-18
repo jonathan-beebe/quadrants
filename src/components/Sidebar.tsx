@@ -7,6 +7,7 @@ import {
   MoreVerticalIcon,
 } from './Icons'
 import ThemeToggleButton from './atoms/ThemeToggleButton'
+import Caption from './atoms/Caption'
 import type { Framework } from '../types'
 
 interface SidebarProps {
@@ -147,10 +148,10 @@ export default function Sidebar({
                 <span className="block text-sm font-medium truncate">
                   {fw.name}
                 </span>
-                <span className="text-xs text-text-tertiary">
+                <Caption>
                   {fw.quadrants.reduce((sum, q) => sum + q.items.length, 0)}{' '}
                   items
-                </span>
+                </Caption>
               </button>
               <button
                 ref={menuId === fw.id ? menuTriggerRef : undefined}

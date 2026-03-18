@@ -8,6 +8,7 @@ import ColorPicker from './ColorPicker'
 import Card, { GhostCard, PLACEHOLDER } from './Card'
 import { EditIcon, ShareIcon, MaximizeIcon, PlusIcon } from './Icons'
 import Badge from './atoms/Badge'
+import PageTitle from './atoms/PageTitle'
 import type { Framework } from '../types'
 
 interface QuadrantCanvasProps {
@@ -119,7 +120,7 @@ export default function QuadrantCanvas({
         className={`flex items-center justify-between mb-5 shrink-0 ${sidebarOpen ? '' : 'pl-12'}`}
       >
         <div className="flex items-center gap-2">
-          <h1 className="text-xl font-semibold">{framework.name}</h1>
+          <PageTitle>{framework.name}</PageTitle>
           <button
             className="btn-ghost btn-sm"
             onClick={onEdit}

@@ -3,6 +3,7 @@ import { createItem } from '../storage'
 import { deriveColors, defaultColors } from '../colors'
 import { XIcon } from './Icons'
 import Badge from './atoms/Badge'
+import Caption from './atoms/Caption'
 import type { Framework } from '../types'
 
 interface ReflectionModeProps {
@@ -185,9 +186,9 @@ export default function ReflectionMode({
               className="w-full py-3.5 px-4 border border-black/10 dark:border-white/10 rounded-lg text-base bg-white/70 dark:bg-white/10 outline-none transition-all duration-150 focus:border-accent focus:bg-white dark:focus:bg-white/15 focus:ring-[3px] focus:ring-accent/10 text-text"
               autoFocus
             />
-            <span className="block mt-2 text-xs text-text-tertiary text-center">
+            <Caption className="block mt-2 text-center">
               Enter to add &middot; Esc to exit
-            </span>
+            </Caption>
           </form>
 
           <ul className="flex-1 flex flex-col gap-1.5" aria-label={`Items in ${quadrant.label}`}>

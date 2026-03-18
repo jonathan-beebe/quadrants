@@ -1,6 +1,9 @@
 import { useState } from 'react'
 import { templates } from '../templates'
 import { deriveColors, defaultColors } from '../colors'
+import PageTitle from './atoms/PageTitle'
+import SectionLabel from './atoms/SectionLabel'
+import Caption from './atoms/Caption'
 import type { Framework, FrameworkTemplate } from '../types'
 
 interface FrameworkBuilderProps {
@@ -49,9 +52,9 @@ export default function FrameworkBuilder({
     <div className="flex justify-center px-6 py-10 min-h-screen">
       <div className="w-full max-w-[640px]">
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-xl font-semibold">
+          <PageTitle as="h2">
             {editing ? 'Edit Framework' : 'Create Framework'}
-          </h2>
+          </PageTitle>
           <button className="btn-ghost" onClick={onCancel}>
             Cancel
           </button>
@@ -59,9 +62,7 @@ export default function FrameworkBuilder({
 
         {!editing && (
           <div className="mb-8">
-            <h3 className="text-sm font-medium text-text-secondary mb-3">
-              Start from a template
-            </h3>
+            <SectionLabel>Start from a template</SectionLabel>
             <div className="grid grid-cols-2 gap-2">
               {templates.map((t) => (
                 <button
@@ -71,9 +72,9 @@ export default function FrameworkBuilder({
                   onClick={() => applyTemplate(t)}
                 >
                   <span className="text-[13px] font-medium">{t.name}</span>
-                  <span className="text-xs text-text-tertiary mt-0.5">
+                  <Caption className="mt-0.5">
                     {t.quadrants.join(' / ')}
-                  </span>
+                  </Caption>
                 </button>
               ))}
             </div>
@@ -82,9 +83,9 @@ export default function FrameworkBuilder({
 
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
           <div>
-            <h3 className="text-sm font-medium text-text-secondary mb-3">
+            <SectionLabel>
               {editing ? 'Framework' : 'Or build your own'}
-            </h3>
+            </SectionLabel>
             <label className="flex flex-col gap-1.5">
               <span className="text-[13px] font-medium text-text-secondary">
                 Framework Name
@@ -101,9 +102,7 @@ export default function FrameworkBuilder({
           </div>
 
           <div>
-            <h3 className="text-sm font-medium text-text-secondary mb-3">
-              Quadrant Labels
-            </h3>
+            <SectionLabel>Quadrant Labels</SectionLabel>
             <div className="flex flex-col items-center gap-2">
               <div className="w-full text-center">
                 <input

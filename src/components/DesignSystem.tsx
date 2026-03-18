@@ -3,6 +3,9 @@ import { useDarkMode } from '../hooks/useDarkMode'
 import { colorPresets } from '../colors'
 import ThemeToggleButton from './atoms/ThemeToggleButton'
 import Badge from './atoms/Badge'
+import PageTitle from './atoms/PageTitle'
+import SectionLabel from './atoms/SectionLabel'
+import Caption from './atoms/Caption'
 import ColorPicker from './ColorPicker'
 import Toast from './Toast'
 import {
@@ -44,6 +47,21 @@ function Subsection({
   )
 }
 
+function DemoRow({
+  label,
+  children,
+}: {
+  label: string
+  children: React.ReactNode
+}) {
+  return (
+    <div>
+      <Caption className="block mb-1">{label}</Caption>
+      {children}
+    </div>
+  )
+}
+
 function Swatch({ color, label }: { color: string; label: string }) {
   return (
     <div className="flex flex-col items-center gap-1.5">
@@ -51,7 +69,7 @@ function Swatch({ color, label }: { color: string; label: string }) {
         className="w-10 h-10 rounded-lg border border-border"
         style={{ backgroundColor: color }}
       />
-      <span className="text-[11px] text-text-tertiary">{label}</span>
+      <Caption>{label}</Caption>
     </div>
   )
 }
@@ -94,7 +112,7 @@ export default function DesignSystem() {
     <div className="min-h-screen bg-bg">
       <header className="sticky top-0 z-10 bg-surface border-b border-border px-8 py-4 flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <h1 className="text-xl font-semibold text-text">Design System</h1>
+          <PageTitle>Design System</PageTitle>
           <a
             href="/"
             className="text-sm text-accent hover:text-accent-hover transition-colors"
@@ -127,34 +145,15 @@ export default function DesignSystem() {
 
         <Subsection title="Typography">
           <div className="space-y-4">
-            <div>
-              <span className="text-xs text-text-tertiary">text-xl font-semibold — Page title</span>
-              <p className="text-xl font-semibold text-text">The quick brown fox</p>
-            </div>
-            <div>
-              <span className="text-xs text-text-tertiary">text-lg font-semibold — Section heading</span>
-              <p className="text-lg font-semibold text-text">The quick brown fox</p>
-            </div>
-            <div>
-              <span className="text-xs text-text-tertiary">text-sm font-medium — Label</span>
-              <p className="text-sm font-medium text-text-secondary">The quick brown fox</p>
-            </div>
-            <div>
-              <span className="text-xs text-text-tertiary">text-[13px] font-medium — Card / menu text</span>
-              <p className="text-[13px] font-medium text-text">The quick brown fox</p>
-            </div>
-            <div>
-              <span className="text-xs text-text-tertiary">text-sm — Body</span>
-              <p className="text-sm text-text-secondary">The quick brown fox jumps over the lazy dog.</p>
-            </div>
-            <div>
-              <span className="text-xs text-text-tertiary">text-xs — Caption</span>
-              <p className="text-xs text-text-tertiary">The quick brown fox jumps over the lazy dog.</p>
-            </div>
-            <div>
-              <span className="text-xs text-text-tertiary">text-[11px] tabular-nums — Badge / count</span>
-              <p className="text-[11px] tabular-nums text-text-tertiary">1234567890</p>
-            </div>
+            <DemoRow label="PageTitle — page/view titles">
+              <PageTitle>The quick brown fox</PageTitle>
+            </DemoRow>
+            <DemoRow label="SectionLabel — form section headings">
+              <SectionLabel>The quick brown fox</SectionLabel>
+            </DemoRow>
+            <DemoRow label="Caption — tertiary descriptive text">
+              <Caption>The quick brown fox jumps over the lazy dog.</Caption>
+            </DemoRow>
           </div>
         </Subsection>
 
@@ -165,7 +164,7 @@ export default function DesignSystem() {
                 <div className="p-3 rounded-lg bg-surface border border-border text-text">
                   <Icon size={20} aria-hidden={false} aria-label={name} />
                 </div>
-                <span className="text-[11px] text-text-tertiary">{name}</span>
+                <Caption>{name}</Caption>
               </div>
             ))}
           </div>
@@ -173,49 +172,45 @@ export default function DesignSystem() {
 
         <Subsection title="Buttons">
           <div className="space-y-6">
-            <div>
-              <span className="text-xs text-text-tertiary block mb-2">Primary</span>
+            <DemoRow label="Primary">
               <div className="flex gap-3">
                 <button className="btn-primary">Create Framework</button>
                 <button className="btn-primary btn-sm">Small Primary</button>
               </div>
-            </div>
-            <div>
-              <span className="text-xs text-text-tertiary block mb-2">Secondary</span>
+            </DemoRow>
+            <DemoRow label="Secondary">
               <div className="flex gap-3">
                 <button className="btn-secondary">Cancel</button>
                 <button className="btn-secondary btn-sm">Small Secondary</button>
               </div>
-            </div>
-            <div>
-              <span className="text-xs text-text-tertiary block mb-2">Ghost</span>
+            </DemoRow>
+            <DemoRow label="Ghost">
               <div className="flex gap-3">
                 <button className="btn-ghost">Edit</button>
                 <button className="btn-ghost btn-sm">Small Ghost</button>
               </div>
-            </div>
-            <div>
-              <span className="text-xs text-text-tertiary block mb-2">Icon</span>
+            </DemoRow>
+            <DemoRow label="Icon">
               <div className="flex gap-3">
                 <button className="btn-icon text-text-secondary"><PlusIcon size={18} /></button>
                 <button className="btn-icon text-text-secondary"><EditIcon size={18} /></button>
                 <ThemeToggleButton darkMode={darkMode} onToggle={toggleDark} />
               </div>
-            </div>
+            </DemoRow>
           </div>
         </Subsection>
 
         <Subsection title="Badge">
           <div className="flex items-center gap-6">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-text-secondary">Count:</span>
+              <Caption>Count:</Caption>
               <Badge count={0} />
               <Badge count={3} />
               <Badge count={12} />
               <Badge count={99} />
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm text-text-secondary">With label:</span>
+              <Caption>With label:</Caption>
               <Badge count={5} label="5 items in quadrant" />
             </div>
           </div>
@@ -227,18 +222,16 @@ export default function DesignSystem() {
         <Subsection title="Color Picker">
           <div className="flex items-center gap-4">
             <ColorPicker color={pickerColor} onChange={setPickerColor} />
-            <span className="text-sm text-text-secondary">
-              Selected: <code className="text-xs bg-bg px-1.5 py-0.5 rounded border border-border">{pickerColor}</code>
-            </span>
+            <Caption>
+              Selected: <code className="bg-bg px-1.5 py-0.5 rounded border border-border">{pickerColor}</code>
+            </Caption>
           </div>
         </Subsection>
 
         <Subsection title="Theme Toggle">
           <div className="flex items-center gap-4">
             <ThemeToggleButton darkMode={darkMode} onToggle={toggleDark} />
-            <span className="text-sm text-text-secondary">
-              Current: {darkMode ? 'Dark' : 'Light'}
-            </span>
+            <Caption>Current: {darkMode ? 'Dark' : 'Light'}</Caption>
           </div>
         </Subsection>
 
@@ -250,9 +243,9 @@ export default function DesignSystem() {
             >
               Show Toast
             </button>
-            <span className="text-xs text-text-tertiary">
+            <Caption>
               Renders a fixed-position error alert at bottom of screen.
-            </span>
+            </Caption>
           </div>
         </Subsection>
 

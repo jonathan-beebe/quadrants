@@ -1,5 +1,6 @@
 import { Component } from 'react'
 import type { ErrorInfo, ReactNode } from 'react'
+import PageTitle from './atoms/PageTitle'
 
 interface ErrorBoundaryProps {
   children: ReactNode
@@ -34,7 +35,7 @@ export default class ErrorBoundary extends Component<
         role="alert"
         className="flex flex-col items-center justify-center h-screen gap-4 p-8 text-center"
       >
-        <h1 className="text-xl font-semibold">Something went wrong</h1>
+        <PageTitle>Something went wrong</PageTitle>
         <p className="text-text-secondary text-sm max-w-md">
           {this.state.error.message}
         </p>
