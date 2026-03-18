@@ -10,9 +10,7 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit,
   const gridRef = useRef(null)
   const quadrantRefs = useRef([null, null, null, null])
   const canvasRefs = useRef([null, null, null, null])
-  const [drag, setDrag] = useState(null) // { itemId, sourceIdx, offsetX, offsetY, x, y }
-  const [editingItem, setEditingItem] = useState(null) // { quadrantIdx, itemId }
-  const [editText, setEditText] = useState('')
+  const [drag, setDrag] = useState(null)
   const [addingQuadrant, setAddingQuadrant] = useState(null)
   const [addText, setAddText] = useState('')
   const addInputRef = useRef(null)
@@ -110,20 +108,16 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit,
     }
   }, [drag, getQuadrantAtPoint, pageToQuadrantPercent, updateFramework])
 
-  const handlePointerDown = useCallback((e, quadrantIdx, item) => {
-    if (e.button !== 0) return
-    e.preventDefault()
-    const cardEl = e.currentTarget
-    const cardRect = cardEl.getBoundingClientRect()
+  const handleDragStart = useCallback((quadrantIdx, item, info) => {
     setDrag({
       itemId: item.id,
       sourceIdx: quadrantIdx,
-      grabX: e.pageX - cardRect.left,
-      grabY: e.pageY - cardRect.top,
-      width: cardRect.width,
-      height: cardRect.height,
-      x: e.pageX,
-      y: e.pageY,
+      grabX: info.grabX,
+      grabY: info.grabY,
+      width: info.width,
+      height: info.height,
+      x: info.pageX,
+      y: info.pageY,
     })
   }, [])
 
@@ -158,30 +152,19 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit,
     [updateFramework]
   )
 
-  const startEdit = useCallback((quadrantIdx, item) => {
-    setEditingItem({ quadrantIdx, itemId: item.id })
-    setEditText(item.text)
-  }, [])
-
-  const saveEdit = useCallback(() => {
-    if (!editingItem) return
-    if (editText.trim()) {
+  const handleEditItem = useCallback(
+    (quadrantIdx, itemId, text) => {
       updateFramework((fw) => ({
         ...fw,
         quadrants: fw.quadrants.map((q, i) =>
-          i === editingItem.quadrantIdx
-            ? {
-                ...q,
-                items: q.items.map((it) =>
-                  it.id === editingItem.itemId ? { ...it, text: editText.trim() } : it
-                ),
-              }
+          i === quadrantIdx
+            ? { ...q, items: q.items.map((it) => (it.id === itemId ? { ...it, text } : it)) }
             : q
         ),
       }))
-    }
-    setEditingItem(null)
-  }, [editingItem, editText, updateFramework])
+    },
+    [updateFramework]
+  )
 
   const handleColorChange = useCallback(
     (quadrantIdx, color) => {
@@ -315,30 +298,16 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit,
               )}
 
               <div className="quadrant__canvas" ref={(el) => (canvasRefs.current[idx] = el)}>
-                {quadrant.items.map((item) => {
-                  const isDragging = drag?.itemId === item.id
-                  const isEditing =
-                    editingItem?.quadrantIdx === idx && editingItem?.itemId === item.id
-
-                  return (
-                    <Card
-                      key={item.id}
-                      item={item}
-                      isDragging={isDragging}
-                      isEditing={isEditing}
-                      editText={editText}
-                      onEditTextChange={setEditText}
-                      onSaveEdit={saveEdit}
-                      onCancelEdit={() => setEditingItem(null)}
-                      onStartEdit={() => startEdit(idx, item)}
-                      onDelete={() => handleDeleteItem(idx, item.id)}
-                      onPointerDown={(e) => {
-                        if (isEditing) return
-                        handlePointerDown(e, idx, item)
-                      }}
-                    />
-                  )
-                })}
+                {quadrant.items.map((item) => (
+                  <Card
+                    key={item.id}
+                    item={item}
+                    isDragging={drag?.itemId === item.id}
+                    onChange={(text) => handleEditItem(idx, item.id, text)}
+                    onDelete={() => handleDeleteItem(idx, item.id)}
+                    onDragStart={(info) => handleDragStart(idx, item, info)}
+                  />
+                ))}
               </div>
             </div>
             )

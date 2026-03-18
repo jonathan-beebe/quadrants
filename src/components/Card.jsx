@@ -1,73 +1,128 @@
+import { useRef, useCallback, useEffect } from 'react'
 import './Card.css'
 
-export default function Card({
-  item,
-  isDragging,
-  isEditing,
-  editText,
-  onEditTextChange,
-  onSaveEdit,
-  onCancelEdit,
-  onStartEdit,
-  onDelete,
-  onPointerDown,
-}) {
+const DRAG_THRESHOLD = 4
+
+export default function Card({ item, isDragging, onChange, onDelete, onDragStart }) {
+  const cardRef = useRef(null)
+  const textRef = useRef(null)
+  const pendingRef = useRef(null) // { startX, startY, pageX, pageY }
+
+  // Clean up listeners on unmount
+  useEffect(() => {
+    return () => {
+      window.removeEventListener('pointermove', handlePendingMove)
+      window.removeEventListener('pointerup', handlePendingUp)
+    }
+  }, [])
+
+  const fireDragStart = useCallback((pageX, pageY) => {
+    const cardEl = cardRef.current
+    if (!cardEl) return
+    const cardRect = cardEl.getBoundingClientRect()
+    onDragStart({
+      pageX,
+      pageY,
+      grabX: pageX - cardRect.left,
+      grabY: pageY - cardRect.top,
+      width: cardRect.width,
+      height: cardRect.height,
+    })
+  }, [onDragStart])
+
+  const handlePendingMove = useCallback((e) => {
+    const p = pendingRef.current
+    if (!p) return
+    const dx = e.pageX - p.startX
+    const dy = e.pageY - p.startY
+    if (dx * dx + dy * dy > DRAG_THRESHOLD * DRAG_THRESHOLD) {
+      window.removeEventListener('pointermove', handlePendingMove)
+      window.removeEventListener('pointerup', handlePendingUp)
+      pendingRef.current = null
+      fireDragStart(p.startX, p.startY)
+    }
+  }, [fireDragStart])
+
+  const handlePendingUp = useCallback(() => {
+    window.removeEventListener('pointermove', handlePendingMove)
+    window.removeEventListener('pointerup', handlePendingUp)
+    if (!pendingRef.current) return
+    pendingRef.current = null
+    // It was a click — focus the text
+    textRef.current?.focus()
+  }, [handlePendingMove])
+
+  const handleTextPointerDown = useCallback((e) => {
+    if (e.button !== 0) return
+
+    // If already focused (editing), let normal text selection work
+    if (document.activeElement === textRef.current) return
+
+    // Prevent default to stop immediate focus — we'll decide on move vs click
+    e.preventDefault()
+    e.stopPropagation()
+
+    pendingRef.current = { startX: e.pageX, startY: e.pageY }
+    window.addEventListener('pointermove', handlePendingMove)
+    window.addEventListener('pointerup', handlePendingUp)
+  }, [handlePendingMove, handlePendingUp])
+
+  const handleBlur = useCallback(() => {
+    const el = textRef.current
+    if (!el) return
+    const newText = el.textContent.trim()
+    if (newText && newText !== item.text) {
+      onChange(newText)
+    } else if (!newText) {
+      el.textContent = item.text
+    }
+  }, [item.text, onChange])
+
+  const handleKeyDown = useCallback((e) => {
+    if (e.key === 'Enter') {
+      e.preventDefault()
+      textRef.current?.blur()
+    }
+    if (e.key === 'Escape') {
+      textRef.current.textContent = item.text
+      textRef.current?.blur()
+    }
+  }, [item.text])
+
   return (
     <div
+      ref={cardRef}
       className={`card ${isDragging ? 'card--dragging' : ''}`}
       style={{ left: `${item.x ?? 10}%`, top: `${item.y ?? 10}%` }}
-      onPointerDown={onPointerDown}
+      onPointerDown={(e) => {
+        if (e.button !== 0) return
+        e.preventDefault()
+        fireDragStart(e.pageX, e.pageY)
+      }}
     >
-      {isEditing ? (
-        <form
-          className="card__edit"
-          onSubmit={(e) => {
-            e.preventDefault()
-            onSaveEdit()
-          }}
-        >
-          <input
-            type="text"
-            value={editText}
-            onChange={(e) => onEditTextChange(e.target.value)}
-            onBlur={onSaveEdit}
-            onKeyDown={(e) => {
-              if (e.key === 'Escape') onCancelEdit()
-            }}
-            autoFocus
-          />
-        </form>
-      ) : (
-        <>
-          <span className="card__text" onDoubleClick={onStartEdit}>
-            {item.text}
-          </span>
-          <div className="card__actions">
-            <button
-              className="card__btn"
-              onPointerDown={(e) => e.stopPropagation()}
-              onClick={onStartEdit}
-              title="Edit"
-            >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
-                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
-              </svg>
-            </button>
-            <button
-              className="card__btn card__btn--danger"
-              onPointerDown={(e) => e.stopPropagation()}
-              onClick={onDelete}
-              title="Delete"
-            >
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                <line x1="18" y1="6" x2="6" y2="18" />
-                <line x1="6" y1="6" x2="18" y2="18" />
-              </svg>
-            </button>
-          </div>
-        </>
-      )}
+      <span
+        ref={textRef}
+        className="card__text"
+        contentEditable
+        suppressContentEditableWarning
+        spellCheck={false}
+        onPointerDown={handleTextPointerDown}
+        onBlur={handleBlur}
+        onKeyDown={handleKeyDown}
+      >
+        {item.text}
+      </span>
+      <button
+        className="card__delete"
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={onDelete}
+        title="Delete"
+      >
+        <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18" />
+          <line x1="6" y1="6" x2="18" y2="18" />
+        </svg>
+      </button>
     </div>
   )
 }
