@@ -147,7 +147,7 @@ export default function DesignSystem() {
         <div className="flex items-center gap-4">
           <PageTitle>Design System</PageTitle>
           <a
-            href="/"
+            href={import.meta.env.BASE_URL ?? '/'}
             className="text-sm text-accent hover:text-accent-hover transition-colors"
           >
             Back to app

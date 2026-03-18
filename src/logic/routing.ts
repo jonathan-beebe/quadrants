@@ -1,7 +1,12 @@
 export const NAMED_ROUTES = ['design-system'] as const
 
+const BASE = import.meta.env.BASE_URL ?? '/'
+
 export function getIdFromPath(): string | null {
-  const path = window.location.pathname.slice(1)
+  const pathname = window.location.pathname
+  const path = pathname.startsWith(BASE)
+    ? pathname.slice(BASE.length)
+    : pathname.slice(1)
   return path || null
 }
 
@@ -14,13 +19,13 @@ export function getHashFromUrl(): string {
 }
 
 export function pushPath(id: string | null): void {
-  const target = id ? `/${id}` : '/'
+  const target = id ? `${BASE}${id}` : BASE
   if (window.location.pathname !== target) {
     history.pushState(null, '', target)
   }
 }
 
 export function replacePath(id: string | null): void {
-  const target = id ? `/${id}` : '/'
+  const target = id ? `${BASE}${id}` : BASE
   history.replaceState(null, '', target)
 }

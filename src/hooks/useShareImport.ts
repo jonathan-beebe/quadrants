@@ -110,7 +110,8 @@ export function useShareImport({
 
   const share = useCallback(async (fw: Framework): Promise<string> => {
     const hash = await encodeFramework(fw)
-    const url = `${window.location.origin}/${fw.id}#${hash}`
+    const base = import.meta.env.BASE_URL ?? '/'
+    const url = `${window.location.origin}${base}${fw.id}#${hash}`
     await navigator.clipboard.writeText(url)
     return url
   }, [])
