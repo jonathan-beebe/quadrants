@@ -91,6 +91,7 @@ export default function Sidebar({
   return (
     <>
       <aside
+        aria-label="Frameworks sidebar"
         className={`fixed top-0 left-0 w-[280px] h-screen bg-surface border-r border-border flex flex-col z-[100] transition-transform duration-150 ease-in-out ${open ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="flex items-center justify-between p-4 border-b border-border">
@@ -132,20 +133,21 @@ export default function Sidebar({
           </button>
         </div>
 
-        <div className="flex-1 overflow-y-auto px-2 py-1">
+        <nav aria-label="Frameworks" className="flex-1 overflow-y-auto px-2 py-1">
           {frameworks.length === 0 && (
             <div className="py-6 px-4 text-center text-text-tertiary text-[13px]">
               No frameworks yet
             </div>
           )}
+          <ul role="list" className="list-none m-0 p-0">
           {frameworks.map((fw) => (
-            <div
+            <li
               key={fw.id}
               className={`relative flex items-center rounded-lg transition-colors duration-150 group ${activeId === fw.id ? 'bg-accent-light' : 'hover:bg-bg'}`}
             >
               <button
                 className="flex-1 min-w-0 text-left py-2.5 px-3 bg-transparent"
-                aria-current={activeId === fw.id ? 'true' : undefined}
+                aria-current={activeId === fw.id ? 'page' : undefined}
                 onClick={() => onSelect(fw.id)}
               >
                 <span className="block text-sm font-medium truncate">
@@ -206,9 +208,10 @@ export default function Sidebar({
                   </button>
                 </div>
               )}
-            </div>
+            </li>
           ))}
-        </div>
+          </ul>
+        </nav>
       </aside>
 
       {!open && (
