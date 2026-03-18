@@ -10,6 +10,7 @@ import ReflectionMode from './components/ReflectionMode'
 import ConflictDialog from './components/ConflictDialog'
 import EmptyState from './components/EmptyState'
 import Toast from './components/Toast'
+import UpdateToast from './components/UpdateToast'
 import ErrorBoundary from './components/ErrorBoundary'
 import DesignSystem from './components/DesignSystem'
 import type { Framework, FrameworkTemplate } from './types'
@@ -186,6 +187,7 @@ export default function App() {
         )}
       </main>
       {error && <Toast message={error} onDismiss={clearError} />}
+      <UpdateToast />
     </div>
   )
 }

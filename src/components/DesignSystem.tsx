@@ -9,6 +9,7 @@ import Caption from './atoms/Caption'
 import Button from './atoms/Button'
 import ColorPicker from './ColorPicker'
 import Toast from './Toast'
+import { UpdateToastView } from './UpdateToast'
 import {
   XIcon,
   PlusIcon,
@@ -233,13 +234,18 @@ export default function DesignSystem() {
           <Caption>Current: {darkMode ? 'Dark' : 'Light'}</Caption>
         </Subsection>
 
-        <Subsection title="Toast" layout="inline">
-          <Button variant="secondary" size="sm" onClick={() => setShowToast(true)}>
-            Show Toast
-          </Button>
-          <Caption>
-            Renders a fixed-position error alert at bottom of screen.
-          </Caption>
+        <Subsection title="Toast" layout="stack">
+          <DemoRow label="Error Toast" layout="inline">
+            <Button variant="secondary" size="sm" onClick={() => setShowToast(true)}>
+              Show Toast
+            </Button>
+            <Caption>
+              Renders a fixed-position error alert at bottom of screen.
+            </Caption>
+          </DemoRow>
+          <DemoRow label="Update Toast (inline preview)">
+            <UpdateToastView onReload={() => {}} onDismiss={() => {}} />
+          </DemoRow>
         </Subsection>
 
         <Subsection title="Card" />
