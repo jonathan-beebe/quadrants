@@ -31,4 +31,10 @@ export const templates: FrameworkTemplate[] = [
     axisY: '',
     quadrants: ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'],
   },
+  {
+    name: 'CRR — Cooperative Reciprocal Relationships',
+    axisX: '',
+    axisY: '',
+    quadrants: ['Is Working', 'Desire', 'Get Rid Of', 'Renegotiate'],
+  },
 ]
