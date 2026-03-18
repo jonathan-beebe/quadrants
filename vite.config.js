@@ -4,6 +4,7 @@ import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
+  base: '/quadrants/',
   plugins: [
     react(),
     tailwindcss(),
@@ -17,8 +18,8 @@ export default defineConfig({
         theme_color: '#3b82f6',
         background_color: '#fafafa',
         display: 'standalone',
-        scope: '/',
-        start_url: '/',
+        scope: '/quadrants/',
+        start_url: '/quadrants/',
         icons: [
           {
             src: 'pwa-192x192.png',
