@@ -83,6 +83,32 @@ export default function ReflectionMode({
     [],
   )
 
+  const handleTabKeyDown = useCallback(
+    (e: React.KeyboardEvent, idx: number) => {
+      const count = framework.quadrants.length
+      let nextIdx: number | null = null
+
+      if (e.key === 'ArrowRight') {
+        nextIdx = (idx + 1) % count
+      } else if (e.key === 'ArrowLeft') {
+        nextIdx = (idx - 1 + count) % count
+      } else if (e.key === 'Home') {
+        nextIdx = 0
+      } else if (e.key === 'End') {
+        nextIdx = count - 1
+      }
+
+      if (nextIdx !== null) {
+        e.preventDefault()
+        switchQuadrant(nextIdx)
+        // Focus the newly active tab after render
+        const tabEl = document.getElementById(`quadrant-tab-${nextIdx}`)
+        tabEl?.focus()
+      }
+    },
+    [framework.quadrants.length, switchQuadrant],
+  )
+
   const quadrant = framework.quadrants[activeQuadrant]
 
   return (
@@ -111,6 +137,7 @@ export default function ReflectionMode({
               aria-selected={i === activeQuadrant}
               aria-controls={`quadrant-panel-${i}`}
               id={`quadrant-tab-${i}`}
+              tabIndex={i === activeQuadrant ? 0 : -1}
               className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg text-[13px] font-medium transition-all duration-150 border ${i === activeQuadrant ? 'text-text border-current' : 'text-text-secondary border-transparent hover:bg-surface hover:text-text'}`}
               style={
                 i === activeQuadrant
@@ -122,6 +149,7 @@ export default function ReflectionMode({
                   : undefined
               }
               onClick={() => switchQuadrant(i)}
+              onKeyDown={(e) => handleTabKeyDown(e, i)}
             >
               {q.label}
               <span className="text-[11px] text-text-tertiary bg-black/6 dark:bg-white/10 px-1.5 rounded-full">
