@@ -269,7 +269,7 @@ export default function Card({
         </span>
       )}
       <button
-        className="p-0 rounded-sm text-text-tertiary transition-all duration-150 cursor-pointer opacity-0 group-hover:opacity-100 shrink-0 mt-px hover:text-danger hover:bg-red-500/10 [div:hover>&]:opacity-100"
+        className="p-0 rounded-sm text-text-tertiary transition-all duration-150 cursor-pointer opacity-0 shrink-0 mt-px hover:text-danger hover:bg-red-500/10 focus:opacity-100 [div:hover>&]:opacity-100 [div:focus-within>&]:opacity-100"
         onPointerDown={(e) => e.stopPropagation()}
         onClick={onDelete}
         aria-label={`Delete item: ${item.text}`}
