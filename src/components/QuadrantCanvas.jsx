@@ -172,12 +172,13 @@ export default function QuadrantCanvas({ framework, sidebarOpen, onUpdate, onRef
         </div>
       </div>
 
-      <div className="flex-1 flex flex-col min-h-0 relative">
+      <div className="flex-1 flex min-h-0 relative">
         {framework.axisY && (
-          <div className="text-center pb-2 shrink-0">
-            <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider">{framework.axisY}</span>
+          <div className="flex items-center justify-center shrink-0 w-6">
+            <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider -rotate-90 whitespace-nowrap">{framework.axisY}</span>
           </div>
         )}
+        <div className="flex-1 flex flex-col min-h-0">
         <div className="grid grid-cols-2 grid-rows-2 gap-3 flex-1 min-h-0" ref={gridRef}>
           {framework.quadrants.map((quadrant, idx) => {
             const qColor = quadrant.color || defaultColors[idx]
@@ -228,6 +229,7 @@ export default function QuadrantCanvas({ framework, sidebarOpen, onUpdate, onRef
             <span className="text-xs font-medium text-text-tertiary uppercase tracking-wider">{framework.axisX}</span>
           </div>
         )}
+        </div>
       </div>
 
       {drag && draggedItem && <GhostCard drag={drag} text={draggedItem.text} />}
