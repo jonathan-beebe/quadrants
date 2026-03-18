@@ -2,12 +2,26 @@ import { useRef, useCallback, useEffect, useState } from 'react'
 import './Card.css'
 
 const DRAG_THRESHOLD = 4
+export const PLACEHOLDER = 'New item...'
 
-export default function Card({ item, isDragging, onChange, onDelete, onDragStart }) {
+export default function Card({ item, isDragging, autoFocus, onChange, onDelete, onDragStart }) {
   const cardRef = useRef(null)
   const textRef = useRef(null)
   const pendingRef = useRef(null)
   const [focused, setFocused] = useState(false)
+
+  // Auto-focus and select all text when autoFocus is set
+  useEffect(() => {
+    if (!autoFocus) return
+    const el = textRef.current
+    if (!el) return
+    el.focus()
+    const range = document.createRange()
+    range.selectNodeContents(el)
+    const sel = window.getSelection()
+    sel.removeAllRanges()
+    sel.addRange(range)
+  }, [autoFocus])
 
   // Clean up pending listeners on unmount
   useEffect(() => {
@@ -90,12 +104,14 @@ export default function Card({ item, isDragging, onChange, onDelete, onDragStart
     const el = textRef.current
     if (!el) return
     const newText = el.textContent.trim()
-    if (newText && newText !== item.text) {
-      onChange(newText)
-    } else if (!newText) {
-      el.textContent = item.text
+    if (!newText || newText === PLACEHOLDER) {
+      onDelete()
+      return
     }
-  }, [item.text, onChange])
+    if (newText !== item.text) {
+      onChange(newText)
+    }
+  }, [item.text, onChange, onDelete])
 
   const handleKeyDown = useCallback((e) => {
     if (e.key === 'Enter') {
@@ -103,6 +119,7 @@ export default function Card({ item, isDragging, onChange, onDelete, onDragStart
       textRef.current?.blur()
     }
     if (e.key === 'Escape') {
+      // Restore original or delete if placeholder
       textRef.current.textContent = item.text
       textRef.current?.blur()
     }

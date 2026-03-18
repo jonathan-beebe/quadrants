@@ -2,7 +2,7 @@ import { useState, useRef, useCallback, useEffect } from 'react'
 import { createItem } from '../storage'
 import { deriveColors, defaultColors } from '../colors'
 import ColorPicker from './ColorPicker'
-import Card, { GhostCard } from './Card'
+import Card, { GhostCard, PLACEHOLDER } from './Card'
 import './QuadrantCanvas.css'
 
 export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit, onShare }) {
@@ -11,9 +11,7 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit,
   const quadrantRefs = useRef([null, null, null, null])
   const canvasRefs = useRef([null, null, null, null])
   const [drag, setDrag] = useState(null)
-  const [addingQuadrant, setAddingQuadrant] = useState(null)
-  const [addText, setAddText] = useState('')
-  const addInputRef = useRef(null)
+  const [autoFocusId, setAutoFocusId] = useState(null)
 
   const updateFramework = useCallback(
     (updater) => {
@@ -123,19 +121,18 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit,
 
   const handleAddItem = useCallback(
     (quadrantIdx) => {
-      if (!addText.trim()) return
+      const newItem = createItem(PLACEHOLDER)
+      setAutoFocusId(newItem.id)
       updateFramework((fw) => ({
         ...fw,
         quadrants: fw.quadrants.map((q, i) =>
           i === quadrantIdx
-            ? { ...q, items: [...q.items, createItem(addText.trim())] }
+            ? { ...q, items: [...q.items, newItem] }
             : q
         ),
       }))
-      setAddText('')
-      addInputRef.current?.focus()
     },
-    [addText, updateFramework]
+    [updateFramework]
   )
 
   const handleDeleteItem = useCallback(
@@ -252,11 +249,7 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit,
                   <span className="quadrant__count">{quadrant.items.length}</span>
                   <button
                     className="quadrant__add-btn"
-                    onClick={() => {
-                      setAddingQuadrant(addingQuadrant === idx ? null : idx)
-                      setAddText('')
-                      setTimeout(() => addInputRef.current?.focus(), 0)
-                    }}
+                    onClick={() => handleAddItem(idx)}
                     title="Add item"
                   >
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -267,42 +260,13 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit,
                 </div>
               </div>
 
-              {addingQuadrant === idx && (
-                <form
-                  className="quadrant__add-form"
-                  onSubmit={(e) => {
-                    e.preventDefault()
-                    handleAddItem(idx)
-                  }}
-                >
-                  <input
-                    ref={addInputRef}
-                    type="text"
-                    value={addText}
-                    onChange={(e) => setAddText(e.target.value)}
-                    placeholder="Type and press Enter..."
-                    className="quadrant__add-input"
-                    onKeyDown={(e) => {
-                      if (e.key === 'Escape') {
-                        setAddingQuadrant(null)
-                        setAddText('')
-                      }
-                    }}
-                    onBlur={() => {
-                      if (!addText.trim()) {
-                        setAddingQuadrant(null)
-                      }
-                    }}
-                  />
-                </form>
-              )}
-
               <div className="quadrant__canvas" ref={(el) => (canvasRefs.current[idx] = el)}>
                 {quadrant.items.map((item) => (
                   <Card
                     key={item.id}
                     item={item}
                     isDragging={drag?.itemId === item.id}
+                    autoFocus={autoFocusId === item.id}
                     onChange={(text) => handleEditItem(idx, item.id, text)}
                     onDelete={() => handleDeleteItem(idx, item.id)}
                     onDragStart={(info) => handleDragStart(idx, item, info)}

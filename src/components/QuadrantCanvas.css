@@ -118,21 +118,6 @@
   background: rgba(0, 0, 0, 0.06);
 }
 
-.quadrant__add-form {
-  padding: 0 10px 4px;
-  flex-shrink: 0;
-}
-
-.quadrant__add-input {
-  width: 100%;
-  padding: 6px 10px;
-  border: 1px solid var(--accent);
-  border-radius: var(--radius);
-  background: white;
-  font-size: 13px;
-  outline: none;
-}
-
 /* Freeform canvas area */
 .quadrant__canvas {
   flex: 1;
