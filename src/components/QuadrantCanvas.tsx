@@ -87,6 +87,13 @@ export default function QuadrantCanvas({
     [updateFramework],
   )
 
+  const handleMoveItem = useCallback(
+    (sourceIdx: number, itemId: string, targetIdx: number) => {
+      updateFramework((fw) => moveItem(fw, sourceIdx, targetIdx, itemId, 10, 10))
+    },
+    [updateFramework],
+  )
+
   let draggedItem = null
   if (drag) {
     const q = framework.quadrants[drag.sourceIdx]
@@ -194,8 +201,12 @@ export default function QuadrantCanvas({
                         item={item}
                         isDragging={drag?.itemId === item.id}
                         autoFocus={autoFocusId === item.id}
+                        moveTargets={framework.quadrants
+                          .map((q, i) => ({ label: q.label, index: i }))
+                          .filter((t) => t.index !== idx)}
                         onChange={(text) => handleEditItem(idx, item.id, text)}
                         onDelete={() => handleDeleteItem(idx, item.id)}
+                        onMove={(targetIdx) => handleMoveItem(idx, item.id, targetIdx)}
                         onDragStart={(info) =>
                           handleDragStart(idx, item, info)
                         }

@@ -14,12 +14,19 @@ export interface DragStartInfo {
   height: number
 }
 
+export interface MoveTarget {
+  label: string
+  index: number
+}
+
 interface CardProps {
   item: Item
   isDragging: boolean
   autoFocus: boolean
+  moveTargets: MoveTarget[]
   onChange: (text: string) => void
   onDelete: () => void
+  onMove: (targetIdx: number) => void
   onDragStart: (info: DragStartInfo) => void
 }
 
@@ -27,17 +34,62 @@ export default function Card({
   item,
   isDragging,
   autoFocus,
+  moveTargets,
   onChange,
   onDelete,
+  onMove,
   onDragStart,
 }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const spanRef = useRef<HTMLSpanElement>(null)
   const pendingRef = useRef<{ startX: number; startY: number } | null>(null)
+  const moveMenuRef = useRef<HTMLDivElement>(null)
   const [editing, setEditing] = useState(autoFocus)
   const [editValue, setEditValue] = useState(item.text)
   const [minSize, setMinSize] = useState<{ width: number; height: number } | null>(null)
+  const [showMoveMenu, setShowMoveMenu] = useState(false)
+
+  // Close move menu on outside click
+  useEffect(() => {
+    if (!showMoveMenu) return
+    const handleClick = (e: MouseEvent) => {
+      if (moveMenuRef.current && !moveMenuRef.current.contains(e.target as Node)) {
+        setShowMoveMenu(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClick)
+    return () => document.removeEventListener('mousedown', handleClick)
+  }, [showMoveMenu])
+
+  // Focus first menu item when move menu opens
+  useEffect(() => {
+    if (showMoveMenu && moveMenuRef.current) {
+      const first = moveMenuRef.current.querySelector<HTMLElement>('[role="menuitem"]')
+      first?.focus()
+    }
+  }, [showMoveMenu])
+
+  const handleMoveMenuKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      const items = moveMenuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]')
+      if (!items?.length) return
+      const currentIdx = Array.from(items).indexOf(e.target as HTMLElement)
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        items[(currentIdx + 1) % items.length].focus()
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        items[(currentIdx - 1 + items.length) % items.length].focus()
+      } else if (e.key === 'Escape' || e.key === 'Tab') {
+        e.preventDefault()
+        setShowMoveMenu(false)
+        spanRef.current?.focus()
+      }
+    },
+    [],
+  )
 
   const resizeTextarea = useCallback(() => {
     const ta = textareaRef.current
@@ -147,9 +199,12 @@ export default function Card({
       if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault()
         enterEditMode()
+      } else if (e.key === 'm' || e.key === 'M') {
+        e.preventDefault()
+        if (moveTargets.length > 0) setShowMoveMenu(true)
       }
     },
-    [enterEditMode],
+    [enterEditMode, moveTargets],
   )
 
   const handleTextareaKeyDown = useCallback(
@@ -222,6 +277,30 @@ export default function Card({
       >
         <XIcon size={11} aria-hidden="true" />
       </button>
+      {showMoveMenu && moveTargets.length > 0 && (
+        <div
+          ref={moveMenuRef}
+          role="menu"
+          aria-label={`Move "${item.text}" to quadrant`}
+          className="absolute left-0 top-full mt-1 bg-surface border border-border rounded-lg shadow-lg z-[200] min-w-[140px] p-1"
+          onKeyDown={handleMoveMenuKeyDown}
+        >
+          {moveTargets.map((target) => (
+            <button
+              key={target.index}
+              role="menuitem"
+              className="block w-full text-left px-3 py-2 text-[13px] rounded text-text hover:bg-bg"
+              onClick={(e) => {
+                e.stopPropagation()
+                onMove(target.index)
+                setShowMoveMenu(false)
+              }}
+            >
+              Move to {target.label}
+            </button>
+          ))}
+        </div>
+      )}
     </div>
   )
 }

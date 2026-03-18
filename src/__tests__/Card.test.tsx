@@ -19,13 +19,19 @@ const defaultProps = {
   item: makeItem(),
   isDragging: false,
   autoFocus: false,
+  moveTargets: [
+    { label: 'Schedule', index: 1 },
+    { label: 'Delegate', index: 2 },
+    { label: 'Eliminate', index: 3 },
+  ],
   onChange: vi.fn(),
   onDelete: vi.fn(),
+  onMove: vi.fn(),
   onDragStart: vi.fn(),
 }
 
 function renderCard(overrides = {}) {
-  const props = { ...defaultProps, onChange: vi.fn(), onDelete: vi.fn(), onDragStart: vi.fn(), ...overrides }
+  const props = { ...defaultProps, onChange: vi.fn(), onDelete: vi.fn(), onMove: vi.fn(), onDragStart: vi.fn(), ...overrides }
   const result = render(<Card {...props} />)
   return { ...result, props }
 }
