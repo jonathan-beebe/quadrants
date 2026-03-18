@@ -9,6 +9,7 @@ import FrameworkBuilder from './components/FrameworkBuilder'
 import ReflectionMode from './components/ReflectionMode'
 import ConflictDialog from './components/ConflictDialog'
 import EmptyState from './components/EmptyState'
+import ErrorBoundary from './components/ErrorBoundary'
 import type { Framework, FrameworkTemplate } from './types'
 
 export default function App() {
@@ -142,14 +143,16 @@ export default function App() {
             onCancel={closeBuilder}
           />
         ) : activeFramework ? (
-          <QuadrantCanvas
-            framework={activeFramework}
-            sidebarOpen={sidebarOpen}
-            onUpdate={frameworkStore.update}
-            onReflect={() => setReflectionMode(true)}
-            onEdit={() => openEditor(activeFramework)}
-            onShare={share}
-          />
+          <ErrorBoundary key={activeFramework.id}>
+            <QuadrantCanvas
+              framework={activeFramework}
+              sidebarOpen={sidebarOpen}
+              onUpdate={frameworkStore.update}
+              onReflect={() => setReflectionMode(true)}
+              onEdit={() => openEditor(activeFramework)}
+              onShare={share}
+            />
+          </ErrorBoundary>
         ) : (
           <EmptyState onNew={openBuilder} />
         )}
