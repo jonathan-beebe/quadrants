@@ -32,9 +32,11 @@ export default function Card({
 }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
+  const spanRef = useRef<HTMLSpanElement>(null)
   const pendingRef = useRef<{ startX: number; startY: number } | null>(null)
   const [editing, setEditing] = useState(autoFocus)
   const [editValue, setEditValue] = useState(item.text)
+  const [minSize, setMinSize] = useState<{ width: number; height: number } | null>(null)
 
   const resizeTextarea = useCallback(() => {
     const ta = textareaRef.current
@@ -101,6 +103,10 @@ export default function Card({
   }, [handlePendingMove]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const enterEditMode = useCallback(() => {
+    const span = spanRef.current
+    if (span) {
+      setMinSize({ width: span.offsetWidth, height: span.offsetHeight })
+    }
     setEditValue(item.text)
     setEditing(true)
   }, [item.text])
@@ -108,6 +114,7 @@ export default function Card({
   const commitEdit = useCallback(
     (value: string) => {
       setEditing(false)
+      setMinSize(null)
       const trimmed = value.trim()
       if (!trimmed || trimmed === PLACEHOLDER) {
         onDelete()
@@ -152,6 +159,7 @@ export default function Card({
       }
       if (e.key === 'Escape') {
         setEditing(false)
+        setMinSize(null)
       }
     },
     [editValue, commitEdit],
@@ -178,6 +186,7 @@ export default function Card({
         <textarea
           ref={textareaRef}
           className={`${textClasses} resize-none bg-transparent p-0 m-0 border-none text-[13px] leading-[1.4] font-[inherit] cursor-text`}
+          style={minSize ? { minWidth: minSize.width, minHeight: minSize.height } : undefined}
           value={editValue}
           aria-label={`Edit item: ${item.text}`}
           rows={1}
@@ -192,6 +201,7 @@ export default function Card({
         />
       ) : (
         <span
+          ref={spanRef}
           className={`${textClasses} ${editing ? 'cursor-text' : 'cursor-grab'}`}
           role="button"
           tabIndex={0}

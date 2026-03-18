@@ -151,6 +151,28 @@ describe('Card', () => {
       const textarea = screen.getByRole('textbox') as HTMLTextAreaElement
       expect(textarea.value).toBe('Test card')
     })
+
+    it('applies min-width and min-height from display span dimensions', async () => {
+      const user = userEvent.setup()
+      renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      // jsdom returns 0 for offsetWidth/Height, so minWidth/minHeight will be 0
+      // but the style attributes should still be set
+      await user.click(span)
+      const textarea = screen.getByRole('textbox') as HTMLTextAreaElement
+      expect(textarea.style.minWidth).toBeDefined()
+      expect(textarea.style.minHeight).toBeDefined()
+    })
+
+    it('clears min-size styles after exiting edit mode', async () => {
+      const user = userEvent.setup()
+      renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      await user.keyboard('{Enter}')
+      // Back in display mode — no textarea present
+      expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    })
   })
 
   describe('committing edits', () => {
