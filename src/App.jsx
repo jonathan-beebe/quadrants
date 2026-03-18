@@ -13,6 +13,28 @@ function getIdFromPath() {
   return path || null
 }
 
+function hydratePayload(payload, id) {
+  return {
+    id,
+    name: payload.name,
+    axisX: payload.axisX || '',
+    axisY: payload.axisY || '',
+    quadrants: payload.quadrants.map((q, i) => ({
+      label: q.label,
+      color: q.color || defaultColors[i],
+      items: (q.items || []).map((it) => ({
+        id: crypto.randomUUID(),
+        text: it.text,
+        x: it.x ?? 10,
+        y: it.y ?? 10,
+        createdAt: Date.now(),
+      })),
+    })),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  }
+}
+
 export default function App() {
   const [frameworks, setFrameworks] = useState(() => loadFrameworks())
   const [activeId, setActiveId] = useState(() => getIdFromPath())
@@ -20,6 +42,7 @@ export default function App() {
   const [editingFramework, setEditingFramework] = useState(null)
   const [reflectionMode, setReflectionMode] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [conflict, setConflict] = useState(null) // { existing, incoming }
   const hashLoaded = useRef(false)
   const skipPush = useRef(false)
 
@@ -31,33 +54,81 @@ export default function App() {
     const hash = window.location.hash.slice(1)
     if (!hash) return
 
+    const pathId = getIdFromPath()
+
     decodeFramework(hash).then((payload) => {
       if (!payload) return
-      const fw = {
-        id: crypto.randomUUID(),
-        name: payload.name,
-        axisX: payload.axisX || '',
-        axisY: payload.axisY || '',
-        quadrants: payload.quadrants.map((q, i) => ({
-          label: q.label,
-          color: q.color || defaultColors[i],
-          items: (q.items || []).map((it) => ({
-            id: crypto.randomUUID(),
-            text: it.text,
-            x: it.x ?? 10,
-            y: it.y ?? 10,
-            createdAt: Date.now(),
-          })),
-        })),
-        createdAt: Date.now(),
-        updatedAt: Date.now(),
-      }
-      setFrameworks((prev) => [...prev, fw])
-      setActiveId(fw.id)
+
+      const id = pathId || crypto.randomUUID()
+
+      setFrameworks((prev) => {
+        const existing = prev.find((f) => f.id === id)
+
+        if (!existing) {
+          // No conflict — create new
+          const fw = hydratePayload(payload, id)
+          setTimeout(() => {
+            setActiveId(fw.id)
+            history.replaceState(null, '', `/${fw.id}`)
+          }, 0)
+          return [...prev, fw]
+        }
+
+        // Same name and same item count — treat as same, just open it
+        const sameStructure =
+          existing.name === payload.name &&
+          existing.quadrants.every(
+            (q, i) =>
+              q.label === payload.quadrants[i]?.label &&
+              q.items.length === payload.quadrants[i]?.items?.length
+          )
+
+        if (sameStructure) {
+          setTimeout(() => {
+            setActiveId(id)
+            history.replaceState(null, '', `/${id}`)
+          }, 0)
+          return prev
+        }
+
+        // Conflict — defer to user
+        const incoming = hydratePayload(payload, id)
+        setTimeout(() => setConflict({ existing, incoming }), 0)
+        return prev
+      })
     }).catch(() => {
       // Invalid hash, ignore
     })
   }, [])
+
+  const handleConflictReplace = useCallback(() => {
+    if (!conflict) return
+    setFrameworks((prev) =>
+      prev.map((f) => (f.id === conflict.incoming.id ? conflict.incoming : f))
+    )
+    setActiveId(conflict.incoming.id)
+    history.replaceState(null, '', `/${conflict.incoming.id}`)
+    setConflict(null)
+  }, [conflict])
+
+  const handleConflictDuplicate = useCallback(() => {
+    if (!conflict) return
+    const dup = {
+      ...conflict.incoming,
+      id: crypto.randomUUID(),
+      name: `${conflict.incoming.name} (imported)`,
+    }
+    setFrameworks((prev) => [...prev, dup])
+    setActiveId(dup.id)
+    history.replaceState(null, '', `/${dup.id}`)
+    setConflict(null)
+  }, [conflict])
+
+  const handleConflictCancel = useCallback(() => {
+    setActiveId(conflict?.existing?.id || null)
+    history.replaceState(null, '', conflict?.existing ? `/${conflict.existing.id}` : '/')
+    setConflict(null)
+  }, [conflict])
 
   // Sync URL when activeId changes
   useEffect(() => {
@@ -124,7 +195,7 @@ export default function App() {
 
   const handleShare = useCallback(async (fw) => {
     const hash = await encodeFramework(fw)
-    const url = `${window.location.origin}/#${hash}`
+    const url = `${window.location.origin}/${fw.id}#${hash}`
     await navigator.clipboard.writeText(url)
     return url
   }, [])
@@ -224,7 +295,15 @@ export default function App() {
         onImport={handleImport}
       />
       <main className={`main ${sidebarOpen ? '' : 'main--full'}`}>
-        {showBuilder ? (
+        {conflict ? (
+          <ConflictDialog
+            existing={conflict.existing}
+            incoming={conflict.incoming}
+            onReplace={handleConflictReplace}
+            onDuplicate={handleConflictDuplicate}
+            onCancel={handleConflictCancel}
+          />
+        ) : showBuilder ? (
           <FrameworkBuilder
             editing={editingFramework}
             onCreate={handleSaveEdit}
@@ -250,6 +329,31 @@ export default function App() {
           />
         )}
       </main>
+    </div>
+  )
+}
+
+function ConflictDialog({ existing, incoming, onReplace, onDuplicate, onCancel }) {
+  return (
+    <div className="conflict">
+      <div className="conflict__container">
+        <h2>Framework already exists</h2>
+        <p>
+          A framework named <strong>"{existing.name}"</strong> already exists locally
+          but differs from the shared version. What would you like to do?
+        </p>
+        <div className="conflict__actions">
+          <button className="btn btn--secondary" onClick={onCancel}>
+            Cancel
+          </button>
+          <button className="btn btn--secondary" onClick={onDuplicate}>
+            Keep both
+          </button>
+          <button className="btn btn--primary" onClick={onReplace}>
+            Replace local
+          </button>
+        </div>
+      </div>
     </div>
   )
 }

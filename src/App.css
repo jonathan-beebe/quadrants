@@ -81,6 +81,39 @@
   background: var(--bg);
 }
 
+/* Conflict dialog */
+.conflict {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  padding: 40px;
+}
+
+.conflict__container {
+  max-width: 420px;
+  text-align: center;
+}
+
+.conflict__container h2 {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.conflict__container p {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin-bottom: 20px;
+  line-height: 1.6;
+}
+
+.conflict__actions {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+}
+
 /* Empty state */
 .empty-state {
   display: flex;
