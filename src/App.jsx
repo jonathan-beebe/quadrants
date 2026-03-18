@@ -321,6 +321,7 @@ export default function App() {
         ) : activeFramework ? (
           <QuadrantCanvas
             framework={activeFramework}
+            sidebarOpen={sidebarOpen}
             onUpdate={handleUpdate}
             onReflect={() => setReflectionMode(true)}
             onEdit={() => handleEditFramework(activeFramework)}

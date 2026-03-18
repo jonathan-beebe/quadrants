@@ -4,7 +4,7 @@ import { deriveColors, defaultColors } from '../colors'
 import ColorPicker from './ColorPicker'
 import Card, { GhostCard, PLACEHOLDER } from './Card'
 
-export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit, onShare }) {
+export default function QuadrantCanvas({ framework, sidebarOpen, onUpdate, onReflect, onEdit, onShare }) {
   const [shareStatus, setShareStatus] = useState(null)
   const gridRef = useRef(null)
   const quadrantRefs = useRef([null, null, null, null])
@@ -131,7 +131,7 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit,
 
   return (
     <div className="flex flex-col h-screen p-6 select-none">
-      <div className="flex items-center justify-between mb-5 shrink-0">
+      <div className={`flex items-center justify-between mb-5 shrink-0 ${sidebarOpen ? '' : 'pl-12'}`}>
         <div className="flex items-center gap-2">
           <h1 className="text-xl font-semibold">{framework.name}</h1>
           <button className="btn-ghost btn-sm" onClick={onEdit} title="Edit framework">
