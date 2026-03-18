@@ -176,6 +176,7 @@ export default function QuadrantCanvas({
                       />
                       <span
                         className="text-[11px] text-text-tertiary bg-black/6 dark:bg-white/10 px-[7px] py-px rounded-full"
+                        role="status"
                         aria-label={`${quadrant.items.length} items in ${quadrant.label}`}
                       >
                         {quadrant.items.length}
