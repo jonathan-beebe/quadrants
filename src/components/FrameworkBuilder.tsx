@@ -110,6 +110,7 @@ export default function FrameworkBuilder({
                   value={axisY}
                   onChange={(e) => setAxisY(e.target.value)}
                   placeholder="Y axis (optional)"
+                  aria-label="Y axis label (optional)"
                   className="px-3 py-1.5 border border-dashed border-border rounded-lg text-xs text-center text-text-secondary outline-none w-[180px] transition-[border-color] duration-150 focus:border-accent bg-transparent"
                 />
               </div>
@@ -121,6 +122,7 @@ export default function FrameworkBuilder({
                     value={quadrants[i]}
                     onChange={(e) => setQuadrant(i, e.target.value)}
                     placeholder={`Quadrant ${i + 1}`}
+                    aria-label={`Quadrant ${i + 1} label`}
                     className="py-5 px-4 border rounded-lg text-sm font-medium text-center outline-none transition-all duration-150 focus:ring-2 focus:ring-accent"
                     style={{
                       background: deriveColors(defaultColors[i]).bg,
@@ -135,6 +137,7 @@ export default function FrameworkBuilder({
                   value={axisX}
                   onChange={(e) => setAxisX(e.target.value)}
                   placeholder="X axis (optional)"
+                  aria-label="X axis label (optional)"
                   className="px-3 py-1.5 border border-dashed border-border rounded-lg text-xs text-center text-text-secondary outline-none w-[180px] transition-[border-color] duration-150 focus:border-accent bg-transparent"
                 />
               </div>
