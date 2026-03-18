@@ -166,9 +166,9 @@ export default function QuadrantCanvas({
                   }}
                 >
                   <div className="flex items-center justify-between px-3.5 pt-2.5 pb-1.5 shrink-0">
-                    <h3 className="text-[13px] font-semibold">
+                    <h2 className="text-[13px] font-semibold">
                       {quadrant.label}
-                    </h3>
+                    </h2>
                     <div className="flex items-center gap-1.5">
                       <ColorPicker
                         color={qColor}
