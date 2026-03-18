@@ -8,14 +8,20 @@ import FrameworkBuilder from './components/FrameworkBuilder'
 import ReflectionMode from './components/ReflectionMode'
 import './App.css'
 
+function getIdFromPath() {
+  const path = window.location.pathname.slice(1)
+  return path || null
+}
+
 export default function App() {
   const [frameworks, setFrameworks] = useState(() => loadFrameworks())
-  const [activeId, setActiveId] = useState(null)
+  const [activeId, setActiveId] = useState(() => getIdFromPath())
   const [showBuilder, setShowBuilder] = useState(false)
   const [editingFramework, setEditingFramework] = useState(null)
   const [reflectionMode, setReflectionMode] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(true)
   const hashLoaded = useRef(false)
+  const skipPush = useRef(false)
 
   // Load framework from URL hash on mount
   useEffect(() => {
@@ -48,11 +54,33 @@ export default function App() {
       }
       setFrameworks((prev) => [...prev, fw])
       setActiveId(fw.id)
-      // Clear hash after import
-      history.replaceState(null, '', window.location.pathname)
     }).catch(() => {
       // Invalid hash, ignore
     })
+  }, [])
+
+  // Sync URL when activeId changes
+  useEffect(() => {
+    if (skipPush.current) {
+      skipPush.current = false
+      return
+    }
+    const target = activeId ? `/${activeId}` : '/'
+    if (window.location.pathname !== target) {
+      history.pushState(null, '', target)
+    }
+  }, [activeId])
+
+  // Handle browser back/forward
+  useEffect(() => {
+    const handlePopState = () => {
+      skipPush.current = true
+      setActiveId(getIdFromPath())
+      setShowBuilder(false)
+      setEditingFramework(null)
+    }
+    window.addEventListener('popstate', handlePopState)
+    return () => window.removeEventListener('popstate', handlePopState)
   }, [])
 
   useEffect(() => {
@@ -96,7 +124,7 @@ export default function App() {
 
   const handleShare = useCallback(async (fw) => {
     const hash = await encodeFramework(fw)
-    const url = `${window.location.origin}${window.location.pathname}#${hash}`
+    const url = `${window.location.origin}/#${hash}`
     await navigator.clipboard.writeText(url)
     return url
   }, [])
