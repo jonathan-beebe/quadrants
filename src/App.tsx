@@ -9,6 +9,7 @@ import FrameworkBuilder from './components/FrameworkBuilder'
 import ReflectionMode from './components/ReflectionMode'
 import ConflictDialog from './components/ConflictDialog'
 import EmptyState from './components/EmptyState'
+import Toast from './components/Toast'
 import ErrorBoundary from './components/ErrorBoundary'
 import type { Framework, FrameworkTemplate } from './types'
 
@@ -23,6 +24,8 @@ export default function App() {
 
   const {
     conflict,
+    error,
+    clearError,
     handleConflictReplace,
     handleConflictDuplicate,
     handleConflictCancel,
@@ -157,6 +160,7 @@ export default function App() {
           <EmptyState onNew={openBuilder} />
         )}
       </main>
+      {error && <Toast message={error} onDismiss={clearError} />}
     </div>
   )
 }

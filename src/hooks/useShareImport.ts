@@ -25,7 +25,20 @@ export function useShareImport({
   addImport,
 }: UseShareImportOptions) {
   const [conflict, setConflict] = useState<Conflict | null>(null)
+  const [error, setError] = useState<string | null>(null)
+  const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
   const hashLoaded = useRef(false)
+
+  const showError = useCallback((message: string) => {
+    if (errorTimer.current) clearTimeout(errorTimer.current)
+    setError(message)
+    errorTimer.current = setTimeout(() => setError(null), 5000)
+  }, [])
+
+  const clearError = useCallback(() => {
+    if (errorTimer.current) clearTimeout(errorTimer.current)
+    setError(null)
+  }, [])
 
   // Load framework from URL hash on mount
   useEffect(() => {
@@ -65,7 +78,11 @@ export function useShareImport({
         const incoming = hydratePayload(payload, id)
         setTimeout(() => setConflict({ existing, incoming }), 0)
       })
-      .catch(() => {})
+      .catch((err) => {
+        console.error('Failed to decode shared framework from URL:', err)
+        showError('The shared link could not be loaded. It may be invalid or corrupted.')
+        replacePath(null)
+      })
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   const handleConflictReplace = useCallback(() => {
@@ -129,20 +146,25 @@ export function useShareImport({
                 updatedAt: Date.now(),
               }
               onImported(imported)
+            } else {
+              showError('The file is not a valid framework. It must have a name and 4 quadrants.')
             }
-          } catch {
-            // Invalid JSON — silently ignore
+          } catch (err) {
+            console.error('Failed to import framework JSON:', err)
+            showError('The file could not be read. Make sure it is valid JSON.')
           }
         }
         reader.readAsText(file)
       }
       input.click()
     },
-    [],
+    [showError],
   )
 
   return {
     conflict,
+    error,
+    clearError,
     handleConflictReplace,
     handleConflictDuplicate,
     handleConflictCancel,
