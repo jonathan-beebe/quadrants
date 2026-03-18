@@ -7,6 +7,7 @@ import type { DropResult } from '../hooks/useDragAndDrop'
 import ColorPicker from './ColorPicker'
 import Card, { GhostCard, PLACEHOLDER } from './Card'
 import { EditIcon, ShareIcon, MaximizeIcon, PlusIcon } from './Icons'
+import Badge from './atoms/Badge'
 import type { Framework } from '../types'
 
 interface QuadrantCanvasProps {
@@ -194,13 +195,10 @@ export default function QuadrantCanvas({
                         color={qColor}
                         onChange={(c) => handleColorChange(idx, c)}
                       />
-                      <span
-                        className="text-[11px] text-text-tertiary bg-black/6 dark:bg-white/10 px-[7px] py-px rounded-full"
-                        role="status"
-                        aria-label={`${quadrant.items.length} items in ${quadrant.label}`}
-                      >
-                        {quadrant.items.length}
-                      </span>
+                      <Badge
+                        count={quadrant.items.length}
+                        label={`${quadrant.items.length} items in ${quadrant.label}`}
+                      />
                       <button
                         className="p-[3px] rounded text-text-tertiary transition-all duration-150 hover:text-text-secondary hover:bg-black/6 dark:hover:bg-white/10"
                         onClick={() => handleAddItem(idx)}
