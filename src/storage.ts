@@ -1,8 +1,9 @@
 import { defaultColors } from './colors'
+import type { Framework, FrameworkTemplate, Item } from './types'
 
 const STORAGE_KEY = 'quadrants_frameworks'
 
-export function loadFrameworks() {
+export function loadFrameworks(): Framework[] {
   try {
     const data = localStorage.getItem(STORAGE_KEY)
     return data ? JSON.parse(data) : []
@@ -11,11 +12,11 @@ export function loadFrameworks() {
   }
 }
 
-export function saveFrameworks(frameworks) {
+export function saveFrameworks(frameworks: Framework[]): void {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(frameworks))
 }
 
-export function createFramework(template) {
+export function createFramework(template: FrameworkTemplate): Framework {
   return {
     id: crypto.randomUUID(),
     name: template.name,
@@ -31,7 +32,7 @@ export function createFramework(template) {
   }
 }
 
-export function createItem(text, x, y) {
+export function createItem(text: string, x?: number, y?: number): Item {
   return {
     id: crypto.randomUUID(),
     text,

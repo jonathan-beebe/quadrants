@@ -1,8 +1,8 @@
-// Default quadrant colors
-export const defaultColors = ['#fbbf24', '#60a5fa', '#34d399', '#f472b6']
+import type { DerivedColors } from './types'
 
-// Preset palette for the color picker
-export const colorPresets = [
+export const defaultColors: string[] = ['#fbbf24', '#60a5fa', '#34d399', '#f472b6']
+
+export const colorPresets: string[] = [
   '#fbbf24', // amber
   '#f97316', // orange
   '#ef4444', // red
@@ -15,8 +15,7 @@ export const colorPresets = [
   '#94a3b8', // slate
 ]
 
-// Derive background and border colors from a base color
-export function deriveColors(hex) {
+export function deriveColors(hex: string): DerivedColors {
   const r = parseInt(hex.slice(1, 3), 16)
   const g = parseInt(hex.slice(3, 5), 16)
   const b = parseInt(hex.slice(5, 7), 16)

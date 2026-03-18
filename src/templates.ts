@@ -1,4 +1,6 @@
-export const templates = [
+import type { FrameworkTemplate } from './types'
+
+export const templates: FrameworkTemplate[] = [
   {
     name: 'Start / Stop / Continue / Change',
     axisX: '',
