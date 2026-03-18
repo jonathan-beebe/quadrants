@@ -54,7 +54,7 @@
 }
 
 .card__delete {
-  padding: 3px;
+  padding: 0;
   border-radius: 3px;
   color: var(--text-tertiary);
   transition: all var(--transition);
