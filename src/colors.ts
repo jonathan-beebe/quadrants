@@ -2,17 +2,17 @@ import type { DerivedColors } from './types'
 
 export const defaultColors: string[] = ['#fbbf24', '#60a5fa', '#34d399', '#f472b6']
 
-export const colorPresets: string[] = [
-  '#fbbf24', // amber
-  '#f97316', // orange
-  '#ef4444', // red
-  '#f472b6', // pink
-  '#a78bfa', // violet
-  '#60a5fa', // blue
-  '#34d399', // emerald
-  '#4ade80', // green
-  '#a3e635', // lime
-  '#94a3b8', // slate
+export const colorPresets: { hex: string; name: string }[] = [
+  { hex: '#fbbf24', name: 'Amber' },
+  { hex: '#f97316', name: 'Orange' },
+  { hex: '#ef4444', name: 'Red' },
+  { hex: '#f472b6', name: 'Pink' },
+  { hex: '#a78bfa', name: 'Violet' },
+  { hex: '#60a5fa', name: 'Blue' },
+  { hex: '#34d399', name: 'Emerald' },
+  { hex: '#4ade80', name: 'Green' },
+  { hex: '#a3e635', name: 'Lime' },
+  { hex: '#94a3b8', name: 'Slate' },
 ]
 
 export function deriveColors(hex: string): DerivedColors {

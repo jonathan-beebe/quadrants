@@ -8,18 +8,21 @@ const defaultProps = {
   onChange: vi.fn(),
 }
 
+function getTrigger() {
+  return screen.getByRole('button', { name: /change color/i })
+}
+
 describe('ColorPicker', () => {
   it('renders a color swatch button', () => {
     render(<ColorPicker {...defaultProps} />)
-    expect(screen.getByTitle('Change color')).toBeInTheDocument()
+    expect(getTrigger()).toBeInTheDocument()
   })
 
   it('opens the picker when the swatch is clicked', async () => {
     const user = userEvent.setup()
     render(<ColorPicker {...defaultProps} />)
 
-    await user.click(screen.getByTitle('Change color'))
-    // Should show the preset grid and the custom color input
+    await user.click(getTrigger())
     expect(screen.getByText('Custom')).toBeInTheDocument()
   })
 
@@ -28,16 +31,13 @@ describe('ColorPicker', () => {
     const onChange = vi.fn()
     render(<ColorPicker {...defaultProps} onChange={onChange} />)
 
-    await user.click(screen.getByTitle('Change color'))
+    await user.click(getTrigger())
 
-    // Click the red preset (the 10 preset buttons are rendered)
-    const presetButtons = screen.getAllByRole('button').filter(
-      (btn: HTMLElement) => btn.style.background && btn !== screen.getByTitle('Change color')
-    )
-    expect(presetButtons.length).toBe(10)
+    const presetOptions = screen.getAllByRole('option')
+    expect(presetOptions).toHaveLength(10)
 
-    // Click one that's different from the current color
-    await user.click(presetButtons[2]) // red (#ef4444)
+    // Click Red (#ef4444)
+    await user.click(screen.getByRole('option', { name: 'Red' }))
     expect(onChange).toHaveBeenCalledWith('#ef4444')
   })
 
@@ -45,13 +45,10 @@ describe('ColorPicker', () => {
     const user = userEvent.setup()
     render(<ColorPicker {...defaultProps} />)
 
-    await user.click(screen.getByTitle('Change color'))
+    await user.click(getTrigger())
     expect(screen.getByText('Custom')).toBeInTheDocument()
 
-    const presetButtons = screen.getAllByRole('button').filter(
-      (btn: HTMLElement) => btn.style.background && btn !== screen.getByTitle('Change color')
-    )
-    await user.click(presetButtons[0])
+    await user.click(screen.getByRole('option', { name: 'Amber' }))
     expect(screen.queryByText('Custom')).not.toBeInTheDocument()
   })
 
@@ -59,23 +56,30 @@ describe('ColorPicker', () => {
     const user = userEvent.setup()
     render(<ColorPicker {...defaultProps} color="#ef4444" />)
 
-    await user.click(screen.getByTitle('Change color'))
+    await user.click(getTrigger())
 
-    // The selected preset should have a distinct border style
-    const presetButtons = screen.getAllByRole('button').filter(
-      (btn: HTMLElement) => btn.style.background && btn !== screen.getByTitle('Change color')
-    )
-    const redButton = presetButtons[2] // #ef4444
-    expect(redButton.className).toContain('border-text')
+    const redOption = screen.getByRole('option', { name: 'Red' })
+    expect(redOption).toHaveAttribute('aria-selected', 'true')
   })
 
   it('provides a native custom color input', async () => {
     const user = userEvent.setup()
     render(<ColorPicker {...defaultProps} />)
 
-    await user.click(screen.getByTitle('Change color'))
+    await user.click(getTrigger())
 
     const colorInput = screen.getByDisplayValue('#fbbf24')
     expect(colorInput).toHaveAttribute('type', 'color')
+  })
+
+  it('communicates expanded state via aria-expanded', async () => {
+    const user = userEvent.setup()
+    render(<ColorPicker {...defaultProps} />)
+
+    const trigger = getTrigger()
+    expect(trigger).toHaveAttribute('aria-expanded', 'false')
+
+    await user.click(trigger)
+    expect(trigger).toHaveAttribute('aria-expanded', 'true')
   })
 })

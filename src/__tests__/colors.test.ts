@@ -18,15 +18,17 @@ describe('colorPresets', () => {
     expect(colorPresets).toHaveLength(10)
   })
 
-  it('contains valid hex color strings', () => {
-    for (const color of colorPresets) {
-      expect(color).toMatch(/^#[0-9a-f]{6}$/i)
+  it('contains valid hex color strings with names', () => {
+    for (const preset of colorPresets) {
+      expect(preset.hex).toMatch(/^#[0-9a-f]{6}$/i)
+      expect(preset.name).toBeTruthy()
     }
   })
 
   it('includes all default colors', () => {
+    const hexValues = colorPresets.map((p) => p.hex)
     for (const color of defaultColors) {
-      expect(colorPresets).toContain(color)
+      expect(hexValues).toContain(color)
     }
   })
 })
