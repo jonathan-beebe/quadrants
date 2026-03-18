@@ -1,7 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import Card, { GhostCard } from '../components/Card'
+import Card, { GhostCard, PLACEHOLDER } from '../components/Card'
 import type { Item } from '../types'
 
 function makeItem(overrides: Partial<Item> = {}): Item {
@@ -24,43 +24,236 @@ const defaultProps = {
   onDragStart: vi.fn(),
 }
 
+function renderCard(overrides = {}) {
+  const props = { ...defaultProps, onChange: vi.fn(), onDelete: vi.fn(), onDragStart: vi.fn(), ...overrides }
+  const result = render(<Card {...props} />)
+  return { ...result, props }
+}
+
 describe('Card', () => {
-  it('renders the item text', () => {
-    render(<Card {...defaultProps} />)
-    expect(screen.getByText('Test card')).toBeInTheDocument()
+  describe('rendering', () => {
+    it('renders the item text in display mode', () => {
+      renderCard()
+      expect(screen.getByText('Test card')).toBeInTheDocument()
+    })
+
+    it('positions the card based on item coordinates', () => {
+      const { container } = renderCard()
+      const card = container.firstElementChild as HTMLElement
+      expect(card.style.left).toBe('25%')
+      expect(card.style.top).toBe('30%')
+    })
+
+    it('uses default coordinates when item has no position', () => {
+      const { container } = renderCard({ item: makeItem({ x: undefined, y: undefined }) })
+      const card = container.firstElementChild as HTMLElement
+      expect(card.style.left).toBe('10%')
+      expect(card.style.top).toBe('10%')
+    })
+
+    it('shows a delete button', () => {
+      renderCard()
+      expect(screen.getByTitle('Delete')).toBeInTheDocument()
+    })
   })
 
-  it('positions the card based on item coordinates', () => {
-    const { container } = render(<Card {...defaultProps} />)
-    const card = container.firstElementChild as HTMLElement
-    expect(card.style.left).toBe('25%')
-    expect(card.style.top).toBe('30%')
+  describe('dragging styles', () => {
+    it('applies dragging styles when isDragging is true', () => {
+      const { container } = renderCard({ isDragging: true })
+      const card = container.firstElementChild as HTMLElement
+      expect(card.className).toContain('opacity-30')
+      expect(card.className).toContain('pointer-events-none')
+    })
+
+    it('does not apply dragging styles when isDragging is false', () => {
+      const { container } = renderCard({ isDragging: false })
+      const card = container.firstElementChild as HTMLElement
+      expect(card.className).not.toContain('opacity-30')
+    })
   })
 
-  it('shows a delete button', () => {
-    render(<Card {...defaultProps} />)
-    expect(screen.getByTitle('Delete')).toBeInTheDocument()
+  describe('accessibility', () => {
+    it('display span has role="button" and tabIndex', () => {
+      renderCard()
+      const span = screen.getByRole('button', { name: /edit item: test card/i })
+      expect(span).toBeInTheDocument()
+      expect(span.tabIndex).toBe(0)
+    })
+
+    it('display span has an aria-label', () => {
+      renderCard()
+      const span = screen.getByRole('button', { name: /edit item: test card/i })
+      expect(span).toHaveAttribute('aria-label', 'Edit item: Test card')
+    })
+
+    it('delete button has an aria-label', () => {
+      renderCard()
+      const btn = screen.getByRole('button', { name: /delete item: test card/i })
+      expect(btn).toBeInTheDocument()
+    })
+
+    it('textarea has an aria-label when editing', async () => {
+      const user = userEvent.setup()
+      renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      const textarea = screen.getByRole('textbox')
+      expect(textarea).toHaveAttribute('aria-label', 'Edit item: Test card')
+    })
   })
 
-  it('calls onDelete when delete button is clicked', async () => {
-    const user = userEvent.setup()
-    const onDelete = vi.fn()
-    render(<Card {...defaultProps} onDelete={onDelete} />)
-    await user.click(screen.getByTitle('Delete'))
-    expect(onDelete).toHaveBeenCalledOnce()
+  describe('entering edit mode', () => {
+    it('enters edit mode on click (pointerup without drag)', async () => {
+      const user = userEvent.setup()
+      renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      expect(screen.getByRole('textbox')).toBeInTheDocument()
+    })
+
+    it('enters edit mode on Enter key', async () => {
+      const user = userEvent.setup()
+      renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      span.focus()
+      await user.keyboard('{Enter}')
+      expect(screen.getByRole('textbox')).toBeInTheDocument()
+    })
+
+    it('enters edit mode on Space key', async () => {
+      const user = userEvent.setup()
+      renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      span.focus()
+      await user.keyboard(' ')
+      expect(screen.getByRole('textbox')).toBeInTheDocument()
+    })
+
+    it('starts in edit mode when autoFocus is true', () => {
+      renderCard({ autoFocus: true })
+      expect(screen.getByRole('textbox')).toBeInTheDocument()
+    })
+
+    it('textarea is focused and text selected when entering edit mode', async () => {
+      const user = userEvent.setup()
+      renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      const textarea = screen.getByRole('textbox') as HTMLTextAreaElement
+      expect(textarea).toHaveFocus()
+    })
+
+    it('populates textarea with item text', async () => {
+      const user = userEvent.setup()
+      renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      const textarea = screen.getByRole('textbox') as HTMLTextAreaElement
+      expect(textarea.value).toBe('Test card')
+    })
   })
 
-  it('applies dragging styles when isDragging is true', () => {
-    const { container } = render(<Card {...defaultProps} isDragging={true} />)
-    const card = container.firstElementChild as HTMLElement
-    expect(card.className).toContain('opacity-30')
-    expect(card.className).toContain('pointer-events-none')
+  describe('committing edits', () => {
+    it('calls onChange with trimmed text on Enter', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      const textarea = screen.getByRole('textbox')
+      await user.clear(textarea)
+      await user.type(textarea, 'Updated text{Enter}')
+      expect(props.onChange).toHaveBeenCalledWith('Updated text')
+    })
+
+    it('calls onChange with trimmed text on blur', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      const textarea = screen.getByRole('textbox')
+      await user.clear(textarea)
+      await user.type(textarea, '  New value  ')
+      await user.tab()
+      expect(props.onChange).toHaveBeenCalledWith('New value')
+    })
+
+    it('does not call onChange when text is unchanged', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      await user.keyboard('{Enter}')
+      expect(props.onChange).not.toHaveBeenCalled()
+    })
+
+    it('returns to display mode after committing', async () => {
+      const user = userEvent.setup()
+      renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      await user.keyboard('{Enter}')
+      expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /edit item/i })).toBeInTheDocument()
+    })
   })
 
-  it('does not apply dragging styles when isDragging is false', () => {
-    const { container } = render(<Card {...defaultProps} isDragging={false} />)
-    const card = container.firstElementChild as HTMLElement
-    expect(card.className).not.toContain('opacity-30')
+  describe('cancelling edits', () => {
+    it('reverts to display mode on Escape without calling onChange', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      const textarea = screen.getByRole('textbox')
+      await user.clear(textarea)
+      await user.type(textarea, 'Unsaved changes')
+      await user.keyboard('{Escape}')
+      expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+      expect(props.onChange).not.toHaveBeenCalled()
+    })
+  })
+
+  describe('deletion', () => {
+    it('calls onDelete when delete button is clicked', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCard()
+      await user.click(screen.getByTitle('Delete'))
+      expect(props.onDelete).toHaveBeenCalledOnce()
+    })
+
+    it('calls onDelete when text is cleared and committed', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      const textarea = screen.getByRole('textbox')
+      await user.clear(textarea)
+      await user.keyboard('{Enter}')
+      expect(props.onDelete).toHaveBeenCalledOnce()
+    })
+
+    it('calls onDelete when text is only whitespace and committed', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      const textarea = screen.getByRole('textbox')
+      await user.clear(textarea)
+      await user.type(textarea, '   ')
+      await user.keyboard('{Enter}')
+      expect(props.onDelete).toHaveBeenCalledOnce()
+    })
+
+    it('calls onDelete when text equals the placeholder and committed', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCard()
+      const span = screen.getByRole('button', { name: /edit item/i })
+      await user.click(span)
+      const textarea = screen.getByRole('textbox')
+      await user.clear(textarea)
+      await user.type(textarea, PLACEHOLDER)
+      await user.keyboard('{Enter}')
+      expect(props.onDelete).toHaveBeenCalledOnce()
+    })
   })
 })
 

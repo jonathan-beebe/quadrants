@@ -31,21 +31,26 @@ export default function Card({
   onDragStart,
 }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
-  const textRef = useRef<HTMLSpanElement>(null)
+  const textareaRef = useRef<HTMLTextAreaElement>(null)
   const pendingRef = useRef<{ startX: number; startY: number } | null>(null)
-  const [focused, setFocused] = useState(false)
+  const [editing, setEditing] = useState(autoFocus)
+  const [editValue, setEditValue] = useState(item.text)
+
+  const resizeTextarea = useCallback(() => {
+    const ta = textareaRef.current
+    if (!ta) return
+    ta.style.height = '0'
+    ta.style.height = `${ta.scrollHeight}px`
+  }, [])
 
   useEffect(() => {
-    if (!autoFocus) return
-    const el = textRef.current
-    if (!el) return
-    el.focus()
-    const range = document.createRange()
-    range.selectNodeContents(el)
-    const sel = window.getSelection()
-    sel?.removeAllRanges()
-    sel?.addRange(range)
-  }, [autoFocus])
+    if (!editing) return
+    const ta = textareaRef.current
+    if (!ta) return
+    resizeTextarea()
+    ta.focus()
+    ta.select()
+  }, [editing, resizeTextarea])
 
   useEffect(() => {
     return () => {
@@ -53,17 +58,6 @@ export default function Card({
       window.removeEventListener('pointerup', handlePendingUp)
     }
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
-
-  useEffect(() => {
-    if (!focused) return
-    const handleOutsideDown = (e: PointerEvent) => {
-      if (cardRef.current && !cardRef.current.contains(e.target as Node)) {
-        textRef.current?.blur()
-      }
-    }
-    window.addEventListener('pointerdown', handleOutsideDown)
-    return () => window.removeEventListener('pointerdown', handleOutsideDown)
-  }, [focused])
 
   const fireDragStart = useCallback(
     (pageX: number, pageY: number) => {
@@ -103,13 +97,31 @@ export default function Card({
     window.removeEventListener('pointerup', handlePendingUp)
     if (!pendingRef.current) return
     pendingRef.current = null
-    textRef.current?.focus()
-  }, [handlePendingMove])
+    enterEditMode()
+  }, [handlePendingMove]) // eslint-disable-line react-hooks/exhaustive-deps
+
+  const enterEditMode = useCallback(() => {
+    setEditValue(item.text)
+    setEditing(true)
+  }, [item.text])
+
+  const commitEdit = useCallback(
+    (value: string) => {
+      setEditing(false)
+      const trimmed = value.trim()
+      if (!trimmed || trimmed === PLACEHOLDER) {
+        onDelete()
+        return
+      }
+      if (trimmed !== item.text) onChange(trimmed)
+    },
+    [item.text, onChange, onDelete],
+  )
 
   const handleTextPointerDown = useCallback(
     (e: React.PointerEvent) => {
       if (e.button !== 0) return
-      if (focused) {
+      if (editing) {
         e.stopPropagation()
         return
       }
@@ -119,66 +131,82 @@ export default function Card({
       window.addEventListener('pointermove', handlePendingMove)
       window.addEventListener('pointerup', handlePendingUp)
     },
-    [focused, handlePendingMove, handlePendingUp],
+    [editing, handlePendingMove, handlePendingUp],
   )
 
-  const handleFocus = useCallback(() => setFocused(true), [])
-
-  const handleBlur = useCallback(() => {
-    setFocused(false)
-    window.getSelection()?.removeAllRanges()
-    const el = textRef.current
-    if (!el) return
-    const newText = (el.textContent ?? '').trim()
-    if (!newText || newText === PLACEHOLDER) {
-      onDelete()
-      return
-    }
-    if (newText !== item.text) onChange(newText)
-  }, [item.text, onChange, onDelete])
-
-  const handleKeyDown = useCallback(
+  const handleDisplayKeyDown = useCallback(
     (e: React.KeyboardEvent) => {
-      if (e.key === 'Enter') {
+      if (e.key === 'Enter' || e.key === ' ') {
         e.preventDefault()
-        textRef.current?.blur()
-      }
-      if (e.key === 'Escape') {
-        if (textRef.current) textRef.current.textContent = item.text
-        textRef.current?.blur()
+        enterEditMode()
       }
     },
-    [item.text],
+    [enterEditMode],
   )
+
+  const handleTextareaKeyDown = useCallback(
+    (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+      if (e.key === 'Enter') {
+        e.preventDefault()
+        commitEdit(editValue)
+      }
+      if (e.key === 'Escape') {
+        setEditing(false)
+      }
+    },
+    [editValue, commitEdit],
+  )
+
+  const handleBlur = useCallback(() => {
+    commitEdit(editValue)
+  }, [editValue, commitEdit])
+
+  const textClasses = 'flex-1 min-w-0 break-words outline-none rounded-sm'
 
   return (
     <div
       ref={cardRef}
-      className={`absolute w-max max-w-[180px] min-w-[60px] py-[7px] px-2.5 bg-white/85 dark:bg-white/10 border border-black/8 dark:border-white/10 rounded-lg shadow-sm text-[13px] leading-[1.4] flex items-start gap-1 transition-[box-shadow,opacity] duration-150 touch-none ${focused ? 'cursor-text' : 'cursor-grab'} ${isDragging ? 'opacity-30 pointer-events-none' : ''} hover:shadow hover:bg-white/95 dark:hover:bg-white/15`}
+      className={`absolute w-max max-w-[180px] min-w-[60px] py-[7px] px-2.5 bg-white/85 dark:bg-white/10 border border-black/8 dark:border-white/10 rounded-lg shadow-sm text-[13px] leading-[1.4] flex items-start gap-1 transition-[box-shadow,opacity] duration-150 touch-none ${editing ? 'cursor-text' : 'cursor-grab'} ${isDragging ? 'opacity-30 pointer-events-none' : ''} hover:shadow hover:bg-white/95 dark:hover:bg-white/15`}
       style={{ left: `${item.x ?? 10}%`, top: `${item.y ?? 10}%` }}
       onPointerDown={(e) => {
-        if (e.button !== 0 || focused) return
+        if (e.button !== 0 || editing) return
         e.preventDefault()
         fireDragStart(e.pageX, e.pageY)
       }}
     >
-      <span
-        ref={textRef}
-        className={`flex-1 min-w-0 break-words outline-none rounded-sm ${focused ? 'cursor-text' : 'cursor-grab'}`}
-        contentEditable
-        suppressContentEditableWarning
-        spellCheck={false}
-        onPointerDown={handleTextPointerDown}
-        onFocus={handleFocus}
-        onBlur={handleBlur}
-        onKeyDown={handleKeyDown}
-      >
-        {item.text}
-      </span>
+      {editing ? (
+        <textarea
+          ref={textareaRef}
+          className={`${textClasses} resize-none bg-transparent p-0 m-0 border-none text-[13px] leading-[1.4] font-[inherit] cursor-text`}
+          value={editValue}
+          aria-label={`Edit item: ${item.text}`}
+          rows={1}
+          spellCheck={false}
+          onChange={(e) => {
+            setEditValue(e.target.value)
+            resizeTextarea()
+          }}
+          onBlur={handleBlur}
+          onKeyDown={handleTextareaKeyDown}
+          onPointerDown={(e) => e.stopPropagation()}
+        />
+      ) : (
+        <span
+          className={`${textClasses} ${editing ? 'cursor-text' : 'cursor-grab'}`}
+          role="button"
+          tabIndex={0}
+          aria-label={`Edit item: ${item.text}`}
+          onPointerDown={handleTextPointerDown}
+          onKeyDown={handleDisplayKeyDown}
+        >
+          {item.text}
+        </span>
+      )}
       <button
         className="p-0 rounded-sm text-text-tertiary transition-all duration-150 cursor-pointer opacity-0 group-hover:opacity-100 shrink-0 mt-px hover:text-danger hover:bg-red-500/10 [div:hover>&]:opacity-100"
         onPointerDown={(e) => e.stopPropagation()}
         onClick={onDelete}
+        aria-label={`Delete item: ${item.text}`}
         title="Delete"
       >
         <svg
@@ -190,6 +218,7 @@ export default function Card({
           strokeWidth="2"
           strokeLinecap="round"
           strokeLinejoin="round"
+          aria-hidden="true"
         >
           <line x1="18" y1="6" x2="6" y2="18" />
           <line x1="6" y1="6" x2="18" y2="18" />
