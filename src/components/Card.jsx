@@ -1,4 +1,4 @@
-import { useRef, useCallback, useEffect } from 'react'
+import { useRef, useCallback, useEffect, useState } from 'react'
 import './Card.css'
 
 const DRAG_THRESHOLD = 4
@@ -6,15 +6,28 @@ const DRAG_THRESHOLD = 4
 export default function Card({ item, isDragging, onChange, onDelete, onDragStart }) {
   const cardRef = useRef(null)
   const textRef = useRef(null)
-  const pendingRef = useRef(null) // { startX, startY, pageX, pageY }
+  const pendingRef = useRef(null)
+  const [focused, setFocused] = useState(false)
 
-  // Clean up listeners on unmount
+  // Clean up pending listeners on unmount
   useEffect(() => {
     return () => {
       window.removeEventListener('pointermove', handlePendingMove)
       window.removeEventListener('pointerup', handlePendingUp)
     }
   }, [])
+
+  // When focused, listen for clicks outside the card to blur
+  useEffect(() => {
+    if (!focused) return
+    const handleOutsideDown = (e) => {
+      if (cardRef.current && !cardRef.current.contains(e.target)) {
+        textRef.current?.blur()
+      }
+    }
+    window.addEventListener('pointerdown', handleOutsideDown)
+    return () => window.removeEventListener('pointerdown', handleOutsideDown)
+  }, [focused])
 
   const fireDragStart = useCallback((pageX, pageY) => {
     const cardEl = cardRef.current
@@ -48,15 +61,17 @@ export default function Card({ item, isDragging, onChange, onDelete, onDragStart
     window.removeEventListener('pointerup', handlePendingUp)
     if (!pendingRef.current) return
     pendingRef.current = null
-    // It was a click — focus the text
     textRef.current?.focus()
   }, [handlePendingMove])
 
   const handleTextPointerDown = useCallback((e) => {
     if (e.button !== 0) return
 
-    // If already focused (editing), let normal text selection work
-    if (document.activeElement === textRef.current) return
+    // If already focused, allow normal text selection
+    if (focused) {
+      e.stopPropagation()
+      return
+    }
 
     // Prevent default to stop immediate focus — we'll decide on move vs click
     e.preventDefault()
@@ -65,9 +80,13 @@ export default function Card({ item, isDragging, onChange, onDelete, onDragStart
     pendingRef.current = { startX: e.pageX, startY: e.pageY }
     window.addEventListener('pointermove', handlePendingMove)
     window.addEventListener('pointerup', handlePendingUp)
-  }, [handlePendingMove, handlePendingUp])
+  }, [focused, handlePendingMove, handlePendingUp])
+
+  const handleFocus = useCallback(() => setFocused(true), [])
 
   const handleBlur = useCallback(() => {
+    setFocused(false)
+    window.getSelection()?.removeAllRanges()
     const el = textRef.current
     if (!el) return
     const newText = el.textContent.trim()
@@ -92,10 +111,10 @@ export default function Card({ item, isDragging, onChange, onDelete, onDragStart
   return (
     <div
       ref={cardRef}
-      className={`card ${isDragging ? 'card--dragging' : ''}`}
+      className={`card ${isDragging ? 'card--dragging' : ''} ${focused ? 'card--focused' : ''}`}
       style={{ left: `${item.x ?? 10}%`, top: `${item.y ?? 10}%` }}
       onPointerDown={(e) => {
-        if (e.button !== 0) return
+        if (e.button !== 0 || focused) return
         e.preventDefault()
         fireDragStart(e.pageX, e.pageY)
       }}
@@ -107,6 +126,7 @@ export default function Card({ item, isDragging, onChange, onDelete, onDragStart
         suppressContentEditableWarning
         spellCheck={false}
         onPointerDown={handleTextPointerDown}
+        onFocus={handleFocus}
         onBlur={handleBlur}
         onKeyDown={handleKeyDown}
       >

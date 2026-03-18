@@ -23,6 +23,10 @@
   background: rgba(255, 255, 255, 0.95);
 }
 
+.card--focused {
+  cursor: text;
+}
+
 .card--dragging {
   opacity: 0.3;
   pointer-events: none;
@@ -41,49 +45,30 @@
   min-width: 0;
   word-break: break-word;
   cursor: grab;
+  outline: none;
+  border-radius: 2px;
 }
 
-.card__actions {
-  display: flex;
-  gap: 1px;
-  opacity: 0;
-  flex-shrink: 0;
-  margin-top: 1px;
-  transition: opacity var(--transition);
+.card__text:focus {
+  cursor: text;
 }
 
-.card:hover .card__actions {
-  opacity: 1;
-}
-
-.card__btn {
+.card__delete {
   padding: 3px;
   border-radius: 3px;
   color: var(--text-tertiary);
   transition: all var(--transition);
   cursor: pointer;
+  opacity: 0;
+  flex-shrink: 0;
+  margin-top: 1px;
 }
 
-.card__btn:hover {
-  color: var(--text-secondary);
-  background: rgba(0, 0, 0, 0.06);
+.card:hover .card__delete {
+  opacity: 1;
 }
 
-.card__btn--danger:hover {
+.card__delete:hover {
   color: var(--danger);
   background: rgba(239, 68, 68, 0.1);
-}
-
-.card__edit {
-  flex: 1;
-}
-
-.card__edit input {
-  width: 100%;
-  padding: 2px 4px;
-  border: 1px solid var(--accent);
-  border-radius: 4px;
-  font-size: 13px;
-  outline: none;
-  background: white;
 }
