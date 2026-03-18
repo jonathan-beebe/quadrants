@@ -32,7 +32,7 @@ describe('ColorPicker', () => {
 
     // Click the red preset (the 10 preset buttons are rendered)
     const presetButtons = screen.getAllByRole('button').filter(
-      (btn) => btn.style.background && btn !== screen.getByTitle('Change color')
+      (btn: HTMLElement) => btn.style.background && btn !== screen.getByTitle('Change color')
     )
     expect(presetButtons.length).toBe(10)
 
@@ -49,7 +49,7 @@ describe('ColorPicker', () => {
     expect(screen.getByText('Custom')).toBeInTheDocument()
 
     const presetButtons = screen.getAllByRole('button').filter(
-      (btn) => btn.style.background && btn !== screen.getByTitle('Change color')
+      (btn: HTMLElement) => btn.style.background && btn !== screen.getByTitle('Change color')
     )
     await user.click(presetButtons[0])
     expect(screen.queryByText('Custom')).not.toBeInTheDocument()
@@ -63,7 +63,7 @@ describe('ColorPicker', () => {
 
     // The selected preset should have a distinct border style
     const presetButtons = screen.getAllByRole('button').filter(
-      (btn) => btn.style.background && btn !== screen.getByTitle('Change color')
+      (btn: HTMLElement) => btn.style.background && btn !== screen.getByTitle('Change color')
     )
     const redButton = presetButtons[2] // #ef4444
     expect(redButton.className).toContain('border-text')
