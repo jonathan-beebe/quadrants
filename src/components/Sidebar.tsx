@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import {
   QuadrantGridIcon,
   SunIcon,
@@ -41,6 +41,7 @@ export default function Sidebar({
 }: SidebarProps) {
   const [menuId, setMenuId] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
+  const menuTriggerRef = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     if (!menuId) return
@@ -52,6 +53,40 @@ export default function Sidebar({
     document.addEventListener('mousedown', handleClick)
     return () => document.removeEventListener('mousedown', handleClick)
   }, [menuId])
+
+  // Focus first menu item when menu opens
+  useEffect(() => {
+    if (menuId && menuRef.current) {
+      const first = menuRef.current.querySelector<HTMLElement>('[role="menuitem"]')
+      first?.focus()
+    }
+  }, [menuId])
+
+  const handleMenuKeyDown = useCallback(
+    (e: React.KeyboardEvent) => {
+      const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]')
+      if (!items?.length) return
+
+      const currentIdx = Array.from(items).indexOf(e.target as HTMLElement)
+
+      if (e.key === 'ArrowDown') {
+        e.preventDefault()
+        const next = (currentIdx + 1) % items.length
+        items[next].focus()
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault()
+        const prev = (currentIdx - 1 + items.length) % items.length
+        items[prev].focus()
+      } else if (e.key === 'Escape') {
+        e.preventDefault()
+        setMenuId(null)
+        menuTriggerRef.current?.focus()
+      } else if (e.key === 'Tab') {
+        setMenuId(null)
+      }
+    },
+    [],
+  )
 
   return (
     <>
@@ -67,14 +102,15 @@ export default function Sidebar({
             <button
               className="btn-icon text-text-secondary"
               onClick={onToggleDark}
-              title="Toggle dark mode"
+              aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
             >
               {darkMode ? <SunIcon /> : <MoonIcon />}
             </button>
             <button
               className="btn-icon text-text-secondary"
               onClick={onToggle}
-              title="Toggle sidebar"
+              aria-label="Close sidebar"
+              aria-expanded={open}
             >
               <SidebarIcon size={18} />
             </button>
@@ -105,10 +141,13 @@ export default function Sidebar({
           {frameworks.map((fw) => (
             <div
               key={fw.id}
-              className={`relative flex items-center py-2.5 px-3 rounded-lg cursor-pointer transition-colors duration-150 group ${activeId === fw.id ? 'bg-accent-light' : 'hover:bg-bg'}`}
-              onClick={() => onSelect(fw.id)}
+              className={`relative flex items-center rounded-lg transition-colors duration-150 group ${activeId === fw.id ? 'bg-accent-light' : 'hover:bg-bg'}`}
             >
-              <div className="flex-1 min-w-0">
+              <button
+                className="flex-1 min-w-0 text-left py-2.5 px-3 bg-transparent"
+                aria-current={activeId === fw.id ? 'true' : undefined}
+                onClick={() => onSelect(fw.id)}
+              >
                 <span className="block text-sm font-medium truncate">
                   {fw.name}
                 </span>
@@ -116,13 +155,14 @@ export default function Sidebar({
                   {fw.quadrants.reduce((sum, q) => sum + q.items.length, 0)}{' '}
                   items
                 </span>
-              </div>
+              </button>
               <button
-                className="opacity-0 group-hover:opacity-100 p-1 rounded text-text-secondary transition-opacity duration-150 hover:bg-border"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  setMenuId(menuId === fw.id ? null : fw.id)
-                }}
+                ref={menuId === fw.id ? menuTriggerRef : undefined}
+                className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1 rounded text-text-secondary transition-opacity duration-150 hover:bg-border mr-1"
+                aria-label={`Actions for ${fw.name}`}
+                aria-haspopup="true"
+                aria-expanded={menuId === fw.id}
+                onClick={() => setMenuId(menuId === fw.id ? null : fw.id)}
               >
                 <MoreVerticalIcon />
               </button>
@@ -130,11 +170,14 @@ export default function Sidebar({
                 <div
                   className="absolute right-2 top-full bg-surface border border-border rounded-lg shadow-lg z-[200] min-w-[140px] p-1"
                   ref={menuRef}
+                  role="menu"
+                  aria-label={`Actions for ${fw.name}`}
+                  onKeyDown={handleMenuKeyDown}
                 >
                   <button
                     className="block w-full text-left px-3 py-2 text-[13px] rounded text-text hover:bg-bg"
-                    onClick={(e) => {
-                      e.stopPropagation()
+                    role="menuitem"
+                    onClick={() => {
                       onDuplicate(fw)
                       setMenuId(null)
                     }}
@@ -143,8 +186,8 @@ export default function Sidebar({
                   </button>
                   <button
                     className="block w-full text-left px-3 py-2 text-[13px] rounded text-text hover:bg-bg"
-                    onClick={(e) => {
-                      e.stopPropagation()
+                    role="menuitem"
+                    onClick={() => {
                       onExport(fw)
                       setMenuId(null)
                     }}
@@ -153,8 +196,8 @@ export default function Sidebar({
                   </button>
                   <button
                     className="block w-full text-left px-3 py-2 text-[13px] rounded text-danger hover:bg-red-50 dark:hover:bg-red-950"
-                    onClick={(e) => {
-                      e.stopPropagation()
+                    role="menuitem"
+                    onClick={() => {
                       onDelete(fw.id)
                       setMenuId(null)
                     }}
@@ -172,7 +215,8 @@ export default function Sidebar({
         <button
           className="fixed top-4 left-4 z-50 p-2 bg-surface border border-border rounded-lg shadow text-text-secondary transition-all duration-150 hover:text-text hover:border-border-hover"
           onClick={onToggle}
-          title="Open sidebar"
+          aria-label="Open sidebar"
+          aria-expanded={false}
         >
           <SidebarIcon size={20} />
         </button>
