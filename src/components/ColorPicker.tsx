@@ -43,7 +43,7 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
         e.preventDefault()
         const prev = (currentIdx - 1 + options.length) % options.length
         options[prev].focus()
-      } else if (e.key === 'Escape') {
+      } else if (e.key === 'Escape' || e.key === 'Tab') {
         e.preventDefault()
         setOpen(false)
         triggerRef.current?.focus()
