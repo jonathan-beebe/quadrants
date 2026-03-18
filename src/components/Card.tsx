@@ -42,7 +42,7 @@ export default function Card({
 }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const spanRef = useRef<HTMLSpanElement>(null)
+  const spanRef = useRef<HTMLButtonElement>(null)
   const pendingRef = useRef<{ startX: number; startY: number } | null>(null)
   const moveMenuRef = useRef<HTMLDivElement>(null)
   const [editing, setEditing] = useState(autoFocus)
@@ -256,17 +256,16 @@ export default function Card({
           onPointerDown={(e) => e.stopPropagation()}
         />
       ) : (
-        <span
+        <button
           ref={spanRef}
-          className={`${textClasses} ${editing ? 'cursor-text' : 'cursor-grab'}`}
-          role="button"
-          tabIndex={0}
+          type="button"
+          className={`${textClasses} ${editing ? 'cursor-text' : 'cursor-grab'} bg-transparent border-none p-0 m-0 text-left text-inherit text-[inherit] leading-[inherit]`}
           aria-label={`Edit item: ${item.text}`}
           onPointerDown={handleTextPointerDown}
           onKeyDown={handleDisplayKeyDown}
         >
           {item.text}
-        </span>
+        </button>
       )}
       <button
         className="p-0 rounded-sm text-text-tertiary transition-all duration-150 cursor-pointer opacity-0 shrink-0 mt-px hover:text-danger hover:bg-red-500/10 focus:opacity-100 [div:hover>&]:opacity-100 [div:focus-within>&]:opacity-100"
