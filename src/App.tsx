@@ -14,7 +14,18 @@ import ErrorBoundary from './components/ErrorBoundary'
 import type { Framework, FrameworkTemplate } from './types'
 
 export default function App() {
-  const frameworkStore = useFrameworks()
+  const {
+    frameworks,
+    getFramework,
+    create,
+    update,
+    remove,
+    duplicate,
+    editStructure,
+    replace,
+    addImport,
+    addRaw,
+  } = useFrameworks()
   const { activeId, navigate } = useRouting()
   const { darkMode, toggle: toggleDark } = useDarkMode()
   const [showBuilder, setShowBuilder] = useState(false)
@@ -33,58 +44,58 @@ export default function App() {
     exportJson,
     importJson,
   } = useShareImport({
-    getFramework: frameworkStore.getFramework,
+    getFramework,
     navigate,
-    addRaw: frameworkStore.addRaw,
-    replace: frameworkStore.replace,
-    addImport: frameworkStore.addImport,
+    addRaw,
+    replace,
+    addImport,
   })
 
-  const activeFramework = frameworkStore.getFramework(activeId)
+  const activeFramework = getFramework(activeId)
 
   const handleCreate = useCallback(
     (template: FrameworkTemplate) => {
-      const fw = frameworkStore.create(template)
+      const fw = create(template)
       navigate(fw.id)
       setShowBuilder(false)
     },
-    [frameworkStore.create, navigate],
+    [create, navigate],
   )
 
   const handleDelete = useCallback(
     (id: string) => {
-      frameworkStore.remove(id)
+      remove(id)
       if (activeId === id) navigate(null)
     },
-    [frameworkStore.remove, activeId, navigate],
+    [remove, activeId, navigate],
   )
 
   const handleDuplicate = useCallback(
     (fw: Framework) => {
-      const dup = frameworkStore.duplicate(fw)
+      const dup = duplicate(fw)
       navigate(dup.id)
     },
-    [frameworkStore.duplicate, navigate],
+    [duplicate, navigate],
   )
 
   const handleImport = useCallback(() => {
     importJson((fw: Framework) => {
-      frameworkStore.addRaw(fw)
+      addRaw(fw)
       navigate(fw.id)
     })
-  }, [importJson, frameworkStore.addRaw, navigate])
+  }, [importJson, addRaw, navigate])
 
   const handleSaveEdit = useCallback(
     (template: FrameworkTemplate) => {
       if (editingFramework) {
-        frameworkStore.editStructure(editingFramework, template)
+        editStructure(editingFramework, template)
         setEditingFramework(null)
         setShowBuilder(false)
       } else {
         handleCreate(template)
       }
     },
-    [editingFramework, frameworkStore.editStructure, handleCreate],
+    [editingFramework, editStructure, handleCreate],
   )
 
   const openBuilder = useCallback(() => {
@@ -106,7 +117,7 @@ export default function App() {
     return (
       <ReflectionMode
         framework={activeFramework}
-        onUpdate={frameworkStore.update}
+        onUpdate={update}
         onExit={() => setReflectionMode(false)}
       />
     )
@@ -115,7 +126,7 @@ export default function App() {
   return (
     <div className="flex h-screen overflow-hidden">
       <Sidebar
-        frameworks={frameworkStore.frameworks}
+        frameworks={frameworks}
         activeId={activeId}
         open={sidebarOpen}
         darkMode={darkMode}
@@ -150,7 +161,7 @@ export default function App() {
             <QuadrantCanvas
               framework={activeFramework}
               sidebarOpen={sidebarOpen}
-              onUpdate={frameworkStore.update}
+              onUpdate={update}
               onReflect={() => setReflectionMode(true)}
               onEdit={() => openEditor(activeFramework)}
               onShare={share}
