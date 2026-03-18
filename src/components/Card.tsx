@@ -275,7 +275,7 @@ export default function Card({
         aria-label={`Delete item: ${item.text}`}
         title="Delete"
       >
-        <XIcon size={11} aria-hidden="true" />
+        <XIcon size={11} />
       </button>
       {showMoveMenu && moveTargets.length > 0 && (
         <div

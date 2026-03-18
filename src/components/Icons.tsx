@@ -11,6 +11,7 @@ const base: SVGProps<SVGSVGElement> = {
   strokeWidth: 2,
   strokeLinecap: 'round',
   strokeLinejoin: 'round',
+  'aria-hidden': true,
 }
 
 export function XIcon({ size = 16, ...props }: IconProps) {
