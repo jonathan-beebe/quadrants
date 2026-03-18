@@ -92,6 +92,7 @@ export default function Sidebar({
     <>
       <aside
         aria-label="Frameworks sidebar"
+        inert={!open ? true : undefined}
         className={`fixed top-0 left-0 w-[280px] h-screen bg-surface border-r border-border flex flex-col z-[100] transition-transform duration-150 ease-in-out ${open ? 'translate-x-0' : '-translate-x-full'}`}
       >
         <div className="flex items-center justify-between p-4 border-b border-border">
@@ -111,7 +112,6 @@ export default function Sidebar({
               className="btn-icon text-text-secondary"
               onClick={onToggle}
               aria-label="Close sidebar"
-              aria-expanded={open}
             >
               <SidebarIcon size={18} />
             </button>
