@@ -318,7 +318,7 @@ export default function App() {
             onUpdate={handleUpdate}
             onReflect={() => setReflectionMode(true)}
             onEdit={() => handleEditFramework(activeFramework)}
-            onShare={() => handleShare(activeFramework)}
+            onShare={handleShare}
           />
         ) : (
           <EmptyState

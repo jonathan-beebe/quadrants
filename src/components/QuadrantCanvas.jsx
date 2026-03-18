@@ -13,12 +13,15 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit,
   const [drag, setDrag] = useState(null)
   const [autoFocusId, setAutoFocusId] = useState(null)
 
+  const frameworkRef = useRef(framework)
+  frameworkRef.current = framework
+
   const updateFramework = useCallback(
     (updater) => {
-      const updated = updater(framework)
+      const updated = updater(frameworkRef.current)
       onUpdate({ ...updated, updatedAt: Date.now() })
     },
-    [framework, onUpdate]
+    [onUpdate]
   )
 
   // Determine which quadrant a page coordinate falls in
@@ -200,7 +203,7 @@ export default function QuadrantCanvas({ framework, onUpdate, onReflect, onEdit,
             className="btn btn--secondary btn--sm"
             onClick={async () => {
               try {
-                await onShare()
+                await onShare(framework)
                 setShareStatus('copied')
                 setTimeout(() => setShareStatus(null), 2000)
               } catch {
