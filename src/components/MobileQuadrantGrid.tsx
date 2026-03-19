@@ -84,124 +84,99 @@ export default function MobileQuadrantGrid({
           const isRight = idx === 1 || idx === 3
           const isBottom = idx === 2 || idx === 3
 
-          // Zoomed out: title in corner, everything else hidden
-          const overviewHeader = (
-            <div
-              className={`flex items-center px-3 py-2.5 shrink-0 ${isRight ? 'justify-end' : 'justify-start'} ${isBottom ? 'border-t' : 'border-b'}`}
-              style={{ borderColor: border }}
-            >
-              <h2 className="text-sm font-semibold truncate">
-                {quadrant.label}
-              </h2>
-            </div>
-          )
-
-          // Zoomed in: centered title + badge, Done on right
-          const focusedHeader = (
-            <div
-              className="flex items-center justify-between px-3 py-2.5 shrink-0 border-b"
-              style={{ borderColor: border }}
-            >
-              {/* Spacer to balance the Done button */}
-              <div className="w-[52px] shrink-0" />
-              <div className="flex items-center gap-2 min-w-0 justify-center">
-                <h2 className="text-sm font-semibold truncate">
-                  {quadrant.label}
-                </h2>
-                <Badge
-                  count={quadrant.items.length}
-                  label={`${quadrant.items.length} items in ${quadrant.label}`}
-                />
-              </div>
-              <div className="shrink-0">
-                <Button
-                  variant="secondary"
-                  size="sm"
-                  onClick={() => setZoomedIdx(null)}
-                  tabIndex={isFocused ? 0 : -1}
-                >
-                  Done
-                </Button>
-              </div>
-            </div>
-          )
-
-          const canvas = (
-            <div
-              className="flex-1 relative min-h-0"
-              style={{ pointerEvents: isFocused ? 'auto' : 'none' }}
-              ref={(el) => {
-                canvasRefs.current![idx] = el
-              }}
-            >
-              {quadrant.items.map((item) => (
-                <Card
-                  key={item.id}
-                  item={item}
-                  isDragging={drag?.itemId === item.id}
-                  autoFocus={autoFocusId === item.id}
-                  moveTargets={framework.quadrants
-                    .map((q, i) => ({ label: q.label, index: i }))
-                    .filter((t) => t.index !== idx)}
-                  onChange={(text) => onEditItem(idx, item.id, text)}
-                  onDelete={() => onDeleteItem(idx, item.id)}
-                  onMove={(targetIdx) =>
-                    onMoveItem(idx, item.id, targetIdx)
-                  }
-                  onDragStart={(info) => onDragStart(idx, item, info)}
-                />
-              ))}
-            </div>
-          )
-
-          // Zoomed in: bottom toolbar with add + color picker
-          const toolbar = (
-            <div
-              className="flex items-center justify-center gap-3 px-3 py-2 shrink-0 border-t"
-              style={{ borderColor: border }}
-            >
-              <ColorPicker
-                color={qColor}
-                onChange={(c) => onColorChange(idx, c)}
-                placement="above-center"
-              />
-              <Button
-                variant="secondary"
-                size="sm"
-                onClick={() => onAddItem(idx)}
-                aria-label={`Add item to ${quadrant.label}`}
-                tabIndex={isFocused ? 0 : -1}
-              >
-                Add <PlusIcon size={14} />
-              </Button>
-            </div>
-          )
-
           return (
             <section
               key={idx}
               aria-label={quadrant.label}
-              className="flex flex-col border overflow-hidden"
+              className="relative flex flex-col border overflow-hidden"
               style={{ background: bg, borderColor: border }}
               ref={(el) => {
                 quadrantRefs.current![idx] = el
               }}
             >
-              {isFocused ? (
+              {/* Overview header — overlays the canvas in the corner */}
+              {!isFocused && (
+                <div
+                  className={`absolute z-10 ${isRight ? 'right-0' : 'left-0'} ${isBottom ? 'bottom-0' : 'top-0'} px-3 py-2.5`}
+                >
+                  <h2 className="text-sm font-semibold truncate">
+                    {quadrant.label}
+                  </h2>
+                </div>
+              )}
+
+              {/* Canvas — always flex-1, never reflows */}
+              <div
+                className="flex-1 relative min-h-0"
+                style={{ pointerEvents: isFocused ? 'auto' : 'none' }}
+                ref={(el) => {
+                  canvasRefs.current![idx] = el
+                }}
+              >
+                {quadrant.items.map((item) => (
+                  <Card
+                    key={item.id}
+                    item={item}
+                    isDragging={drag?.itemId === item.id}
+                    autoFocus={autoFocusId === item.id}
+                    moveTargets={framework.quadrants
+                      .map((q, i) => ({ label: q.label, index: i }))
+                      .filter((t) => t.index !== idx)}
+                    onChange={(text) => onEditItem(idx, item.id, text)}
+                    onDelete={() => onDeleteItem(idx, item.id)}
+                    onMove={(targetIdx) =>
+                      onMoveItem(idx, item.id, targetIdx)
+                    }
+                    onDragStart={(info) => onDragStart(idx, item, info)}
+                  />
+                ))}
+              </div>
+
+              {/* Focused overlays — header and toolbar float over the canvas */}
+              {isFocused && (
                 <>
-                  {focusedHeader}
-                  {canvas}
-                  {toolbar}
-                </>
-              ) : isBottom ? (
-                <>
-                  {canvas}
-                  {overviewHeader}
-                </>
-              ) : (
-                <>
-                  {overviewHeader}
-                  {canvas}
+                  <div
+                    className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-3 py-2.5 border-b"
+                    style={{ borderColor: border, background: bg }}
+                  >
+                    <div className="w-[52px] shrink-0" />
+                    <div className="flex items-center gap-2 min-w-0 justify-center">
+                      <h2 className="text-sm font-semibold truncate">
+                        {quadrant.label}
+                      </h2>
+                      <Badge
+                        count={quadrant.items.length}
+                        label={`${quadrant.items.length} items in ${quadrant.label}`}
+                      />
+                    </div>
+                    <div className="shrink-0">
+                      <Button
+                        variant="secondary"
+                        size="sm"
+                        onClick={() => setZoomedIdx(null)}
+                      >
+                        Done
+                      </Button>
+                    </div>
+                  </div>
+                  <div
+                    className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-center gap-3 px-3 py-2 border-t"
+                    style={{ borderColor: border, background: bg }}
+                  >
+                    <ColorPicker
+                      color={qColor}
+                      onChange={(c) => onColorChange(idx, c)}
+                      placement="above-center"
+                    />
+                    <Button
+                      variant="secondary"
+                      size="sm"
+                      onClick={() => onAddItem(idx)}
+                      aria-label={`Add item to ${quadrant.label}`}
+                    >
+                      Add <PlusIcon size={14} />
+                    </Button>
+                  </div>
                 </>
               )}
             </section>
