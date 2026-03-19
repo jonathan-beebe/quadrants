@@ -8,6 +8,7 @@ interface ColorPickerProps {
 
 export default function ColorPicker({ color, onChange }: ColorPickerProps) {
   const [open, setOpen] = useState(false)
+  const [alignLeft, setAlignLeft] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
 
@@ -60,14 +61,20 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
         ref={triggerRef}
         className="w-[24px] h-[24px] rounded border-2 border-white/80 shadow-[0_0_0_1px_rgba(0,0,0,0.12)] cursor-pointer transition-transform duration-150 hover:scale-115"
         style={{ background: color }}
-        onClick={() => setOpen(!open)}
+        onClick={() => {
+          if (!open && triggerRef.current) {
+            const rect = triggerRef.current.getBoundingClientRect()
+            setAlignLeft(rect.left < window.innerWidth / 2)
+          }
+          setOpen(!open)
+        }}
         aria-label={`Change color (current: ${currentName})`}
         aria-haspopup="listbox"
         aria-expanded={open}
       />
       {open && (
         <div
-          className="absolute top-[calc(100%+6px)] right-0 bg-surface border border-border rounded-lg shadow-lg p-2.5 z-[300] w-[180px]"
+          className={`absolute top-[calc(100%+6px)] ${alignLeft ? 'left-0' : 'right-0'} bg-surface border border-border rounded-lg shadow-lg p-2.5 z-[300] w-[180px]`}
           role="listbox"
           aria-label="Color options"
           onKeyDown={handleKeyDown}
