@@ -3,9 +3,9 @@ import type { FrameworkTemplate } from './types'
 export const templates: FrameworkTemplate[] = [
   {
     name: 'Start / Stop / Continue / Change',
-    axisX: '',
-    axisY: '',
-    quadrants: ['Start', 'Stop', 'Continue', 'Change'],
+    axisX: 'Existing / New',
+    axisY: 'Rethink / Embrace',
+    quadrants: ['Continue', 'Start', 'Stop', 'Change'],
   },
   {
     name: 'Keep / Problem / Try / Question',

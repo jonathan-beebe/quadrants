@@ -101,9 +101,9 @@ describe('FrameworkBuilder', () => {
 
     expect(onCreate).toHaveBeenCalledWith({
       name: 'Start / Stop / Continue / Change',
-      axisX: '',
-      axisY: '',
-      quadrants: ['Start', 'Stop', 'Continue', 'Change'],
+      axisX: 'Existing / New',
+      axisY: 'Rethink / Embrace',
+      quadrants: ['Continue', 'Start', 'Stop', 'Change'],
     })
   })
 
