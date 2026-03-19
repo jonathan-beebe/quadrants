@@ -4,9 +4,10 @@ import { colorPresets } from '../colors'
 interface ColorPickerProps {
   color: string
   onChange: (color: string) => void
+  placement?: 'auto' | 'above-center'
 }
 
-export default function ColorPicker({ color, onChange }: ColorPickerProps) {
+export default function ColorPicker({ color, onChange, placement = 'auto' }: ColorPickerProps) {
   const [open, setOpen] = useState(false)
   const [alignLeft, setAlignLeft] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -74,7 +75,7 @@ export default function ColorPicker({ color, onChange }: ColorPickerProps) {
       />
       {open && (
         <div
-          className={`absolute top-[calc(100%+6px)] ${alignLeft ? 'left-0' : 'right-0'} bg-surface border border-border rounded-lg shadow-lg p-2.5 z-[300] w-[180px]`}
+          className={`absolute bg-surface border border-border rounded-lg shadow-lg p-2.5 z-[300] w-[180px] ${placement === 'above-center' ? 'bottom-[calc(100%+6px)] left-1/2 -translate-x-1/2' : `top-[calc(100%+6px)] ${alignLeft ? 'left-0' : 'right-0'}`}`}
           role="listbox"
           aria-label="Color options"
           onKeyDown={handleKeyDown}

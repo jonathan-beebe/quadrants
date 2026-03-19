@@ -60,6 +60,34 @@ export default function QuadrantGrid({
           {framework.quadrants.map((quadrant, idx) => {
             const qColor = quadrant.color || defaultColors[idx]
             const { bg, border } = deriveColors(qColor)
+            const isRight = idx === 1 || idx === 3
+            const isBottom = idx === 2 || idx === 3
+
+            const header = (
+              <div className={`flex items-center justify-between px-3.5 pt-2.5 pb-1.5 shrink-0 ${isRight ? 'flex-row-reverse' : ''}`}>
+                <div className={`flex items-center gap-1.5 ${isRight ? 'flex-row-reverse' : ''}`}>
+                  <h2 className="text-[13px] font-semibold">{quadrant.label}</h2>
+                  <Badge
+                    count={quadrant.items.length}
+                    label={`${quadrant.items.length} items in ${quadrant.label}`}
+                  />
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <ColorPicker
+                    color={qColor}
+                    onChange={(c) => onColorChange(idx, c)}
+                  />
+                  <button
+                    className="p-[3px] rounded text-text-tertiary transition-all duration-150 hover:text-text-secondary hover:bg-black/6 dark:hover:bg-white/10"
+                    onClick={() => onAddItem(idx)}
+                    aria-label={`Add item to ${quadrant.label}`}
+                  >
+                    <PlusIcon size={14} />
+                  </button>
+                </div>
+              </div>
+            )
+
             return (
               <section
                 key={idx}
@@ -70,26 +98,7 @@ export default function QuadrantGrid({
                   quadrantRefs.current![idx] = el
                 }}
               >
-                <div className="flex items-center justify-between px-3.5 pt-2.5 pb-1.5 shrink-0">
-                  <h2 className="text-[13px] font-semibold">{quadrant.label}</h2>
-                  <div className="flex items-center gap-1.5">
-                    <ColorPicker
-                      color={qColor}
-                      onChange={(c) => onColorChange(idx, c)}
-                    />
-                    <Badge
-                      count={quadrant.items.length}
-                      label={`${quadrant.items.length} items in ${quadrant.label}`}
-                    />
-                    <button
-                      className="p-[3px] rounded text-text-tertiary transition-all duration-150 hover:text-text-secondary hover:bg-black/6 dark:hover:bg-white/10"
-                      onClick={() => onAddItem(idx)}
-                      aria-label={`Add item to ${quadrant.label}`}
-                    >
-                      <PlusIcon size={14} />
-                    </button>
-                  </div>
-                </div>
+                {!isBottom && header}
                 <div
                   className="flex-1 relative min-h-0 overflow-visible"
                   ref={(el) => {
@@ -112,6 +121,7 @@ export default function QuadrantGrid({
                     />
                   ))}
                 </div>
+                {isBottom && header}
               </section>
             )
           })}
