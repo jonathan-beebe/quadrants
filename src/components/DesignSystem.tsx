@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useRef } from 'react'
 import { useDarkMode } from '../hooks/useDarkMode'
-import { colorPresets } from '../colors'
+import { colorPresets, defaultColors } from '../colors'
 import ThemeToggleButton from './atoms/ThemeToggleButton'
 import Badge from './atoms/Badge'
 import PageTitle from './atoms/PageTitle'
@@ -10,6 +10,9 @@ import Button from './atoms/Button'
 import ColorPicker from './ColorPicker'
 import Toast from './Toast'
 import { UpdateToastView } from './UpdateToast'
+import QuadrantGrid from './QuadrantGrid'
+import MobileQuadrantGrid from './MobileQuadrantGrid'
+import type { Framework } from '../types'
 import {
   XIcon,
   PlusIcon,
@@ -100,6 +103,119 @@ function IconSwatch({ name, component: Icon }: { name: string; component: typeof
         <Icon size={20} aria-hidden={false} aria-label={name} />
       </div>
       <Caption>{name}</Caption>
+    </div>
+  )
+}
+
+/* ── Demo data ── */
+
+const demoFramework: Framework = {
+  id: 'demo',
+  name: 'Eisenhower Matrix',
+  axisX: 'Urgency',
+  axisY: 'Importance',
+  quadrants: [
+    {
+      label: 'Do First',
+      color: defaultColors[0],
+      items: [
+        { id: '1', text: 'Ship v2 release', x: 25, y: 20, createdAt: 0 },
+        { id: '2', text: 'Fix auth bug', x: 55, y: 60, createdAt: 0 },
+        { id: '3', text: 'Update deps', x: 15, y: 70, createdAt: 0 },
+      ],
+    },
+    {
+      label: 'Schedule',
+      color: defaultColors[1],
+      items: [
+        { id: '4', text: 'Refactor DB layer', x: 30, y: 35, createdAt: 0 },
+        { id: '5', text: 'Write API docs', x: 60, y: 15, createdAt: 0 },
+      ],
+    },
+    {
+      label: 'Delegate',
+      color: defaultColors[2],
+      items: [
+        { id: '6', text: 'Design review', x: 40, y: 40, createdAt: 0 },
+        { id: '7', text: 'QA sprint tasks', x: 10, y: 20, createdAt: 0 },
+        { id: '8', text: 'Onboard new dev', x: 65, y: 70, createdAt: 0 },
+      ],
+    },
+    {
+      label: 'Eliminate',
+      color: defaultColors[3],
+      items: [
+        { id: '9', text: 'Legacy dashboard', x: 20, y: 30, createdAt: 0 },
+      ],
+    },
+  ],
+  createdAt: 0,
+  updatedAt: 0,
+}
+
+const noop = () => {}
+
+function DesktopGridDemo() {
+  const [framework, setFramework] = useState(demoFramework)
+  const quadrantRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
+  const canvasRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
+
+  return (
+    <div className="border border-border rounded-xl overflow-hidden bg-bg h-[500px] flex flex-col">
+      <QuadrantGrid
+        framework={framework}
+        drag={null}
+        autoFocusId={null}
+        quadrantRefs={quadrantRefs}
+        canvasRefs={canvasRefs}
+        onAddItem={noop}
+        onDeleteItem={noop}
+        onEditItem={noop}
+        onColorChange={(idx, color) => {
+          setFramework((fw) => ({
+            ...fw,
+            quadrants: fw.quadrants.map((q, i) =>
+              i === idx ? { ...q, color } : q,
+            ),
+          }))
+        }}
+        onMoveItem={noop}
+        onDragStart={noop}
+      />
+    </div>
+  )
+}
+
+function MobileGridDemo() {
+  const [framework, setFramework] = useState(demoFramework)
+  const quadrantRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
+  const canvasRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
+
+  return (
+    <div
+      className="border border-border rounded-xl overflow-hidden bg-bg flex flex-col"
+      style={{ width: 375, height: 667 }}
+    >
+      <MobileQuadrantGrid
+        framework={framework}
+        drag={null}
+        autoFocusId={null}
+        quadrantRefs={quadrantRefs}
+        canvasRefs={canvasRefs}
+        onAddItem={noop}
+        onDeleteItem={noop}
+        onEditItem={noop}
+        onColorChange={(idx, color) => {
+          setFramework((fw) => ({
+            ...fw,
+            quadrants: fw.quadrants.map((q, i) =>
+              i === idx ? { ...q, color } : q,
+            ),
+          }))
+        }}
+        onMoveItem={noop}
+        onDragStart={noop}
+      />
     </div>
   )
 }
@@ -254,7 +370,15 @@ export default function DesignSystem() {
         {/* ── Layouts ── */}
         <SectionHeading>Layouts</SectionHeading>
         <Subsection title="Sidebar" />
-        <Subsection title="Quadrant Canvas" />
+
+        <Subsection title="Quadrant Grid — Desktop">
+          <DesktopGridDemo />
+        </Subsection>
+
+        <Subsection title="Quadrant Grid — Mobile">
+          <MobileGridDemo />
+        </Subsection>
+
         <Subsection title="Reflection Mode" />
       </main>
 
