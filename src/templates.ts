@@ -26,7 +26,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Schedule', 'Do First', 'Eliminate', 'Delegate'],
   },
   {
-    name: 'Strengths / Weaknesses / Opportunities / Threats',
+    name: 'SWOT Analysis',
     axisX: '',
     axisY: '',
     quadrants: ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'],
