@@ -30,7 +30,7 @@ export default function App() {
     addRaw,
   } = useFrameworks()
   const { activeId, navigate } = useRouting()
-  const { darkMode, toggle: toggleDark } = useDarkMode()
+  const { darkMode, mode, cycleMode } = useDarkMode()
   const isMobile = useIsMobile()
   const [showBuilder, setShowBuilder] = useState(false)
   const [editingFramework, setEditingFramework] = useState<Framework | null>(null)
@@ -144,8 +144,9 @@ export default function App() {
           frameworks={frameworks}
           activeId={activeId}
           open={sidebarOpen}
+          themeMode={mode}
           darkMode={darkMode}
-          onToggleDark={toggleDark}
+          onCycleTheme={cycleMode}
           onToggle={() => setSidebarOpen((s) => !s)}
           onSelect={navigate}
           onNew={openBuilder}

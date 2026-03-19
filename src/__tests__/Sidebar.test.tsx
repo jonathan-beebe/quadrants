@@ -26,8 +26,9 @@ const defaultProps = {
   frameworks: [] as Framework[],
   activeId: null as string | null,
   open: true,
+  themeMode: 'system' as const,
   darkMode: false,
-  onToggleDark: vi.fn(),
+  onCycleTheme: vi.fn(),
   onToggle: vi.fn(),
   onSelect: vi.fn(),
   onNew: vi.fn(),
@@ -80,12 +81,12 @@ describe('Sidebar', () => {
     expect(onImport).toHaveBeenCalledOnce()
   })
 
-  it('calls onToggleDark when dark mode button is clicked', async () => {
+  it('calls onCycleTheme when theme button is clicked', async () => {
     const user = userEvent.setup()
-    const onToggleDark = vi.fn()
-    render(<Sidebar {...defaultProps} onToggleDark={onToggleDark} />)
-    await user.click(screen.getByRole('button', { name: /switch to dark mode/i }))
-    expect(onToggleDark).toHaveBeenCalledOnce()
+    const onCycleTheme = vi.fn()
+    render(<Sidebar {...defaultProps} onCycleTheme={onCycleTheme} />)
+    await user.click(screen.getByRole('button', { name: /following system theme/i }))
+    expect(onCycleTheme).toHaveBeenCalledOnce()
   })
 
   it('calls onToggle when sidebar toggle button is clicked', async () => {

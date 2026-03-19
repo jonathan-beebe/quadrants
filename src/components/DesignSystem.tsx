@@ -22,6 +22,8 @@ import {
   QuadrantGridIcon,
   SunIcon,
   MoonIcon,
+  MonitorIcon,
+  LinkIcon,
   SidebarIcon,
   ImportIcon,
   MoreVerticalIcon,
@@ -246,6 +248,8 @@ const iconEntries = [
   { name: 'QuadrantGridIcon', component: QuadrantGridIcon },
   { name: 'SunIcon', component: SunIcon },
   { name: 'MoonIcon', component: MoonIcon },
+  { name: 'MonitorIcon', component: MonitorIcon },
+  { name: 'LinkIcon', component: LinkIcon },
   { name: 'SidebarIcon', component: SidebarIcon },
   { name: 'ImportIcon', component: ImportIcon },
   { name: 'MoreVerticalIcon', component: MoreVerticalIcon },
@@ -254,7 +258,7 @@ const iconEntries = [
 /* ── Page ── */
 
 export default function DesignSystem() {
-  const { darkMode, toggle: toggleDark } = useDarkMode()
+  const { darkMode, mode, cycleMode } = useDarkMode()
   const [pickerColor, setPickerColor] = useState('#60a5fa')
   const [showToast, setShowToast] = useState(false)
 
@@ -270,7 +274,7 @@ export default function DesignSystem() {
             Back to app
           </a>
         </div>
-        <ThemeToggleButton darkMode={darkMode} onToggle={toggleDark} />
+        <ThemeToggleButton mode={mode} darkMode={darkMode} onCycle={cycleMode} />
       </header>
 
       <main className="max-w-4xl mx-auto px-8 py-8">
@@ -323,7 +327,7 @@ export default function DesignSystem() {
           <DemoRow label="Icon">
             <Button variant="icon" aria-label="Add"><PlusIcon size={18} /></Button>
             <Button variant="icon" aria-label="Edit"><EditIcon size={18} /></Button>
-            <ThemeToggleButton darkMode={darkMode} onToggle={toggleDark} />
+            <ThemeToggleButton mode={mode} darkMode={darkMode} onCycle={cycleMode} />
           </DemoRow>
         </Subsection>
 
@@ -346,8 +350,8 @@ export default function DesignSystem() {
         </Subsection>
 
         <Subsection title="Theme Toggle" layout="inline">
-          <ThemeToggleButton darkMode={darkMode} onToggle={toggleDark} />
-          <Caption>Current: {darkMode ? 'Dark' : 'Light'}</Caption>
+          <ThemeToggleButton mode={mode} darkMode={darkMode} onCycle={cycleMode} />
+          <Caption>Current: {mode}</Caption>
         </Subsection>
 
         <Subsection title="Toast" layout="stack">

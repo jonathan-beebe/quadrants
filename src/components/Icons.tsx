@@ -94,6 +94,25 @@ export function MoonIcon({ size = 16, ...props }: IconProps) {
   )
 }
 
+export function MonitorIcon({ size = 16, ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} {...props}>
+      <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+      <line x1="8" y1="21" x2="16" y2="21" />
+      <line x1="12" y1="17" x2="12" y2="21" />
+    </svg>
+  )
+}
+
+export function LinkIcon({ size = 16, ...props }: IconProps) {
+  return (
+    <svg width={size} height={size} {...base} {...props}>
+      <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71" />
+      <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" />
+    </svg>
+  )
+}
+
 export function SidebarIcon({ size = 16, ...props }: IconProps) {
   return (
     <svg width={size} height={size} {...base} {...props}>

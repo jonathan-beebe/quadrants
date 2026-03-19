@@ -10,13 +10,15 @@ import ThemeToggleButton from './atoms/ThemeToggleButton'
 import Caption from './atoms/Caption'
 import Button from './atoms/Button'
 import type { Framework } from '../types'
+import type { ThemeMode } from '../hooks/useDarkMode'
 
 interface SidebarProps {
   frameworks: Framework[]
   activeId: string | null
   open: boolean
+  themeMode: ThemeMode
   darkMode: boolean
-  onToggleDark: () => void
+  onCycleTheme: () => void
   onToggle: () => void
   onSelect: (id: string) => void
   onNew: () => void
@@ -30,8 +32,9 @@ export default function Sidebar({
   frameworks,
   activeId,
   open,
+  themeMode,
   darkMode,
-  onToggleDark,
+  onCycleTheme,
   onToggle,
   onSelect,
   onNew,
@@ -102,7 +105,7 @@ export default function Sidebar({
             <span>Quadrants</span>
           </div>
           <div className="flex items-center gap-1">
-            <ThemeToggleButton darkMode={darkMode} onToggle={onToggleDark} />
+            <ThemeToggleButton mode={themeMode} darkMode={darkMode} onCycle={onCycleTheme} />
             <Button
               variant="icon"
               onClick={onToggle}
