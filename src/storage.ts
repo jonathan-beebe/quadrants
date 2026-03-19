@@ -17,6 +17,7 @@ export function saveFrameworks(frameworks: Framework[]): void {
 }
 
 export function createFramework(template: FrameworkTemplate): Framework {
+  const now = Date.now()
   return {
     id: crypto.randomUUID(),
     name: template.name,
@@ -27,8 +28,8 @@ export function createFramework(template: FrameworkTemplate): Framework {
       color: template.colors?.[i] || defaultColors[i],
       items: [],
     })),
-    createdAt: Date.now(),
-    updatedAt: Date.now(),
+    createdAt: now,
+    updatedAt: now,
   }
 }
 
