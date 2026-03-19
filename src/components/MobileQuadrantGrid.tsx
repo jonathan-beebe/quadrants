@@ -115,15 +115,16 @@ export default function MobileQuadrantGrid({
                     />
                   </div>
                 </div>
-                {isFocused && (
+                <div className={isFocused ? 'opacity-100' : 'opacity-0 pointer-events-none'}>
                   <Button
                     variant="secondary"
                     size="sm"
                     onClick={() => setZoomedIdx(null)}
+                    tabIndex={isFocused ? 0 : -1}
                   >
                     Done
                   </Button>
-                )}
+                </div>
               </div>
 
               {/* Canvas */}
@@ -154,20 +155,19 @@ export default function MobileQuadrantGrid({
               </div>
 
               {/* Footer — add button */}
-              {isFocused && (
-                <div
-                  className="flex items-center justify-center px-3 py-2 border-t shrink-0"
-                  style={{ borderColor: border }}
+              <div
+                className={`flex items-center justify-center px-3 py-2 border-t shrink-0 ${isFocused ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}
+                style={{ borderColor: border }}
+              >
+                <button
+                  className="p-2 rounded-lg text-text-secondary transition-all duration-150 hover:text-text hover:bg-black/6 dark:hover:bg-white/10"
+                  onClick={() => onAddItem(idx)}
+                  aria-label={`Add item to ${quadrant.label}`}
+                  tabIndex={isFocused ? 0 : -1}
                 >
-                  <button
-                    className="p-2 rounded-lg text-text-secondary transition-all duration-150 hover:text-text hover:bg-black/6 dark:hover:bg-white/10"
-                    onClick={() => onAddItem(idx)}
-                    aria-label={`Add item to ${quadrant.label}`}
-                  >
-                    <PlusIcon size={20} />
-                  </button>
-                </div>
-              )}
+                  <PlusIcon size={20} />
+                </button>
+              </div>
             </section>
           )
         })}
