@@ -212,7 +212,7 @@ export default function Sidebar({
 
       {!open && (
         <button
-          className="fixed top-4 left-4 z-50 p-2 bg-surface border border-border rounded-lg shadow text-text-secondary transition-all duration-150 hover:text-text hover:border-border-hover"
+          className="hidden min-[769px]:block fixed top-4 left-4 z-50 p-2 bg-surface border border-border rounded-lg shadow text-text-secondary transition-all duration-150 hover:text-text hover:border-border-hover"
           onClick={onToggle}
           aria-label="Open sidebar"
           aria-expanded={false}

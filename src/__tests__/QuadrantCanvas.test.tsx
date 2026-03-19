@@ -25,6 +25,7 @@ function makeFramework(overrides: Partial<Framework> = {}): Framework {
 const defaultProps = {
   framework: makeFramework(),
   sidebarOpen: true,
+  onToggleSidebar: vi.fn(),
   onUpdate: vi.fn(),
   onReflect: vi.fn(),
   onEdit: vi.fn(),

@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { useFrameworks } from './hooks/useFrameworks'
 import { useRouting } from './hooks/useRouting'
 import { useDarkMode } from './hooks/useDarkMode'
+import { useIsMobile } from './hooks/useIsMobile'
 import { useShareImport } from './hooks/useShareImport'
 import Sidebar from './components/Sidebar'
 import QuadrantCanvas from './components/QuadrantCanvas'
@@ -30,10 +31,11 @@ export default function App() {
   } = useFrameworks()
   const { activeId, navigate } = useRouting()
   const { darkMode, toggle: toggleDark } = useDarkMode()
+  const isMobile = useIsMobile()
   const [showBuilder, setShowBuilder] = useState(false)
   const [editingFramework, setEditingFramework] = useState<Framework | null>(null)
   const [reflectionMode, setReflectionMode] = useState(false)
-  const [sidebarOpen, setSidebarOpen] = useState(true)
+  const [sidebarOpen, setSidebarOpen] = useState(!isMobile)
 
   const {
     conflict,
@@ -155,7 +157,7 @@ export default function App() {
       </div>
       <main
         id="main-content"
-        className={`flex-1 overflow-y-auto transition-[margin-left] duration-150 ease-in-out ${sidebarOpen ? 'ml-[280px]' : 'ml-0'}`}
+        className={`flex-1 overflow-y-auto transition-[margin-left] duration-150 ease-in-out ${!isMobile && sidebarOpen ? 'ml-[280px]' : 'ml-0'}`}
       >
         {conflict ? (
           <ConflictDialog
@@ -176,6 +178,7 @@ export default function App() {
             <QuadrantCanvas
               framework={activeFramework}
               sidebarOpen={sidebarOpen}
+              onToggleSidebar={() => setSidebarOpen((s) => !s)}
               onUpdate={update}
               onReflect={() => setReflectionMode(true)}
               onEdit={() => openEditor(activeFramework)}

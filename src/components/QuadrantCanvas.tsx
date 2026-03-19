@@ -1,19 +1,22 @@
 import { useState, useRef, useCallback } from 'react'
 import { createItem } from '../storage'
 import { addItem, removeItem, updateItemText, setQuadrantColor, moveItem } from '../logic/items'
+import { useIsMobile } from '../hooks/useIsMobile'
 import useDragAndDrop from '../hooks/useDragAndDrop'
 import type { DropResult } from '../hooks/useDragAndDrop'
 import { GhostCard, PLACEHOLDER } from './Card'
-import { EditIcon, ShareIcon, MaximizeIcon } from './Icons'
+import { EditIcon, ShareIcon, MaximizeIcon, SidebarIcon } from './Icons'
 import PageTitle from './atoms/PageTitle'
 import Button from './atoms/Button'
 import QuadrantGrid from './QuadrantGrid'
+import MobileQuadrantGrid from './MobileQuadrantGrid'
 import type { Framework, Item } from '../types'
 import type { DragStartInfo } from './Card'
 
 interface QuadrantCanvasProps {
   framework: Framework
   sidebarOpen: boolean
+  onToggleSidebar: () => void
   onUpdate: (framework: Framework) => void
   onReflect: () => void
   onEdit: () => void
@@ -23,11 +26,13 @@ interface QuadrantCanvasProps {
 export default function QuadrantCanvas({
   framework,
   sidebarOpen,
+  onToggleSidebar,
   onUpdate,
   onReflect,
   onEdit,
   onShare,
 }: QuadrantCanvasProps) {
+  const isMobile = useIsMobile()
   const [shareStatus, setShareStatus] = useState<'copied' | 'error' | null>(null)
   const [autoFocusId, setAutoFocusId] = useState<string | null>(null)
   const [liveMessage, setLiveMessage] = useState('')
@@ -121,33 +126,47 @@ export default function QuadrantCanvas({
     draggedItem = q?.items.find((it) => it.id === drag.itemId) ?? null
   }
 
+  const handleShare = useCallback(async () => {
+    try {
+      await onShare(framework)
+      setShareStatus('copied')
+      setTimeout(() => setShareStatus(null), 2000)
+    } catch {
+      setShareStatus('error')
+      setTimeout(() => setShareStatus(null), 2000)
+    }
+  }, [onShare, framework])
+
+  const Grid = isMobile ? MobileQuadrantGrid : QuadrantGrid
+
   return (
-    <div className="flex flex-col h-screen p-6 select-none">
+    <div className={`flex flex-col h-screen select-none ${isMobile ? 'p-0' : 'p-6'}`}>
       <div
-        className={`flex items-center justify-between mb-5 shrink-0 ${sidebarOpen ? '' : 'pl-12'}`}
+        className={`flex items-center justify-between shrink-0 ${isMobile ? 'px-3 py-2.5 border-b border-border' : 'mb-5'} ${!isMobile && !sidebarOpen ? 'pl-12' : ''}`}
       >
-        <div className="flex items-center gap-2">
-          <PageTitle>{framework.name}</PageTitle>
-          <Button variant="ghost" size="sm" onClick={onEdit} title="Edit framework">
-            <EditIcon size={14} />
-            Edit
-          </Button>
+        <div className="flex items-center gap-2 min-w-0">
+          {isMobile && (
+            <Button
+              variant="icon"
+              onClick={onToggleSidebar}
+              aria-label="Open sidebar"
+              aria-expanded={sidebarOpen}
+            >
+              <SidebarIcon size={18} />
+            </Button>
+          )}
+          <PageTitle className={isMobile ? 'text-base truncate' : undefined}>
+            {framework.name}
+          </PageTitle>
+          {!isMobile && (
+            <Button variant="ghost" size="sm" onClick={onEdit} title="Edit framework">
+              <EditIcon size={14} />
+              Edit
+            </Button>
+          )}
         </div>
-        <div className="flex gap-2">
-          <Button
-            variant="secondary"
-            size="sm"
-            onClick={async () => {
-              try {
-                await onShare(framework)
-                setShareStatus('copied')
-                setTimeout(() => setShareStatus(null), 2000)
-              } catch {
-                setShareStatus('error')
-                setTimeout(() => setShareStatus(null), 2000)
-              }
-            }}
-          >
+        <div className="flex gap-2 shrink-0">
+          <Button variant="secondary" size="sm" onClick={handleShare}>
             <ShareIcon size={14} />
             <span aria-live="polite">
               {shareStatus === 'copied' ? 'Link copied!' : shareStatus === 'error' ? 'Share failed' : 'Share'}
@@ -160,7 +179,7 @@ export default function QuadrantCanvas({
         </div>
       </div>
 
-      <QuadrantGrid
+      <Grid
         framework={framework}
         drag={drag}
         autoFocusId={autoFocusId}
