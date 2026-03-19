@@ -23,8 +23,8 @@ describe('templates', () => {
     }
   })
 
-  it('includes the Urgent-Important Matrix with axes', () => {
-    const matrix = templates.find((t) => t.name === 'Urgent-Important Matrix')
+  it('includes the Eisenhower Matrix with axes', () => {
+    const matrix = templates.find((t) => t.name === 'Eisenhower Matrix')
     expect(matrix).toBeDefined()
     expect(matrix!.axisX).toBe('Urgency')
     expect(matrix!.axisY).toBe('Importance')

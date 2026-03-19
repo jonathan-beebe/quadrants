@@ -38,7 +38,7 @@ describe('FrameworkBuilder', () => {
     render(<FrameworkBuilder {...defaultProps} />)
     expect(screen.getByText('Start from a template')).toBeInTheDocument()
     // Template names appear as button text
-    expect(screen.getByRole('button', { name: /Urgent-Important Matrix/ })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /Eisenhower Matrix/ })).toBeInTheDocument()
   })
 
   it('hides templates when editing', () => {
@@ -64,9 +64,9 @@ describe('FrameworkBuilder', () => {
     const user = userEvent.setup()
     render(<FrameworkBuilder {...defaultProps} />)
 
-    await user.click(screen.getByRole('button', { name: /Urgent-Important Matrix/ }))
+    await user.click(screen.getByRole('button', { name: /Eisenhower Matrix/ }))
 
-    expect(screen.getByDisplayValue('Urgent-Important Matrix')).toBeInTheDocument()
+    expect(screen.getByDisplayValue('Eisenhower Matrix')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Do First')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Schedule')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Delegate')).toBeInTheDocument()

@@ -20,10 +20,10 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Love', 'Loathe', 'Learn', 'Leave'],
   },
   {
-    name: 'Urgent-Important Matrix',
+    name: 'Eisenhower Matrix',
     axisX: 'Urgency',
     axisY: 'Importance',
-    quadrants: ['Do First', 'Schedule', 'Delegate', 'Eliminate'],
+    quadrants: ['Schedule', 'Do First', 'Eliminate', 'Delegate'],
   },
   {
     name: 'Strengths / Weaknesses / Opportunities / Threats',
