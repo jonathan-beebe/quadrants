@@ -4,9 +4,16 @@
     <meta charset="utf-8" />
     <title>Quadrants</title>
     <script>
-      // GitHub Pages SPA redirect
-      // Saves the full URL and redirects to the base path so index.html can load.
-      // The app restores the original URL via history.replaceState on boot.
+      // GitHub Pages SPA redirect (step 1 of 2)
+      //
+      // GitHub Pages serves this file for any unknown path. We save the
+      // original URL in sessionStorage and redirect to the base path so
+      // index.html can load. Step 2 happens in index.html, which reads
+      // sessionStorage.redirect and calls history.replaceState to restore
+      // the URL before the React app boots.
+      //
+      // During local development, vite.config.js serves this file via
+      // ghPages404Plugin to match production behavior.
       var pathSegmentsToKeep = 1; // keep /quadrants/
       var l = window.location;
       sessionStorage.redirect = l.pathname + l.search + l.hash;

@@ -6,7 +6,18 @@ import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 import { VitePWA } from 'vite-plugin-pwa'
 
-// Mimics GitHub Pages: serves 404.html for unknown paths instead of index.html
+// Mimics the GitHub Pages 404 redirect chain during local development.
+//
+// On GitHub Pages, requesting an unknown path (e.g. /quadrants/some-id)
+// serves the custom 404.html. That page saves the original URL in
+// sessionStorage and redirects to the base path (/quadrants/). Then
+// index.html restores the URL via history.replaceState before the app boots,
+// so React sees the correct pathname.
+//
+// Vite's default SPA mode would serve index.html directly for unknown paths,
+// bypassing 404.html entirely. We disable that with `appType: 'mpa'` below
+// and use this middleware to serve 404.html for unknown paths instead —
+// matching production behavior exactly.
 function ghPages404Plugin() {
   return {
     name: 'gh-pages-404',
@@ -25,7 +36,7 @@ function ghPages404Plugin() {
         ) {
           return next()
         }
-        // Serve 404.html for anything else, like GitHub Pages would
+        // Unknown path → serve 404.html, which triggers the redirect chain
         req.url = '/quadrants/404.html'
         next()
       })
@@ -40,7 +51,7 @@ export default defineConfig({
   define: {
     __COMMIT_HASH__: JSON.stringify(commitHash),
   },
-  appType: 'mpa', // Disable SPA fallback to index.html
+  appType: 'mpa', // Disable SPA fallback so ghPages404Plugin handles unknown paths
   plugins: [
     ghPages404Plugin(),
     react(),
