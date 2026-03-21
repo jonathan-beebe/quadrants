@@ -1,7 +1,9 @@
 import { describe, it, expect, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../App'
+import { encodeFramework } from '../sharing'
+import type { Framework } from '../types'
 
 beforeEach(() => {
   localStorage.clear()
@@ -96,5 +98,74 @@ describe('App', () => {
     render(<App />)
     // ConflictDialog is only shown on hash import conflicts — we just verify the empty state is clean
     expect(screen.queryByText('Framework already exists')).not.toBeInTheDocument()
+  })
+
+  describe('hash import', () => {
+    const sharedFramework: Framework = {
+      id: 'shared-fw',
+      name: 'Shared Framework',
+      axisX: 'Impact',
+      axisY: 'Effort',
+      quadrants: [
+        { label: 'Quick Wins', color: '#fbbf24', items: [{ id: 'i1', text: 'Item A', x: 10, y: 20, createdAt: 1000 }] },
+        { label: 'Big Bets', color: '#60a5fa', items: [] },
+        { label: 'Fill Ins', color: '#34d399', items: [] },
+        { label: 'Money Pit', color: '#f472b6', items: [] },
+      ],
+      createdAt: 1000,
+      updatedAt: 1000,
+    }
+
+    it('imports a new framework from a URL hash', async () => {
+      const hash = await encodeFramework(sharedFramework)
+      window.location.hash = `#${hash}`
+
+      render(<App />)
+
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: 'Shared Framework' })).toBeInTheDocument()
+      })
+      expect(screen.getByText('Quick Wins')).toBeInTheDocument()
+    })
+
+    it('navigates to existing framework when hash matches', async () => {
+      // Pre-populate localStorage with the same framework
+      localStorage.setItem('quadrants_frameworks', JSON.stringify([sharedFramework]))
+      const hash = await encodeFramework(sharedFramework)
+      window.location.hash = `#${hash}`
+
+      render(<App />)
+
+      await waitFor(() => {
+        expect(screen.getByRole('heading', { name: 'Shared Framework' })).toBeInTheDocument()
+      })
+      // No conflict dialog should appear
+      expect(screen.queryByText('Framework already exists')).not.toBeInTheDocument()
+    })
+
+    it('shows conflict dialog when hash has same ID but different content', async () => {
+      // Pre-populate with a framework that has the same ID but different name
+      const localFramework = {
+        ...sharedFramework,
+        name: 'My Local Version',
+        quadrants: sharedFramework.quadrants.map((q, i) => ({
+          ...q,
+          label: `Local ${i + 1}`,
+        })),
+      }
+      localStorage.setItem('quadrants_frameworks', JSON.stringify([localFramework]))
+
+      const hash = await encodeFramework(sharedFramework)
+      window.location.hash = `#${hash}`
+
+      render(<App />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Framework already exists')).toBeInTheDocument()
+      })
+      expect(screen.getByRole('button', { name: 'Cancel' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Keep both' })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: 'Replace local' })).toBeInTheDocument()
+    })
   })
 })
