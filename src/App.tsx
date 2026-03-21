@@ -1,9 +1,10 @@
-import { useState, useCallback } from 'react'
+import { useState, useCallback, useEffect } from 'react'
 import { useFrameworks } from './hooks/useFrameworks'
 import { useRouting } from './hooks/useRouting'
 import { useDarkMode } from './hooks/useDarkMode'
 import { useIsMobile } from './hooks/useIsMobile'
 import { useShareImport } from './hooks/useShareImport'
+import { isNamedRoute, replacePath } from './logic/routing'
 import Sidebar from './components/Sidebar'
 import QuadrantCanvas from './components/QuadrantCanvas'
 import FrameworkBuilder from './components/FrameworkBuilder'
@@ -56,6 +57,14 @@ export default function App() {
   })
 
   const activeFramework = getFramework(activeId)
+
+  // Redirect to home if the URL points to a framework that doesn't exist
+  useEffect(() => {
+    if (activeId && !activeFramework && !isNamedRoute(activeId)) {
+      navigate(null)
+      replacePath(null)
+    }
+  }, [activeId, activeFramework, navigate])
 
   const handleCreate = useCallback(
     (template: FrameworkTemplate) => {
