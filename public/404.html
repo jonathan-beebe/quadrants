@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Quadrants</title>
+    <script>
+      // GitHub Pages SPA redirect
+      // Saves the full URL and redirects to the base path so index.html can load.
+      // The app restores the original URL via history.replaceState on boot.
+      var pathSegmentsToKeep = 1; // keep /quadrants/
+      var l = window.location;
+      sessionStorage.redirect = l.pathname + l.search + l.hash;
+      l.replace(
+        l.protocol +
+          '//' +
+          l.hostname +
+          (l.port ? ':' + l.port : '') +
+          l.pathname
+            .split('/')
+            .slice(0, 1 + pathSegmentsToKeep)
+            .join('/') +
+          '/',
+      );
+    </script>
+  </head>
+  <body></body>
+</html>

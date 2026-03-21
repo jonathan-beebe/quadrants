@@ -8,6 +8,16 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <title>Quadrants</title>
+    <script>
+      // Restore URL after GitHub Pages 404.html redirect
+      (function () {
+        var redirect = sessionStorage.redirect;
+        delete sessionStorage.redirect;
+        if (redirect && redirect !== location.pathname + location.search + location.hash) {
+          history.replaceState(null, '', redirect);
+        }
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>
