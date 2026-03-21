@@ -154,30 +154,59 @@ describe('applyTemplateEdit', () => {
 })
 
 describe('frameworksMatch', () => {
-  it('returns true when name, labels, and item counts match', () => {
-    const fw = makeFramework({ name: 'Shared' })
-    fw.quadrants[0].label = 'Q1'
-    fw.quadrants[1].label = 'Q2'
-    fw.quadrants[2].label = 'Q3'
-    fw.quadrants[3].label = 'Q4'
-    const payload = makePayload()
-    expect(frameworksMatch(fw, payload)).toBe(true)
+  function makeMatchingFramework(): Framework {
+    return makeFramework({
+      name: 'Shared',
+      axisX: 'X',
+      axisY: 'Y',
+      quadrants: [
+        { label: 'Q1', color: '#fbbf24', items: [{ id: 'i1', text: 'Shared item', x: 15, y: 25, createdAt: 1000 }] },
+        { label: 'Q2', color: '#60a5fa', items: [] },
+        { label: 'Q3', color: '#34d399', items: [] },
+        { label: 'Q4', color: '#f472b6', items: [] },
+      ],
+    })
+  }
+
+  it('returns true when name, axes, labels, and items match', () => {
+    expect(frameworksMatch(makeMatchingFramework(), makePayload())).toBe(true)
   })
 
   it('returns false when names differ', () => {
-    const fw = makeFramework({ name: 'Different' })
+    const fw = makeMatchingFramework()
+    fw.name = 'Different'
+    expect(frameworksMatch(fw, makePayload())).toBe(false)
+  })
+
+  it('returns false when axis labels differ', () => {
+    const fw = makeMatchingFramework()
+    fw.axisX = 'Different Axis'
     expect(frameworksMatch(fw, makePayload())).toBe(false)
   })
 
   it('returns false when item counts differ', () => {
-    const fw = makeFramework({ name: 'Shared' })
-    fw.quadrants[0].label = 'Q1'
-    fw.quadrants[1].label = 'Q2'
-    fw.quadrants[2].label = 'Q3'
-    fw.quadrants[3].label = 'Q4'
-    // fw has 1 item in Q1, payload also has 1 - but let's add an extra
+    const fw = makeMatchingFramework()
     fw.quadrants[0].items.push({ id: 'extra', text: 'Extra', x: 0, y: 0, createdAt: 0 })
     expect(frameworksMatch(fw, makePayload())).toBe(false)
+  })
+
+  it('returns false when item text differs', () => {
+    const fw = makeMatchingFramework()
+    fw.quadrants[0].items[0].text = 'Edited locally'
+    expect(frameworksMatch(fw, makePayload())).toBe(false)
+  })
+
+  it('returns false when item coordinates differ', () => {
+    const fw = makeMatchingFramework()
+    fw.quadrants[0].items[0].x = 99
+    expect(frameworksMatch(fw, makePayload())).toBe(false)
+  })
+
+  it('ignores metadata fields like createdAt and item ids', () => {
+    const fw = makeMatchingFramework()
+    fw.quadrants[0].items[0].id = 'different-id'
+    fw.quadrants[0].items[0].createdAt = 9999
+    expect(frameworksMatch(fw, makePayload())).toBe(true)
   })
 })
 

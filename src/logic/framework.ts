@@ -72,11 +72,21 @@ export function frameworksMatch(
 ): boolean {
   return (
     existing.name === payload.name &&
-    existing.quadrants.every(
-      (q, i) =>
-        q.label === payload.quadrants[i]?.label &&
-        q.items.length === (payload.quadrants[i]?.items?.length ?? 0),
-    )
+    existing.axisX === (payload.axisX || '') &&
+    existing.axisY === (payload.axisY || '') &&
+    existing.quadrants.every((q, i) => {
+      const pq = payload.quadrants[i]
+      if (!pq) return false
+      if (q.label !== pq.label) return false
+      const pqItems = pq.items ?? []
+      if (q.items.length !== pqItems.length) return false
+      return q.items.every(
+        (item, j) =>
+          item.text === pqItems[j]?.text &&
+          item.x === pqItems[j]?.x &&
+          item.y === pqItems[j]?.y,
+      )
+    })
   )
 }
 
