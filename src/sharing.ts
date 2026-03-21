@@ -2,6 +2,7 @@ import type { Framework, SharedPayload } from './types'
 
 export async function encodeFramework(framework: Framework): Promise<string> {
   const payload: SharedPayload = {
+    id: framework.id,
     name: framework.name,
     axisX: framework.axisX,
     axisY: framework.axisY,
@@ -41,7 +42,7 @@ export async function decodeFramework(hash: string): Promise<SharedPayload | nul
   const json = new TextDecoder().decode(decompressed)
   const payload = JSON.parse(json) as SharedPayload
 
-  if (!payload.name || !Array.isArray(payload.quadrants) || payload.quadrants.length !== 4) {
+  if (!payload.id || !payload.name || !Array.isArray(payload.quadrants) || payload.quadrants.length !== 4) {
     return null
   }
 

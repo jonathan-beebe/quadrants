@@ -41,6 +41,7 @@ export default function App() {
   const {
     conflict,
     error,
+    importing,
     clearError,
     handleConflictReplace,
     handleConflictDuplicate,
@@ -60,11 +61,12 @@ export default function App() {
 
   // Redirect to home if the URL points to a framework that doesn't exist
   useEffect(() => {
+    if (importing) return
     if (activeId && !activeFramework && !isNamedRoute(activeId)) {
       navigate(null)
       replacePath(null)
     }
-  }, [activeId, activeFramework, navigate])
+  }, [activeId, activeFramework, importing, navigate])
 
   const handleCreate = useCallback(
     (template: FrameworkTemplate) => {

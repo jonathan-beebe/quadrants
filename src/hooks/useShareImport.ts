@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { encodeFramework, decodeFramework } from '../sharing'
 import { hydratePayload, frameworksMatch } from '../logic/framework'
-import { getIdFromPath, getHashFromUrl, replacePath } from '../logic/routing'
+import { getHashFromUrl, replacePath } from '../logic/routing'
 import type { Framework } from '../types'
 
 export interface Conflict {
@@ -26,8 +26,9 @@ export function useShareImport({
 }: UseShareImportOptions) {
   const [conflict, setConflict] = useState<Conflict | null>(null)
   const [error, setError] = useState<string | null>(null)
+  const [importing, setImporting] = useState(() => !!getHashFromUrl())
   const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const hashLoaded = useRef(false)
+  const lastHash = useRef<string | null>(null)
 
   const showError = useCallback((message: string) => {
     if (errorTimer.current) clearTimeout(errorTimer.current)
@@ -40,21 +41,20 @@ export function useShareImport({
     setError(null)
   }, [])
 
-  // Load framework from URL hash on mount
-  useEffect(() => {
-    if (hashLoaded.current) return
-    hashLoaded.current = true
-
+  const importFromHash = useCallback(() => {
     const hash = getHashFromUrl()
-    if (!hash) return
-
-    const pathId = getIdFromPath()
+    if (!hash || hash === lastHash.current) return
+    lastHash.current = hash
+    setImporting(true)
 
     decodeFramework(hash)
       .then((payload) => {
-        if (!payload) return
+        if (!payload) {
+          setImporting(false)
+          return
+        }
 
-        const id = pathId || crypto.randomUUID()
+        const id = payload.id
         const existing = getFramework(id)
 
         if (!existing) {
@@ -63,6 +63,7 @@ export function useShareImport({
           setTimeout(() => {
             navigate(fw.id)
             replacePath(fw.id)
+            setImporting(false)
           }, 0)
           return
         }
@@ -71,19 +72,31 @@ export function useShareImport({
           setTimeout(() => {
             navigate(id)
             replacePath(id)
+            setImporting(false)
           }, 0)
           return
         }
 
         const incoming = hydratePayload(payload, id)
-        setTimeout(() => setConflict({ existing, incoming }), 0)
+        setTimeout(() => {
+          setConflict({ existing, incoming })
+          setImporting(false)
+        }, 0)
       })
       .catch((err) => {
         console.error('Failed to decode shared framework from URL:', err)
         showError('The shared link could not be loaded. It may be invalid or corrupted.')
         replacePath(null)
+        setImporting(false)
       })
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  }, [getFramework, addRaw, navigate, showError])
+
+  // Load framework from URL hash on mount and on hash change
+  useEffect(() => {
+    importFromHash()
+    window.addEventListener('hashchange', importFromHash)
+    return () => window.removeEventListener('hashchange', importFromHash)
+  }, [importFromHash])
 
   const handleConflictReplace = useCallback(() => {
     if (!conflict) return
@@ -111,7 +124,7 @@ export function useShareImport({
   const share = useCallback(async (fw: Framework): Promise<string> => {
     const hash = await encodeFramework(fw)
     const base = import.meta.env.BASE_URL ?? '/'
-    const url = `${window.location.origin}${base}${fw.id}#${hash}`
+    const url = `${window.location.origin}${base}#${hash}`
     await navigator.clipboard.writeText(url)
     return url
   }, [])
@@ -165,6 +178,7 @@ export function useShareImport({
   return {
     conflict,
     error,
+    importing,
     clearError,
     handleConflictReplace,
     handleConflictDuplicate,

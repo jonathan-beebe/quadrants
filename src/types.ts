@@ -31,6 +31,7 @@ export interface FrameworkTemplate {
 }
 
 export interface SharedPayload {
+  id: string
   name: string
   axisX: string
   axisY: string

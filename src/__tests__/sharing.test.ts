@@ -35,12 +35,19 @@ describe('encodeFramework / decodeFramework', () => {
     expect(decoded!.quadrants[0].items[0].text).toBe('Item 1')
   })
 
-  it('strips metadata fields (id, createdAt, updatedAt) during encoding', async () => {
+  it('includes the framework id in the encoded payload', async () => {
+    const fw = makeFramework({ id: 'my-uuid-123' })
+    const encoded = await encodeFramework(fw)
+    const decoded = await decodeFramework(encoded)
+
+    expect(decoded!.id).toBe('my-uuid-123')
+  })
+
+  it('strips item-level and framework-level metadata (createdAt, updatedAt, item ids)', async () => {
     const fw = makeFramework()
     const encoded = await encodeFramework(fw)
     const decoded = await decodeFramework(encoded)
 
-    expect(decoded).not.toHaveProperty('id')
     expect(decoded).not.toHaveProperty('createdAt')
     expect(decoded).not.toHaveProperty('updatedAt')
     expect(decoded!.quadrants[0].items[0]).not.toHaveProperty('id')
@@ -78,5 +85,32 @@ describe('encodeFramework / decodeFramework', () => {
     const encoded = await encodeFramework(fw)
     const decoded = await decodeFramework(encoded)
     expect(decoded!.name).toBe('Prüfung 测试 テスト')
+  })
+
+  it('returns null for payload missing an id', async () => {
+    const payload = {
+      name: 'No ID',
+      axisX: 'X',
+      axisY: 'Y',
+      quadrants: [
+        { label: 'Q1', color: '#fbbf24', items: [] },
+        { label: 'Q2', color: '#60a5fa', items: [] },
+        { label: 'Q3', color: '#34d399', items: [] },
+        { label: 'Q4', color: '#f472b6', items: [] },
+      ],
+    }
+    const json = JSON.stringify(payload)
+    const bytes = new TextEncoder().encode(json)
+
+    const cs = new CompressionStream('deflate')
+    const writer = cs.writable.getWriter()
+    writer.write(bytes)
+    writer.close()
+    const compressed = await new Response(cs.readable).arrayBuffer()
+    const binary = String.fromCharCode(...new Uint8Array(compressed))
+    const hash = btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+
+    const result = await decodeFramework(hash)
+    expect(result).toBeNull()
   })
 })
