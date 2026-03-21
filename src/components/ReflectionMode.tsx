@@ -1,7 +1,9 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
 import { createItem } from '../storage'
+import { addItem } from '../logic/items'
 import { deriveColors, defaultColors } from '../colors'
 import { XIcon } from './Icons'
+import { useFocusTrap } from '../hooks/useFocusTrap'
 import Badge from './atoms/Badge'
 import Caption from './atoms/Caption'
 import type { Framework } from '../types'
@@ -35,12 +37,7 @@ export default function ReflectionMode({
     (e: React.FormEvent) => {
       e.preventDefault()
       if (!text.trim()) return
-      const updated = { ...framework }
-      updated.quadrants = updated.quadrants.map((q, i) =>
-        i === activeQuadrant
-          ? { ...q, items: [...q.items, createItem(text.trim())] }
-          : q,
-      )
+      const updated = addItem(framework, activeQuadrant, createItem(text.trim()))
       onUpdate(updated)
       setText('')
       inputRef.current?.focus()
@@ -48,34 +45,7 @@ export default function ReflectionMode({
     [text, activeQuadrant, framework, onUpdate],
   )
 
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        onExit()
-        return
-      }
-
-      // Focus trap: cycle focus within the overlay
-      if (e.key === 'Tab') {
-        const focusable = overlayRef.current?.querySelectorAll<HTMLElement>(
-          'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])',
-        )
-        if (!focusable?.length) return
-
-        const first = focusable[0]
-        const last = focusable[focusable.length - 1]
-
-        if (e.shiftKey && document.activeElement === first) {
-          e.preventDefault()
-          last.focus()
-        } else if (!e.shiftKey && document.activeElement === last) {
-          e.preventDefault()
-          first.focus()
-        }
-      }
-    },
-    [onExit],
-  )
+  const handleKeyDown = useFocusTrap(overlayRef, onExit)
 
   const switchQuadrant = useCallback(
     (idx: number) => {
@@ -140,6 +110,7 @@ export default function ReflectionMode({
               aria-controls={`quadrant-panel-${i}`}
               id={`quadrant-tab-${i}`}
               tabIndex={i === activeQuadrant ? 0 : -1}
+              aria-keyshortcuts="ArrowLeft ArrowRight Home End"
               className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 px-3 rounded-lg text-[13px] font-medium transition-all duration-150 border ${i === activeQuadrant ? 'text-text border-current' : 'text-text-secondary border-transparent hover:bg-surface hover:text-text'}`}
               style={
                 i === activeQuadrant

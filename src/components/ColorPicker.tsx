@@ -1,5 +1,7 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { colorPresets } from '../colors'
+import { useClickOutside } from '../hooks/useClickOutside'
+import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
 
 interface ColorPickerProps {
   color: string
@@ -13,46 +15,17 @@ export default function ColorPicker({ color, onChange, placement = 'auto' }: Col
   const ref = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
 
-  useEffect(() => {
-    if (!open) return
-    const handleClick = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false)
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [open])
+  const close = () => setOpen(false)
+  useClickOutside(ref, close, open)
 
-  // Focus first swatch when popup opens
+  const handleKeyDown = useMenuKeyboardNav(ref, close, triggerRef)
+
   useEffect(() => {
     if (open && ref.current) {
       const first = ref.current.querySelector<HTMLElement>('[role="option"]')
       first?.focus()
     }
   }, [open])
-
-  const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      const options = ref.current?.querySelectorAll<HTMLElement>('[role="option"]')
-      if (!options?.length) return
-
-      const currentIdx = Array.from(options).indexOf(e.target as HTMLElement)
-
-      if (e.key === 'ArrowRight' || e.key === 'ArrowDown') {
-        e.preventDefault()
-        const next = (currentIdx + 1) % options.length
-        options[next].focus()
-      } else if (e.key === 'ArrowLeft' || e.key === 'ArrowUp') {
-        e.preventDefault()
-        const prev = (currentIdx - 1 + options.length) % options.length
-        options[prev].focus()
-      } else if (e.key === 'Escape' || e.key === 'Tab') {
-        e.preventDefault()
-        setOpen(false)
-        triggerRef.current?.focus()
-      }
-    },
-    [],
-  )
 
   const currentName = colorPresets.find((c) => c.hex === color)?.name ?? 'Custom'
 

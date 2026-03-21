@@ -1,5 +1,7 @@
 import { useRef, useCallback, useEffect, useState } from 'react'
 import { XIcon } from './Icons'
+import { useClickOutside } from '../hooks/useClickOutside'
+import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
 import type { Item } from '../types'
 
 const DRAG_THRESHOLD = 4
@@ -50,17 +52,8 @@ export default function Card({
   const [minSize, setMinSize] = useState<{ width: number; height: number } | null>(null)
   const [showMoveMenu, setShowMoveMenu] = useState(false)
 
-  // Close move menu on outside click
-  useEffect(() => {
-    if (!showMoveMenu) return
-    const handleClick = (e: MouseEvent) => {
-      if (moveMenuRef.current && !moveMenuRef.current.contains(e.target as Node)) {
-        setShowMoveMenu(false)
-      }
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [showMoveMenu])
+  const closeMoveMenu = useCallback(() => setShowMoveMenu(false), [])
+  useClickOutside(moveMenuRef, closeMoveMenu, showMoveMenu)
 
   // Focus first menu item when move menu opens
   useEffect(() => {
@@ -70,26 +63,7 @@ export default function Card({
     }
   }, [showMoveMenu])
 
-  const handleMoveMenuKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      const items = moveMenuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]')
-      if (!items?.length) return
-      const currentIdx = Array.from(items).indexOf(e.target as HTMLElement)
-
-      if (e.key === 'ArrowDown') {
-        e.preventDefault()
-        items[(currentIdx + 1) % items.length].focus()
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault()
-        items[(currentIdx - 1 + items.length) % items.length].focus()
-      } else if (e.key === 'Escape' || e.key === 'Tab') {
-        e.preventDefault()
-        setShowMoveMenu(false)
-        spanRef.current?.focus()
-      }
-    },
-    [],
-  )
+  const handleMoveMenuKeyDown = useMenuKeyboardNav(moveMenuRef, closeMoveMenu, spanRef)
 
   const resizeTextarea = useCallback(() => {
     const ta = textareaRef.current
@@ -107,19 +81,22 @@ export default function Card({
     ta.select()
   }, [editing, resizeTextarea])
 
-  useEffect(() => {
-    return () => {
-      window.removeEventListener('pointermove', handlePendingMove)
-      window.removeEventListener('pointerup', handlePendingUp)
-    }
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
+  // Use refs for callbacks passed to window listeners to avoid stale closures
+  const onDragStartRef = useRef(onDragStart)
+  onDragStartRef.current = onDragStart
+  const itemTextRef = useRef(item.text)
+  itemTextRef.current = item.text
+  const onDeleteRef = useRef(onDelete)
+  onDeleteRef.current = onDelete
+  const onChangeRef = useRef(onChange)
+  onChangeRef.current = onChange
 
   const fireDragStart = useCallback(
     (pageX: number, pageY: number) => {
       const cardEl = cardRef.current
       if (!cardEl) return
       const cardRect = cardEl.getBoundingClientRect()
-      onDragStart({
+      onDragStartRef.current({
         pageX,
         pageY,
         grabX: pageX - cardRect.left,
@@ -128,41 +105,59 @@ export default function Card({
         height: cardRect.height,
       })
     },
-    [onDragStart],
+    [],
   )
-
-  const handlePendingMove = useCallback(
-    (e: PointerEvent) => {
-      const p = pendingRef.current
-      if (!p) return
-      const dx = e.pageX - p.startX
-      const dy = e.pageY - p.startY
-      if (dx * dx + dy * dy > DRAG_THRESHOLD * DRAG_THRESHOLD) {
-        window.removeEventListener('pointermove', handlePendingMove)
-        window.removeEventListener('pointerup', handlePendingUp)
-        pendingRef.current = null
-        fireDragStart(p.startX, p.startY)
-      }
-    },
-    [fireDragStart], // eslint-disable-line react-hooks/exhaustive-deps
-  )
-
-  const handlePendingUp = useCallback(() => {
-    window.removeEventListener('pointermove', handlePendingMove)
-    window.removeEventListener('pointerup', handlePendingUp)
-    if (!pendingRef.current) return
-    pendingRef.current = null
-    enterEditMode()
-  }, [handlePendingMove]) // eslint-disable-line react-hooks/exhaustive-deps
 
   const enterEditMode = useCallback(() => {
     const span = spanRef.current
     if (span) {
       setMinSize({ width: span.offsetWidth, height: span.offsetHeight })
     }
-    setEditValue(item.text)
+    setEditValue(itemTextRef.current)
     setEditing(true)
-  }, [item.text])
+  }, [])
+
+  const cleanupPending = useRef<(() => void) | null>(null)
+
+  useEffect(() => {
+    return () => cleanupPending.current?.()
+  }, [])
+
+  const startPendingDrag = useCallback(
+    (startX: number, startY: number) => {
+      pendingRef.current = { startX, startY }
+
+      const onMove = (e: PointerEvent) => {
+        const p = pendingRef.current
+        if (!p) return
+        const dx = e.pageX - p.startX
+        const dy = e.pageY - p.startY
+        if (dx * dx + dy * dy > DRAG_THRESHOLD * DRAG_THRESHOLD) {
+          cleanup()
+          pendingRef.current = null
+          fireDragStart(p.startX, p.startY)
+        }
+      }
+
+      const onUp = () => {
+        cleanup()
+        if (!pendingRef.current) return
+        pendingRef.current = null
+        enterEditMode()
+      }
+
+      const cleanup = () => {
+        window.removeEventListener('pointermove', onMove)
+        window.removeEventListener('pointerup', onUp)
+        cleanupPending.current = null
+      }
+
+      window.addEventListener('pointermove', onMove)
+      window.addEventListener('pointerup', onUp)
+      cleanupPending.current = cleanup
+    },
+    [fireDragStart, enterEditMode],
+  )
 
   const commitEdit = useCallback(
     (value: string) => {
@@ -170,12 +165,12 @@ export default function Card({
       setMinSize(null)
       const trimmed = value.trim()
       if (!trimmed || trimmed === PLACEHOLDER) {
-        onDelete()
+        onDeleteRef.current()
         return
       }
-      if (trimmed !== item.text) onChange(trimmed)
+      if (trimmed !== itemTextRef.current) onChangeRef.current(trimmed)
     },
-    [item.text, onChange, onDelete],
+    [],
   )
 
   const handleTextPointerDown = useCallback(
@@ -187,11 +182,9 @@ export default function Card({
       }
       e.preventDefault()
       e.stopPropagation()
-      pendingRef.current = { startX: e.pageX, startY: e.pageY }
-      window.addEventListener('pointermove', handlePendingMove)
-      window.addEventListener('pointerup', handlePendingUp)
+      startPendingDrag(e.pageX, e.pageY)
     },
-    [editing, handlePendingMove, handlePendingUp],
+    [editing, startPendingDrag],
   )
 
   const handleDisplayKeyDown = useCallback(

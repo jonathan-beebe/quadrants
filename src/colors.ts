@@ -15,13 +15,20 @@ export const colorPresets: { hex: string; name: string }[] = [
   { hex: '#94a3b8', name: 'Slate' },
 ]
 
+const colorCache = new Map<string, DerivedColors>()
+
 export function deriveColors(hex: string): DerivedColors {
+  const cached = colorCache.get(hex)
+  if (cached) return cached
+
   const r = parseInt(hex.slice(1, 3), 16)
   const g = parseInt(hex.slice(3, 5), 16)
   const b = parseInt(hex.slice(5, 7), 16)
-  return {
+  const result: DerivedColors = {
     bg: `rgba(${r}, ${g}, ${b}, 0.08)`,
     border: `rgba(${r}, ${g}, ${b}, 0.4)`,
     accent: hex,
   }
+  colorCache.set(hex, result)
+  return result
 }

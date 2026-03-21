@@ -2,6 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { encodeFramework, decodeFramework } from '../sharing'
 import { hydratePayload, frameworksMatch } from '../logic/framework'
 import { getHashFromUrl, replacePath } from '../logic/routing'
+import { downloadJson, pickJsonFile } from '../io'
 import type { Framework } from '../types'
 
 export interface Conflict {
@@ -130,47 +131,31 @@ export function useShareImport({
   }, [])
 
   const exportJson = useCallback((fw: Framework) => {
-    const data = JSON.stringify(fw, null, 2)
-    const blob = new Blob([data], { type: 'application/json' })
-    const url = URL.createObjectURL(blob)
-    const a = document.createElement('a')
-    a.href = url
-    a.download = `${fw.name.replace(/\s+/g, '-').toLowerCase()}.json`
-    a.click()
-    URL.revokeObjectURL(url)
+    const filename = `${fw.name.replace(/\s+/g, '-').toLowerCase()}.json`
+    downloadJson(filename, JSON.stringify(fw, null, 2))
   }, [])
 
   const importJson = useCallback(
     (onImported: (fw: Framework) => void) => {
-      const input = document.createElement('input')
-      input.type = 'file'
-      input.accept = '.json'
-      input.onchange = (e) => {
-        const file = (e.target as HTMLInputElement).files?.[0]
-        if (!file) return
-        const reader = new FileReader()
-        reader.onload = (ev) => {
-          try {
-            const fw = JSON.parse(ev.target?.result as string)
-            if (fw.name && fw.quadrants && fw.quadrants.length === 4) {
-              const imported: Framework = {
-                ...fw,
-                id: crypto.randomUUID(),
-                createdAt: Date.now(),
-                updatedAt: Date.now(),
-              }
-              onImported(imported)
-            } else {
-              showError('The file is not a valid framework. It must have a name and 4 quadrants.')
+      pickJsonFile()
+        .then((text) => {
+          const fw = JSON.parse(text)
+          if (fw.name && fw.quadrants && fw.quadrants.length === 4) {
+            const imported: Framework = {
+              ...fw,
+              id: crypto.randomUUID(),
+              createdAt: Date.now(),
+              updatedAt: Date.now(),
             }
-          } catch (err) {
-            console.error('Failed to import framework JSON:', err)
-            showError('The file could not be read. Make sure it is valid JSON.')
+            onImported(imported)
+          } else {
+            showError('The file is not a valid framework. It must have a name and 4 quadrants.')
           }
-        }
-        reader.readAsText(file)
-      }
-      input.click()
+        })
+        .catch((err) => {
+          console.error('Failed to import framework JSON:', err)
+          showError('The file could not be read. Make sure it is valid JSON.')
+        })
     },
     [showError],
   )

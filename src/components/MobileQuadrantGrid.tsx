@@ -5,22 +5,7 @@ import Card from './Card'
 import { PlusIcon } from './Icons'
 import Badge from './atoms/Badge'
 import Button from './atoms/Button'
-import type { Framework, Item } from '../types'
-import type { DragStartInfo, DragState } from './Card'
-
-export interface MobileQuadrantGridProps {
-  framework: Framework
-  drag: DragState | null
-  autoFocusId: string | null
-  quadrantRefs: React.RefObject<(HTMLElement | null)[]>
-  canvasRefs: React.RefObject<(HTMLElement | null)[]>
-  onAddItem: (quadrantIdx: number) => void
-  onDeleteItem: (quadrantIdx: number, itemId: string) => void
-  onEditItem: (quadrantIdx: number, itemId: string, text: string) => void
-  onColorChange: (quadrantIdx: number, color: string) => void
-  onMoveItem: (sourceIdx: number, itemId: string, targetIdx: number) => void
-  onDragStart: (quadrantIdx: number, item: Item, info: DragStartInfo) => void
-}
+import type { QuadrantGridProps } from './QuadrantGrid'
 
 const TRANSITION = 'transform 300ms cubic-bezier(0.4, 0, 0.2, 1)'
 
@@ -46,7 +31,7 @@ export default function MobileQuadrantGrid({
   onColorChange,
   onMoveItem,
   onDragStart,
-}: MobileQuadrantGridProps) {
+}: QuadrantGridProps) {
   const [zoomedIdx, setZoomedIdx] = useState<number | null>(null)
   const isZoomed = zoomedIdx !== null
 
@@ -154,6 +139,7 @@ export default function MobileQuadrantGrid({
                         variant="secondary"
                         size="sm"
                         onClick={() => setZoomedIdx(null)}
+                        aria-label={`Done editing ${quadrant.label}`}
                       >
                         Done
                       </Button>

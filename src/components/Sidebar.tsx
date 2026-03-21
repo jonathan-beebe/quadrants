@@ -9,6 +9,8 @@ import {
 import ThemeToggleButton from './atoms/ThemeToggleButton'
 import Caption from './atoms/Caption'
 import Button from './atoms/Button'
+import { useClickOutside } from '../hooks/useClickOutside'
+import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
 import type { Framework } from '../types'
 import type { ThemeMode } from '../hooks/useDarkMode'
 
@@ -47,16 +49,8 @@ export default function Sidebar({
   const menuRef = useRef<HTMLDivElement>(null)
   const menuTriggerRef = useRef<HTMLButtonElement>(null)
 
-  useEffect(() => {
-    if (!menuId) return
-    const handleClick = (e: MouseEvent) => {
-      if (menuRef.current && !menuRef.current.contains(e.target as Node)) {
-        setMenuId(null)
-      }
-    }
-    document.addEventListener('mousedown', handleClick)
-    return () => document.removeEventListener('mousedown', handleClick)
-  }, [menuId])
+  const closeMenu = useCallback(() => setMenuId(null), [])
+  useClickOutside(menuRef, closeMenu, !!menuId)
 
   // Focus first menu item when menu opens
   useEffect(() => {
@@ -66,31 +60,7 @@ export default function Sidebar({
     }
   }, [menuId])
 
-  const handleMenuKeyDown = useCallback(
-    (e: React.KeyboardEvent) => {
-      const items = menuRef.current?.querySelectorAll<HTMLElement>('[role="menuitem"]')
-      if (!items?.length) return
-
-      const currentIdx = Array.from(items).indexOf(e.target as HTMLElement)
-
-      if (e.key === 'ArrowDown') {
-        e.preventDefault()
-        const next = (currentIdx + 1) % items.length
-        items[next].focus()
-      } else if (e.key === 'ArrowUp') {
-        e.preventDefault()
-        const prev = (currentIdx - 1 + items.length) % items.length
-        items[prev].focus()
-      } else if (e.key === 'Escape') {
-        e.preventDefault()
-        setMenuId(null)
-        menuTriggerRef.current?.focus()
-      } else if (e.key === 'Tab') {
-        setMenuId(null)
-      }
-    },
-    [],
-  )
+  const handleMenuKeyDown = useMenuKeyboardNav(menuRef, closeMenu, menuTriggerRef)
 
   return (
     <>
@@ -130,7 +100,7 @@ export default function Sidebar({
 
         <nav aria-label="Frameworks" className="flex-1 overflow-y-auto px-2 py-1">
           {frameworks.length === 0 && (
-            <div className="py-6 px-4 text-center text-text-tertiary text-[13px]">
+            <div role="status" className="py-6 px-4 text-center text-text-tertiary text-[13px]">
               No frameworks yet
             </div>
           )}
