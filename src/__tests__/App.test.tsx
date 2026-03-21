@@ -83,6 +83,15 @@ describe('App', () => {
     expect(screen.getByText('Stored Framework')).toBeInTheDocument()
   })
 
+  it('redirects to home when URL points to a nonexistent framework', () => {
+    window.history.replaceState(null, '', '/nonexistent-id')
+    render(<App />)
+    // Should show the empty state, not a broken view
+    expect(screen.getByText('No framework selected')).toBeInTheDocument()
+    // URL should be reset to base
+    expect(window.location.pathname).toBe('/')
+  })
+
   it('shows the conflict dialog elements', () => {
     render(<App />)
     // ConflictDialog is only shown on hash import conflicts — we just verify the empty state is clean
