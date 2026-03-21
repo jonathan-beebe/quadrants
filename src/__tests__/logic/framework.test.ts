@@ -31,6 +31,7 @@ function makeFramework(overrides: Partial<Framework> = {}): Framework {
 
 function makePayload(): SharedPayload {
   return {
+    id: 'fw-1',
     name: 'Shared',
     axisX: 'X',
     axisY: 'Y',
