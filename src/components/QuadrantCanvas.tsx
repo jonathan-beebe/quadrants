@@ -82,7 +82,9 @@ export default function QuadrantCanvas({
     (quadrantIdx: number, itemId: string) => {
       const item = frameworkRef.current.quadrants[quadrantIdx].items.find((i) => i.id === itemId)
       updateFramework((fw) => removeItem(fw, quadrantIdx, itemId))
-      announce(`Item "${item?.text ?? ''}" deleted from ${frameworkRef.current.quadrants[quadrantIdx].label}`)
+      const label = frameworkRef.current.quadrants[quadrantIdx].label
+      const itemText = item ? `"${item.text}"` : ''
+      announce(item ? `Item ${itemText} deleted from ${label}` : `Item deleted from ${label}`)
     },
     [updateFramework, announce],
   )
