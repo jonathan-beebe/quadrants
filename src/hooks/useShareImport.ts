@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { encodeFramework, decodeFramework } from '../sharing'
-import { hydratePayload, frameworksMatch } from '../logic/framework'
+import { hydratePayload, frameworksMatch, sanitizeImportedFramework } from '../logic/framework'
 import { getHashFromUrl, replacePath } from '../logic/routing'
 import { downloadJson, pickJsonFile } from '../io'
 import type { Framework } from '../types'
@@ -134,14 +134,9 @@ export function useShareImport({ getFramework, navigate, addRaw, replace, addImp
       pickJsonFile()
         .then((text) => {
           if (text === null) return
-          const fw = JSON.parse(text)
-          if (fw.name && fw.quadrants && fw.quadrants.length === 4) {
-            const imported: Framework = {
-              ...fw,
-              id: crypto.randomUUID(),
-              createdAt: Date.now(),
-              updatedAt: Date.now(),
-            }
+          const raw = JSON.parse(text)
+          const imported = sanitizeImportedFramework(raw)
+          if (imported) {
             onImported(imported)
           } else {
             showError('The file is not a valid framework. It must have a name and 4 quadrants.')

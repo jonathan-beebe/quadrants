@@ -84,3 +84,46 @@ export function duplicateAsImport(fw: Framework): Framework {
 export function replaceFramework(frameworks: Framework[], incoming: Framework): Framework[] {
   return frameworks.map((f) => (f.id === incoming.id ? incoming : f))
 }
+
+/**
+ * Sanitize a parsed JSON object into a valid Framework, filling in missing
+ * or invalid fields with safe defaults. Returns null if the input is not
+ * salvageable (missing name or not exactly 4 quadrants).
+ */
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function sanitizeImportedFramework(raw: any): Framework | null {
+  if (!raw || typeof raw !== 'object') return null
+  if (typeof raw.name !== 'string' || !raw.name.trim()) return null
+  if (!Array.isArray(raw.quadrants) || raw.quadrants.length !== 4) return null
+
+  return {
+    id: crypto.randomUUID(),
+    name: raw.name,
+    axisX: typeof raw.axisX === 'string' ? raw.axisX : '',
+    axisY: typeof raw.axisY === 'string' ? raw.axisY : '',
+    quadrants: raw.quadrants.map((q: unknown, i: number) => {
+      const qObj = q && typeof q === 'object' ? (q as Record<string, unknown>) : {}
+      const rawItems = Array.isArray(qObj.items) ? qObj.items : []
+      return {
+        label: typeof qObj.label === 'string' ? qObj.label : `Quadrant ${i + 1}`,
+        color: typeof qObj.color === 'string' ? qObj.color : defaultColors[i],
+        items: rawItems
+          .filter(
+            (it: unknown) => it && typeof it === 'object' && typeof (it as Record<string, unknown>).text === 'string',
+          )
+          .map((it: unknown) => {
+            const item = it as Record<string, unknown>
+            return {
+              id: typeof item.id === 'string' && item.id ? item.id : crypto.randomUUID(),
+              text: item.text as string,
+              x: typeof item.x === 'number' ? item.x : 10,
+              y: typeof item.y === 'number' ? item.y : 10,
+              createdAt: typeof item.createdAt === 'number' ? item.createdAt : Date.now(),
+            }
+          }),
+      }
+    }),
+    createdAt: Date.now(),
+    updatedAt: Date.now(),
+  }
+}

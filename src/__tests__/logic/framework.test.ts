@@ -8,6 +8,7 @@ import {
   frameworksMatch,
   duplicateAsImport,
   replaceFramework,
+  sanitizeImportedFramework,
 } from '../../logic/framework'
 import type { Framework, SharedPayload } from '../../types'
 
@@ -226,5 +227,121 @@ describe('replaceFramework', () => {
     const result = replaceFramework(frameworks, incoming)
     expect(result[0].name).toBe('Replaced')
     expect(result[1].name).toBe('Keep')
+  })
+})
+
+describe('sanitizeImportedFramework', () => {
+  const validRaw = {
+    name: 'My Framework',
+    axisX: 'Urgency',
+    axisY: 'Importance',
+    quadrants: [
+      { label: 'Do First', color: '#fbbf24', items: [{ text: 'Task', x: 25, y: 30 }] },
+      { label: 'Schedule', color: '#60a5fa', items: [] },
+      { label: 'Delegate', color: '#34d399', items: [] },
+      { label: 'Eliminate', color: '#f472b6', items: [] },
+    ],
+  }
+
+  it('returns null for null/undefined/non-object input', () => {
+    expect(sanitizeImportedFramework(null)).toBeNull()
+    expect(sanitizeImportedFramework(undefined)).toBeNull()
+    expect(sanitizeImportedFramework('string')).toBeNull()
+  })
+
+  it('returns null when name is missing or empty', () => {
+    expect(sanitizeImportedFramework({ ...validRaw, name: '' })).toBeNull()
+    expect(sanitizeImportedFramework({ ...validRaw, name: 42 })).toBeNull()
+  })
+
+  it('returns null when quadrants is not an array of 4', () => {
+    expect(sanitizeImportedFramework({ ...validRaw, quadrants: [] })).toBeNull()
+    expect(sanitizeImportedFramework({ ...validRaw, quadrants: [{ label: 'A' }] })).toBeNull()
+  })
+
+  it('sanitizes a valid framework', () => {
+    const result = sanitizeImportedFramework(validRaw)!
+    expect(result).not.toBeNull()
+    expect(result.name).toBe('My Framework')
+    expect(result.axisX).toBe('Urgency')
+    expect(result.quadrants).toHaveLength(4)
+    expect(result.quadrants[0].label).toBe('Do First')
+    expect(result.quadrants[0].items).toHaveLength(1)
+    expect(result.quadrants[0].items[0].text).toBe('Task')
+    expect(result.quadrants[0].items[0].x).toBe(25)
+    expect(result.quadrants[0].items[0].y).toBe(30)
+    expect(result.id).toBeTruthy()
+  })
+
+  it('defaults missing quadrant labels', () => {
+    const raw = {
+      ...validRaw,
+      quadrants: validRaw.quadrants.map((q) => ({ ...q, label: undefined })),
+    }
+    const result = sanitizeImportedFramework(raw)!
+    expect(result.quadrants[0].label).toBe('Quadrant 1')
+    expect(result.quadrants[3].label).toBe('Quadrant 4')
+  })
+
+  it('defaults missing quadrant colors to defaultColors', () => {
+    const raw = {
+      ...validRaw,
+      quadrants: validRaw.quadrants.map((q) => ({ ...q, color: undefined })),
+    }
+    const result = sanitizeImportedFramework(raw)!
+    expect(result.quadrants[0].color).toBe('#fbbf24')
+    expect(result.quadrants[1].color).toBe('#60a5fa')
+  })
+
+  it('defaults missing items array to empty', () => {
+    const raw = {
+      ...validRaw,
+      quadrants: validRaw.quadrants.map((q) => ({ ...q, items: undefined })),
+    }
+    const result = sanitizeImportedFramework(raw)!
+    expect(result.quadrants[0].items).toEqual([])
+  })
+
+  it('defaults missing x/y on items to 10', () => {
+    const raw = {
+      ...validRaw,
+      quadrants: [
+        { label: 'A', color: '#fff', items: [{ text: 'No coords' }] },
+        { label: 'B', color: '#fff', items: [] },
+        { label: 'C', color: '#fff', items: [] },
+        { label: 'D', color: '#fff', items: [] },
+      ],
+    }
+    const result = sanitizeImportedFramework(raw)!
+    expect(result.quadrants[0].items[0].x).toBe(10)
+    expect(result.quadrants[0].items[0].y).toBe(10)
+  })
+
+  it('filters out items without text', () => {
+    const raw = {
+      ...validRaw,
+      quadrants: [
+        { label: 'A', color: '#fff', items: [{ text: 'Good' }, { x: 5 }, null, { text: 'Also good' }] },
+        { label: 'B', color: '#fff', items: [] },
+        { label: 'C', color: '#fff', items: [] },
+        { label: 'D', color: '#fff', items: [] },
+      ],
+    }
+    const result = sanitizeImportedFramework(raw)!
+    expect(result.quadrants[0].items).toHaveLength(2)
+    expect(result.quadrants[0].items[0].text).toBe('Good')
+    expect(result.quadrants[0].items[1].text).toBe('Also good')
+  })
+
+  it('generates id for items missing one', () => {
+    const result = sanitizeImportedFramework(validRaw)!
+    expect(result.quadrants[0].items[0].id).toBeTruthy()
+  })
+
+  it('defaults axisX/axisY to empty string when missing', () => {
+    const raw = { ...validRaw, axisX: undefined, axisY: undefined }
+    const result = sanitizeImportedFramework(raw)!
+    expect(result.axisX).toBe('')
+    expect(result.axisY).toBe('')
   })
 })
