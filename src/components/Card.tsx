@@ -8,8 +8,8 @@ const DRAG_THRESHOLD = 4
 export const PLACEHOLDER = 'New item...'
 
 export interface DragStartInfo {
-  pageX: number
-  pageY: number
+  clientX: number
+  clientY: number
   grabX: number
   grabY: number
   width: number
@@ -91,15 +91,15 @@ export default function Card({
   const onChangeRef = useRef(onChange)
   onChangeRef.current = onChange
 
-  const fireDragStart = useCallback((pageX: number, pageY: number) => {
+  const fireDragStart = useCallback((clientX: number, clientY: number) => {
     const cardEl = cardRef.current
     if (!cardEl) return
     const cardRect = cardEl.getBoundingClientRect()
     onDragStartRef.current({
-      pageX,
-      pageY,
-      grabX: pageX - cardRect.left,
-      grabY: pageY - cardRect.top,
+      clientX,
+      clientY,
+      grabX: clientX - cardRect.left,
+      grabY: clientY - cardRect.top,
       width: cardRect.width,
       height: cardRect.height,
     })
@@ -127,8 +127,8 @@ export default function Card({
       const onMove = (e: PointerEvent) => {
         const p = pendingRef.current
         if (!p) return
-        const dx = e.pageX - p.startX
-        const dy = e.pageY - p.startY
+        const dx = e.clientX - p.startX
+        const dy = e.clientY - p.startY
         if (dx * dx + dy * dy > DRAG_THRESHOLD * DRAG_THRESHOLD) {
           cleanup()
           pendingRef.current = null
@@ -176,7 +176,7 @@ export default function Card({
       }
       e.preventDefault()
       e.stopPropagation()
-      startPendingDrag(e.pageX, e.pageY)
+      startPendingDrag(e.clientX, e.clientY)
     },
     [editing, startPendingDrag],
   )
@@ -222,7 +222,7 @@ export default function Card({
       onPointerDown={(e) => {
         if (e.button !== 0 || editing) return
         e.preventDefault()
-        fireDragStart(e.pageX, e.pageY)
+        fireDragStart(e.clientX, e.clientY)
       }}>
       {editing ? (
         <textarea
