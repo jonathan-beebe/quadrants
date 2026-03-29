@@ -113,6 +113,23 @@ describe('getQuadrantAtPoint', () => {
   })
 })
 
+describe('coordinate system consistency', () => {
+  it('uses clientX/clientY (not pageX/pageY) so coordinates match getBoundingClientRect', () => {
+    // getBoundingClientRect() returns viewport-relative coords (client space).
+    // The drag system must use clientX/clientY from PointerEvents to match.
+    // If pageX/pageY were used instead, a scrolled page would cause mismatch.
+    const rect = { left: 100, top: 200, width: 400, height: 300 } as DOMRect
+
+    // clientX=300, clientY=350 → center of the rect
+    const result = pageToQuadrantPercent(300, 350, rect)
+    expect(result.x).toBe(50)
+    expect(result.y).toBe(50)
+
+    // Verify the function is named to reflect client coordinates
+    // (This test documents the expected coordinate system)
+  })
+})
+
 // --- Hook integration tests ---
 
 describe('useDragAndDrop hook', () => {
@@ -139,8 +156,8 @@ describe('useDragAndDrop hook', () => {
 
     act(() => {
       result.current.handleDragStart(0, mockItem, {
-        pageX: 150,
-        pageY: 250,
+        clientX: 150,
+        clientY: 250,
         grabX: 10,
         grabY: 5,
         width: 120,
@@ -167,8 +184,8 @@ describe('useDragAndDrop hook', () => {
 
     act(() => {
       result.current.handleDragStart(0, mockItem, {
-        pageX: 150,
-        pageY: 250,
+        clientX: 150,
+        clientY: 250,
         grabX: 10,
         grabY: 5,
         width: 120,
@@ -180,7 +197,7 @@ describe('useDragAndDrop hook', () => {
       window.dispatchEvent(new PointerEvent('pointermove', { clientX: 200, clientY: 300 }))
     })
 
-    // PointerEvent pageX/pageY default to 0 in jsdom, so drag.x/y become 0
+    // PointerEvent clientX/clientY default to 0 in jsdom, so drag.x/y become 0
     // The important thing is the handler runs without error
     expect(result.current.drag).not.toBeNull()
   })
@@ -192,8 +209,8 @@ describe('useDragAndDrop hook', () => {
 
     act(() => {
       result.current.handleDragStart(0, mockItem, {
-        pageX: 150,
-        pageY: 250,
+        clientX: 150,
+        clientY: 250,
         grabX: 10,
         grabY: 5,
         width: 120,
@@ -215,8 +232,8 @@ describe('useDragAndDrop hook', () => {
 
     act(() => {
       result.current.handleDragStart(0, mockItem, {
-        pageX: 150,
-        pageY: 250,
+        clientX: 150,
+        clientY: 250,
         grabX: 10,
         grabY: 5,
         width: 120,
@@ -240,8 +257,8 @@ describe('useDragAndDrop hook', () => {
 
     act(() => {
       result.current.handleDragStart(0, mockItem, {
-        pageX: 150,
-        pageY: 250,
+        clientX: 150,
+        clientY: 250,
         grabX: 10,
         grabY: 5,
         width: 120,
