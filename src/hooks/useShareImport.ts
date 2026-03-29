@@ -133,6 +133,7 @@ export function useShareImport({ getFramework, navigate, addRaw, replace, addImp
     (onImported: (fw: Framework) => void) => {
       pickJsonFile()
         .then((text) => {
+          if (text === null) return
           const fw = JSON.parse(text)
           if (fw.name && fw.quadrants && fw.quadrants.length === 4) {
             const imported: Framework = {

@@ -35,11 +35,11 @@ describe('pickJsonFile', () => {
     await expect(promise).resolves.toBe('{"hello":"world"}')
   })
 
-  it('rejects when the user cancels the file picker', async () => {
+  it('resolves with null when the user cancels the file picker', async () => {
     const promise = pickJsonFile()
 
     createdInput.dispatchEvent(new Event('cancel'))
 
-    await expect(promise).rejects.toThrow('File selection cancelled')
+    await expect(promise).resolves.toBeNull()
   })
 })
