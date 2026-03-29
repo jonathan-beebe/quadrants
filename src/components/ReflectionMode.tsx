@@ -29,16 +29,22 @@ export default function ReflectionMode({ framework, onUpdate, onExit }: Reflecti
     }
   }, [])
 
+  const frameworkRef = useRef(framework)
+  useEffect(() => {
+    frameworkRef.current = framework
+  }, [framework])
+
   const handleAdd = useCallback(
     (e: React.FormEvent) => {
       e.preventDefault()
       if (!text.trim()) return
-      const updated = addItem(framework, activeQuadrant, createItem(text.trim()))
+      const updated = addItem(frameworkRef.current, activeQuadrant, createItem(text.trim()))
+      frameworkRef.current = updated
       onUpdate(updated)
       setText('')
       inputRef.current?.focus()
     },
-    [text, activeQuadrant, framework, onUpdate],
+    [text, activeQuadrant, onUpdate],
   )
 
   const handleKeyDown = useFocusTrap(overlayRef, onExit)

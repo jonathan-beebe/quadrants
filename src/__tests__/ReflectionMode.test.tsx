@@ -115,4 +115,26 @@ describe('ReflectionMode', () => {
     expect(dialog).toHaveAttribute('aria-modal', 'true')
     expect(dialog).toHaveAttribute('aria-label', expect.stringContaining('Test'))
   })
+
+  it('preserves all items when adding rapidly without re-render between adds', async () => {
+    const user = userEvent.setup()
+    const onUpdate = vi.fn()
+
+    // Render with the initial framework — never re-render with updated props
+    // This simulates rapid adds where React hasn't re-rendered between them
+    render(<ReflectionMode framework={makeFramework()} onUpdate={onUpdate} onExit={vi.fn()} />)
+
+    const input = screen.getByPlaceholderText('Add to "Start"...')
+
+    // Add two items rapidly without any re-render in between
+    await user.type(input, 'First{Enter}')
+    await user.type(input, 'Second{Enter}')
+
+    // The second onUpdate call should include BOTH items, not just "Second"
+    expect(onUpdate).toHaveBeenCalledTimes(2)
+    const secondUpdate = onUpdate.mock.calls[1][0]
+    expect(secondUpdate.quadrants[0].items).toHaveLength(2)
+    expect(secondUpdate.quadrants[0].items[0].text).toBe('First')
+    expect(secondUpdate.quadrants[0].items[1].text).toBe('Second')
+  })
 })
