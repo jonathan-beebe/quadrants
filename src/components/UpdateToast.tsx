@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import { XIcon } from './Icons'
 
@@ -32,15 +33,25 @@ export function UpdateToastView({ className = '', onReload, onDismiss }: UpdateT
 const UPDATE_CHECK_INTERVAL_MS = 60 * 60 * 1000 // 1 hour
 
 export default function UpdateToast() {
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
   const {
     needRefresh: [needRefresh, setNeedRefresh],
     updateServiceWorker,
   } = useRegisterSW({
     onRegistered(registration) {
       if (!registration) return
-      setInterval(() => registration.update(), UPDATE_CHECK_INTERVAL_MS)
+      intervalRef.current = setInterval(() => registration.update(), UPDATE_CHECK_INTERVAL_MS)
     },
   })
+
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current !== null) {
+        clearInterval(intervalRef.current)
+      }
+    }
+  }, [])
 
   if (!needRefresh) return null
 
