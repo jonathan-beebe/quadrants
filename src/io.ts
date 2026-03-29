@@ -8,7 +8,7 @@ export function downloadJson(filename: string, data: string): void {
   URL.revokeObjectURL(url)
 }
 
-export function pickJsonFile(): Promise<string> {
+export function pickJsonFile(): Promise<string | null> {
   return new Promise((resolve, reject) => {
     const input = document.createElement('input')
     input.type = 'file'
@@ -24,6 +24,7 @@ export function pickJsonFile(): Promise<string> {
       reader.onerror = () => reject(new Error('Failed to read file'))
       reader.readAsText(file)
     }
+    input.oncancel = () => resolve(null)
     input.click()
   })
 }
