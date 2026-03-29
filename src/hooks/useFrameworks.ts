@@ -17,10 +17,7 @@ export function useFrameworks() {
     saveFrameworks(frameworks)
   }, [frameworks])
 
-  const activeFramework = useCallback(
-    (id: string | null) => frameworks.find((f) => f.id === id) ?? null,
-    [frameworks],
-  )
+  const activeFramework = useCallback((id: string | null) => frameworks.find((f) => f.id === id) ?? null, [frameworks])
 
   const create = useCallback((template: FrameworkTemplate): Framework => {
     const fw = createFramework(template)
@@ -42,15 +39,10 @@ export function useFrameworks() {
     return dup
   }, [])
 
-  const editStructure = useCallback(
-    (fw: Framework, template: FrameworkTemplate) => {
-      const updated = applyTemplateEdit(fw, template)
-      setFrameworks((prev) =>
-        prev.map((f) => (f.id === updated.id ? updated : f)),
-      )
-    },
-    [],
-  )
+  const editStructure = useCallback((fw: Framework, template: FrameworkTemplate) => {
+    const updated = applyTemplateEdit(fw, template)
+    setFrameworks((prev) => prev.map((f) => (f.id === updated.id ? updated : f)))
+  }, [])
 
   const replace = useCallback((incoming: Framework) => {
     setFrameworks((prev) => replaceFramework(prev, incoming))

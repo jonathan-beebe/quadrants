@@ -11,10 +11,10 @@ const TRANSITION = 'transform 300ms cubic-bezier(0.4, 0, 0.2, 1)'
 
 /** Translate values to pan each quadrant into view at scale(1). */
 const CELL_TRANSFORMS: Record<number, string> = {
-  0: 'translate(0%, 0%)',       // top-left
-  1: 'translate(-50%, 0%)',     // top-right
-  2: 'translate(0%, -50%)',     // bottom-left
-  3: 'translate(-50%, -50%)',   // bottom-right
+  0: 'translate(0%, 0%)', // top-left
+  1: 'translate(-50%, 0%)', // top-right
+  2: 'translate(0%, -50%)', // bottom-left
+  3: 'translate(-50%, -50%)', // bottom-right
 }
 
 const OVERVIEW_TRANSFORM = 'scale(0.5)'
@@ -48,9 +48,7 @@ export default function MobileQuadrantGrid({
     [isZoomed],
   )
 
-  const gridTransform = isZoomed
-    ? CELL_TRANSFORMS[zoomedIdx]
-    : OVERVIEW_TRANSFORM
+  const gridTransform = isZoomed ? CELL_TRANSFORMS[zoomedIdx] : OVERVIEW_TRANSFORM
 
   return (
     <div className="relative flex-1 min-h-0 overflow-hidden select-none">
@@ -60,8 +58,7 @@ export default function MobileQuadrantGrid({
         style={{ transform: gridTransform, transition: TRANSITION }}
         onClick={!isZoomed ? handleGridClick : undefined}
         role="group"
-        aria-label="Quadrant grid"
-      >
+        aria-label="Quadrant grid">
         {framework.quadrants.map((quadrant, idx) => {
           const qColor = quadrant.color || defaultColors[idx]
           const { bg, border } = deriveColors(qColor)
@@ -77,16 +74,12 @@ export default function MobileQuadrantGrid({
               style={{ background: bg, borderColor: border }}
               ref={(el) => {
                 quadrantRefs.current![idx] = el
-              }}
-            >
+              }}>
               {/* Overview header — overlays the canvas in the corner */}
               {!isFocused && (
                 <div
-                  className={`absolute z-10 ${isRight ? 'right-0' : 'left-0'} ${isBottom ? 'bottom-0' : 'top-0'} px-3 py-2.5`}
-                >
-                  <h2 className="text-sm font-semibold truncate">
-                    {quadrant.label}
-                  </h2>
+                  className={`absolute z-10 ${isRight ? 'right-0' : 'left-0'} ${isBottom ? 'bottom-0' : 'top-0'} px-3 py-2.5`}>
+                  <h2 className="text-sm font-semibold truncate">{quadrant.label}</h2>
                 </div>
               )}
 
@@ -96,8 +89,7 @@ export default function MobileQuadrantGrid({
                 style={{ pointerEvents: isFocused ? 'auto' : 'none' }}
                 ref={(el) => {
                   canvasRefs.current![idx] = el
-                }}
-              >
+                }}>
                 {quadrant.items.map((item) => (
                   <Card
                     key={item.id}
@@ -109,9 +101,7 @@ export default function MobileQuadrantGrid({
                       .filter((t) => t.index !== idx)}
                     onChange={(text) => onEditItem(idx, item.id, text)}
                     onDelete={() => onDeleteItem(idx, item.id)}
-                    onMove={(targetIdx) =>
-                      onMoveItem(idx, item.id, targetIdx)
-                    }
+                    onMove={(targetIdx) => onMoveItem(idx, item.id, targetIdx)}
                     onDragStart={(info) => onDragStart(idx, item, info)}
                   />
                 ))}
@@ -122,13 +112,10 @@ export default function MobileQuadrantGrid({
                 <>
                   <div
                     className="absolute top-0 left-0 right-0 z-10 flex items-center justify-between px-3 py-2.5 border-b"
-                    style={{ borderColor: border, background: bg }}
-                  >
+                    style={{ borderColor: border, background: bg }}>
                     <div className="w-[52px] shrink-0" />
                     <div className="flex items-center gap-2 min-w-0 justify-center">
-                      <h2 className="text-sm font-semibold truncate">
-                        {quadrant.label}
-                      </h2>
+                      <h2 className="text-sm font-semibold truncate">{quadrant.label}</h2>
                       <Badge
                         count={quadrant.items.length}
                         label={`${quadrant.items.length} items in ${quadrant.label}`}
@@ -139,27 +126,20 @@ export default function MobileQuadrantGrid({
                         variant="secondary"
                         size="sm"
                         onClick={() => setZoomedIdx(null)}
-                        aria-label={`Done editing ${quadrant.label}`}
-                      >
+                        aria-label={`Done editing ${quadrant.label}`}>
                         Done
                       </Button>
                     </div>
                   </div>
                   <div
                     className="absolute bottom-0 left-0 right-0 z-10 flex items-center justify-center gap-3 px-3 py-2 border-t"
-                    style={{ borderColor: border, background: bg }}
-                  >
-                    <ColorPicker
-                      color={qColor}
-                      onChange={(c) => onColorChange(idx, c)}
-                      placement="above-center"
-                    />
+                    style={{ borderColor: border, background: bg }}>
+                    <ColorPicker color={qColor} onChange={(c) => onColorChange(idx, c)} placement="above-center" />
                     <Button
                       variant="secondary"
                       size="sm"
                       onClick={() => onAddItem(idx)}
-                      aria-label={`Add item to ${quadrant.label}`}
-                    >
+                      aria-label={`Add item to ${quadrant.label}`}>
                       Add <PlusIcon size={14} />
                     </Button>
                   </div>

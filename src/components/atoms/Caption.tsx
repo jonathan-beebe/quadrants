@@ -6,9 +6,5 @@ interface CaptionProps {
 }
 
 export default function Caption({ children, className = '' }: CaptionProps) {
-  return (
-    <span className={`text-xs text-text-tertiary ${className}`.trim()}>
-      {children}
-    </span>
-  )
+  return <span className={`text-xs text-text-tertiary ${className}`.trim()}>{children}</span>
 }

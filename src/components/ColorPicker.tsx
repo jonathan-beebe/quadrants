@@ -51,8 +51,7 @@ export default function ColorPicker({ color, onChange, placement = 'auto' }: Col
           className={`absolute bg-surface border border-border rounded-lg shadow-lg p-2.5 z-[300] w-[180px] ${placement === 'above-center' ? 'bottom-[calc(100%+6px)] left-1/2 -translate-x-1/2' : `top-[calc(100%+6px)] ${alignLeft ? 'left-0' : 'right-0'}`}`}
           role="listbox"
           aria-label="Color options"
-          onKeyDown={handleKeyDown}
-        >
+          onKeyDown={handleKeyDown}>
           <div className="grid grid-cols-5 gap-1.5 mb-2.5">
             {colorPresets.map((c) => (
               <button

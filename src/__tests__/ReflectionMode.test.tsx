@@ -13,7 +13,11 @@ function makeFramework(): Framework {
     quadrants: [
       { label: 'Start', color: '#fbbf24', items: [] },
       { label: 'Stop', color: '#60a5fa', items: [] },
-      { label: 'Continue', color: '#34d399', items: [{ id: 'i1', text: 'Existing item', x: 10, y: 10, createdAt: 1000 }] },
+      {
+        label: 'Continue',
+        color: '#34d399',
+        items: [{ id: 'i1', text: 'Existing item', x: 10, y: 10, createdAt: 1000 }],
+      },
       { label: 'Change', color: '#f472b6', items: [] },
     ],
     createdAt: 1000,

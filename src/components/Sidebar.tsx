@@ -1,11 +1,5 @@
 import { useState, useRef, useEffect, useCallback } from 'react'
-import {
-  QuadrantGridIcon,
-  SidebarIcon,
-  PlusIcon,
-  ImportIcon,
-  MoreVerticalIcon,
-} from './Icons'
+import { QuadrantGridIcon, SidebarIcon, PlusIcon, ImportIcon, MoreVerticalIcon } from './Icons'
 import ThemeToggleButton from './atoms/ThemeToggleButton'
 import Caption from './atoms/Caption'
 import Button from './atoms/Button'
@@ -67,8 +61,7 @@ export default function Sidebar({
       <aside
         aria-label="Frameworks sidebar"
         inert={!open ? true : undefined}
-        className={`fixed top-0 left-0 w-[280px] h-screen bg-surface border-r border-border flex flex-col z-[100] transition-transform duration-150 ease-in-out ${open ? 'translate-x-0' : '-translate-x-full'}`}
-      >
+        className={`fixed top-0 left-0 w-[280px] h-screen bg-surface border-r border-border flex flex-col z-[100] transition-transform duration-150 ease-in-out ${open ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2 font-semibold text-[15px]">
             <QuadrantGridIcon size={20} />
@@ -76,12 +69,7 @@ export default function Sidebar({
           </div>
           <div className="flex items-center gap-1">
             <ThemeToggleButton mode={themeMode} darkMode={darkMode} onCycle={onCycleTheme} />
-            <Button
-              variant="icon"
-              onClick={onToggle}
-              aria-label="Close sidebar"
-              aria-expanded="true"
-            >
+            <Button variant="icon" onClick={onToggle} aria-label="Close sidebar" aria-expanded="true">
               <SidebarIcon size={18} />
             </Button>
           </div>
@@ -105,76 +93,64 @@ export default function Sidebar({
             </div>
           )}
           <ul role="list" className="list-none m-0 p-0">
-          {frameworks.map((fw) => (
-            <li
-              key={fw.id}
-              className={`relative flex items-center rounded-lg transition-colors duration-150 group ${activeId === fw.id ? 'bg-accent-light' : 'hover:bg-bg'}`}
-            >
-              <button
-                className="flex-1 min-w-0 text-left py-2.5 px-3 bg-transparent"
-                aria-current={activeId === fw.id ? 'page' : undefined}
-                onClick={() => onSelect(fw.id)}
-              >
-                <span className="block text-sm font-medium truncate">
-                  {fw.name}
-                </span>
-                <Caption>
-                  {fw.quadrants.reduce((sum, q) => sum + q.items.length, 0)}{' '}
-                  items
-                </Caption>
-              </button>
-              <button
-                ref={menuId === fw.id ? menuTriggerRef : undefined}
-                className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1 rounded text-text-secondary transition-opacity duration-150 hover:bg-border mr-1"
-                aria-label={`Actions for ${fw.name}`}
-                aria-haspopup="true"
-                aria-expanded={menuId === fw.id}
-                onClick={() => setMenuId(menuId === fw.id ? null : fw.id)}
-              >
-                <MoreVerticalIcon />
-              </button>
-              {menuId === fw.id && (
-                <div
-                  className="absolute right-2 top-full bg-surface border border-border rounded-lg shadow-lg z-[200] min-w-[140px] p-1"
-                  ref={menuRef}
-                  role="menu"
+            {frameworks.map((fw) => (
+              <li
+                key={fw.id}
+                className={`relative flex items-center rounded-lg transition-colors duration-150 group ${activeId === fw.id ? 'bg-accent-light' : 'hover:bg-bg'}`}>
+                <button
+                  className="flex-1 min-w-0 text-left py-2.5 px-3 bg-transparent"
+                  aria-current={activeId === fw.id ? 'page' : undefined}
+                  onClick={() => onSelect(fw.id)}>
+                  <span className="block text-sm font-medium truncate">{fw.name}</span>
+                  <Caption>{fw.quadrants.reduce((sum, q) => sum + q.items.length, 0)} items</Caption>
+                </button>
+                <button
+                  ref={menuId === fw.id ? menuTriggerRef : undefined}
+                  className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1 rounded text-text-secondary transition-opacity duration-150 hover:bg-border mr-1"
                   aria-label={`Actions for ${fw.name}`}
-                  onKeyDown={handleMenuKeyDown}
-                >
-                  <button
-                    className="block w-full text-left px-3 py-2 text-[13px] rounded text-text hover:bg-bg"
-                    role="menuitem"
-                    onClick={() => {
-                      onDuplicate(fw)
-                      setMenuId(null)
-                    }}
-                  >
-                    Duplicate
-                  </button>
-                  <button
-                    className="block w-full text-left px-3 py-2 text-[13px] rounded text-text hover:bg-bg"
-                    role="menuitem"
-                    onClick={() => {
-                      onExport(fw)
-                      setMenuId(null)
-                    }}
-                  >
-                    Export JSON
-                  </button>
-                  <button
-                    className="block w-full text-left px-3 py-2 text-[13px] rounded text-danger hover:bg-red-50 dark:hover:bg-red-950"
-                    role="menuitem"
-                    onClick={() => {
-                      onDelete(fw.id)
-                      setMenuId(null)
-                    }}
-                  >
-                    Delete
-                  </button>
-                </div>
-              )}
-            </li>
-          ))}
+                  aria-haspopup="true"
+                  aria-expanded={menuId === fw.id}
+                  onClick={() => setMenuId(menuId === fw.id ? null : fw.id)}>
+                  <MoreVerticalIcon />
+                </button>
+                {menuId === fw.id && (
+                  <div
+                    className="absolute right-2 top-full bg-surface border border-border rounded-lg shadow-lg z-[200] min-w-[140px] p-1"
+                    ref={menuRef}
+                    role="menu"
+                    aria-label={`Actions for ${fw.name}`}
+                    onKeyDown={handleMenuKeyDown}>
+                    <button
+                      className="block w-full text-left px-3 py-2 text-[13px] rounded text-text hover:bg-bg"
+                      role="menuitem"
+                      onClick={() => {
+                        onDuplicate(fw)
+                        setMenuId(null)
+                      }}>
+                      Duplicate
+                    </button>
+                    <button
+                      className="block w-full text-left px-3 py-2 text-[13px] rounded text-text hover:bg-bg"
+                      role="menuitem"
+                      onClick={() => {
+                        onExport(fw)
+                        setMenuId(null)
+                      }}>
+                      Export JSON
+                    </button>
+                    <button
+                      className="block w-full text-left px-3 py-2 text-[13px] rounded text-danger hover:bg-red-50 dark:hover:bg-red-950"
+                      role="menuitem"
+                      onClick={() => {
+                        onDelete(fw.id)
+                        setMenuId(null)
+                      }}>
+                      Delete
+                    </button>
+                  </div>
+                )}
+              </li>
+            ))}
           </ul>
         </nav>
 
@@ -188,8 +164,7 @@ export default function Sidebar({
           className="hidden min-[769px]:block fixed top-4 left-4 z-50 p-2 bg-surface border border-border rounded-lg shadow text-text-secondary transition-all duration-150 hover:text-text hover:border-border-hover"
           onClick={onToggle}
           aria-label="Open sidebar"
-          aria-expanded={false}
-        >
+          aria-expanded={false}>
           <SidebarIcon size={20} />
         </button>
       )}

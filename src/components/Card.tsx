@@ -91,22 +91,19 @@ export default function Card({
   const onChangeRef = useRef(onChange)
   onChangeRef.current = onChange
 
-  const fireDragStart = useCallback(
-    (pageX: number, pageY: number) => {
-      const cardEl = cardRef.current
-      if (!cardEl) return
-      const cardRect = cardEl.getBoundingClientRect()
-      onDragStartRef.current({
-        pageX,
-        pageY,
-        grabX: pageX - cardRect.left,
-        grabY: pageY - cardRect.top,
-        width: cardRect.width,
-        height: cardRect.height,
-      })
-    },
-    [],
-  )
+  const fireDragStart = useCallback((pageX: number, pageY: number) => {
+    const cardEl = cardRef.current
+    if (!cardEl) return
+    const cardRect = cardEl.getBoundingClientRect()
+    onDragStartRef.current({
+      pageX,
+      pageY,
+      grabX: pageX - cardRect.left,
+      grabY: pageY - cardRect.top,
+      width: cardRect.width,
+      height: cardRect.height,
+    })
+  }, [])
 
   const enterEditMode = useCallback(() => {
     const span = spanRef.current
@@ -159,19 +156,16 @@ export default function Card({
     [fireDragStart, enterEditMode],
   )
 
-  const commitEdit = useCallback(
-    (value: string) => {
-      setEditing(false)
-      setMinSize(null)
-      const trimmed = value.trim()
-      if (!trimmed || trimmed === PLACEHOLDER) {
-        onDeleteRef.current()
-        return
-      }
-      if (trimmed !== itemTextRef.current) onChangeRef.current(trimmed)
-    },
-    [],
-  )
+  const commitEdit = useCallback((value: string) => {
+    setEditing(false)
+    setMinSize(null)
+    const trimmed = value.trim()
+    if (!trimmed || trimmed === PLACEHOLDER) {
+      onDeleteRef.current()
+      return
+    }
+    if (trimmed !== itemTextRef.current) onChangeRef.current(trimmed)
+  }, [])
 
   const handleTextPointerDown = useCallback(
     (e: React.PointerEvent) => {
@@ -229,8 +223,7 @@ export default function Card({
         if (e.button !== 0 || editing) return
         e.preventDefault()
         fireDragStart(e.pageX, e.pageY)
-      }}
-    >
+      }}>
       {editing ? (
         <textarea
           ref={textareaRef}
@@ -256,8 +249,7 @@ export default function Card({
           aria-label={`Edit item: ${item.text}. Press M to move.`}
           aria-keyshortcuts="m"
           onPointerDown={handleTextPointerDown}
-          onKeyDown={handleDisplayKeyDown}
-        >
+          onKeyDown={handleDisplayKeyDown}>
           {item.text}
         </button>
       )}
@@ -266,8 +258,7 @@ export default function Card({
         onPointerDown={(e) => e.stopPropagation()}
         onClick={onDelete}
         aria-label={`Delete item: ${item.text}`}
-        title="Delete"
-      >
+        title="Delete">
         <XIcon size={11} />
       </button>
       {showMoveMenu && moveTargets.length > 0 && (
@@ -276,8 +267,7 @@ export default function Card({
           role="menu"
           aria-label={`Move "${item.text}" to quadrant`}
           className="absolute left-0 top-full mt-1 bg-surface border border-border rounded-lg shadow-lg z-[200] min-w-[140px] p-1"
-          onKeyDown={handleMoveMenuKeyDown}
-        >
+          onKeyDown={handleMoveMenuKeyDown}>
           {moveTargets.map((target) => (
             <button
               key={target.index}
@@ -287,8 +277,7 @@ export default function Card({
                 e.stopPropagation()
                 onMove(target.index)
                 setShowMoveMenu(false)
-              }}
-            >
+              }}>
               Move to {target.label}
             </button>
           ))}
@@ -326,8 +315,7 @@ export function GhostCard({ drag, text }: GhostCardProps) {
         position: 'fixed',
         pointerEvents: 'none',
         zIndex: 9999,
-      }}
-    >
+      }}>
       <span className="flex-1 min-w-0 break-words">{text}</span>
     </div>
   )

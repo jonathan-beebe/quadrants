@@ -70,8 +70,15 @@ describe('MobileQuadrantGrid', () => {
   /** Click the grid at a position to zoom into a quadrant. */
   function zoomInto(grid: HTMLElement, clientX: number, clientY: number) {
     grid.getBoundingClientRect = () => ({
-      left: 0, top: 0, width: 400, height: 400,
-      right: 400, bottom: 400, x: 0, y: 0, toJSON: () => {},
+      left: 0,
+      top: 0,
+      width: 400,
+      height: 400,
+      right: 400,
+      bottom: 400,
+      x: 0,
+      y: 0,
+      toJSON: () => {},
     })
     fireEvent.click(grid, { clientX, clientY })
   }
@@ -132,8 +139,15 @@ describe('MobileQuadrantGrid', () => {
 
     const grid = screen.getByRole('group', { name: 'Quadrant grid' })
     grid.getBoundingClientRect = () => ({
-      left: 0, top: 0, width: 400, height: 400,
-      right: 400, bottom: 400, x: 0, y: 0, toJSON: () => {},
+      left: 0,
+      top: 0,
+      width: 400,
+      height: 400,
+      right: 400,
+      bottom: 400,
+      x: 0,
+      y: 0,
+      toJSON: () => {},
     })
     // Fire click in bottom-right area (quadrant 3)
     fireEvent.click(grid, { clientX: 350, clientY: 350 })

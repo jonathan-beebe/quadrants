@@ -52,9 +52,7 @@ export default function QuadrantCanvas({
 
   const handleDrop = useCallback(
     (result: DropResult) => {
-      updateFramework((fw) =>
-        moveItem(fw, result.sourceIdx, result.targetIdx, result.itemId, result.x, result.y),
-      )
+      updateFramework((fw) => moveItem(fw, result.sourceIdx, result.targetIdx, result.itemId, result.x, result.y))
     },
     [updateFramework],
   )
@@ -82,7 +80,7 @@ export default function QuadrantCanvas({
 
   const handleDeleteItem = useCallback(
     (quadrantIdx: number, itemId: string) => {
-      const item = frameworkRef.current.quadrants[quadrantIdx].items.find(i => i.id === itemId)
+      const item = frameworkRef.current.quadrants[quadrantIdx].items.find((i) => i.id === itemId)
       updateFramework((fw) => removeItem(fw, quadrantIdx, itemId))
       announce(`Item "${item?.text ?? ''}" deleted from ${frameworkRef.current.quadrants[quadrantIdx].label}`)
     },
@@ -105,7 +103,7 @@ export default function QuadrantCanvas({
 
   const handleMoveItem = useCallback(
     (sourceIdx: number, itemId: string, targetIdx: number) => {
-      const item = frameworkRef.current.quadrants[sourceIdx].items.find(i => i.id === itemId)
+      const item = frameworkRef.current.quadrants[sourceIdx].items.find((i) => i.id === itemId)
       const targetLabel = frameworkRef.current.quadrants[targetIdx].label
       updateFramework((fw) => moveItem(fw, sourceIdx, targetIdx, itemId, 10, 10))
       announce(`Item "${item?.text ?? ''}" moved to ${targetLabel}`)
@@ -142,22 +140,14 @@ export default function QuadrantCanvas({
   return (
     <div className={`flex flex-col h-screen select-none ${isMobile ? 'p-0' : 'p-6'}`}>
       <div
-        className={`flex items-center justify-between shrink-0 ${isMobile ? 'px-3 py-2.5 border-b border-border' : 'mb-5'} ${!isMobile && !sidebarOpen ? 'pl-12' : ''}`}
-      >
+        className={`flex items-center justify-between shrink-0 ${isMobile ? 'px-3 py-2.5 border-b border-border' : 'mb-5'} ${!isMobile && !sidebarOpen ? 'pl-12' : ''}`}>
         <div className="flex items-center gap-2 min-w-0">
           {isMobile && (
-            <Button
-              variant="icon"
-              onClick={onToggleSidebar}
-              aria-label="Open sidebar"
-              aria-expanded={sidebarOpen}
-            >
+            <Button variant="icon" onClick={onToggleSidebar} aria-label="Open sidebar" aria-expanded={sidebarOpen}>
               <SidebarIcon size={18} />
             </Button>
           )}
-          <PageTitle className={isMobile ? 'text-base truncate' : undefined}>
-            {framework.name}
-          </PageTitle>
+          <PageTitle className={isMobile ? 'text-base truncate' : undefined}>{framework.name}</PageTitle>
           {!isMobile && (
             <Button variant="ghost" size="sm" onClick={onEdit} title="Edit framework">
               <EditIcon size={14} />

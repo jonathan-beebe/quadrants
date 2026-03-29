@@ -31,7 +31,14 @@ const defaultProps = {
 }
 
 function renderCard(overrides = {}) {
-  const props = { ...defaultProps, onChange: vi.fn(), onDelete: vi.fn(), onMove: vi.fn(), onDragStart: vi.fn(), ...overrides }
+  const props = {
+    ...defaultProps,
+    onChange: vi.fn(),
+    onDelete: vi.fn(),
+    onMove: vi.fn(),
+    onDragStart: vi.fn(),
+    ...overrides,
+  }
   const result = render(<Card {...props} />)
   return { ...result, props }
 }

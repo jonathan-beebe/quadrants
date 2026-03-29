@@ -25,11 +25,7 @@ export interface UseDragAndDropOptions {
  * Given page coordinates and a bounding rect, returns clamped percentage
  * coordinates within that rect.
  */
-export function pageToQuadrantPercent(
-  pageX: number,
-  pageY: number,
-  rect: DOMRect,
-): { x: number; y: number } {
+export function pageToQuadrantPercent(pageX: number, pageY: number, rect: DOMRect): { x: number; y: number } {
   const x = ((pageX - rect.left) / rect.width) * 100
   const y = ((pageY - rect.top) / rect.height) * 100
   return {
@@ -52,12 +48,7 @@ export function getQuadrantAtPoint(
     const el = quadrantEls[i]
     if (!el) continue
     const rect = el.getBoundingClientRect()
-    if (
-      pageX >= rect.left &&
-      pageX <= rect.right &&
-      pageY >= rect.top &&
-      pageY <= rect.bottom
-    ) {
+    if (pageX >= rect.left && pageX <= rect.right && pageY >= rect.top && pageY <= rect.bottom) {
       const canvasRect = canvasEls[i]?.getBoundingClientRect() || rect
       return { index: i, rect: canvasRect }
     }
@@ -65,11 +56,7 @@ export function getQuadrantAtPoint(
   return null
 }
 
-export default function useDragAndDrop({
-  quadrantRefs,
-  canvasRefs,
-  onDrop,
-}: UseDragAndDropOptions) {
+export default function useDragAndDrop({ quadrantRefs, canvasRefs, onDrop }: UseDragAndDropOptions) {
   const [drag, setDrag] = useState<DragState | null>(null)
   const onDropRef = useRef(onDrop)
   onDropRef.current = onDrop
@@ -78,26 +65,15 @@ export default function useDragAndDrop({
     if (!drag) return
 
     const handleMove = (e: PointerEvent) => {
-      setDrag((prev) =>
-        prev ? { ...prev, x: e.pageX, y: e.pageY } : null,
-      )
+      setDrag((prev) => (prev ? { ...prev, x: e.pageX, y: e.pageY } : null))
     }
 
     const handleUp = (e: PointerEvent) => {
       setDrag((prev) => {
         if (!prev) return null
-        const target = getQuadrantAtPoint(
-          e.pageX,
-          e.pageY,
-          quadrantRefs.current!,
-          canvasRefs.current!,
-        )
+        const target = getQuadrantAtPoint(e.pageX, e.pageY, quadrantRefs.current!, canvasRefs.current!)
         if (target) {
-          const { x, y } = pageToQuadrantPercent(
-            e.pageX - prev.grabX,
-            e.pageY - prev.grabY,
-            target.rect,
-          )
+          const { x, y } = pageToQuadrantPercent(e.pageX - prev.grabX, e.pageY - prev.grabY, target.rect)
           onDropRef.current({
             itemId: prev.itemId,
             sourceIdx: prev.sourceIdx,
@@ -118,21 +94,18 @@ export default function useDragAndDrop({
     }
   }, [drag, quadrantRefs, canvasRefs])
 
-  const handleDragStart = useCallback(
-    (quadrantIdx: number, item: Item, info: DragStartInfo) => {
-      setDrag({
-        itemId: item.id,
-        sourceIdx: quadrantIdx,
-        grabX: info.grabX,
-        grabY: info.grabY,
-        width: info.width,
-        height: info.height,
-        x: info.pageX,
-        y: info.pageY,
-      })
-    },
-    [],
-  )
+  const handleDragStart = useCallback((quadrantIdx: number, item: Item, info: DragStartInfo) => {
+    setDrag({
+      itemId: item.id,
+      sourceIdx: quadrantIdx,
+      grabX: info.grabX,
+      grabY: info.grabY,
+      width: info.width,
+      height: info.height,
+      x: info.pageX,
+      y: info.pageY,
+    })
+  }, [])
 
   return { drag, handleDragStart }
 }

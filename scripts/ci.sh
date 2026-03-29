@@ -2,7 +2,7 @@
 # CI: runs all checks, suppressing output unless a step fails.
 set -e
 
-steps="typecheck lint test build"
+steps="format:check typecheck lint test build"
 
 for step in $steps; do
   if ! output=$(npm run "$step" 2>&1); then

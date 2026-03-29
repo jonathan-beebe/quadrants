@@ -14,11 +14,7 @@ interface ReflectionModeProps {
   onExit: () => void
 }
 
-export default function ReflectionMode({
-  framework,
-  onUpdate,
-  onExit,
-}: ReflectionModeProps) {
+export default function ReflectionMode({ framework, onUpdate, onExit }: ReflectionModeProps) {
   const [activeQuadrant, setActiveQuadrant] = useState(0)
   const [text, setText] = useState('')
   const inputRef = useRef<HTMLInputElement>(null)
@@ -47,13 +43,10 @@ export default function ReflectionMode({
 
   const handleKeyDown = useFocusTrap(overlayRef, onExit)
 
-  const switchQuadrant = useCallback(
-    (idx: number) => {
-      setActiveQuadrant(idx)
-      inputRef.current?.focus()
-    },
-    [],
-  )
+  const switchQuadrant = useCallback((idx: number) => {
+    setActiveQuadrant(idx)
+    inputRef.current?.focus()
+  }, [])
 
   const handleTabKeyDown = useCallback(
     (e: React.KeyboardEvent, idx: number) => {
@@ -90,13 +83,11 @@ export default function ReflectionMode({
       role="dialog"
       aria-modal="true"
       aria-label={`Reflection mode: ${framework.name}`}
-      onKeyDown={handleKeyDown}
-    >
+      onKeyDown={handleKeyDown}>
       <button
         className="fixed top-5 right-5 p-2 rounded-lg text-text-secondary transition-all duration-150 hover:text-text hover:bg-border"
         onClick={onExit}
-        aria-label="Exit reflection mode"
-      >
+        aria-label="Exit reflection mode">
         <XIcon size={20} />
       </button>
 
@@ -116,14 +107,12 @@ export default function ReflectionMode({
                 i === activeQuadrant
                   ? {
                       background: deriveColors(q.color || defaultColors[i]).bg,
-                      borderColor: deriveColors(q.color || defaultColors[i])
-                        .border,
+                      borderColor: deriveColors(q.color || defaultColors[i]).border,
                     }
                   : undefined
               }
               onClick={() => switchQuadrant(i)}
-              onKeyDown={(e) => handleTabKeyDown(e, i)}
-            >
+              onKeyDown={(e) => handleTabKeyDown(e, i)}>
               {q.label}
               <Badge count={q.items.length} aria-hidden={true} />
             </button>
@@ -136,14 +125,9 @@ export default function ReflectionMode({
           aria-labelledby={`quadrant-tab-${activeQuadrant}`}
           className="p-6 rounded-xl border min-h-[400px] flex flex-col"
           style={{
-            background: deriveColors(
-              quadrant.color || defaultColors[activeQuadrant],
-            ).bg,
-            borderColor: deriveColors(
-              quadrant.color || defaultColors[activeQuadrant],
-            ).border,
-          }}
-        >
+            background: deriveColors(quadrant.color || defaultColors[activeQuadrant]).bg,
+            borderColor: deriveColors(quadrant.color || defaultColors[activeQuadrant]).border,
+          }}>
           <h2 className="text-2xl font-semibold mb-5">{quadrant.label}</h2>
 
           <form className="mb-5" onSubmit={handleAdd}>
@@ -157,24 +141,17 @@ export default function ReflectionMode({
               className="w-full py-3.5 px-4 border border-black/10 dark:border-white/10 rounded-lg text-base bg-white/70 dark:bg-white/10 outline-none transition-all duration-150 focus:border-accent focus:bg-white dark:focus:bg-white/15 focus:ring-[3px] focus:ring-accent/10 text-text"
               autoFocus
             />
-            <Caption className="block mt-2 text-center">
-              Enter to add &middot; Esc to exit
-            </Caption>
+            <Caption className="block mt-2 text-center">Enter to add &middot; Esc to exit</Caption>
           </form>
 
           <ul className="flex-1 flex flex-col gap-1.5" aria-label={`Items in ${quadrant.label}`}>
             {quadrant.items.map((item) => (
-              <li
-                key={item.id}
-                className="py-2.5 px-3.5 bg-white/60 dark:bg-white/10 rounded-lg text-sm"
-              >
+              <li key={item.id} className="py-2.5 px-3.5 bg-white/60 dark:bg-white/10 rounded-lg text-sm">
                 {item.text}
               </li>
             ))}
             {quadrant.items.length === 0 && (
-              <li className="text-text-tertiary text-sm text-center py-8">
-                No items yet. Start typing above.
-              </li>
+              <li className="text-text-tertiary text-sm text-center py-8">No items yet. Start typing above.</li>
             )}
           </ul>
         </div>

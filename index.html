@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
@@ -12,13 +12,13 @@
       // GitHub Pages SPA redirect (step 2 of 2)
       // Restores the original URL saved by 404.html before React boots.
       // See public/404.html for step 1.
-      (function () {
-        var redirect = sessionStorage.redirect;
-        delete sessionStorage.redirect;
+      ;(function () {
+        var redirect = sessionStorage.redirect
+        delete sessionStorage.redirect
         if (redirect && redirect !== location.pathname + location.search + location.hash) {
-          history.replaceState(null, '', redirect);
+          history.replaceState(null, '', redirect)
         }
-      })();
+      })()
     </script>
   </head>
   <body>

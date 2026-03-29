@@ -13,17 +13,11 @@ interface FrameworkBuilderProps {
   onCancel: () => void
 }
 
-export default function FrameworkBuilder({
-  editing,
-  onCreate,
-  onCancel,
-}: FrameworkBuilderProps) {
+export default function FrameworkBuilder({ editing, onCreate, onCancel }: FrameworkBuilderProps) {
   const [name, setName] = useState(editing?.name || '')
   const [axisX, setAxisX] = useState(editing?.axisX || '')
   const [axisY, setAxisY] = useState(editing?.axisY || '')
-  const [quadrants, setQuadrants] = useState(
-    editing ? editing.quadrants.map((q) => q.label) : ['', '', '', ''],
-  )
+  const [quadrants, setQuadrants] = useState(editing ? editing.quadrants.map((q) => q.label) : ['', '', '', ''])
 
   const isValid = name.trim() && quadrants.every((q) => q.trim())
 
@@ -53,9 +47,7 @@ export default function FrameworkBuilder({
     <div className="flex justify-center px-6 py-10 min-h-screen">
       <div className="w-full max-w-[640px]">
         <div className="flex items-center justify-between mb-8">
-          <PageTitle as="h2">
-            {editing ? 'Edit Framework' : 'Create Framework'}
-          </PageTitle>
+          <PageTitle as="h2">{editing ? 'Edit Framework' : 'Create Framework'}</PageTitle>
           <Button variant="ghost" onClick={onCancel}>
             Cancel
           </Button>
@@ -70,12 +62,9 @@ export default function FrameworkBuilder({
                   key={t.name}
                   className="flex flex-col items-start p-3 px-4 bg-surface border border-border rounded-lg text-left transition-all duration-150 hover:border-accent hover:bg-accent-light"
                   aria-label={`Apply template: ${t.name}`}
-                  onClick={() => applyTemplate(t)}
-                >
+                  onClick={() => applyTemplate(t)}>
                   <span className="text-[13px] font-medium">{t.name}</span>
-                  <Caption className="mt-0.5">
-                    {t.quadrants.join(' / ')}
-                  </Caption>
+                  <Caption className="mt-0.5">{t.quadrants.join(' / ')}</Caption>
                 </button>
               ))}
             </div>
@@ -84,13 +73,9 @@ export default function FrameworkBuilder({
 
         <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
           <div>
-            <SectionLabel>
-              {editing ? 'Framework' : 'Or build your own'}
-            </SectionLabel>
+            <SectionLabel>{editing ? 'Framework' : 'Or build your own'}</SectionLabel>
             <label className="flex flex-col gap-1.5">
-              <span className="text-[13px] font-medium text-text-secondary">
-                Framework Name
-              </span>
+              <span className="text-[13px] font-medium text-text-secondary">Framework Name</span>
               <input
                 type="text"
                 value={name}

@@ -4,9 +4,7 @@ const BASE = import.meta.env.BASE_URL ?? '/'
 
 export function getIdFromPath(): string | null {
   const pathname = window.location.pathname
-  const path = pathname.startsWith(BASE)
-    ? pathname.slice(BASE.length)
-    : pathname.slice(1)
+  const path = pathname.startsWith(BASE) ? pathname.slice(BASE.length) : pathname.slice(1)
   return path || null
 }
 

@@ -5,9 +5,5 @@ interface SectionLabelProps {
 }
 
 export default function SectionLabel({ children }: SectionLabelProps) {
-  return (
-    <h3 className="text-sm font-medium text-text-secondary mb-3">
-      {children}
-    </h3>
-  )
+  return <h3 className="text-sm font-medium text-text-secondary mb-3">{children}</h3>
 }

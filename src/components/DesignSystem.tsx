@@ -39,11 +39,7 @@ const layouts = {
 } as const
 
 function SectionHeading({ children }: { children: React.ReactNode }) {
-  return (
-    <h2 className="text-2xl font-semibold text-text mt-16 mb-6 pb-2 border-b border-border">
-      {children}
-    </h2>
-  )
+  return <h2 className="text-2xl font-semibold text-text mt-16 mb-6 pb-2 border-b border-border">{children}</h2>
 }
 
 function Subsection({
@@ -89,10 +85,7 @@ function DemoRow({
 function Swatch({ color, label }: { color: string; label: string }) {
   return (
     <div className="flex flex-col items-center gap-1.5">
-      <div
-        className="w-10 h-10 rounded-lg border border-border"
-        style={{ backgroundColor: color }}
-      />
+      <div className="w-10 h-10 rounded-lg border border-border" style={{ backgroundColor: color }} />
       <Caption>{label}</Caption>
     </div>
   )
@@ -146,9 +139,7 @@ const demoFramework: Framework = {
     {
       label: 'Eliminate',
       color: defaultColors[3],
-      items: [
-        { id: '9', text: 'Legacy dashboard', x: 20, y: 30, createdAt: 0 },
-      ],
+      items: [{ id: '9', text: 'Legacy dashboard', x: 20, y: 30, createdAt: 0 }],
     },
   ],
   createdAt: 0,
@@ -176,9 +167,7 @@ function DesktopGridDemo() {
         onColorChange={(idx, color) => {
           setFramework((fw) => ({
             ...fw,
-            quadrants: fw.quadrants.map((q, i) =>
-              i === idx ? { ...q, color } : q,
-            ),
+            quadrants: fw.quadrants.map((q, i) => (i === idx ? { ...q, color } : q)),
           }))
         }}
         onMoveItem={noop}
@@ -196,8 +185,7 @@ function MobileGridDemo() {
   return (
     <div
       className="border border-border rounded-xl overflow-hidden bg-bg flex flex-col"
-      style={{ width: 375, height: 667 }}
-    >
+      style={{ width: 375, height: 667 }}>
       <MobileQuadrantGrid
         framework={framework}
         drag={null}
@@ -210,9 +198,7 @@ function MobileGridDemo() {
         onColorChange={(idx, color) => {
           setFramework((fw) => ({
             ...fw,
-            quadrants: fw.quadrants.map((q, i) =>
-              i === idx ? { ...q, color } : q,
-            ),
+            quadrants: fw.quadrants.map((q, i) => (i === idx ? { ...q, color } : q)),
           }))
         }}
         onMoveItem={noop}
@@ -269,8 +255,7 @@ export default function DesignSystem() {
           <PageTitle>Design System</PageTitle>
           <a
             href={import.meta.env.BASE_URL ?? '/'}
-            className="text-sm text-accent hover:text-accent-hover transition-colors"
-          >
+            className="text-sm text-accent hover:text-accent-hover transition-colors">
             Back to app
           </a>
         </div>
@@ -318,15 +303,23 @@ export default function DesignSystem() {
           </DemoRow>
           <DemoRow label="Secondary">
             <Button variant="secondary">Cancel</Button>
-            <Button variant="secondary" size="sm">Small Secondary</Button>
+            <Button variant="secondary" size="sm">
+              Small Secondary
+            </Button>
           </DemoRow>
           <DemoRow label="Ghost">
             <Button variant="ghost">Edit</Button>
-            <Button variant="ghost" size="sm">Small Ghost</Button>
+            <Button variant="ghost" size="sm">
+              Small Ghost
+            </Button>
           </DemoRow>
           <DemoRow label="Icon">
-            <Button variant="icon" aria-label="Add"><PlusIcon size={18} /></Button>
-            <Button variant="icon" aria-label="Edit"><EditIcon size={18} /></Button>
+            <Button variant="icon" aria-label="Add">
+              <PlusIcon size={18} />
+            </Button>
+            <Button variant="icon" aria-label="Edit">
+              <EditIcon size={18} />
+            </Button>
             <ThemeToggleButton mode={mode} darkMode={darkMode} onCycle={cycleMode} />
           </DemoRow>
         </Subsection>
@@ -359,9 +352,7 @@ export default function DesignSystem() {
             <Button variant="secondary" size="sm" onClick={() => setShowToast(true)}>
               Show Toast
             </Button>
-            <Caption>
-              Renders a fixed-position error alert at bottom of screen.
-            </Caption>
+            <Caption>Renders a fixed-position error alert at bottom of screen.</Caption>
           </DemoRow>
           <DemoRow label="Update Toast (inline preview)">
             <UpdateToastView onReload={() => {}} onDismiss={() => {}} />
@@ -387,10 +378,7 @@ export default function DesignSystem() {
       </main>
 
       {showToast && (
-        <Toast
-          message="Something went wrong — this is a demo toast."
-          onDismiss={() => setShowToast(false)}
-        />
+        <Toast message="Something went wrong — this is a demo toast." onDismiss={() => setShowToast(false)} />
       )}
     </div>
   )

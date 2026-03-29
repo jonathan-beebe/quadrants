@@ -18,18 +18,8 @@ import DesignSystem from './components/DesignSystem'
 import type { Framework, FrameworkTemplate } from './types'
 
 export default function App() {
-  const {
-    frameworks,
-    getFramework,
-    create,
-    update,
-    remove,
-    duplicate,
-    editStructure,
-    replace,
-    addImport,
-    addRaw,
-  } = useFrameworks()
+  const { frameworks, getFramework, create, update, remove, duplicate, editStructure, replace, addImport, addRaw } =
+    useFrameworks()
   const { activeId, navigate } = useRouting()
   const { darkMode, mode, cycleMode } = useDarkMode()
   const isMobile = useIsMobile()
@@ -133,21 +123,14 @@ export default function App() {
   }
 
   if (reflectionMode && activeFramework) {
-    return (
-      <ReflectionMode
-        framework={activeFramework}
-        onUpdate={update}
-        onExit={() => setReflectionMode(false)}
-      />
-    )
+    return <ReflectionMode framework={activeFramework} onUpdate={update} onExit={() => setReflectionMode(false)} />
   }
 
   return (
     <div className="flex h-screen overflow-hidden">
       <a
         href="#main-content"
-        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-1/2 focus:-translate-x-1/2 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-accent focus:text-white focus:rounded-lg focus:text-sm focus:font-medium"
-      >
+        className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-1/2 focus:-translate-x-1/2 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-accent focus:text-white focus:rounded-lg focus:text-sm focus:font-medium">
         Skip to main content
       </a>
       <div inert={conflict ? true : undefined}>
@@ -169,8 +152,7 @@ export default function App() {
       </div>
       <main
         id="main-content"
-        className={`flex-1 overflow-y-auto transition-[margin-left] duration-150 ease-in-out ${!isMobile && sidebarOpen ? 'ml-[280px]' : 'ml-0'}`}
-      >
+        className={`flex-1 overflow-y-auto transition-[margin-left] duration-150 ease-in-out ${!isMobile && sidebarOpen ? 'ml-[280px]' : 'ml-0'}`}>
         {conflict ? (
           <ConflictDialog
             existing={conflict.existing}
@@ -180,11 +162,7 @@ export default function App() {
             onCancel={handleConflictCancel}
           />
         ) : showBuilder ? (
-          <FrameworkBuilder
-            editing={editingFramework}
-            onCreate={handleSaveEdit}
-            onCancel={closeBuilder}
-          />
+          <FrameworkBuilder editing={editingFramework} onCreate={handleSaveEdit} onCancel={closeBuilder} />
         ) : activeFramework ? (
           <ErrorBoundary key={activeFramework.id}>
             <QuadrantCanvas

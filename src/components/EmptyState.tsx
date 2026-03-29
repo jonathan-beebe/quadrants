@@ -13,12 +13,9 @@ export default function EmptyState({ onNew }: EmptyStateProps) {
       </div>
       <h2 className="text-lg font-semibold text-text">No framework selected</h2>
       <p className="text-sm max-w-[360px] mb-2">
-        Create a new quadrant framework or select one from the sidebar to get
-        started.
+        Create a new quadrant framework or select one from the sidebar to get started.
       </p>
-      <Button onClick={onNew}>
-        Create Framework
-      </Button>
+      <Button onClick={onNew}>Create Framework</Button>
     </div>
   )
 }

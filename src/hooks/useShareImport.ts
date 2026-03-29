@@ -18,13 +18,7 @@ interface UseShareImportOptions {
   addImport: (fw: Framework) => Framework
 }
 
-export function useShareImport({
-  getFramework,
-  navigate,
-  addRaw,
-  replace,
-  addImport,
-}: UseShareImportOptions) {
+export function useShareImport({ getFramework, navigate, addRaw, replace, addImport }: UseShareImportOptions) {
   const [conflict, setConflict] = useState<Conflict | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [importing, setImporting] = useState(() => !!getHashFromUrl())

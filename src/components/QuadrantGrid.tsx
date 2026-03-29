@@ -43,14 +43,18 @@ export default function QuadrantGrid({
         framework.axisY && `vertical axis: ${framework.axisY}`,
       ]
         .filter(Boolean)
-        .join(', ')}
-    >
+        .join(', ')}>
       {framework.axisY && (
-        <div
-          className="flex flex-col items-center shrink-0 w-6 py-2 text-text-tertiary"
-          aria-hidden="true"
-        >
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+        <div className="flex flex-col items-center shrink-0 w-6 py-2 text-text-tertiary" aria-hidden="true">
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round">
             <path d="M5 9 L5 1 M2 4 L5 1 L8 4" />
           </svg>
           <div className="flex-1 w-px bg-current opacity-30" />
@@ -58,7 +62,15 @@ export default function QuadrantGrid({
             {framework.axisY}
           </span>
           <div className="flex-1 w-px bg-current opacity-30" />
-          <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round">
             <path d="M5 1 L5 9 M2 6 L5 9 L8 6" />
           </svg>
         </div>
@@ -72,24 +84,18 @@ export default function QuadrantGrid({
             const isBottom = idx === 2 || idx === 3
 
             const header = (
-              <div className={`flex items-center justify-between px-3.5 pt-2.5 pb-1.5 shrink-0 ${isRight ? 'flex-row-reverse' : ''}`}>
+              <div
+                className={`flex items-center justify-between px-3.5 pt-2.5 pb-1.5 shrink-0 ${isRight ? 'flex-row-reverse' : ''}`}>
                 <div className={`flex items-center gap-1.5 ${isRight ? 'flex-row-reverse' : ''}`}>
                   <h2 className="text-[13px] font-semibold">{quadrant.label}</h2>
-                  <Badge
-                    count={quadrant.items.length}
-                    label={`${quadrant.items.length} items in ${quadrant.label}`}
-                  />
+                  <Badge count={quadrant.items.length} label={`${quadrant.items.length} items in ${quadrant.label}`} />
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <ColorPicker
-                    color={qColor}
-                    onChange={(c) => onColorChange(idx, c)}
-                  />
+                  <ColorPicker color={qColor} onChange={(c) => onColorChange(idx, c)} />
                   <button
                     className="p-[3px] rounded text-text-tertiary transition-all duration-150 hover:text-text-secondary hover:bg-black/6 dark:hover:bg-white/10"
                     onClick={() => onAddItem(idx)}
-                    aria-label={`Add item to ${quadrant.label}`}
-                  >
+                    aria-label={`Add item to ${quadrant.label}`}>
                     <PlusIcon size={14} />
                   </button>
                 </div>
@@ -104,15 +110,13 @@ export default function QuadrantGrid({
                 style={{ background: bg, borderColor: border }}
                 ref={(el) => {
                   quadrantRefs.current![idx] = el
-                }}
-              >
+                }}>
                 {!isBottom && header}
                 <div
                   className="flex-1 relative min-h-0 overflow-visible"
                   ref={(el) => {
                     canvasRefs.current![idx] = el
-                  }}
-                >
+                  }}>
                   {quadrant.items.map((item) => (
                     <Card
                       key={item.id}
@@ -135,11 +139,16 @@ export default function QuadrantGrid({
           })}
         </div>
         {framework.axisX && (
-          <div
-            className="flex items-center shrink-0 pt-2 px-2 text-text-tertiary"
-            aria-hidden="true"
-          >
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+          <div className="flex items-center shrink-0 pt-2 px-2 text-text-tertiary" aria-hidden="true">
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round">
               <path d="M9 5 L1 5 M4 2 L1 5 L4 8" />
             </svg>
             <div className="flex-1 h-px bg-current opacity-30" />
@@ -147,7 +156,15 @@ export default function QuadrantGrid({
               {framework.axisX}
             </span>
             <div className="flex-1 h-px bg-current opacity-30" />
-            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round">
               <path d="M1 5 L9 5 M6 2 L9 5 L6 8" />
             </svg>
           </div>
