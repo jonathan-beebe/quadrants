@@ -86,6 +86,13 @@ export function useShareImport({ getFramework, navigate, addRaw, replace, addImp
       })
   }, [getFramework, addRaw, navigate, showError])
 
+  // Clear pending error auto-dismiss timer on unmount
+  useEffect(() => {
+    return () => {
+      if (errorTimer.current) clearTimeout(errorTimer.current)
+    }
+  }, [])
+
   // Load framework from URL hash on mount and on hash change
   useEffect(() => {
     importFromHash()
