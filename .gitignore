@@ -2,3 +2,4 @@ node_modules
 __local__
 dist
 .DS_Store
+.claude
