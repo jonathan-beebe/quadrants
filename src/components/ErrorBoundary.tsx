@@ -12,10 +12,7 @@ interface ErrorBoundaryState {
   error: Error | null
 }
 
-export default class ErrorBoundary extends Component<
-  ErrorBoundaryProps,
-  ErrorBoundaryState
-> {
+export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
   state: ErrorBoundaryState = { error: null }
 
   static getDerivedStateFromError(error: Error) {
@@ -32,17 +29,10 @@ export default class ErrorBoundary extends Component<
     if (this.props.fallback) return this.props.fallback
 
     return (
-      <div
-        role="alert"
-        className="flex flex-col items-center justify-center h-screen gap-4 p-8 text-center"
-      >
+      <div role="alert" className="flex flex-col items-center justify-center h-screen gap-4 p-8 text-center">
         <PageTitle>Something went wrong</PageTitle>
-        <p className="text-text-secondary text-sm max-w-md">
-          {this.state.error.message}
-        </p>
-        <Button onClick={() => this.setState({ error: null })}>
-          Try again
-        </Button>
+        <p className="text-text-secondary text-sm max-w-md">{this.state.error.message}</p>
+        <Button onClick={() => this.setState({ error: null })}>Try again</Button>
       </div>
     )
   }

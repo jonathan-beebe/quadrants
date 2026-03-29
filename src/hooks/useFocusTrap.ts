@@ -1,7 +1,6 @@
 import { useCallback } from 'react'
 
-const FOCUSABLE_SELECTOR =
-  'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+const FOCUSABLE_SELECTOR = 'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
 
 export function useFocusTrap(
   ref: React.RefObject<HTMLElement | null>,

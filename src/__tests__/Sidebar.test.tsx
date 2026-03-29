@@ -104,9 +104,7 @@ describe('Sidebar', () => {
 
   it('highlights the active framework', () => {
     const fw = makeFramework()
-    const { container } = render(
-      <Sidebar {...defaultProps} frameworks={[fw]} activeId="fw-1" />
-    )
+    const { container } = render(<Sidebar {...defaultProps} frameworks={[fw]} activeId="fw-1" />)
     const activeItem = container.querySelector('.bg-accent-light')
     expect(activeItem).toBeInTheDocument()
   })
@@ -118,13 +116,7 @@ describe('Sidebar', () => {
     const onExport = vi.fn()
     const onDelete = vi.fn()
     render(
-      <Sidebar
-        {...defaultProps}
-        frameworks={[fw]}
-        onDuplicate={onDuplicate}
-        onExport={onExport}
-        onDelete={onDelete}
-      />
+      <Sidebar {...defaultProps} frameworks={[fw]} onDuplicate={onDuplicate} onExport={onExport} onDelete={onDelete} />,
     )
 
     // Open context menu via the actions button

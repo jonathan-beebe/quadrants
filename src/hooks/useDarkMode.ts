@@ -5,10 +5,7 @@ export type ThemeMode = 'light' | 'dark' | 'system'
 const STORAGE_KEY = 'quadrants_theme_mode'
 const LEGACY_KEY = 'quadrants_dark_mode'
 
-const darkQuery =
-  typeof window !== 'undefined'
-    ? window.matchMedia('(prefers-color-scheme: dark)')
-    : null
+const darkQuery = typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)') : null
 
 function subscribeToSystemTheme(callback: () => void) {
   darkQuery?.addEventListener('change', callback)

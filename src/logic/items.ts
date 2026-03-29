@@ -1,45 +1,26 @@
 import type { Framework, Item } from '../types'
 
-export function addItem(
-  framework: Framework,
-  quadrantIndex: number,
-  item: Item,
-): Framework {
+export function addItem(framework: Framework, quadrantIndex: number, item: Item): Framework {
+  return {
+    ...framework,
+    quadrants: framework.quadrants.map((q, i) => (i === quadrantIndex ? { ...q, items: [...q.items, item] } : q)),
+  }
+}
+
+export function removeItem(framework: Framework, quadrantIndex: number, itemId: string): Framework {
   return {
     ...framework,
     quadrants: framework.quadrants.map((q, i) =>
-      i === quadrantIndex ? { ...q, items: [...q.items, item] } : q,
+      i === quadrantIndex ? { ...q, items: q.items.filter((it) => it.id !== itemId) } : q,
     ),
   }
 }
 
-export function removeItem(
-  framework: Framework,
-  quadrantIndex: number,
-  itemId: string,
-): Framework {
+export function updateItemText(framework: Framework, quadrantIndex: number, itemId: string, text: string): Framework {
   return {
     ...framework,
     quadrants: framework.quadrants.map((q, i) =>
-      i === quadrantIndex
-        ? { ...q, items: q.items.filter((it) => it.id !== itemId) }
-        : q,
-    ),
-  }
-}
-
-export function updateItemText(
-  framework: Framework,
-  quadrantIndex: number,
-  itemId: string,
-  text: string,
-): Framework {
-  return {
-    ...framework,
-    quadrants: framework.quadrants.map((q, i) =>
-      i === quadrantIndex
-        ? { ...q, items: q.items.map((it) => (it.id === itemId ? { ...it, text } : it)) }
-        : q,
+      i === quadrantIndex ? { ...q, items: q.items.map((it) => (it.id === itemId ? { ...it, text } : it)) } : q,
     ),
   }
 }
@@ -56,9 +37,7 @@ export function moveItem(
     return {
       ...framework,
       quadrants: framework.quadrants.map((q, i) =>
-        i === targetIndex
-          ? { ...q, items: q.items.map((it) => (it.id === itemId ? { ...it, x, y } : it)) }
-          : q,
+        i === targetIndex ? { ...q, items: q.items.map((it) => (it.id === itemId ? { ...it, x, y } : it)) } : q,
       ),
     }
   }
@@ -80,15 +59,9 @@ export function moveItem(
   }
 }
 
-export function setQuadrantColor(
-  framework: Framework,
-  quadrantIndex: number,
-  color: string,
-): Framework {
+export function setQuadrantColor(framework: Framework, quadrantIndex: number, color: string): Framework {
   return {
     ...framework,
-    quadrants: framework.quadrants.map((q, i) =>
-      i === quadrantIndex ? { ...q, color } : q,
-    ),
+    quadrants: framework.quadrants.map((q, i) => (i === quadrantIndex ? { ...q, color } : q)),
   }
 }

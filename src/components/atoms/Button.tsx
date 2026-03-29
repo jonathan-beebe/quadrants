@@ -14,13 +14,7 @@ interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
 
 const Button = forwardRef<HTMLButtonElement, ButtonProps>(
   ({ variant = 'primary', size = 'default', className = '', ...props }, ref) => {
-    const classes = [
-      variantClasses[variant],
-      size === 'sm' ? 'btn-sm' : '',
-      className,
-    ]
-      .filter(Boolean)
-      .join(' ')
+    const classes = [variantClasses[variant], size === 'sm' ? 'btn-sm' : '', className].filter(Boolean).join(' ')
 
     return <button ref={ref} className={classes} {...props} />
   },

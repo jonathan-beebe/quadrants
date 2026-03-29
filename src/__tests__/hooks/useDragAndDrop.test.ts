@@ -1,9 +1,6 @@
 import { describe, it, expect, vi } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
-import useDragAndDrop, {
-  pageToQuadrantPercent,
-  getQuadrantAtPoint,
-} from '../../hooks/useDragAndDrop'
+import useDragAndDrop, { pageToQuadrantPercent, getQuadrantAtPoint } from '../../hooks/useDragAndDrop'
 import type { Item } from '../../types'
 
 // --- Pure function tests ---
@@ -131,18 +128,14 @@ describe('useDragAndDrop hook', () => {
   it('starts with no drag state', () => {
     const refs = makeRefs()
     const onDrop = vi.fn()
-    const { result } = renderHook(() =>
-      useDragAndDrop({ ...refs, onDrop }),
-    )
+    const { result } = renderHook(() => useDragAndDrop({ ...refs, onDrop }))
     expect(result.current.drag).toBeNull()
   })
 
   it('sets drag state on handleDragStart', () => {
     const refs = makeRefs()
     const onDrop = vi.fn()
-    const { result } = renderHook(() =>
-      useDragAndDrop({ ...refs, onDrop }),
-    )
+    const { result } = renderHook(() => useDragAndDrop({ ...refs, onDrop }))
 
     act(() => {
       result.current.handleDragStart(0, mockItem, {
@@ -170,9 +163,7 @@ describe('useDragAndDrop hook', () => {
   it('updates drag position on pointermove', () => {
     const refs = makeRefs()
     const onDrop = vi.fn()
-    const { result } = renderHook(() =>
-      useDragAndDrop({ ...refs, onDrop }),
-    )
+    const { result } = renderHook(() => useDragAndDrop({ ...refs, onDrop }))
 
     act(() => {
       result.current.handleDragStart(0, mockItem, {
@@ -186,9 +177,7 @@ describe('useDragAndDrop hook', () => {
     })
 
     act(() => {
-      window.dispatchEvent(
-        new PointerEvent('pointermove', { clientX: 200, clientY: 300 }),
-      )
+      window.dispatchEvent(new PointerEvent('pointermove', { clientX: 200, clientY: 300 }))
     })
 
     // PointerEvent pageX/pageY default to 0 in jsdom, so drag.x/y become 0
@@ -199,9 +188,7 @@ describe('useDragAndDrop hook', () => {
   it('clears drag state on pointerup', () => {
     const refs = makeRefs()
     const onDrop = vi.fn()
-    const { result } = renderHook(() =>
-      useDragAndDrop({ ...refs, onDrop }),
-    )
+    const { result } = renderHook(() => useDragAndDrop({ ...refs, onDrop }))
 
     act(() => {
       result.current.handleDragStart(0, mockItem, {
@@ -224,9 +211,7 @@ describe('useDragAndDrop hook', () => {
   it('does not call onDrop when pointerup is outside all quadrants', () => {
     const refs = makeRefs()
     const onDrop = vi.fn()
-    const { result } = renderHook(() =>
-      useDragAndDrop({ ...refs, onDrop }),
-    )
+    const { result } = renderHook(() => useDragAndDrop({ ...refs, onDrop }))
 
     act(() => {
       result.current.handleDragStart(0, mockItem, {
@@ -251,9 +236,7 @@ describe('useDragAndDrop hook', () => {
     const onDrop = vi.fn()
     const removeSpy = vi.spyOn(window, 'removeEventListener')
 
-    const { result } = renderHook(() =>
-      useDragAndDrop({ ...refs, onDrop }),
-    )
+    const { result } = renderHook(() => useDragAndDrop({ ...refs, onDrop }))
 
     act(() => {
       result.current.handleDragStart(0, mockItem, {
