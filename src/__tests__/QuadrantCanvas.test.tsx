@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import QuadrantCanvas from '../components/QuadrantCanvas'
 import type { Framework } from '../types'
@@ -108,5 +108,22 @@ describe('QuadrantCanvas', () => {
     // The updated framework should have one more item in the first quadrant
     const updatedFw = onUpdate.mock.calls[0][0]
     expect(updatedFw.quadrants[0].items).toHaveLength(2)
+  })
+
+  it('announces item text when deleting an item', async () => {
+    const user = userEvent.setup()
+    render(<QuadrantCanvas {...defaultProps} />)
+
+    // Delete the existing item "Task A" via its delete button
+    const deleteBtn = screen.getByRole('button', { name: /delete item: task a/i })
+    await user.click(deleteBtn)
+
+    // The sr-only aria-live region should announce the deletion with the item name
+    await waitFor(() => {
+      const liveRegions = screen.getAllByRole('status')
+      const announcement = liveRegions.find((el) => el.textContent?.includes('deleted from'))
+      expect(announcement).toBeDefined()
+      expect(announcement!.textContent).toContain('Task A')
+    })
   })
 })
