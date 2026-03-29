@@ -13,8 +13,8 @@ export function hydratePayload(payload: SharedPayload, id: string): Framework {
       items: (q.items || []).map((it) => ({
         id: crypto.randomUUID(),
         text: it.text,
-        x: it.x ?? 10,
-        y: it.y ?? 10,
+        x: Math.max(2, Math.min(it.x ?? 10, 85)),
+        y: Math.max(2, Math.min(it.y ?? 10, 85)),
         createdAt: Date.now(),
       })),
     })),

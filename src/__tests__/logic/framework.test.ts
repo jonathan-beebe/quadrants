@@ -73,6 +73,22 @@ describe('hydratePayload', () => {
     expect(fw.quadrants[0].items[0].x).toBe(10)
     expect(fw.quadrants[0].items[0].y).toBe(10)
   })
+
+  it('clamps item coordinates to valid range (2-85)', () => {
+    const payload = makePayload()
+    payload.quadrants[0].items = [
+      { text: 'Too high', x: 9999, y: 200 },
+      { text: 'Too low', x: -500, y: -10 },
+      { text: 'In range', x: 50, y: 50 },
+    ]
+    const fw = hydratePayload(payload, 'id')
+    expect(fw.quadrants[0].items[0].x).toBe(85)
+    expect(fw.quadrants[0].items[0].y).toBe(85)
+    expect(fw.quadrants[0].items[1].x).toBe(2)
+    expect(fw.quadrants[0].items[1].y).toBe(2)
+    expect(fw.quadrants[0].items[2].x).toBe(50)
+    expect(fw.quadrants[0].items[2].y).toBe(50)
+  })
 })
 
 describe('updateFramework', () => {
