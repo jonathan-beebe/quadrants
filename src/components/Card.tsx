@@ -222,7 +222,7 @@ export default function Card({
       onPointerDown={(e) => {
         if (e.button !== 0 || editing) return
         e.preventDefault()
-        fireDragStart(e.clientX, e.clientY)
+        startPendingDrag(e.clientX, e.clientY)
       }}>
       {editing ? (
         <textarea
