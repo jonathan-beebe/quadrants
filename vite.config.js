@@ -45,9 +45,10 @@ function ghPages404Plugin() {
 }
 
 const commitHash = execSync('git rev-parse --short HEAD').toString().trim()
+const base = process.env.VITE_BASE || '/quadrants/'
 
 export default defineConfig({
-  base: '/quadrants/',
+  base,
   define: {
     __COMMIT_HASH__: JSON.stringify(commitHash),
   },
@@ -66,8 +67,8 @@ export default defineConfig({
         theme_color: '#3b82f6',
         background_color: '#fafafa',
         display: 'standalone',
-        scope: '/quadrants/',
-        start_url: '/quadrants/',
+        scope: base,
+        start_url: base,
         icons: [
           {
             src: 'pwa-192x192.png',
