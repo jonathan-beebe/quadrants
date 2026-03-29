@@ -24,6 +24,7 @@ export function pickJsonFile(): Promise<string> {
       reader.onerror = () => reject(new Error('Failed to read file'))
       reader.readAsText(file)
     }
+    input.oncancel = () => reject(new Error('File selection cancelled'))
     input.click()
   })
 }
