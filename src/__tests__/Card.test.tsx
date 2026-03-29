@@ -70,6 +70,19 @@ describe('Card', () => {
     })
   })
 
+  describe('drag threshold', () => {
+    it('does not fire onDragStart immediately when pointer-down on card outer area', () => {
+      const { container, props } = renderCard()
+      const card = container.firstElementChild as HTMLElement
+
+      // Simulate pointerdown on the outer card div (padding area)
+      card.dispatchEvent(new PointerEvent('pointerdown', { button: 0, clientX: 50, clientY: 50, bubbles: true }))
+
+      // onDragStart should NOT be called immediately — it should wait for threshold movement
+      expect(props.onDragStart).not.toHaveBeenCalled()
+    })
+  })
+
   describe('dragging styles', () => {
     it('applies dragging styles when isDragging is true', () => {
       const { container } = renderCard({ isDragging: true })
