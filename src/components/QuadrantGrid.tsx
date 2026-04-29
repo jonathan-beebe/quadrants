@@ -36,7 +36,7 @@ export default function QuadrantGrid({
 }: QuadrantGridProps) {
   return (
     <div
-      className="flex-1 flex min-h-0 relative"
+      className="flex-1 flex flex-col min-h-0 relative"
       role="group"
       aria-label={[
         'Quadrant grid',
@@ -45,38 +45,38 @@ export default function QuadrantGrid({
       ]
         .filter(Boolean)
         .join(', ')}>
-      {framework.axisY && (
-        <div className="flex flex-col items-center shrink-0 w-6 py-2 text-text-tertiary" aria-hidden="true">
-          <svg
-            width="10"
-            height="10"
-            viewBox="0 0 10 10"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round">
-            <path d="M5 9 L5 1 M2 4 L5 1 L8 4" />
-          </svg>
-          <div className="flex-1 w-px bg-current opacity-30" />
-          <span className="text-xs font-medium uppercase tracking-wider -rotate-90 whitespace-nowrap my-2">
-            {framework.axisY}
-          </span>
-          <div className="flex-1 w-px bg-current opacity-30" />
-          <svg
-            width="10"
-            height="10"
-            viewBox="0 0 10 10"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round">
-            <path d="M5 1 L5 9 M2 6 L5 9 L8 6" />
-          </svg>
-        </div>
-      )}
-      <div className="flex-1 flex flex-col min-h-0">
+      <div className="flex flex-1 min-h-0">
+        {framework.axisY && (
+          <div className="flex flex-col items-center shrink-0 w-6 py-2 text-text-tertiary" aria-hidden="true">
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round">
+              <path d="M5 9 L5 1 M2 4 L5 1 L8 4" />
+            </svg>
+            <div className="flex-1 w-px bg-current opacity-30" />
+            <span className="text-xs font-medium uppercase tracking-wider -rotate-90 whitespace-nowrap my-2">
+              {framework.axisY}
+            </span>
+            <div className="flex-1 w-px bg-current opacity-30" />
+            <svg
+              width="10"
+              height="10"
+              viewBox="0 0 10 10"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round">
+              <path d="M5 1 L5 9 M2 6 L5 9 L8 6" />
+            </svg>
+          </div>
+        )}
         <div className="grid grid-cols-2 grid-rows-2 flex-1 min-h-0 relative">
           <CornerGradient
             colors={[
@@ -160,38 +160,38 @@ export default function QuadrantGrid({
             )
           })}
         </div>
-        {framework.axisX && (
-          <div className="flex items-center shrink-0 pt-2 px-2 text-text-tertiary" aria-hidden="true">
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 10 10"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round">
-              <path d="M9 5 L1 5 M4 2 L1 5 L4 8" />
-            </svg>
-            <div className="flex-1 h-px bg-current opacity-30" />
-            <span className="text-xs font-medium uppercase tracking-wider whitespace-nowrap mx-2">
-              {framework.axisX}
-            </span>
-            <div className="flex-1 h-px bg-current opacity-30" />
-            <svg
-              width="10"
-              height="10"
-              viewBox="0 0 10 10"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="1.5"
-              strokeLinecap="round"
-              strokeLinejoin="round">
-              <path d="M1 5 L9 5 M6 2 L9 5 L6 8" />
-            </svg>
-          </div>
-        )}
       </div>
+      {framework.axisX && (
+        <div
+          className={`flex items-center shrink-0 pt-2 ${framework.axisY ? 'pl-8 pr-2' : 'px-2'} text-text-tertiary`}
+          aria-hidden="true">
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round">
+            <path d="M9 5 L1 5 M4 2 L1 5 L4 8" />
+          </svg>
+          <div className="flex-1 h-px bg-current opacity-30" />
+          <span className="text-xs font-medium uppercase tracking-wider whitespace-nowrap mx-2">{framework.axisX}</span>
+          <div className="flex-1 h-px bg-current opacity-30" />
+          <svg
+            width="10"
+            height="10"
+            viewBox="0 0 10 10"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round">
+            <path d="M1 5 L9 5 M6 2 L9 5 L6 8" />
+          </svg>
+        </div>
+      )}
     </div>
   )
 }
