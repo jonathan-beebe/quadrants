@@ -2,6 +2,7 @@ import { useState, useCallback } from 'react'
 import { deriveColors, defaultColors } from '../colors'
 import ColorPicker from './ColorPicker'
 import Card from './Card'
+import CornerGradient from './CornerGradient'
 import { PlusIcon } from './Icons'
 import Badge from './atoms/Badge'
 import Button from './atoms/Button'
@@ -54,11 +55,20 @@ export default function MobileQuadrantGrid({
     <div className="relative flex-1 min-h-0 overflow-hidden select-none">
       {/* 2x2 grid at 200% x 200%, scaled/panned via transform */}
       <div
-        className="grid grid-cols-2 grid-rows-2 w-[200%] h-[200%] origin-top-left"
+        className="grid grid-cols-2 grid-rows-2 w-[200%] h-[200%] origin-top-left relative"
         style={{ transform: gridTransform, transition: TRANSITION }}
         onClick={!isZoomed ? handleGridClick : undefined}
         role="group"
         aria-label="Quadrant grid">
+        <CornerGradient
+          colors={[
+            framework.quadrants[0]?.color || defaultColors[0],
+            framework.quadrants[1]?.color || defaultColors[1],
+            framework.quadrants[2]?.color || defaultColors[2],
+            framework.quadrants[3]?.color || defaultColors[3],
+          ]}
+          className="absolute inset-0 pointer-events-none opacity-20 dark:opacity-30"
+        />
         {framework.quadrants.map((quadrant, idx) => {
           const qColor = quadrant.color || defaultColors[idx]
           const { bg, border } = deriveColors(qColor)
@@ -71,7 +81,7 @@ export default function MobileQuadrantGrid({
               key={idx}
               aria-label={quadrant.label}
               className="relative flex flex-col border overflow-hidden"
-              style={{ background: bg, borderColor: border }}
+              style={{ borderColor: border }}
               ref={(el) => {
                 quadrantRefs.current![idx] = el
               }}>

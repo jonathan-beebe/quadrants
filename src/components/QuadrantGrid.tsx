@@ -1,6 +1,7 @@
 import { deriveColors, defaultColors } from '../colors'
 import ColorPicker from './ColorPicker'
 import Card from './Card'
+import CornerGradient from './CornerGradient'
 import { PlusIcon } from './Icons'
 import Badge from './atoms/Badge'
 import type { Framework, Item } from '../types'
@@ -76,10 +77,19 @@ export default function QuadrantGrid({
         </div>
       )}
       <div className="flex-1 flex flex-col min-h-0">
-        <div className="grid grid-cols-2 grid-rows-2 gap-3 flex-1 min-h-0">
+        <div className="grid grid-cols-2 grid-rows-2 flex-1 min-h-0 relative">
+          <CornerGradient
+            colors={[
+              framework.quadrants[0]?.color || defaultColors[0],
+              framework.quadrants[1]?.color || defaultColors[1],
+              framework.quadrants[2]?.color || defaultColors[2],
+              framework.quadrants[3]?.color || defaultColors[3],
+            ]}
+            className="absolute inset-0 pointer-events-none rounded-xl opacity-20 dark:opacity-30"
+          />
           {framework.quadrants.map((quadrant, idx) => {
             const qColor = quadrant.color || defaultColors[idx]
-            const { bg, border } = deriveColors(qColor)
+            const { border } = deriveColors(qColor)
             const isRight = idx === 1 || idx === 3
             const isBottom = idx === 2 || idx === 3
 
@@ -106,8 +116,10 @@ export default function QuadrantGrid({
               <section
                 key={idx}
                 aria-label={quadrant.label}
-                className="flex flex-col rounded-xl border overflow-visible transition-[border-color] duration-150"
-                style={{ background: bg, borderColor: border }}
+                className={`relative flex flex-col border overflow-visible transition-[border-color] duration-150 ${
+                  ['rounded-tl-xl', 'rounded-tr-xl', 'rounded-bl-xl', 'rounded-br-xl'][idx]
+                }`}
+                style={{ borderColor: border }}
                 ref={(el) => {
                   quadrantRefs.current![idx] = el
                 }}>
