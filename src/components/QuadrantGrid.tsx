@@ -97,11 +97,11 @@ export default function QuadrantGrid({
               <div
                 className={`flex items-center justify-between px-3.5 pt-2.5 pb-1.5 shrink-0 ${isRight ? 'flex-row-reverse' : ''}`}>
                 <div className={`flex items-center gap-1.5 ${isRight ? 'flex-row-reverse' : ''}`}>
-                  <h2 className="text-[13px] font-semibold">{quadrant.label}</h2>
+                  <ColorPicker color={qColor} onChange={(c) => onColorChange(idx, c)} size="sm" />
+                  <h2 className="text-[13px] font-semibold leading-none">{quadrant.label}</h2>
                   <Badge count={quadrant.items.length} label={`${quadrant.items.length} items in ${quadrant.label}`} />
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <ColorPicker color={qColor} onChange={(c) => onColorChange(idx, c)} />
                   <button
                     className="p-[3px] rounded text-text-tertiary transition-all duration-150 hover:text-text-secondary hover:bg-black/6 dark:hover:bg-white/10"
                     onClick={() => onAddItem(idx)}

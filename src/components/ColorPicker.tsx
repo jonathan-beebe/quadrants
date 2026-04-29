@@ -7,9 +7,10 @@ interface ColorPickerProps {
   color: string
   onChange: (color: string) => void
   placement?: 'auto' | 'above-center'
+  size?: 'sm' | 'md'
 }
 
-export default function ColorPicker({ color, onChange, placement = 'auto' }: ColorPickerProps) {
+export default function ColorPicker({ color, onChange, placement = 'auto', size = 'md' }: ColorPickerProps) {
   const [open, setOpen] = useState(false)
   const [alignLeft, setAlignLeft] = useState(false)
   const ref = useRef<HTMLDivElement>(null)
@@ -33,7 +34,7 @@ export default function ColorPicker({ color, onChange, placement = 'auto' }: Col
     <div className="relative" ref={ref}>
       <button
         ref={triggerRef}
-        className="w-[24px] h-[24px] rounded border-2 border-white/80 shadow-[0_0_0_1px_rgba(0,0,0,0.12)] cursor-pointer transition-transform duration-150 hover:scale-115"
+        className={`${size === 'sm' ? 'w-[14px] h-[14px] border' : 'w-[24px] h-[24px] border-2'} rounded border-white/80 shadow-[0_0_0_1px_rgba(0,0,0,0.12)] cursor-pointer transition-transform duration-150 hover:scale-115`}
         style={{ background: color }}
         onClick={() => {
           if (!open && triggerRef.current) {
