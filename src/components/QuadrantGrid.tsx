@@ -92,6 +92,16 @@ export default function QuadrantGrid({
             const { border } = deriveColors(qColor)
             const isRight = idx === 1 || idx === 3
             const isBottom = idx === 2 || idx === 3
+            const r = parseInt(qColor.slice(1, 3), 16)
+            const g = parseInt(qColor.slice(3, 5), 16)
+            const b = parseInt(qColor.slice(5, 7), 16)
+            const innerEdge = `rgba(${r}, ${g}, ${b}, 0.15)`
+            const edgeStyle = {
+              borderTopColor: !isBottom ? border : innerEdge,
+              borderBottomColor: isBottom ? border : innerEdge,
+              borderLeftColor: !isRight ? border : innerEdge,
+              borderRightColor: isRight ? border : innerEdge,
+            }
 
             const header = (
               <div
@@ -119,7 +129,7 @@ export default function QuadrantGrid({
                 className={`relative flex flex-col border overflow-visible transition-[border-color] duration-150 ${
                   ['rounded-tl-xl', 'rounded-tr-xl', 'rounded-bl-xl', 'rounded-br-xl'][idx]
                 }`}
-                style={{ borderColor: border }}
+                style={edgeStyle}
                 ref={(el) => {
                   quadrantRefs.current![idx] = el
                 }}>
