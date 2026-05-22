@@ -102,6 +102,14 @@ describe('Sidebar', () => {
     expect(screen.getByRole('button', { name: /open sidebar/i })).toBeInTheDocument()
   })
 
+  it('open sidebar button is visible on mobile when closed (BUG-009)', () => {
+    render(<Sidebar {...defaultProps} open={false} />)
+    const openButton = screen.getByRole('button', { name: /open sidebar/i })
+    // The button must not be hidden by the `hidden` utility class, otherwise
+    // mobile users cannot reopen the sidebar from EmptyState/FrameworkBuilder.
+    expect(openButton.className).not.toMatch(/(^|\s)hidden(\s|$)/)
+  })
+
   it('highlights the active framework', () => {
     const fw = makeFramework()
     const { container } = render(<Sidebar {...defaultProps} frameworks={[fw]} activeId="fw-1" />)
