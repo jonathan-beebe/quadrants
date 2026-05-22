@@ -139,6 +139,34 @@ describe('encodeFramework / decodeFramework', () => {
     }
   })
 
+  it('returns null when a quadrant color is a non-string value (BUG-017)', async () => {
+    const payload = {
+      id: 'bad-color-id',
+      name: 'Bad Color',
+      axisX: 'X',
+      axisY: 'Y',
+      quadrants: [
+        { label: 'Q1', color: 42, items: [] },
+        { label: 'Q2', color: '#60a5fa', items: [] },
+        { label: 'Q3', color: '#34d399', items: [] },
+        { label: 'Q4', color: '#f472b6', items: [] },
+      ],
+    }
+    const json = JSON.stringify(payload)
+    const bytes = new TextEncoder().encode(json)
+
+    const cs = new CompressionStream('deflate')
+    const writer = cs.writable.getWriter()
+    writer.write(bytes)
+    writer.close()
+    const compressed = await new Response(cs.readable).arrayBuffer()
+    const binary = String.fromCharCode(...new Uint8Array(compressed))
+    const hash = btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
+
+    const result = await decodeFramework(hash)
+    expect(result).toBeNull()
+  })
+
   it('returns null for payload missing an id', async () => {
     const payload = {
       name: 'No ID',

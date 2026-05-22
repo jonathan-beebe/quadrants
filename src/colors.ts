@@ -18,6 +18,9 @@ export const colorPresets: { hex: string; name: string }[] = [
 const colorCache = new Map<string, DerivedColors>()
 
 export function deriveColors(hex: string): DerivedColors {
+  if (typeof hex !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(hex)) {
+    hex = '#94a3b8'
+  }
   const cached = colorCache.get(hex)
   if (cached) return cached
 

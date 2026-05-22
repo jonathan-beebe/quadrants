@@ -42,6 +42,7 @@ function isValidPayload(p: unknown): p is SharedPayload {
     if (typeof q !== 'object' || q === null) return false
     const quad = q as Record<string, unknown>
     if (typeof quad.label !== 'string') return false
+    if (quad.color !== undefined && typeof quad.color !== 'string') return false
     if (quad.items !== undefined && !Array.isArray(quad.items)) return false
     const items = (quad.items as unknown[] | undefined) ?? []
     return items.every((it: unknown) => {

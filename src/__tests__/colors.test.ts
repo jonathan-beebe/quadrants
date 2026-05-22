@@ -52,4 +52,20 @@ describe('deriveColors', () => {
     const hex = '#34d399'
     expect(deriveColors(hex).accent).toBe(hex)
   })
+
+  it('falls back to a safe color when given a non-hex string (BUG-017)', () => {
+    expect(() => deriveColors('red')).not.toThrow()
+    const result = deriveColors('red')
+    expect(result.bg).not.toMatch(/NaN/)
+    expect(result.border).not.toMatch(/NaN/)
+    expect(result.accent).toMatch(/^#[0-9a-fA-F]{6}$/)
+  })
+
+  it('falls back to a safe color when given a non-string value (BUG-017)', () => {
+    expect(() => deriveColors(42 as unknown as string)).not.toThrow()
+    const result = deriveColors(99 as unknown as string)
+    expect(result.bg).not.toMatch(/NaN/)
+    expect(result.border).not.toMatch(/NaN/)
+    expect(result.accent).toMatch(/^#[0-9a-fA-F]{6}$/)
+  })
 })
