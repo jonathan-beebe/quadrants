@@ -57,8 +57,37 @@ describe('saveFrameworks', () => {
         updatedAt: 1000,
       },
     ]
-    saveFrameworks(frameworks)
+    expect(saveFrameworks(frameworks)).toBe(true)
     expect(JSON.parse(localStorage.getItem('quadrants_frameworks')!)).toEqual(frameworks)
+  })
+
+  it('returns false and does not throw when localStorage throws QuotaExceededError', () => {
+    const quotaError = new DOMException('Quota exceeded', 'QuotaExceededError')
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw quotaError
+    })
+    const errorSpy = vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    const frameworks: Framework[] = [
+      {
+        id: 'test-1',
+        name: 'Big',
+        axisX: '',
+        axisY: '',
+        quadrants: [
+          { label: 'A', color: '#ff0000', items: [] },
+          { label: 'B', color: '#00ff00', items: [] },
+          { label: 'C', color: '#0000ff', items: [] },
+          { label: 'D', color: '#ffff00', items: [] },
+        ],
+        createdAt: 1000,
+        updatedAt: 1000,
+      },
+    ]
+
+    expect(() => saveFrameworks(frameworks)).not.toThrow()
+    expect(saveFrameworks(frameworks)).toBe(false)
+    expect(errorSpy).toHaveBeenCalled()
   })
 })
 

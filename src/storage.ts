@@ -12,8 +12,14 @@ export function loadFrameworks(): Framework[] {
   }
 }
 
-export function saveFrameworks(frameworks: Framework[]): void {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(frameworks))
+export function saveFrameworks(frameworks: Framework[]): boolean {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(frameworks))
+    return true
+  } catch (e) {
+    console.error('Failed to save frameworks to localStorage:', e)
+    return false
+  }
 }
 
 export function createFramework(template: FrameworkTemplate): Framework {
