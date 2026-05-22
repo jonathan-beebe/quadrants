@@ -1,4 +1,4 @@
-import { useState, useRef, useCallback } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { createItem } from '../storage'
 import { addItem, removeItem, updateItemText, setQuadrantColor, moveItem } from '../logic/items'
 import { useIsMobile } from '../hooks/useIsMobile'
@@ -38,6 +38,13 @@ export default function QuadrantCanvas({
   const [liveMessage, setLiveMessage] = useState('')
   const quadrantRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
   const canvasRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
+  const shareTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (shareTimerRef.current) clearTimeout(shareTimerRef.current)
+    }
+  }, [])
 
   const frameworkRef = useRef(framework)
   frameworkRef.current = framework
@@ -127,13 +134,14 @@ export default function QuadrantCanvas({
   }
 
   const handleShare = useCallback(async () => {
+    if (shareTimerRef.current) clearTimeout(shareTimerRef.current)
     try {
       await onShare(framework)
       setShareStatus('copied')
-      setTimeout(() => setShareStatus(null), 2000)
+      shareTimerRef.current = setTimeout(() => setShareStatus(null), 2000)
     } catch {
       setShareStatus('error')
-      setTimeout(() => setShareStatus(null), 2000)
+      shareTimerRef.current = setTimeout(() => setShareStatus(null), 2000)
     }
   }, [onShare, framework])
 

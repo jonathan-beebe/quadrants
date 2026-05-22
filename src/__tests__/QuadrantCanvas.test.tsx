@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { act, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import QuadrantCanvas from '../components/QuadrantCanvas'
 import type { Framework } from '../types'
@@ -108,6 +108,60 @@ describe('QuadrantCanvas', () => {
     // The updated framework should have one more item in the first quadrant
     const updatedFw = onUpdate.mock.calls[0][0]
     expect(updatedFw.quadrants[0].items).toHaveLength(2)
+  })
+
+  it('clears the share status timer on unmount (BUG-012)', async () => {
+    // Track timeouts scheduled with a 2000ms delay (the share-status reset)
+    // so we can assert the component clears them on unmount.
+    const realSetTimeout = globalThis.setTimeout
+    const realClearTimeout = globalThis.clearTimeout
+    const shareTimerIds = new Set<ReturnType<typeof setTimeout>>()
+    const clearedTimerIds = new Set<ReturnType<typeof setTimeout>>()
+
+    const setTimeoutSpy = vi.spyOn(globalThis, 'setTimeout').mockImplementation(((
+      handler: TimerHandler,
+      timeout?: number,
+      ...args: unknown[]
+    ) => {
+      const id = realSetTimeout(handler as () => void, timeout, ...args)
+      if (timeout === 2000) shareTimerIds.add(id)
+      return id
+    }) as typeof setTimeout)
+
+    const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout').mockImplementation(((
+      id?: ReturnType<typeof setTimeout>,
+    ) => {
+      if (id !== undefined) clearedTimerIds.add(id)
+      realClearTimeout(id)
+    }) as typeof clearTimeout)
+
+    try {
+      const user = userEvent.setup()
+      const onShare = vi.fn().mockResolvedValue('http://example.com')
+      const { unmount } = render(<QuadrantCanvas {...defaultProps} onShare={onShare} />)
+
+      await user.click(screen.getByText('Share'))
+
+      // After the share resolves, the component should have scheduled the
+      // 2s reset timer.
+      await waitFor(() => {
+        expect(shareTimerIds.size).toBeGreaterThan(0)
+      })
+
+      // Unmount before the timer fires.
+      act(() => {
+        unmount()
+      })
+
+      // Every share-status timer scheduled by the component must be cleared
+      // on unmount.
+      for (const id of shareTimerIds) {
+        expect(clearedTimerIds.has(id)).toBe(true)
+      }
+    } finally {
+      setTimeoutSpy.mockRestore()
+      clearTimeoutSpy.mockRestore()
+    }
   })
 
   it('announces item text when deleting an item', async () => {
