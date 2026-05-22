@@ -167,5 +167,34 @@ describe('App', () => {
       expect(screen.getByRole('button', { name: 'Keep both' })).toBeInTheDocument()
       expect(screen.getByRole('button', { name: 'Replace local' })).toBeInTheDocument()
     })
+
+    it('marks the skip-to-content link as inert while the conflict dialog is active', async () => {
+      // BUG-016: when the ConflictDialog is shown, the skip-to-content link
+      // must be inside an inert subtree so keyboard users cannot Tab to it.
+      const localFramework = {
+        ...sharedFramework,
+        name: 'My Local Version',
+        quadrants: sharedFramework.quadrants.map((q, i) => ({
+          ...q,
+          label: `Local ${i + 1}`,
+        })),
+      }
+      localStorage.setItem('quadrants_frameworks', JSON.stringify([localFramework]))
+
+      const hash = await encodeFramework(sharedFramework)
+      window.location.hash = `#${hash}`
+
+      render(<App />)
+
+      await waitFor(() => {
+        expect(screen.getByText('Framework already exists')).toBeInTheDocument()
+      })
+
+      const skipLink = screen.getByRole('link', { name: 'Skip to main content' })
+      // The skip link should have an ancestor with the inert attribute applied
+      // (React forwards `inert={true}` to the DOM as an empty `inert=""` attr).
+      const inertAncestor = skipLink.closest('[inert]')
+      expect(inertAncestor).not.toBeNull()
+    })
   })
 })
