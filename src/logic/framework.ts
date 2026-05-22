@@ -75,11 +75,10 @@ export function frameworksMatch(existing: Framework, payload: SharedPayload): bo
 }
 
 export function duplicateAsImport(fw: Framework): Framework {
-  return {
-    ...fw,
-    id: crypto.randomUUID(),
-    name: `${fw.name} (imported)`,
-  }
+  const clone = structuredClone(fw)
+  clone.id = crypto.randomUUID()
+  clone.name = `${fw.name} (imported)`
+  return clone
 }
 
 export function replaceFramework(frameworks: Framework[], incoming: Framework): Framework[] {

@@ -240,6 +240,14 @@ describe('duplicateAsImport', () => {
     expect(result.id).not.toBe(fw.id)
     expect(result.name).toBe('Test (imported)')
   })
+
+  it('produces an independent copy (no shared nested references)', () => {
+    const fw = makeFramework()
+    const dup = duplicateAsImport(fw)
+    expect(dup.quadrants).not.toBe(fw.quadrants)
+    expect(dup.quadrants[0]).not.toBe(fw.quadrants[0])
+    expect(dup.quadrants[0].items).not.toBe(fw.quadrants[0].items)
+  })
 })
 
 describe('replaceFramework', () => {
