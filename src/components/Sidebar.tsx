@@ -5,6 +5,7 @@ import Caption from './atoms/Caption'
 import Button from './atoms/Button'
 import { useClickOutside } from '../hooks/useClickOutside'
 import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
+import { useIsMobile } from '../hooks/useIsMobile'
 import type { Framework } from '../types'
 import type { ThemeMode } from '../hooks/useDarkMode'
 
@@ -42,6 +43,7 @@ export default function Sidebar({
   const [menuId, setMenuId] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const menuTriggerRef = useRef<HTMLButtonElement>(null)
+  const isMobile = useIsMobile()
 
   const closeMenu = useCallback(() => setMenuId(null), [])
   useClickOutside(menuRef, closeMenu, !!menuId)
@@ -58,6 +60,14 @@ export default function Sidebar({
 
   return (
     <>
+      {open && isMobile && (
+        <div
+          data-testid="sidebar-backdrop"
+          className="fixed inset-0 bg-black/30 z-[99]"
+          onClick={onToggle}
+          aria-hidden="true"
+        />
+      )}
       <aside
         aria-label="Frameworks sidebar"
         inert={!open ? true : undefined}

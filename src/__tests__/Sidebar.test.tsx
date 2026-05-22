@@ -1,8 +1,13 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Sidebar from '../components/Sidebar'
+import { useIsMobile } from '../hooks/useIsMobile'
 import type { Framework } from '../types'
+
+vi.mock('../hooks/useIsMobile', () => ({
+  useIsMobile: vi.fn(() => false),
+}))
 
 function makeFramework(overrides: Partial<Framework> = {}): Framework {
   return {
@@ -39,6 +44,10 @@ const defaultProps = {
 }
 
 describe('Sidebar', () => {
+  beforeEach(() => {
+    vi.mocked(useIsMobile).mockReturnValue(false)
+  })
+
   it('renders the app title', () => {
     render(<Sidebar {...defaultProps} />)
     expect(screen.getByText('Quadrants')).toBeInTheDocument()
@@ -145,6 +154,32 @@ describe('Sidebar', () => {
     render(<Sidebar {...defaultProps} open={true} />)
     const toggle = screen.getByRole('button', { name: /close sidebar/i })
     expect(toggle).toHaveAttribute('aria-expanded', 'true')
+  })
+
+  it('renders a backdrop on mobile when open that closes the sidebar on click (BUG-015)', async () => {
+    const user = userEvent.setup()
+    vi.mocked(useIsMobile).mockReturnValue(true)
+    const onToggle = vi.fn()
+    render(<Sidebar {...defaultProps} open={true} onToggle={onToggle} />)
+
+    const backdrop = screen.getByTestId('sidebar-backdrop')
+    expect(backdrop).toBeInTheDocument()
+    expect(backdrop).toHaveAttribute('aria-hidden', 'true')
+
+    await user.click(backdrop)
+    expect(onToggle).toHaveBeenCalledOnce()
+  })
+
+  it('does not render a backdrop on desktop (BUG-015)', () => {
+    vi.mocked(useIsMobile).mockReturnValue(false)
+    render(<Sidebar {...defaultProps} open={true} />)
+    expect(screen.queryByTestId('sidebar-backdrop')).not.toBeInTheDocument()
+  })
+
+  it('does not render a backdrop when closed on mobile (BUG-015)', () => {
+    vi.mocked(useIsMobile).mockReturnValue(true)
+    render(<Sidebar {...defaultProps} open={false} />)
+    expect(screen.queryByTestId('sidebar-backdrop')).not.toBeInTheDocument()
   })
 
   it('communicates expanded state on context menu trigger', async () => {
