@@ -68,4 +68,24 @@ describe('deriveColors', () => {
     expect(result.border).not.toMatch(/NaN/)
     expect(result.accent).toMatch(/^#[0-9a-fA-F]{6}$/)
   })
+
+  it('is pure: repeated calls return value-equal results across many hex inputs (BUG-024)', () => {
+    // Regression guard against re-introducing a module-level cache. If the
+    // function stays pure, two independent invocations for any hex should
+    // produce structurally equal results without leaking shared state. We
+    // exercise a large set of distinct hex values to make sure no path
+    // accumulates incorrect state across calls.
+    for (let i = 0; i < 1000; i++) {
+      const hex = `#${i.toString(16).padStart(6, '0')}`
+      const a = deriveColors(hex)
+      const b = deriveColors(hex)
+      expect(a).toEqual(b)
+      expect(a.accent).toBe(hex)
+    }
+  })
+
+  it('does not export a module-level color cache (BUG-024)', async () => {
+    const mod = await import('../colors')
+    expect((mod as Record<string, unknown>).colorCache).toBeUndefined()
+  })
 })
