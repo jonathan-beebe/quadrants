@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent, act } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Card, { GhostCard, PLACEHOLDER } from '../components/Card'
 import type { Item } from '../types'
@@ -257,6 +257,37 @@ describe('Card', () => {
       await user.keyboard('{Escape}')
       expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
       expect(props.onChange).not.toHaveBeenCalled()
+    })
+
+    it('does not commit via blur when Escape cancels the edit (BUG-018)', () => {
+      const { props } = renderCard({ autoFocus: true })
+      const textarea = screen.getByRole('textbox') as HTMLTextAreaElement
+      fireEvent.change(textarea, { target: { value: 'Should be discarded' } })
+      // Simulate the browser sequence reported in BUG-018: Escape keydown
+      // triggers setEditing(false), and the blur event fires on the
+      // still-mounted textarea before React unmounts it. Batching both
+      // events inside a single act() reproduces this ordering reliably.
+      act(() => {
+        fireEvent.keyDown(textarea, { key: 'Escape' })
+        fireEvent.blur(textarea)
+      })
+      // onChange MUST NOT be called with the typed text via blur
+      expect(props.onChange).not.toHaveBeenCalled()
+      // Original text should still be displayed (edit discarded)
+      expect(screen.getByText('Test card')).toBeInTheDocument()
+    })
+
+    it('does not delete when textarea is cleared and Escape is pressed (BUG-018)', () => {
+      const { props } = renderCard({ autoFocus: true })
+      const textarea = screen.getByRole('textbox') as HTMLTextAreaElement
+      fireEvent.change(textarea, { target: { value: '' } })
+      act(() => {
+        fireEvent.keyDown(textarea, { key: 'Escape' })
+        fireEvent.blur(textarea)
+      })
+      expect(props.onDelete).not.toHaveBeenCalled()
+      // Original text preserved
+      expect(screen.getByText('Test card')).toBeInTheDocument()
     })
   })
 

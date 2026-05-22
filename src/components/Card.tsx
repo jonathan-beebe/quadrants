@@ -47,6 +47,7 @@ export default function Card({
   const spanRef = useRef<HTMLButtonElement>(null)
   const pendingRef = useRef<{ startX: number; startY: number } | null>(null)
   const moveMenuRef = useRef<HTMLDivElement>(null)
+  const cancelledRef = useRef(false)
   const [editing, setEditing] = useState(autoFocus)
   const [editValue, setEditValue] = useState(item.text)
   const [minSize, setMinSize] = useState<{ width: number; height: number } | null>(null)
@@ -201,6 +202,7 @@ export default function Card({
         commitEdit(editValue)
       }
       if (e.key === 'Escape') {
+        cancelledRef.current = true
         setEditing(false)
         setMinSize(null)
       }
@@ -209,6 +211,10 @@ export default function Card({
   )
 
   const handleBlur = useCallback(() => {
+    if (cancelledRef.current) {
+      cancelledRef.current = false
+      return
+    }
     commitEdit(editValue)
   }, [editValue, commitEdit])
 
