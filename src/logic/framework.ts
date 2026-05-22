@@ -64,6 +64,7 @@ export function frameworksMatch(existing: Framework, payload: SharedPayload): bo
       const pq = payload.quadrants[i]
       if (!pq) return false
       if (q.label !== pq.label) return false
+      if ((q.color || '') !== (pq.color || '')) return false
       const pqItems = pq.items ?? []
       if (q.items.length !== pqItems.length) return false
       return q.items.every(

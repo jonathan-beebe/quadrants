@@ -219,6 +219,12 @@ describe('frameworksMatch', () => {
     expect(frameworksMatch(fw, makePayload())).toBe(false)
   })
 
+  it('returns false when quadrant colors differ', () => {
+    const fw = makeMatchingFramework()
+    fw.quadrants[0].color = '#000000'
+    expect(frameworksMatch(fw, makePayload())).toBe(false)
+  })
+
   it('ignores metadata fields like createdAt and item ids', () => {
     const fw = makeMatchingFramework()
     fw.quadrants[0].items[0].id = 'different-id'
