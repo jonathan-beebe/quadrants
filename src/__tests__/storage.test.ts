@@ -37,6 +37,36 @@ describe('loadFrameworks', () => {
     localStorage.setItem('quadrants_frameworks', 'not-json')
     expect(loadFrameworks()).toEqual([])
   })
+
+  it('returns empty array when stored JSON is a non-array value', () => {
+    localStorage.setItem('quadrants_frameworks', JSON.stringify('hello'))
+    expect(loadFrameworks()).toEqual([])
+  })
+
+  it('filters out entries that do not match the Framework shape', () => {
+    localStorage.setItem('quadrants_frameworks', JSON.stringify([{ id: 1 }]))
+    expect(loadFrameworks()).toEqual([])
+  })
+
+  it('keeps valid frameworks and discards invalid ones from a mixed list', () => {
+    const valid: Framework = {
+      id: 'valid-1',
+      name: 'Valid',
+      axisX: '',
+      axisY: '',
+      quadrants: [
+        { label: 'A', color: '#ff0000', items: [] },
+        { label: 'B', color: '#00ff00', items: [] },
+        { label: 'C', color: '#0000ff', items: [] },
+        { label: 'D', color: '#ffff00', items: [] },
+      ],
+      createdAt: 1000,
+      updatedAt: 1000,
+    }
+    const invalid = { id: 2, name: 'bad', quadrants: 'nope' }
+    localStorage.setItem('quadrants_frameworks', JSON.stringify([valid, invalid]))
+    expect(loadFrameworks()).toEqual([valid])
+  })
 })
 
 describe('saveFrameworks', () => {

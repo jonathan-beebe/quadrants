@@ -6,7 +6,18 @@ const STORAGE_KEY = 'quadrants_frameworks'
 export function loadFrameworks(): Framework[] {
   try {
     const data = localStorage.getItem(STORAGE_KEY)
-    return data ? JSON.parse(data) : []
+    if (!data) return []
+    const parsed = JSON.parse(data)
+    if (!Array.isArray(parsed)) return []
+    return parsed.filter(
+      (fw: unknown) =>
+        typeof fw === 'object' &&
+        fw !== null &&
+        typeof (fw as { id: unknown }).id === 'string' &&
+        typeof (fw as { name: unknown }).name === 'string' &&
+        Array.isArray((fw as { quadrants: unknown }).quadrants) &&
+        (fw as { quadrants: unknown[] }).quadrants.length === 4,
+    )
   } catch {
     return []
   }
