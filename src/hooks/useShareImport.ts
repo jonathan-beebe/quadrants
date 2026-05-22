@@ -134,7 +134,17 @@ export function useShareImport({ getFramework, navigate, addRaw, replace, addImp
     const hash = await encodeFramework(fw)
     const base = import.meta.env.BASE_URL ?? '/'
     const url = `${window.location.origin}${base}#${hash}`
-    await navigator.clipboard.writeText(url)
+    // Feature-detect clipboard and swallow failures so the URL is always
+    // returned. `navigator.clipboard` is undefined in insecure contexts and
+    // `writeText` can reject (NotAllowedError) when the page is unfocused
+    // or blocked by a permission policy. The caller falls back on the URL.
+    if (navigator.clipboard?.writeText) {
+      try {
+        await navigator.clipboard.writeText(url)
+      } catch {
+        // Intentionally ignore — URL is still returned below (BUG-025).
+      }
+    }
     return url
   }, [])
 
