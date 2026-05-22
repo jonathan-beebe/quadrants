@@ -40,6 +40,13 @@ export function useShareImport({ getFramework, navigate, addRaw, replace, addImp
     const hash = getHashFromUrl()
     if (!hash || hash === lastHash.current) return
     lastHash.current = hash
+
+    // Clear the hash fragment from the URL synchronously, before the async
+    // decode begins. Otherwise a refresh during the decode window (or before
+    // the deferred `replacePath` calls run) re-enters this code path on
+    // remount and re-imports the same payload (BUG-020).
+    replacePath(null)
+
     setImporting(true)
 
     decodeFramework(hash)
