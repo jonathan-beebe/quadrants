@@ -23,7 +23,12 @@ export async function encodeFramework(framework: Framework): Promise<string> {
 
   const compressed = await new Response(cs.readable).arrayBuffer()
 
-  const binary = String.fromCharCode(...new Uint8Array(compressed))
+  const compressedBytes = new Uint8Array(compressed)
+  let binary = ''
+  const chunkSize = 8192
+  for (let i = 0; i < compressedBytes.length; i += chunkSize) {
+    binary += String.fromCharCode(...compressedBytes.subarray(i, i + chunkSize))
+  }
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
 }
 

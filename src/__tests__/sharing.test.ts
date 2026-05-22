@@ -1,4 +1,4 @@
-import { describe, it, expect } from 'vitest'
+import { describe, it, expect, vi } from 'vitest'
 import { encodeFramework, decodeFramework } from '../sharing'
 import type { Framework } from '../types'
 
@@ -85,6 +85,58 @@ describe('encodeFramework / decodeFramework', () => {
     const encoded = await encodeFramework(fw)
     const decoded = await decodeFramework(encoded)
     expect(decoded!.name).toBe('Prüfung 测试 テスト')
+  })
+
+  it('encodes large frameworks in chunks no larger than 8192 bytes (BUG-011)', async () => {
+    // Build a framework whose compressed byte payload exceeds 8192 bytes.
+    // Using unique random-ish text per item to keep deflate from compressing
+    // everything down to a tiny payload.
+    const items = Array.from({ length: 400 }, (_, i) => ({
+      id: `item-${i}`,
+      text: `item-${i}-` + Math.random().toString(36).repeat(20) + '-' + i.toString(36).repeat(30),
+      x: (i * 7) % 100,
+      y: (i * 13) % 100,
+      createdAt: 1000 + i,
+    }))
+
+    const fw: Framework = {
+      id: 'large-id',
+      name: 'Large Framework',
+      axisX: 'X',
+      axisY: 'Y',
+      quadrants: [
+        { label: 'Q1', color: '#fbbf24', items },
+        { label: 'Q2', color: '#60a5fa', items: [] },
+        { label: 'Q3', color: '#34d399', items: [] },
+        { label: 'Q4', color: '#f472b6', items: [] },
+      ],
+      createdAt: 1000,
+      updatedAt: 1000,
+    }
+
+    const spy = vi.spyOn(String, 'fromCharCode')
+    try {
+      const encoded = await encodeFramework(fw)
+
+      // Sanity: encode actually produced output and used fromCharCode.
+      expect(encoded.length).toBeGreaterThan(0)
+      expect(spy).toHaveBeenCalled()
+
+      // Every call to fromCharCode must stay within the safe chunk size of 8192.
+      // The current (buggy) implementation passes the whole Uint8Array via spread
+      // in a single call, which for this payload is well over 8192 args.
+      const maxArgs = spy.mock.calls.reduce((max, args) => Math.max(max, args.length), 0)
+      expect(maxArgs).toBeLessThanOrEqual(8192)
+
+      // And round-trip must still work.
+      const decoded = await decodeFramework(encoded)
+      expect(decoded).not.toBeNull()
+      expect(decoded!.quadrants[0].items).toHaveLength(items.length)
+      expect(decoded!.quadrants[0].items[0].text).toBe(items[0].text)
+      expect(decoded!.quadrants[0].items[items.length - 1].text).toBe(items[items.length - 1].text)
+    } finally {
+      spy.mockRestore()
+    }
   })
 
   it('returns null for payload missing an id', async () => {
