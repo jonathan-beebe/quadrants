@@ -52,6 +52,18 @@ describe('ColorPicker', () => {
     expect(screen.queryByText('Custom')).not.toBeInTheDocument()
   })
 
+  it('restores focus to the trigger after selecting a preset by click', async () => {
+    const user = userEvent.setup()
+    render(<ColorPicker {...defaultProps} />)
+
+    const triggerButton = getTrigger()
+    await user.click(triggerButton)
+
+    await user.click(screen.getByRole('option', { name: 'Red' }))
+
+    expect(triggerButton).toHaveFocus()
+  })
+
   it('shows the current color as selected', async () => {
     const user = userEvent.setup()
     render(<ColorPicker {...defaultProps} color="#ef4444" />)

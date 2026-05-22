@@ -65,6 +65,7 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
                 onClick={() => {
                   onChange(c.hex)
                   setOpen(false)
+                  triggerRef.current?.focus()
                 }}
               />
             ))}
