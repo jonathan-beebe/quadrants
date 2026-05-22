@@ -116,6 +116,18 @@ describe('ReflectionMode', () => {
     expect(dialog).toHaveAttribute('aria-label', expect.stringContaining('Test'))
   })
 
+  it('each tab’s aria-controls (when present) references an existing panel in the DOM', () => {
+    render(<ReflectionMode {...defaultProps} />)
+    const tabs = screen.getAllByRole('tab')
+    expect(tabs).toHaveLength(4)
+    for (const tab of tabs) {
+      const controls = tab.getAttribute('aria-controls')
+      if (controls !== null) {
+        expect(document.getElementById(controls)).not.toBeNull()
+      }
+    }
+  })
+
   it('preserves all items when adding rapidly without re-render between adds', async () => {
     const user = userEvent.setup()
     const onUpdate = vi.fn()

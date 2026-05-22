@@ -104,7 +104,7 @@ export default function ReflectionMode({ framework, onUpdate, onExit }: Reflecti
               key={i}
               role="tab"
               aria-selected={i === activeQuadrant}
-              aria-controls={`quadrant-panel-${i}`}
+              aria-controls={i === activeQuadrant ? `quadrant-panel-${i}` : undefined}
               id={`quadrant-tab-${i}`}
               tabIndex={i === activeQuadrant ? 0 : -1}
               aria-keyshortcuts="ArrowLeft ArrowRight Home End"
