@@ -57,7 +57,8 @@ describe('MobileQuadrantGrid', () => {
   it('renders quadrant sections with aria labels', () => {
     renderGrid()
     for (const label of ['Do First', 'Schedule', 'Delegate', 'Eliminate']) {
-      expect(screen.getByRole('region', { name: label })).toBeInTheDocument()
+      // In overview mode, sections expose role="button" so keyboard users can zoom.
+      expect(screen.getByRole('button', { name: new RegExp(`^${label} - tap to edit$`, 'i') })).toBeInTheDocument()
     }
   })
 
@@ -132,6 +133,34 @@ describe('MobileQuadrantGrid', () => {
     renderGrid()
     const grid = screen.getByRole('group', { name: 'Quadrant grid' })
     expect(grid.style.transform).toBe('scale(0.5)')
+  })
+
+  it('exposes each overview quadrant as a focusable button with tap-to-edit label', () => {
+    renderGrid()
+    for (const label of ['Do First', 'Schedule', 'Delegate', 'Eliminate']) {
+      const section = screen.getByRole('button', { name: new RegExp(`${label} .* tap to edit`, 'i') })
+      expect(section).toHaveAttribute('tabIndex', '0')
+    }
+  })
+
+  it('zooms into a quadrant when its section receives keyboard activation', async () => {
+    const user = userEvent.setup()
+    renderGrid()
+    const section = screen.getByRole('button', { name: /schedule .* tap to edit/i })
+    section.focus()
+    expect(section).toHaveFocus()
+    await user.keyboard('{Enter}')
+    expect(screen.getByText('Done')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /add item to schedule/i })).toBeInTheDocument()
+  })
+
+  it('zooms into a quadrant when Space is pressed on its section', async () => {
+    const user = userEvent.setup()
+    renderGrid()
+    const section = screen.getByRole('button', { name: /delegate .* tap to edit/i })
+    section.focus()
+    await user.keyboard(' ')
+    expect(screen.getByRole('button', { name: /add item to delegate/i })).toBeInTheDocument()
   })
 
   it('applies cell transform when zoomed into bottom-right', () => {

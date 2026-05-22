@@ -79,7 +79,20 @@ export default function MobileQuadrantGrid({
           return (
             <section
               key={idx}
-              aria-label={quadrant.label}
+              aria-label={!isFocused && !isZoomed ? `${quadrant.label} - tap to edit` : quadrant.label}
+              tabIndex={!isZoomed ? 0 : undefined}
+              role={!isZoomed ? 'button' : undefined}
+              onClick={!isZoomed ? () => setZoomedIdx(idx) : undefined}
+              onKeyDown={
+                !isZoomed
+                  ? (e) => {
+                      if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault()
+                        setZoomedIdx(idx)
+                      }
+                    }
+                  : undefined
+              }
               className="relative flex flex-col border overflow-hidden"
               style={{ borderColor: border }}
               ref={(el) => {
