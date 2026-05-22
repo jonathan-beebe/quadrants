@@ -1,6 +1,16 @@
 import type { Framework, SharedPayload } from './types'
 
+function assertCompressionSupport(): void {
+  if (
+    typeof (globalThis as { CompressionStream?: unknown }).CompressionStream === 'undefined' ||
+    typeof (globalThis as { DecompressionStream?: unknown }).DecompressionStream === 'undefined'
+  ) {
+    throw new Error('Your browser does not support sharing. Please update to a newer version.')
+  }
+}
+
 export async function encodeFramework(framework: Framework): Promise<string> {
+  assertCompressionSupport()
   const payload: SharedPayload = {
     id: framework.id,
     name: framework.name,
@@ -54,6 +64,7 @@ function isValidPayload(p: unknown): p is SharedPayload {
 }
 
 export async function decodeFramework(hash: string): Promise<SharedPayload | null> {
+  assertCompressionSupport()
   const base64 = hash.replace(/-/g, '+').replace(/_/g, '/')
   const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4)
   const binary = atob(padded)

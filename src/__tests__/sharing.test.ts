@@ -1,6 +1,10 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, afterEach } from 'vitest'
 import { encodeFramework, decodeFramework } from '../sharing'
 import type { Framework } from '../types'
+
+afterEach(() => {
+  vi.unstubAllGlobals()
+})
 
 function makeFramework(overrides: Partial<Framework> = {}): Framework {
   return {
@@ -165,6 +169,23 @@ describe('encodeFramework / decodeFramework', () => {
 
     const result = await decodeFramework(hash)
     expect(result).toBeNull()
+  })
+
+  it('encodeFramework rejects with a friendly error when CompressionStream is unsupported (BUG-026)', async () => {
+    vi.stubGlobal('CompressionStream', undefined)
+    const fw = makeFramework()
+    await expect(encodeFramework(fw)).rejects.toThrow(/browser|support/i)
+    await expect(encodeFramework(fw)).rejects.toBeInstanceOf(Error)
+  })
+
+  it('decodeFramework rejects with a friendly error when DecompressionStream is unsupported (BUG-026)', async () => {
+    // First produce a valid hash with the real implementation.
+    const fw = makeFramework()
+    const encoded = await encodeFramework(fw)
+
+    vi.stubGlobal('DecompressionStream', undefined)
+    await expect(decodeFramework(encoded)).rejects.toThrow(/browser|support/i)
+    await expect(decodeFramework(encoded)).rejects.toBeInstanceOf(Error)
   })
 
   it('returns null for payload missing an id', async () => {
