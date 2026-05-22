@@ -109,11 +109,23 @@ export function useShareImport({ getFramework, navigate, addRaw, replace, addImp
 
   const handleConflictReplace = useCallback(() => {
     if (!conflict) return
-    replace(conflict.incoming)
+    // Defensive freshness check (BUG-027): re-read the latest framework from
+    // state before applying the replace. BUG-020's synchronous hash-clear
+    // makes the original repro (refresh re-triggers the dialog with a stale
+    // `existing`) unreachable in practice, and the conflict dialog blocks
+    // the canvas so the user cannot normally edit while it is open. Even so,
+    // looking up `getFramework(conflict.incoming.id)` here guards against the
+    // local framework having been deleted out from under us (e.g. from a
+    // future multi-tab/storage-event sync) — `replace` is a no-op on a
+    // missing id, so we just navigate and dismiss in that case.
+    const currentExisting = getFramework(conflict.incoming.id)
+    if (currentExisting) {
+      replace(conflict.incoming)
+    }
     navigate(conflict.incoming.id)
     replacePath(conflict.incoming.id)
     setConflict(null)
-  }, [conflict, replace, navigate])
+  }, [conflict, getFramework, replace, navigate])
 
   const handleConflictDuplicate = useCallback(() => {
     if (!conflict) return
