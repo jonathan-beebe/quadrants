@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-05-29:16:35:45 — A11Y-002 — done: expand ColorPicker trigger hit area to
+  24x24
 - 2026-05-29:16:33:03 — A11Y-001 — done: inert non-focused canvases in
   MobileQuadrantGrid
 - 2026-05-29:14:00:46 — MAINT-001 — defined: test: cover quadrant drag-and-drop

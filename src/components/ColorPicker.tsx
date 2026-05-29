@@ -34,8 +34,7 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
     <div className="relative" ref={ref}>
       <button
         ref={triggerRef}
-        className={`${size === 'sm' ? 'w-[14px] h-[14px] border' : 'w-[24px] h-[24px] border-2'} rounded border-white/80 shadow-[0_0_0_1px_rgba(0,0,0,0.12)] cursor-pointer transition-transform duration-150 hover:scale-115`}
-        style={{ background: color }}
+        className="group inline-grid place-items-center w-6 h-6 cursor-pointer focus:outline-none"
         onClick={() => {
           if (!open && triggerRef.current) {
             const rect = triggerRef.current.getBoundingClientRect()
@@ -45,8 +44,15 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
         }}
         aria-label={`Change color (current: ${currentName})`}
         aria-haspopup="listbox"
-        aria-expanded={open}
-      />
+        aria-expanded={open}>
+        <span
+          aria-hidden="true"
+          className={`block rounded border-white/80 shadow-[0_0_0_1px_rgba(0,0,0,0.12)] transition-transform duration-150 group-hover:scale-115 group-focus-visible:outline group-focus-visible:outline-2 group-focus-visible:outline-offset-2 ${
+            size === 'sm' ? 'w-[14px] h-[14px] border' : 'w-[24px] h-[24px] border-2'
+          }`}
+          style={{ background: color }}
+        />
+      </button>
       {open && (
         <div
           className={`absolute bg-surface border border-border rounded-lg shadow-lg p-2.5 z-[300] w-[180px] ${placement === 'above-center' ? 'bottom-[calc(100%+6px)] left-1/2 -translate-x-1/2' : `top-[calc(100%+6px)] ${alignLeft ? 'left-0' : 'right-0'}`}`}

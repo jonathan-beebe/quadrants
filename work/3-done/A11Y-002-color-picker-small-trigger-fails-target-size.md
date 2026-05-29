@@ -1,8 +1,9 @@
 ---
 id: A11Y-002
 type: a11y
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # A11Y-002: color picker small trigger fails target size
@@ -39,3 +40,17 @@ to expand the target area without changing layout.
 Keep the 14x14 visible swatch but expand the clickable button to >=24x24 by
 adding padding (or an absolutely positioned pseudo-element). Verify focus ring
 still aligns to the visible swatch.
+
+## Working
+
+- Restructured the `ColorPicker` trigger in `ColorPicker.tsx` to be a 24x24
+  `inline-grid place-items-center` button containing the visible swatch as an
+  inner `<span aria-hidden>`. The swatch keeps its prior 14x14 (sm) / 24x24 (md)
+  dimensions and visual treatment.
+- Focus ring is rendered on the inner swatch via `group-focus-visible:outline`
+  so the visible focus indicator still aligns to the swatch, not the larger hit
+  area.
+- Existing `ColorPicker` tests (which query the trigger by its accessible name)
+  continue to pass; no new tests added — this is purely a CSS-shape change and
+  the a11y type guidance is to skip tests for HTML/CSS behaviors that aren't
+  regression-risky.
