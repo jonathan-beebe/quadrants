@@ -14,6 +14,7 @@
 
 ## Log
 
+- 2026-05-29:16:51:44 — A11Y-006 — done: promote EmptyState heading to h1
 - 2026-05-29:16:50:18 — A11Y-005 — done: mobile sidebar drawer focus trap and
   Escape to close
 - 2026-05-29:16:46:46 — A11Y-004 — done: reveal Sidebar actions trigger on touch

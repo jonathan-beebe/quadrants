@@ -1,8 +1,9 @@
 ---
 id: A11Y-006
 type: a11y
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # A11Y-006: EmptyState page missing h1
@@ -40,3 +41,10 @@ Either promote "No framework selected" to h1 (use `<PageTitle>` instead of
 `<h2>` in EmptyState and re-style as needed), or add a visually-hidden `<h1>` to
 the app shell (e.g. the app's name "Quadrants") that is always present. The
 first option keeps a single h1 per view.
+
+## Working
+
+- Replaced the `<h2>` in `EmptyState.tsx` with `<PageTitle>` (defaults to
+  `<h1>`, className preserved so the visual styling is unchanged). The page now
+  exposes "No framework selected" as the top-level heading when EmptyState is
+  the main view.

@@ -1,5 +1,6 @@
 import { QuadrantGridIcon } from './Icons'
 import Button from './atoms/Button'
+import PageTitle from './atoms/PageTitle'
 
 interface EmptyStateProps {
   onNew: () => void
@@ -11,7 +12,7 @@ export default function EmptyState({ onNew }: EmptyStateProps) {
       <div className="text-text-tertiary mb-2">
         <QuadrantGridIcon size={48} strokeWidth={1.5} />
       </div>
-      <h2 className="text-lg font-semibold text-text">No framework selected</h2>
+      <PageTitle className="text-lg font-semibold text-text">No framework selected</PageTitle>
       <p className="text-sm max-w-[360px] mb-2">
         Create a new quadrant framework or select one from the sidebar to get started.
       </p>
