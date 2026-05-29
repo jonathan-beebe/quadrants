@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-05-29:17:40:02 — FEAT-001 — done: integration tests for conflict dialog
+  Replace / Keep both / Cancel
 - 2026-05-29:17:38:13 — BUG-002 — done: share returns outcome; fall back to
   navigator.share when clipboard fails
 - 2026-05-29:17:03:15 — BUG-001 — done: file picker change-no-files resolves

@@ -1,8 +1,9 @@
 ---
 id: FEAT-001
 type: feature
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # FEAT-001: test: cover share-import conflict dialog Replace, Keep both, and Cancel actions
@@ -81,3 +82,18 @@ data-loss regressions in the share-import path.
 - commits 088a559, da74a5f, f9ec0e0, 59d3f2f — prior ConflictDialog a11y work
   (buttons already have stable visible labels "Cancel", "Keep both", "Replace
   local"; no aria-label change needed)
+
+## Working
+
+- Added a `setupConflict()` helper inside the `hash import` describe block in
+  `App.test.tsx` that pre-populates the local framework, encodes the shared
+  payload, and sets `window.location.hash`. Three new integration tests use it:
+  - **Replace local** — asserts storage now contains a single framework with
+    `id=shared-fw` and `name='Shared Framework'`, dialog is dismissed, and the
+    active heading reflects the incoming framework.
+  - **Keep both** — asserts storage contains two frameworks (the original
+    `My Local Version` plus a duplicate with a different id) and the dialog is
+    dismissed.
+  - **Cancel** — asserts storage still contains only the unchanged local
+    framework, `window.location.hash` is cleared (BUG-020 family regression
+    guard), and the active heading remains `My Local Version`.

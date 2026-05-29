@@ -168,6 +168,75 @@ describe('App', () => {
       expect(screen.getByRole('button', { name: 'Replace local' })).toBeInTheDocument()
     })
 
+    // FEAT-001: end-to-end coverage for the three conflict-dialog resolutions.
+    // The local framework setup is shared between the three actions, so it's
+    // defined inline at the start of each test for readability.
+    async function setupConflict() {
+      const localFramework = {
+        ...sharedFramework,
+        name: 'My Local Version',
+        quadrants: sharedFramework.quadrants.map((q, i) => ({ ...q, label: `Local ${i + 1}` })),
+      }
+      localStorage.setItem('quadrants_frameworks', JSON.stringify([localFramework]))
+      const hash = await encodeFramework(sharedFramework)
+      window.location.hash = `#${hash}`
+      return { localFramework, hash }
+    }
+
+    it('Replace local swaps the stored framework for the incoming one (FEAT-001)', async () => {
+      await setupConflict()
+      const user = userEvent.setup()
+      render(<App />)
+
+      await waitFor(() => expect(screen.getByText('Framework already exists')).toBeInTheDocument())
+      await user.click(screen.getByRole('button', { name: 'Replace local' }))
+
+      await waitFor(() => expect(screen.queryByText('Framework already exists')).not.toBeInTheDocument())
+      const stored = JSON.parse(localStorage.getItem('quadrants_frameworks')!)
+      expect(stored).toHaveLength(1)
+      expect(stored[0].id).toBe('shared-fw')
+      expect(stored[0].name).toBe('Shared Framework')
+      // Active page heading reflects the replaced framework.
+      expect(screen.getByRole('heading', { name: 'Shared Framework' })).toBeInTheDocument()
+    })
+
+    it('Keep both creates a duplicate alongside the local framework (FEAT-001)', async () => {
+      await setupConflict()
+      const user = userEvent.setup()
+      render(<App />)
+
+      await waitFor(() => expect(screen.getByText('Framework already exists')).toBeInTheDocument())
+      await user.click(screen.getByRole('button', { name: 'Keep both' }))
+
+      await waitFor(() => expect(screen.queryByText('Framework already exists')).not.toBeInTheDocument())
+      const stored = JSON.parse(localStorage.getItem('quadrants_frameworks')!)
+      expect(stored).toHaveLength(2)
+      // Original local framework is untouched.
+      const local = stored.find((fw: Framework) => fw.name === 'My Local Version')
+      expect(local).toBeDefined()
+      // A new framework was added with a different id.
+      const duplicate = stored.find((fw: Framework) => fw.id !== 'shared-fw' && fw.name !== 'My Local Version')
+      expect(duplicate).toBeDefined()
+    })
+
+    it('Cancel leaves the local framework untouched and clears the URL hash (FEAT-001)', async () => {
+      const { localFramework } = await setupConflict()
+      const user = userEvent.setup()
+      render(<App />)
+
+      await waitFor(() => expect(screen.getByText('Framework already exists')).toBeInTheDocument())
+      await user.click(screen.getByRole('button', { name: 'Cancel' }))
+
+      await waitFor(() => expect(screen.queryByText('Framework already exists')).not.toBeInTheDocument())
+      const stored = JSON.parse(localStorage.getItem('quadrants_frameworks')!)
+      expect(stored).toHaveLength(1)
+      expect(stored[0]).toEqual(localFramework)
+      // Hash must be cleared so a refresh doesn't re-trigger the dialog (BUG-020 family).
+      expect(window.location.hash).toBe('')
+      // The local framework remains the active view.
+      expect(screen.getByRole('heading', { name: 'My Local Version' })).toBeInTheDocument()
+    })
+
     it('marks the skip-to-content link as inert while the conflict dialog is active', async () => {
       // BUG-016: when the ConflictDialog is shown, the skip-to-content link
       // must be inside an inert subtree so keyboard users cannot Tab to it.
