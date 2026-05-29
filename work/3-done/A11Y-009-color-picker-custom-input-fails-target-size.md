@@ -1,8 +1,9 @@
 ---
 id: A11Y-009
 type: a11y
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # A11Y-009: color picker custom input fails target size
@@ -41,3 +42,9 @@ input in a clickable container ≥24×24 and forward click to the input.
 
 - A11Y-002 (color picker small trigger fails target size)
 - A11Y-008 (quadrant header add-item button fails target size)
+
+## Working
+
+- Bumped the `<input type="color">` from `h-[22px]` to `h-6` (24px) in
+  `ColorPicker.tsx`. The popover's "Custom" row grows by 2px, well within the
+  existing 10px row padding, so no other layout changes are needed.

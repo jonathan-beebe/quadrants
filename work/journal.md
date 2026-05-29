@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-05-29:16:55:45 — A11Y-009 — done: bump ColorPicker custom input to 24px
+  high
 - 2026-05-29:16:54:29 — A11Y-008 — done: enlarge quadrant-header Add Item hit
   area to 24x24
 - 2026-05-29:16:53:15 — A11Y-007 — done: switch UpdateToast to role=status

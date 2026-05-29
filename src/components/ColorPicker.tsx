@@ -82,7 +82,7 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
               type="color"
               value={color}
               onChange={(e) => onChange(e.target.value)}
-              className="w-7 h-[22px] border border-border rounded cursor-pointer p-0 bg-transparent"
+              className="w-7 h-6 border border-border rounded cursor-pointer p-0 bg-transparent"
             />
           </label>
         </div>
