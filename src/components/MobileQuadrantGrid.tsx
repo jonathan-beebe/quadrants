@@ -106,10 +106,14 @@ export default function MobileQuadrantGrid({
                 </div>
               )}
 
-              {/* Canvas — always flex-1, never reflows */}
+              {/* Canvas — always flex-1, never reflows. `inert` keeps the
+                  section's button role from owning interactive descendants
+                  (cards, delete buttons, move menus) when the quadrant isn't
+                  the active editing target. */}
               <div
                 className="flex-1 relative min-h-0"
                 style={{ pointerEvents: isFocused ? 'auto' : 'none' }}
+                inert={!isFocused ? true : undefined}
                 ref={(el) => {
                   canvasRefs.current![idx] = el
                 }}>

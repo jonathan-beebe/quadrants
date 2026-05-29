@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-05-29:16:33:03 — A11Y-001 — done: inert non-focused canvases in
+  MobileQuadrantGrid
 - 2026-05-29:14:00:46 — MAINT-001 — defined: test: cover quadrant drag-and-drop
   drop-resolution integration
 - 2026-05-29:14:00:25 — IMPRV-001 — defined: extract share-import decision into

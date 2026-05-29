@@ -163,6 +163,24 @@ describe('MobileQuadrantGrid', () => {
     expect(screen.getByRole('button', { name: /add item to delegate/i })).toBeInTheDocument()
   })
 
+  it('marks every quadrant canvas as inert in overview so cards are not tab stops', () => {
+    renderGrid()
+    // Each card lives inside the canvas div; its closest [inert] ancestor must exist
+    // in overview, otherwise tab order would include the card buttons inside a role=button.
+    const card = screen.getByText('Task A')
+    expect(card.closest('[inert]')).not.toBeNull()
+  })
+
+  it('only the focused quadrant canvas is interactive when zoomed', () => {
+    renderGrid()
+    const grid = screen.getByRole('group', { name: 'Quadrant grid' })
+    zoomInto(grid, 50, 50) // zoom into Do First (quadrant 0)
+
+    // Do First's card is now in the focused canvas — not inside an inert subtree.
+    const card = screen.getByText('Task A')
+    expect(card.closest('[inert]')).toBeNull()
+  })
+
   it('applies cell transform when zoomed into bottom-right', () => {
     renderGrid()
 
