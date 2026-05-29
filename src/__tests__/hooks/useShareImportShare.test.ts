@@ -49,6 +49,7 @@ function makeFramework(): Framework {
 
 describe('useShareImport share clipboard feature detection (BUG-025)', () => {
   const originalClipboard = Object.getOwnPropertyDescriptor(navigator, 'clipboard')
+  const originalShare = Object.getOwnPropertyDescriptor(navigator, 'share')
 
   afterEach(() => {
     if (originalClipboard) {
@@ -58,43 +59,15 @@ describe('useShareImport share clipboard feature detection (BUG-025)', () => {
       // @ts-expect-error -- test-only cleanup
       delete (navigator as Navigator).clipboard
     }
+    if (originalShare) {
+      Object.defineProperty(navigator, 'share', originalShare)
+    } else {
+      // @ts-expect-error -- test-only cleanup
+      delete (navigator as Navigator).share
+    }
   })
 
-  it('returns the share URL even when navigator.clipboard is undefined', async () => {
-    // Simulate insecure context / older browser where clipboard is absent.
-    Object.defineProperty(navigator, 'clipboard', {
-      configurable: true,
-      value: undefined,
-    })
-
-    const { result } = renderHook(() => useShareImport(makeOptions()))
-
-    const url = await result.current.share(makeFramework())
-
-    expect(typeof url).toBe('string')
-    expect(url.length).toBeGreaterThan(0)
-    expect(url).toContain('#encoded-hash-payload')
-  })
-
-  it('returns the share URL even when clipboard.writeText rejects', async () => {
-    // Simulate a focused-tab/permission-policy rejection.
-    const writeText = vi.fn().mockRejectedValue(new Error('NotAllowedError'))
-    Object.defineProperty(navigator, 'clipboard', {
-      configurable: true,
-      value: { writeText },
-    })
-
-    const { result } = renderHook(() => useShareImport(makeOptions()))
-
-    const url = await result.current.share(makeFramework())
-
-    expect(writeText).toHaveBeenCalledTimes(1)
-    expect(typeof url).toBe('string')
-    expect(url.length).toBeGreaterThan(0)
-    expect(url).toContain('#encoded-hash-payload')
-  })
-
-  it('still writes to the clipboard when available', async () => {
+  it('reports outcome=copied and writes to the clipboard when available', async () => {
     const writeText = vi.fn().mockResolvedValue(undefined)
     Object.defineProperty(navigator, 'clipboard', {
       configurable: true,
@@ -103,9 +76,70 @@ describe('useShareImport share clipboard feature detection (BUG-025)', () => {
 
     const { result } = renderHook(() => useShareImport(makeOptions()))
 
-    const url = await result.current.share(makeFramework())
+    const out = await result.current.share(makeFramework())
 
+    expect(out.outcome).toBe('copied')
+    expect(out.url).toContain('#encoded-hash-payload')
+    expect(writeText).toHaveBeenCalledWith(out.url)
+  })
+
+  // BUG-002: clipboard absent (insecure context, sandbox) must NOT report copied.
+  it('falls back to navigator.share when clipboard is undefined (BUG-002)', async () => {
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
+    const share = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'share', { configurable: true, value: share })
+
+    const { result } = renderHook(() => useShareImport(makeOptions()))
+
+    const out = await result.current.share(makeFramework())
+
+    expect(out.outcome).toBe('shared')
+    expect(share).toHaveBeenCalledWith({ url: out.url })
+  })
+
+  // BUG-002: clipboard rejection must NOT report copied; navigator.share is tried.
+  it('falls back to navigator.share when clipboard.writeText rejects (BUG-002)', async () => {
+    const writeText = vi.fn().mockRejectedValue(new Error('NotAllowedError'))
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } })
+    const share = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'share', { configurable: true, value: share })
+
+    const { result } = renderHook(() => useShareImport(makeOptions()))
+
+    const out = await result.current.share(makeFramework())
+
+    expect(out.outcome).toBe('shared')
     expect(writeText).toHaveBeenCalledTimes(1)
-    expect(writeText).toHaveBeenCalledWith(url)
+    expect(share).toHaveBeenCalledTimes(1)
+  })
+
+  // BUG-002: user cancelling the native share sheet is not an error.
+  it('reports outcome=cancelled when the user aborts navigator.share', async () => {
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
+    const abort = new DOMException('aborted', 'AbortError')
+    Object.defineProperty(navigator, 'share', {
+      configurable: true,
+      value: vi.fn().mockRejectedValue(abort),
+    })
+
+    const { result } = renderHook(() => useShareImport(makeOptions()))
+
+    const out = await result.current.share(makeFramework())
+
+    expect(out.outcome).toBe('cancelled')
+  })
+
+  // BUG-002: when nothing can deliver the URL, the outcome is 'failed'.
+  it('reports outcome=failed when both clipboard and share are unavailable', async () => {
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
+    // @ts-expect-error -- test-only cleanup
+    delete (navigator as Navigator).share
+
+    const { result } = renderHook(() => useShareImport(makeOptions()))
+
+    const out = await result.current.share(makeFramework())
+
+    expect(out.outcome).toBe('failed')
+    expect(out.url).toContain('#encoded-hash-payload')
   })
 })

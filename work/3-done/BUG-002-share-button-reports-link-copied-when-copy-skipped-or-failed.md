@@ -1,8 +1,9 @@
 ---
 id: BUG-002
 type: bug
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # BUG-002: share button reports "Link copied!" even when clipboard write skipped or failed
@@ -81,3 +82,21 @@ the clipboard write was skipped or rejected.
 - commit e63928b / 1fc28ff (surface share/import errors to users)
 - commit 7966c94 (BUG-027: refresh existing snapshot for share-import conflict
   replace)
+
+## Working
+
+- Chose option (d) per `/work-start`: try `navigator.clipboard.writeText` first,
+  fall back to `navigator.share` when clipboard is absent or rejects.
+- Changed `share`'s return shape to `{ url, outcome }` where outcome is one of
+  `'copied' | 'shared' | 'cancelled' | 'failed'`. `AbortError` from
+  `navigator.share` is mapped to `cancelled` (silent), everything else to
+  `failed`.
+- Updated `QuadrantCanvas.handleShare` to interpret the new shape: only `copied`
+  shows "Link copied!", `failed` shows "Share failed", and `shared` /
+  `cancelled` show nothing (the native share UI is the affordance).
+- Replaced the BUG-025 tests with BUG-002 tests covering each outcome path —
+  clipboard-success → copied, clipboard-absent → shared via fallback,
+  clipboard-rejection → shared via fallback, user-abort → cancelled, no-API →
+  failed. Added QuadrantCanvas tests asserting "Link copied!" is absent when
+  outcome is `shared` and that `failed` surfaces "Share failed".
+- Existing share-status timer cleanup test was updated to use the new shape.

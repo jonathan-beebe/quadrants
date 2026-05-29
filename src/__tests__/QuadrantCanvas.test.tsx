@@ -88,10 +88,29 @@ describe('QuadrantCanvas', () => {
 
   it('calls onShare when Share button is clicked', async () => {
     const user = userEvent.setup()
-    const onShare = vi.fn().mockResolvedValue('http://example.com')
+    const onShare = vi.fn().mockResolvedValue({ url: 'http://example.com', outcome: 'copied' })
     render(<QuadrantCanvas {...defaultProps} onShare={onShare} />)
     await user.click(screen.getByText('Share'))
     expect(onShare).toHaveBeenCalledWith(defaultProps.framework)
+  })
+
+  // BUG-002: the "Link copied!" confirmation must only render when the
+  // clipboard actually received the URL — outcome=copied. For 'shared'
+  // (native share UI) and 'cancelled', no toast is shown.
+  it('shows "Link copied!" only when share outcome is copied (BUG-002)', async () => {
+    const user = userEvent.setup()
+    const onShare = vi.fn().mockResolvedValue({ url: 'http://example.com', outcome: 'shared' })
+    render(<QuadrantCanvas {...defaultProps} onShare={onShare} />)
+    await user.click(screen.getByText('Share'))
+    expect(screen.queryByText('Link copied!')).not.toBeInTheDocument()
+  })
+
+  it('shows "Share failed" when nothing could deliver the link (BUG-002)', async () => {
+    const user = userEvent.setup()
+    const onShare = vi.fn().mockResolvedValue({ url: 'http://example.com', outcome: 'failed' })
+    render(<QuadrantCanvas {...defaultProps} onShare={onShare} />)
+    await user.click(screen.getByText('Share'))
+    await waitFor(() => expect(screen.getByText('Share failed')).toBeInTheDocument())
   })
 
   it('calls onUpdate when add item button is clicked', async () => {
@@ -137,7 +156,7 @@ describe('QuadrantCanvas', () => {
 
     try {
       const user = userEvent.setup()
-      const onShare = vi.fn().mockResolvedValue('http://example.com')
+      const onShare = vi.fn().mockResolvedValue({ url: 'http://example.com', outcome: 'copied' })
       const { unmount } = render(<QuadrantCanvas {...defaultProps} onShare={onShare} />)
 
       await user.click(screen.getByText('Share'))

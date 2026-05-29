@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-05-29:17:38:13 — BUG-002 — done: share returns outcome; fall back to
+  navigator.share when clipboard fails
 - 2026-05-29:17:03:15 — BUG-001 — done: file picker change-no-files resolves
   null instead of rejecting
 - 2026-05-29:17:01:22 — A11Y-010 — done: arrow-key reposition for focused cards

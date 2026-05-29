@@ -12,6 +12,7 @@ import QuadrantGrid from './QuadrantGrid'
 import MobileQuadrantGrid from './MobileQuadrantGrid'
 import type { Framework, Item } from '../types'
 import type { DragStartInfo } from './Card'
+import type { ShareResult } from '../hooks/useShareImport'
 
 interface QuadrantCanvasProps {
   framework: Framework
@@ -20,7 +21,7 @@ interface QuadrantCanvasProps {
   onUpdate: (framework: Framework) => void
   onReflect: () => void
   onEdit: () => void
-  onShare: (framework: Framework) => Promise<string>
+  onShare: (framework: Framework) => Promise<ShareResult>
 }
 
 export default function QuadrantCanvas({
@@ -145,9 +146,15 @@ export default function QuadrantCanvas({
   const handleShare = useCallback(async () => {
     if (shareTimerRef.current) clearTimeout(shareTimerRef.current)
     try {
-      await onShare(framework)
-      setShareStatus('copied')
-      shareTimerRef.current = setTimeout(() => setShareStatus(null), 2000)
+      const result = await onShare(framework)
+      if (result.outcome === 'copied') {
+        setShareStatus('copied')
+        shareTimerRef.current = setTimeout(() => setShareStatus(null), 2000)
+      } else if (result.outcome === 'failed') {
+        setShareStatus('error')
+        shareTimerRef.current = setTimeout(() => setShareStatus(null), 2000)
+      }
+      // 'shared' / 'cancelled': native share UI handled the affordance — no toast.
     } catch {
       setShareStatus('error')
       shareTimerRef.current = setTimeout(() => setShareStatus(null), 2000)

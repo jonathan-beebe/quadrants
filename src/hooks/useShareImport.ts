@@ -10,6 +10,13 @@ export interface Conflict {
   incoming: Framework
 }
 
+export type ShareOutcome = 'copied' | 'shared' | 'cancelled' | 'failed'
+
+export interface ShareResult {
+  url: string
+  outcome: ShareOutcome
+}
+
 interface UseShareImportOptions {
   getFramework: (id: string | null) => Framework | null
   navigate: (id: string | null) => void
@@ -142,22 +149,36 @@ export function useShareImport({ getFramework, navigate, addRaw, replace, addImp
     setConflict(null)
   }, [conflict, navigate])
 
-  const share = useCallback(async (fw: Framework): Promise<string> => {
+  const share = useCallback(async (fw: Framework): Promise<ShareResult> => {
     const hash = await encodeFramework(fw)
     const base = import.meta.env.BASE_URL ?? '/'
     const url = `${window.location.origin}${base}#${hash}`
-    // Feature-detect clipboard and swallow failures so the URL is always
-    // returned. `navigator.clipboard` is undefined in insecure contexts and
-    // `writeText` can reject (NotAllowedError) when the page is unfocused
-    // or blocked by a permission policy. The caller falls back on the URL.
+
+    // Try clipboard first — quiet, in-place, lets us show "Link copied!".
     if (navigator.clipboard?.writeText) {
       try {
         await navigator.clipboard.writeText(url)
+        return { url, outcome: 'copied' }
       } catch {
-        // Intentionally ignore — URL is still returned below (BUG-025).
+        // fall through to navigator.share
       }
     }
-    return url
+
+    // Native share sheet — covers mobile-web Safari, insecure contexts, and
+    // tabs where clipboard.writeText is blocked by permission policy (BUG-002).
+    if (navigator.share) {
+      try {
+        await navigator.share({ url })
+        return { url, outcome: 'shared' }
+      } catch (err) {
+        if (err instanceof DOMException && err.name === 'AbortError') {
+          return { url, outcome: 'cancelled' }
+        }
+        // other errors fall through to 'failed'
+      }
+    }
+
+    return { url, outcome: 'failed' }
   }, [])
 
   const exportJson = useCallback((fw: Framework) => {
