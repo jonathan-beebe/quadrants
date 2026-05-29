@@ -1,8 +1,9 @@
 ---
 id: A11Y-010
 type: a11y
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # A11Y-010: keyboard-reposition items within quadrant
@@ -45,3 +46,18 @@ to 0-95 within the canvas. Reuse `moveItem(fw, idx, idx, itemId, x, y)` and the
 existing `announce(...)` live region. Update the `aria-keyshortcuts` attribute
 on the card to advertise the new arrows and update the `aria-label`
 instructional text.
+
+## Working
+
+- Added `onReposition(x, y)` prop to `Card.tsx` and a new branch in
+  `handleDisplayKeyDown` that handles `Arrow{Left,Right,Up,Down}` (5% step, 15%
+  with Shift) and clamps to 0-95. The card's `aria-label` and
+  `aria-keyshortcuts` now advertise the new bindings.
+- Threaded `onReposition(quadrantIdx, itemId, x, y)` through `QuadrantGridProps`
+  and both grid components (`QuadrantGrid.tsx`, `MobileQuadrantGrid.tsx`).
+- Implemented `handleRepositionItem` in `QuadrantCanvas.tsx`: reuses
+  `moveItem(fw, idx, idx, itemId, x, y)` (same-quadrant branch) and announces
+  the new position via the existing live region.
+- Updated `DesignSystem.tsx` demos and `Card`/`MobileQuadrantGrid` tests for the
+  new required prop. Added Card test coverage for arrow steps, Shift step,
+  clamping, and the new `aria-keyshortcuts` value.

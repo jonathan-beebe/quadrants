@@ -27,6 +27,7 @@ const defaultProps = {
   onChange: vi.fn(),
   onDelete: vi.fn(),
   onMove: vi.fn(),
+  onReposition: vi.fn(),
   onDragStart: vi.fn(),
 }
 
@@ -36,6 +37,7 @@ function renderCard(overrides = {}) {
     onChange: vi.fn(),
     onDelete: vi.fn(),
     onMove: vi.fn(),
+    onReposition: vi.fn(),
     onDragStart: vi.fn(),
     ...overrides,
   }
@@ -109,7 +111,10 @@ describe('Card', () => {
     it('display span has an aria-label', () => {
       renderCard()
       const span = screen.getByRole('button', { name: /edit item: test card/i })
-      expect(span).toHaveAttribute('aria-label', 'Edit item: Test card. Press M to move.')
+      expect(span).toHaveAttribute(
+        'aria-label',
+        'Edit item: Test card. Press M to move to another quadrant, or arrow keys to reposition.',
+      )
     })
 
     it('delete button has an aria-label', () => {
@@ -125,6 +130,49 @@ describe('Card', () => {
       await user.click(span)
       const textarea = screen.getByRole('textbox')
       expect(textarea).toHaveAttribute('aria-label', 'Edit item: Test card')
+    })
+  })
+
+  describe('keyboard reposition (A11Y-010)', () => {
+    it('arrow keys reposition the focused card by 5 percent', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCard({ item: makeItem({ x: 25, y: 30 }) })
+      const span = screen.getByRole('button', { name: /edit item: test card/i })
+      span.focus()
+      await user.keyboard('{ArrowRight}')
+      expect(props.onReposition).toHaveBeenCalledWith(30, 30)
+      await user.keyboard('{ArrowDown}')
+      expect(props.onReposition).toHaveBeenLastCalledWith(25, 35)
+      await user.keyboard('{ArrowLeft}')
+      expect(props.onReposition).toHaveBeenLastCalledWith(20, 30)
+      await user.keyboard('{ArrowUp}')
+      expect(props.onReposition).toHaveBeenLastCalledWith(25, 25)
+    })
+
+    it('Shift+Arrow takes larger 15 percent steps', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCard({ item: makeItem({ x: 40, y: 40 }) })
+      const span = screen.getByRole('button', { name: /edit item: test card/i })
+      span.focus()
+      await user.keyboard('{Shift>}{ArrowRight}{/Shift}')
+      expect(props.onReposition).toHaveBeenLastCalledWith(55, 40)
+    })
+
+    it('clamps reposition coordinates to 0-95', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCard({ item: makeItem({ x: 2, y: 92 }) })
+      const span = screen.getByRole('button', { name: /edit item: test card/i })
+      span.focus()
+      await user.keyboard('{ArrowLeft}')
+      expect(props.onReposition).toHaveBeenLastCalledWith(0, 92)
+      await user.keyboard('{ArrowDown}')
+      expect(props.onReposition).toHaveBeenLastCalledWith(2, 95)
+    })
+
+    it('advertises arrow-key reposition via aria-keyshortcuts', () => {
+      renderCard()
+      const span = screen.getByRole('button', { name: /edit item: test card/i })
+      expect(span).toHaveAttribute('aria-keyshortcuts', 'm ArrowLeft ArrowRight ArrowUp ArrowDown')
     })
   })
 

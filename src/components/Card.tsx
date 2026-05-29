@@ -29,8 +29,15 @@ interface CardProps {
   onChange: (text: string) => void
   onDelete: () => void
   onMove: (targetIdx: number) => void
+  onReposition: (x: number, y: number) => void
   onDragStart: (info: DragStartInfo) => void
 }
+
+// Keyboard reposition step sizes in percent of the canvas. Shift = larger jumps.
+const REPOSITION_STEP = 5
+const REPOSITION_STEP_LARGE = 15
+const REPOSITION_MIN = 0
+const REPOSITION_MAX = 95
 
 export default function Card({
   item,
@@ -40,6 +47,7 @@ export default function Card({
   onChange,
   onDelete,
   onMove,
+  onReposition,
   onDragStart,
 }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
@@ -190,9 +198,24 @@ export default function Card({
       } else if (e.key === 'm' || e.key === 'M') {
         e.preventDefault()
         if (moveTargets.length > 0) setShowMoveMenu(true)
+      } else if (e.key.startsWith('Arrow')) {
+        const step = e.shiftKey ? REPOSITION_STEP_LARGE : REPOSITION_STEP
+        const currentX = item.x ?? 10
+        const currentY = item.y ?? 10
+        let nextX = currentX
+        let nextY = currentY
+        if (e.key === 'ArrowLeft') nextX = currentX - step
+        else if (e.key === 'ArrowRight') nextX = currentX + step
+        else if (e.key === 'ArrowUp') nextY = currentY - step
+        else if (e.key === 'ArrowDown') nextY = currentY + step
+        else return
+        e.preventDefault()
+        nextX = Math.min(REPOSITION_MAX, Math.max(REPOSITION_MIN, nextX))
+        nextY = Math.min(REPOSITION_MAX, Math.max(REPOSITION_MIN, nextY))
+        if (nextX !== currentX || nextY !== currentY) onReposition(nextX, nextY)
       }
     },
-    [enterEditMode, moveTargets],
+    [enterEditMode, moveTargets, item.x, item.y, onReposition],
   )
 
   const handleTextareaKeyDown = useCallback(
@@ -252,8 +275,8 @@ export default function Card({
           ref={spanRef}
           type="button"
           className={`${textClasses} ${editing ? 'cursor-text' : 'cursor-grab'} bg-transparent border-none p-0 m-0 text-left text-inherit text-[inherit] leading-[inherit]`}
-          aria-label={`Edit item: ${item.text}. Press M to move.`}
-          aria-keyshortcuts="m"
+          aria-label={`Edit item: ${item.text}. Press M to move to another quadrant, or arrow keys to reposition.`}
+          aria-keyshortcuts="m ArrowLeft ArrowRight ArrowUp ArrowDown"
           onPointerDown={handleTextPointerDown}
           onKeyDown={handleDisplayKeyDown}>
           {item.text}

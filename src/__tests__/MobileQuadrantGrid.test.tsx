@@ -34,6 +34,7 @@ const defaultProps = {
   onEditItem: vi.fn(),
   onColorChange: vi.fn(),
   onMoveItem: vi.fn(),
+  onReposition: vi.fn(),
   onDragStart: vi.fn(),
 }
 

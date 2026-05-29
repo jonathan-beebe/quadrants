@@ -171,6 +171,7 @@ function DesktopGridDemo() {
           }))
         }}
         onMoveItem={noop}
+        onReposition={noop}
         onDragStart={noop}
       />
     </div>
@@ -202,6 +203,7 @@ function MobileGridDemo() {
           }))
         }}
         onMoveItem={noop}
+        onReposition={noop}
         onDragStart={noop}
       />
     </div>

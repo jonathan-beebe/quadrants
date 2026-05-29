@@ -18,6 +18,7 @@ export interface QuadrantGridProps {
   onEditItem: (quadrantIdx: number, itemId: string, text: string) => void
   onColorChange: (quadrantIdx: number, color: string) => void
   onMoveItem: (sourceIdx: number, itemId: string, targetIdx: number) => void
+  onReposition: (quadrantIdx: number, itemId: string, x: number, y: number) => void
   onDragStart: (quadrantIdx: number, item: Item, info: DragStartInfo) => void
 }
 
@@ -32,6 +33,7 @@ export default function QuadrantGrid({
   onEditItem,
   onColorChange,
   onMoveItem,
+  onReposition,
   onDragStart,
 }: QuadrantGridProps) {
   return (
@@ -151,6 +153,7 @@ export default function QuadrantGrid({
                       onChange={(text) => onEditItem(idx, item.id, text)}
                       onDelete={() => onDeleteItem(idx, item.id)}
                       onMove={(targetIdx) => onMoveItem(idx, item.id, targetIdx)}
+                      onReposition={(x, y) => onReposition(idx, item.id, x, y)}
                       onDragStart={(info) => onDragStart(idx, item, info)}
                     />
                   ))}

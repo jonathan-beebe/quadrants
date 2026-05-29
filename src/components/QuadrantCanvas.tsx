@@ -120,6 +120,15 @@ export default function QuadrantCanvas({
     [updateFramework, announce],
   )
 
+  const handleRepositionItem = useCallback(
+    (quadrantIdx: number, itemId: string, x: number, y: number) => {
+      const item = frameworkRef.current.quadrants[quadrantIdx].items.find((i) => i.id === itemId)
+      updateFramework((fw) => moveItem(fw, quadrantIdx, quadrantIdx, itemId, x, y))
+      announce(`Item "${item?.text ?? ''}" moved to ${Math.round(x)}% horizontal, ${Math.round(y)}% vertical`)
+    },
+    [updateFramework, announce],
+  )
+
   const handleDragStart_ = useCallback(
     (quadrantIdx: number, item: Item, info: DragStartInfo) => {
       handleDragStart(quadrantIdx, item, info)
@@ -190,6 +199,7 @@ export default function QuadrantCanvas({
         onEditItem={handleEditItem}
         onColorChange={handleColorChange}
         onMoveItem={handleMoveItem}
+        onReposition={handleRepositionItem}
         onDragStart={handleDragStart_}
       />
 
