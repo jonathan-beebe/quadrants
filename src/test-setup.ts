@@ -4,6 +4,11 @@ import { afterEach, beforeEach } from 'vitest'
 if (typeof window !== 'undefined') {
   const { cleanup } = await import('@testing-library/react')
 
+  // Stub canvas getContext so jsdom does not emit "Not implemented" warnings.
+  // Components that draw to canvas (e.g. CornerGradient) treat a null context
+  // as a no-op, which is the right behavior in a non-rendering test env.
+  HTMLCanvasElement.prototype.getContext = (() => null) as typeof HTMLCanvasElement.prototype.getContext
+
   // Polyfill matchMedia for jsdom
   Object.defineProperty(window, 'matchMedia', {
     writable: true,
