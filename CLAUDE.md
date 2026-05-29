@@ -25,9 +25,9 @@
 
 # Worflow details
 
-- **Collaboration.** We work together in three steps: planning our work, then
-  implementing, then reviewing and committing. DO NOT MAKE COMMITS UNTIL I
-  REVIEW THE CHANGES.
+- **Ticket-driven work.** Work is organized as tickets under `work/`. Use the
+  `/work-start` skill to drain the inbox; the skill owns the canonical
+  per-ticket flow (tests → change → green → commit → move to `3-done`).
 - **git commit messages.** We follow the git conventions for
   [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/#summary).
 - **Plan before executing.** Always present a plan and get approval before
