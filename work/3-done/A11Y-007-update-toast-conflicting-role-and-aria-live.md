@@ -1,8 +1,9 @@
 ---
 id: A11Y-007
 type: a11y
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # A11Y-007: UpdateToast conflicting role and aria-live
@@ -41,3 +42,10 @@ Drop the explicit `aria-live="polite"` and switch the role to `role="status"`,
 or keep `role="alert"` without the explicit `aria-live`. Choose based on whether
 the update toast should interrupt (assertive) or wait (polite); the current
 intent appears to be polite.
+
+## Working
+
+- Swapped `role="alert" aria-live="polite"` for `role="status"` in
+  `UpdateToast.tsx`. `role="status"` carries an implicit `aria-live="polite"`,
+  which matches the intent (a non-interrupting "new version" notice) and avoids
+  the conflicting live-region hints.

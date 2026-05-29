@@ -11,8 +11,7 @@ interface UpdateToastViewProps {
 export function UpdateToastView({ className = '', onReload, onDismiss }: UpdateToastViewProps) {
   return (
     <div
-      role="alert"
-      aria-live="polite"
+      role="status"
       className={`max-w-md px-4 py-3 bg-surface border border-border rounded-lg shadow-lg text-sm flex items-center gap-3 ${className}`}>
       <span className="flex-1 text-text">A new version is available.</span>
       <button
