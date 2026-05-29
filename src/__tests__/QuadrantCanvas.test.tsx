@@ -129,6 +129,130 @@ describe('QuadrantCanvas', () => {
     expect(updatedFw.quadrants[0].items).toHaveLength(2)
   })
 
+  // MAINT-001: end-to-end coverage for the pointer drag-and-drop drop resolution
+  // wiring (Card pointer events → useDragAndDrop → handleDrop → moveItem → onUpdate).
+  // jsdom doesn't compute layout, so each test stubs getBoundingClientRect on the
+  // four quadrant sections, their canvas children, and the card outer element.
+  describe('drag-and-drop drop resolution (MAINT-001)', () => {
+    function stubRect(el: Element, rect: Partial<DOMRect>) {
+      ;(el as HTMLElement).getBoundingClientRect = () =>
+        ({
+          left: 0,
+          top: 0,
+          right: 0,
+          bottom: 0,
+          width: 0,
+          height: 0,
+          x: 0,
+          y: 0,
+          toJSON: () => '',
+          ...rect,
+        }) as DOMRect
+    }
+
+    // 2x2 grid, each cell 200x200 in viewport coords.
+    const QUADRANT_LAYOUT = [
+      { left: 0, top: 0 },
+      { left: 200, top: 0 },
+      { left: 0, top: 200 },
+      { left: 200, top: 200 },
+    ]
+
+    function stubLayout(container: HTMLElement) {
+      const sections = Array.from(container.querySelectorAll('section'))
+      expect(sections).toHaveLength(4)
+      sections.forEach((section, i) => {
+        const { left, top } = QUADRANT_LAYOUT[i]
+        const rect = { left, top, right: left + 200, bottom: top + 200, width: 200, height: 200 }
+        stubRect(section, rect)
+        // Canvas div is the one that hosts the items (closest absolute child of section).
+        const canvas = section.querySelector('div[class*="flex-1"]')
+        if (canvas) stubRect(canvas, rect)
+      })
+    }
+
+    // jsdom's PointerEvent constructor ignores clientX/clientY; MouseEvent honors
+    // them and React treats type='pointerdown' as a pointer event.
+    function pointerEvent(type: string, clientX: number, clientY: number) {
+      return new MouseEvent(type, { clientX, clientY, bubbles: true })
+    }
+
+    function findCardOuter(text: string): HTMLElement {
+      const button = screen.getByRole('button', { name: new RegExp(`edit item: ${text}`, 'i') })
+      // Card's outer wrapper carries inline style left/top — walk up to it.
+      const outer = button.closest('div[style*="left"]')
+      if (!outer) throw new Error('Could not find card outer element')
+      return outer as HTMLElement
+    }
+
+    function dragAndDrop(card: HTMLElement, from: { x: number; y: number }, to: { x: number; y: number }) {
+      // Start at `from`, move past the 4px threshold to trigger drag start, then
+      // release at `to`.
+      card.dispatchEvent(pointerEvent('pointerdown', from.x, from.y))
+      act(() => {
+        window.dispatchEvent(pointerEvent('pointermove', from.x + 20, from.y + 20))
+      })
+      act(() => {
+        window.dispatchEvent(pointerEvent('pointerup', to.x, to.y))
+      })
+    }
+
+    it('moving Task A into quadrant 1 updates the framework with item in target', () => {
+      const onUpdate = vi.fn()
+      const { container } = render(<QuadrantCanvas {...defaultProps} onUpdate={onUpdate} />)
+      stubLayout(container)
+      const card = findCardOuter('Task A')
+      stubRect(card, { left: 20, top: 20, right: 100, bottom: 50, width: 80, height: 30 })
+
+      // Pointer up at (250, 80) — inside quadrant 1 (top-right cell).
+      dragAndDrop(card, { x: 30, y: 30 }, { x: 250, y: 80 })
+
+      expect(onUpdate).toHaveBeenCalled()
+      const updated = onUpdate.mock.calls.at(-1)![0] as Framework
+      expect(updated.quadrants[0].items).toHaveLength(0)
+      expect(updated.quadrants[1].items).toHaveLength(1)
+      expect(updated.quadrants[1].items[0].text).toBe('Task A')
+      // Coordinates are clamped to 2..85.
+      expect(updated.quadrants[1].items[0].x).toBeGreaterThanOrEqual(2)
+      expect(updated.quadrants[1].items[0].x).toBeLessThanOrEqual(85)
+      expect(updated.quadrants[1].items[0].y).toBeGreaterThanOrEqual(2)
+      expect(updated.quadrants[1].items[0].y).toBeLessThanOrEqual(85)
+    })
+
+    it('dropping within the source quadrant repositions the item in place', () => {
+      const onUpdate = vi.fn()
+      const { container } = render(<QuadrantCanvas {...defaultProps} onUpdate={onUpdate} />)
+      stubLayout(container)
+      const card = findCardOuter('Task A')
+      stubRect(card, { left: 20, top: 20, right: 100, bottom: 50, width: 80, height: 30 })
+
+      // Release at (120, 120) — still inside quadrant 0 (top-left, 0..200 x 0..200).
+      dragAndDrop(card, { x: 30, y: 30 }, { x: 120, y: 120 })
+
+      expect(onUpdate).toHaveBeenCalled()
+      const updated = onUpdate.mock.calls.at(-1)![0] as Framework
+      // Same-quadrant drop: item stays in quadrant 0 with new coordinates.
+      expect(updated.quadrants[0].items).toHaveLength(1)
+      expect(updated.quadrants[1].items).toHaveLength(0)
+      expect(updated.quadrants[2].items).toHaveLength(0)
+      expect(updated.quadrants[3].items).toHaveLength(0)
+      expect(updated.quadrants[0].items[0].id).toBe('i1')
+    })
+
+    it('dropping outside all quadrant rects leaves the framework unchanged', () => {
+      const onUpdate = vi.fn()
+      const { container } = render(<QuadrantCanvas {...defaultProps} onUpdate={onUpdate} />)
+      stubLayout(container)
+      const card = findCardOuter('Task A')
+      stubRect(card, { left: 20, top: 20, right: 100, bottom: 50, width: 80, height: 30 })
+
+      // Release at (1000, 1000) — far outside the 400x400 grid.
+      dragAndDrop(card, { x: 30, y: 30 }, { x: 1000, y: 1000 })
+
+      expect(onUpdate).not.toHaveBeenCalled()
+    })
+  })
+
   it('clears the share status timer on unmount (BUG-012)', async () => {
     // Track timeouts scheduled with a 2000ms delay (the share-status reset)
     // so we can assert the component clears them on unmount.

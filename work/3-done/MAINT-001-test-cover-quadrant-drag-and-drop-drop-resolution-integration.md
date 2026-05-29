@@ -1,8 +1,9 @@
 ---
 id: MAINT-001
 type: maintenance
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # MAINT-001: test: cover quadrant drag-and-drop drop-resolution integration
@@ -107,3 +108,22 @@ silent data-position regressions in the canvas's hot path.
   wiring under test
 - src/hooks/useDragAndDrop.ts:69-89 — the pointermove/pointerup effect whose
   end-to-end behavior these tests protect
+
+## Working
+
+- Added a `drag-and-drop drop resolution (MAINT-001)` describe block in
+  `QuadrantCanvas.test.tsx` with three integration tests. Each test stubs
+  `getBoundingClientRect` on the four `<section>` quadrants, their inner canvas
+  divs, and the dragged card's outer wrapper to a 2x2 200px grid in client
+  coords. Pointer events are dispatched as `MouseEvent` (clientX/Y survive in
+  jsdom; PointerEvent's constructor drops them).
+- **Cross-quadrant move:** drop on (250, 80) — quadrant 1 — and assert
+  `onUpdate` is called with the item removed from quadrant 0, added to quadrant
+  1, and its x/y clamped to 2..85.
+- **Same-quadrant reposition:** drop on (120, 120) — still quadrant 0 — and
+  assert the item stays in quadrant 0 with the same id, no cross-quadrant side
+  effects.
+- **Out-of-bounds drop:** drop on (1000, 1000) and assert `onUpdate` is not
+  called.
+- These exercise the previously-untested wiring between `useDragAndDrop`,
+  `handleDrop`, and `moveItem` on the rendered surface.

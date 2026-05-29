@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-05-29:17:45:23 — MAINT-001 — done: integration tests for quadrant
+  drag-and-drop drop resolution
 - 2026-05-29:17:42:19 — IMPRV-001 — done: extract resolveImportAction pure
   function from useShareImport
 - 2026-05-29:17:40:02 — FEAT-001 — done: integration tests for conflict dialog
