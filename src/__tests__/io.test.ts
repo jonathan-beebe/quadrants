@@ -42,4 +42,19 @@ describe('pickJsonFile', () => {
 
     await expect(promise).resolves.toBeNull()
   })
+
+  // BUG-001: older browsers (and some race conditions in modern ones) fire
+  // a `change` event with no files instead of a `cancel`. That path must also
+  // resolve to null so the caller does not surface a misleading read error.
+  it('resolves with null when change fires with no files (BUG-001)', async () => {
+    const promise = pickJsonFile()
+
+    Object.defineProperty(createdInput, 'files', {
+      value: [],
+      configurable: true,
+    })
+    createdInput.dispatchEvent(new Event('change'))
+
+    await expect(promise).resolves.toBeNull()
+  })
 })

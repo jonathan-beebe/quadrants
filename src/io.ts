@@ -15,8 +15,11 @@ export function pickJsonFile(): Promise<string | null> {
     input.accept = '.json'
     input.onchange = (e) => {
       const file = (e.target as HTMLInputElement).files?.[0]
+      // Older browsers deliver "cancelled picker" as `change` with no files
+      // instead of a `cancel` event; treat both the same so the caller doesn't
+      // surface a misleading read error.
       if (!file) {
-        reject(new Error('No file selected'))
+        resolve(null)
         return
       }
       const reader = new FileReader()

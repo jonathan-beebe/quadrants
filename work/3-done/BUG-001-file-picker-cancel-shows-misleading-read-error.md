@@ -1,8 +1,9 @@
 ---
 id: BUG-001
 type: bug
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # BUG-001: file picker cancel via onchange-no-file shows misleading read error
@@ -59,3 +60,14 @@ this regression cannot reappear silently.
 - commit 3faf51d — added `oncancel` handler that initially rejected
 - commit 95b223d — reversed course: cancel now resolves null and caller silently
   no-ops; this is the policy the bug violates in the legacy fallback path
+
+## Working
+
+- Added a failing test in `io.test.ts` that dispatches `change` with no files
+  and expects the promise to resolve to `null`. With the previous code it threw
+  `Error('No file selected')` — confirming the bug.
+- Changed the `if (!file)` branch in `src/io.ts:onchange` from
+  `reject(new Error('No file selected'))` to `resolve(null)`. The caller's
+  existing `text === null` guard already silently no-ops, so this matches the
+  `oncancel` path and the deliberate policy from commit 95b223d.
+- Test passes; full CI green.
