@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen } from '@testing-library/react'
+import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import Sidebar from '../components/Sidebar'
 import { useIsMobile } from '../hooks/useIsMobile'
@@ -180,6 +180,34 @@ describe('Sidebar', () => {
     vi.mocked(useIsMobile).mockReturnValue(true)
     render(<Sidebar {...defaultProps} open={false} />)
     expect(screen.queryByTestId('sidebar-backdrop')).not.toBeInTheDocument()
+  })
+
+  it('moves focus to the close button when the drawer opens on mobile (A11Y-005)', () => {
+    vi.mocked(useIsMobile).mockReturnValue(true)
+    render(<Sidebar {...defaultProps} open={true} />)
+    expect(screen.getByRole('button', { name: /close sidebar/i })).toHaveFocus()
+  })
+
+  it('exposes the open mobile drawer as a modal dialog (A11Y-005)', () => {
+    vi.mocked(useIsMobile).mockReturnValue(true)
+    render(<Sidebar {...defaultProps} open={true} />)
+    const dialog = screen.getByRole('dialog', { name: /frameworks sidebar/i })
+    expect(dialog).toHaveAttribute('aria-modal', 'true')
+  })
+
+  it('closes the mobile drawer when Escape is pressed (A11Y-005)', () => {
+    vi.mocked(useIsMobile).mockReturnValue(true)
+    const onToggle = vi.fn()
+    render(<Sidebar {...defaultProps} open={true} onToggle={onToggle} />)
+    const dialog = screen.getByRole('dialog', { name: /frameworks sidebar/i })
+    fireEvent.keyDown(dialog, { key: 'Escape' })
+    expect(onToggle).toHaveBeenCalledOnce()
+  })
+
+  it('does not trap focus or behave as a dialog on desktop (A11Y-005)', () => {
+    vi.mocked(useIsMobile).mockReturnValue(false)
+    render(<Sidebar {...defaultProps} open={true} />)
+    expect(screen.queryByRole('dialog', { name: /frameworks sidebar/i })).not.toBeInTheDocument()
   })
 
   it('communicates expanded state on context menu trigger', async () => {

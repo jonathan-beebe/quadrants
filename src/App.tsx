@@ -152,6 +152,7 @@ export default function App() {
       </div>
       <main
         id="main-content"
+        inert={isMobile && sidebarOpen ? true : undefined}
         className={`flex-1 overflow-y-auto transition-[margin-left] duration-150 ease-in-out ${!isMobile && sidebarOpen ? 'ml-[280px]' : 'ml-0'}`}>
         {conflict ? (
           <ConflictDialog

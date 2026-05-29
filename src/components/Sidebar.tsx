@@ -6,6 +6,7 @@ import Button from './atoms/Button'
 import { useClickOutside } from '../hooks/useClickOutside'
 import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
 import { useIsMobile } from '../hooks/useIsMobile'
+import { useFocusTrap } from '../hooks/useFocusTrap'
 import type { Framework } from '../types'
 import type { ThemeMode } from '../hooks/useDarkMode'
 
@@ -43,10 +44,28 @@ export default function Sidebar({
   const [menuId, setMenuId] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const menuTriggerRef = useRef<HTMLButtonElement>(null)
+  const asideRef = useRef<HTMLElement>(null)
+  const closeButtonRef = useRef<HTMLButtonElement>(null)
+  const previouslyFocusedRef = useRef<HTMLElement | null>(null)
   const isMobile = useIsMobile()
+  const isModal = isMobile && open
 
   const closeMenu = useCallback(() => setMenuId(null), [])
   useClickOutside(menuRef, closeMenu, !!menuId)
+
+  // When the drawer becomes modal (mobile + open), move focus into it and
+  // remember where focus came from so we can restore it on close.
+  useEffect(() => {
+    if (!isModal) return
+    previouslyFocusedRef.current = document.activeElement as HTMLElement | null
+    closeButtonRef.current?.focus()
+    return () => {
+      previouslyFocusedRef.current?.focus?.()
+      previouslyFocusedRef.current = null
+    }
+  }, [isModal])
+
+  const handleAsideKeyDown = useFocusTrap(asideRef, isModal ? onToggle : undefined)
 
   // Focus first menu item when menu opens
   useEffect(() => {
@@ -69,8 +88,12 @@ export default function Sidebar({
         />
       )}
       <aside
+        ref={asideRef}
         aria-label="Frameworks sidebar"
+        aria-modal={isModal ? true : undefined}
+        role={isModal ? 'dialog' : undefined}
         inert={!open ? true : undefined}
+        onKeyDown={isModal ? handleAsideKeyDown : undefined}
         className={`fixed top-0 left-0 w-[280px] h-screen bg-surface border-r border-border flex flex-col z-[100] transition-transform duration-150 ease-in-out ${open ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2 font-semibold text-[15px]">
@@ -79,7 +102,12 @@ export default function Sidebar({
           </div>
           <div className="flex items-center gap-1">
             <ThemeToggleButton mode={themeMode} darkMode={darkMode} onCycle={onCycleTheme} />
-            <Button variant="icon" onClick={onToggle} aria-label="Close sidebar" aria-expanded="true">
+            <Button
+              ref={closeButtonRef}
+              variant="icon"
+              onClick={onToggle}
+              aria-label="Close sidebar"
+              aria-expanded="true">
               <SidebarIcon size={18} />
             </Button>
           </div>

@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-05-29:16:50:18 — A11Y-005 — done: mobile sidebar drawer focus trap and
+  Escape to close
 - 2026-05-29:16:46:46 — A11Y-004 — done: reveal Sidebar actions trigger on touch
 - 2026-05-29:16:45:34 — A11Y-003 — done: enlarge Card delete hit area to 24x24
   and reveal on touch

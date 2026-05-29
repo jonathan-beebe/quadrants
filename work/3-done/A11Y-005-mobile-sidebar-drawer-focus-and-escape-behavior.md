@@ -1,8 +1,9 @@
 ---
 id: A11Y-005
 type: a11y
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # A11Y-005: mobile sidebar drawer focus and escape behavior
@@ -46,3 +47,17 @@ previous element on close.
 
 - `src/hooks/useFocusTrap.ts` already exists and is used by `ConflictDialog.tsx`
   and `ReflectionMode.tsx`.
+
+## Working
+
+- Added focus-trap + Escape behavior in `Sidebar.tsx` only when
+  `isMobile && open` (`isModal`). The `<aside>` then exposes `role="dialog"`
+  - `aria-modal="true"`, uses `useFocusTrap(asideRef, onToggle)` so Tab stays in
+    the drawer and Escape calls `onToggle`. An effect moves focus to the close
+    button on open and restores it to the previously-focused element on close.
+- Applied `inert={isMobile && sidebarOpen}` to `<main>` in `App.tsx` so the
+  background content is removed from the AT tree and tab order while the drawer
+  is open on mobile. Desktop behavior is unchanged.
+- Added regression tests in `Sidebar.test.tsx` covering focus-on-open,
+  `role="dialog"` + `aria-modal`, Escape-closes-drawer, and the desktop variant
+  continuing to use a plain `<aside>` (no dialog role, no trap).
