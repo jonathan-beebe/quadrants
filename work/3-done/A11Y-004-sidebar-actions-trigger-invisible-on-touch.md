@@ -1,8 +1,9 @@
 ---
 id: A11Y-004
 type: a11y
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # A11Y-004: sidebar actions trigger invisible on touch
@@ -45,3 +46,10 @@ drop the `opacity-0` class on touch. Keep `aria-haspopup`, `aria-expanded`, and
 
 - See related a11y ticket for the Card delete button which uses the same
   hover-only opacity pattern.
+
+## Working
+
+- Added `[@media(pointer:coarse)]:opacity-100` to the per-framework actions
+  trigger in `Sidebar.tsx`, matching the pattern adopted in A11Y-003 for the
+  Card delete button. Desktop hover/focus reveal is preserved; touch devices see
+  the trigger by default. ARIA attributes are untouched.

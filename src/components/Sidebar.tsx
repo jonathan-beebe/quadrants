@@ -116,7 +116,7 @@ export default function Sidebar({
                 </button>
                 <button
                   ref={menuId === fw.id ? menuTriggerRef : undefined}
-                  className="opacity-0 group-hover:opacity-100 focus:opacity-100 p-1 rounded text-text-secondary transition-opacity duration-150 hover:bg-border mr-1"
+                  className="opacity-0 group-hover:opacity-100 focus:opacity-100 [@media(pointer:coarse)]:opacity-100 p-1 rounded text-text-secondary transition-opacity duration-150 hover:bg-border mr-1"
                   aria-label={`Actions for ${fw.name}`}
                   aria-haspopup="true"
                   aria-expanded={menuId === fw.id}
