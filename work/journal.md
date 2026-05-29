@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-05-29:16:54:29 — A11Y-008 — done: enlarge quadrant-header Add Item hit
+  area to 24x24
 - 2026-05-29:16:53:15 — A11Y-007 — done: switch UpdateToast to role=status
 - 2026-05-29:16:51:44 — A11Y-006 — done: promote EmptyState heading to h1
 - 2026-05-29:16:50:18 — A11Y-005 — done: mobile sidebar drawer focus trap and

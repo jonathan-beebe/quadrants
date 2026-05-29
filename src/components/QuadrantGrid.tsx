@@ -113,7 +113,7 @@ export default function QuadrantGrid({
                 </div>
                 <div className="flex items-center gap-1.5">
                   <button
-                    className="p-[3px] rounded text-text-tertiary transition-all duration-150 hover:text-text-secondary hover:bg-black/6 dark:hover:bg-white/10"
+                    className="w-6 h-6 grid place-items-center rounded text-text-tertiary transition-all duration-150 hover:text-text-secondary hover:bg-black/6 dark:hover:bg-white/10"
                     onClick={() => onAddItem(idx)}
                     aria-label={`Add item to ${quadrant.label}`}>
                     <PlusIcon size={14} />

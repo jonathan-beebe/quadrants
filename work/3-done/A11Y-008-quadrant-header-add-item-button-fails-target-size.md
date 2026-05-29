@@ -1,8 +1,9 @@
 ---
 id: A11Y-008
 type: a11y
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # A11Y-008: quadrant header add-item button fails target size
@@ -37,3 +38,10 @@ Increase the clickable area to ≥24×24 by raising padding (e.g. `p-1.5`) or by
 adding an invisible expansion via a pseudo-element so the icon stays at size 14.
 Confirm focus ring still aligns and the layout in the quadrant header is
 unchanged.
+
+## Working
+
+- Swapped `p-[3px]` for `w-6 h-6 grid place-items-center` on the quadrant-header
+  Add Item button in `QuadrantGrid.tsx`, mirroring the pattern adopted in
+  A11Y-003. The 14px PlusIcon is centered in a guaranteed 24x24 hit area; the
+  visible icon and hover/focus treatment are unchanged.
