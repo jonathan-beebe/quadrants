@@ -1,8 +1,9 @@
 ---
 id: A11Y-003
 type: a11y
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # A11Y-003: card delete button: target size and touch visibility
@@ -48,3 +49,13 @@ that never trigger on touch.
 
 - see related a11y ticket for the sidebar menu trigger which uses the same
   hover-only opacity pattern
+
+## Working
+
+- Replaced `p-0.5` with `w-6 h-6 grid place-items-center` on the Card delete
+  button so the hit area is a guaranteed 24x24 while keeping the 11px X icon.
+- Added `[@media(pointer:coarse)]:opacity-100` so touch-primary devices see the
+  delete control without needing hover/focus; desktop (hover-capable) devices
+  retain the existing reveal-on-hover/focus behavior.
+- Aria-label, keyboard focus reveal, and `[div:hover>&]`/`[div:focus-within>&]`
+  selectors are all preserved. Sidebar trigger (A11Y-004) is a sibling fix.

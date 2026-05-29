@@ -260,7 +260,7 @@ export default function Card({
         </button>
       )}
       <button
-        className="absolute -top-2 -right-2 p-0.5 rounded-full bg-white dark:bg-gray-700 border border-black/8 dark:border-white/10 shadow-sm text-text-tertiary transition-all duration-150 cursor-pointer opacity-0 hover:text-danger hover:bg-red-500/10 focus:opacity-100 [div:hover>&]:opacity-100 [div:focus-within>&]:opacity-100"
+        className="absolute -top-2 -right-2 w-6 h-6 grid place-items-center rounded-full bg-white dark:bg-gray-700 border border-black/8 dark:border-white/10 shadow-sm text-text-tertiary transition-all duration-150 cursor-pointer opacity-0 hover:text-danger hover:bg-red-500/10 focus:opacity-100 [div:hover>&]:opacity-100 [div:focus-within>&]:opacity-100 [@media(pointer:coarse)]:opacity-100"
         onPointerDown={(e) => e.stopPropagation()}
         onClick={onDelete}
         aria-label={`Delete item: ${item.text}`}

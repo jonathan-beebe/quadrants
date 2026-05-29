@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-05-29:16:45:34 — A11Y-003 — done: enlarge Card delete hit area to 24x24
+  and reveal on touch
 - 2026-05-29:16:35:45 — A11Y-002 — done: expand ColorPicker trigger hit area to
   24x24
 - 2026-05-29:16:33:03 — A11Y-001 — done: inert non-focused canvases in
