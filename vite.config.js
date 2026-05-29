@@ -49,6 +49,11 @@ const base = process.env.VITE_BASE || '/quadrants/'
 
 export default defineConfig({
   base,
+  server: {
+    host: true,
+    port: parseInt(process.env.DEV_PORT || '5173', 10),
+    strictPort: true,
+  },
   define: {
     __COMMIT_HASH__: JSON.stringify(commitHash),
   },

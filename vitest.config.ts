@@ -13,8 +13,27 @@ export default defineConfig({
     },
   },
   test: {
-    environment: 'jsdom',
     globals: true,
     setupFiles: ['./src/test-setup.ts'],
+    projects: [
+      {
+        extends: true,
+        test: {
+          name: 'core',
+          environment: 'node',
+          include: ['src/__tests__/logic/**/*.test.ts'],
+          isolate: false,
+        },
+      },
+      {
+        extends: true,
+        test: {
+          name: 'dom',
+          environment: 'jsdom',
+          include: ['src/**/*.test.{ts,tsx}'],
+          exclude: ['src/__tests__/logic/**/*.test.ts'],
+        },
+      },
+    ],
   },
 })

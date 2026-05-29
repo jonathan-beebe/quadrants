@@ -1,3 +1,4 @@
+// @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest'
 import { getIdFromPath, getHashFromUrl, pushPath, replacePath } from '../../logic/routing'
 
