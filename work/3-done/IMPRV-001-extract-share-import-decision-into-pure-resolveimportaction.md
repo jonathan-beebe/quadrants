@@ -1,8 +1,9 @@
 ---
 id: IMPRV-001
 type: improvement
-status: open
+status: resolved
 created: 2026-05-29
+resolved: 2026-05-29
 ---
 
 # IMPRV-001: Extract share-import decision into pure resolveImportAction
@@ -122,3 +123,17 @@ shell concerns, not part of the pure decision.
   stay synchronous in the shell)
 - BUG-027 — referenced in-file as the freshness re-read in
   `handleConflictReplace`
+
+## Working
+
+- Added `src/logic/shareImport.ts` with `resolveImportAction(payload, existing)`
+  returning a discriminated `ImportAction` (`'add' | 'navigate' | 'conflict'`).
+  Pure — no React, no DOM, no timers.
+- Added `src/__tests__/logic/shareImport.test.ts` covering the three branches.
+- Rewrote `importFromHash` in `useShareImport.ts` as a thin dispatcher: it
+  decodes, calls `resolveImportAction`, and switches on `action.kind`. The
+  imperative shell (BUG-020's synchronous `replacePath(null)`, the deferred
+  `navigate/replace`, `setImporting` lifecycle, error path) is unchanged.
+- Existing app/hook tests (App.test.tsx,
+  useShareImportConflictFreshness.test.ts) remain green, confirming behavior is
+  unchanged.

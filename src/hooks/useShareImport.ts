@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { encodeFramework, decodeFramework } from '../sharing'
-import { hydratePayload, frameworksMatch, sanitizeImportedFramework } from '../logic/framework'
+import { sanitizeImportedFramework } from '../logic/framework'
+import { resolveImportAction } from '../logic/shareImport'
 import { getHashFromUrl, replacePath } from '../logic/routing'
 import { downloadJson, pickJsonFile } from '../io'
 import type { Framework } from '../types'
@@ -63,34 +64,35 @@ export function useShareImport({ getFramework, navigate, addRaw, replace, addImp
           return
         }
 
-        const id = payload.id
-        const existing = getFramework(id)
+        const action = resolveImportAction(payload, getFramework(payload.id))
 
-        if (!existing) {
-          const fw = hydratePayload(payload, id)
-          addRaw(fw)
-          setTimeout(() => {
-            navigate(fw.id)
-            replacePath(fw.id)
-            setImporting(false)
-          }, 0)
-          return
+        // The dispatch below stays imperative: it owns the React state writes,
+        // the deferred navigate/replace (to let `addRaw` commit first), and
+        // the `setImporting(false)` lifecycle. The decision branches above
+        // are entirely pure (see logic/shareImport.ts).
+        switch (action.kind) {
+          case 'add':
+            addRaw(action.framework)
+            setTimeout(() => {
+              navigate(action.framework.id)
+              replacePath(action.framework.id)
+              setImporting(false)
+            }, 0)
+            return
+          case 'navigate':
+            setTimeout(() => {
+              navigate(action.id)
+              replacePath(action.id)
+              setImporting(false)
+            }, 0)
+            return
+          case 'conflict':
+            setTimeout(() => {
+              setConflict({ existing: action.existing, incoming: action.incoming })
+              setImporting(false)
+            }, 0)
+            return
         }
-
-        if (frameworksMatch(existing, payload)) {
-          setTimeout(() => {
-            navigate(id)
-            replacePath(id)
-            setImporting(false)
-          }, 0)
-          return
-        }
-
-        const incoming = hydratePayload(payload, id)
-        setTimeout(() => {
-          setConflict({ existing, incoming })
-          setImporting(false)
-        }, 0)
       })
       .catch((err) => {
         console.error('Failed to decode shared framework from URL:', err)
