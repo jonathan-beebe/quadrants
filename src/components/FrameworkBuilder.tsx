@@ -64,7 +64,7 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
                   aria-label={`Apply template: ${t.name}`}
                   onClick={() => applyTemplate(t)}>
                   <span className="text-[13px] font-medium">{t.name}</span>
-                  <Caption className="mt-0.5">{t.quadrants.join(' / ')}</Caption>
+                  <Caption className="mt-0.5">{t.description ?? t.quadrants.join(' / ')}</Caption>
                 </button>
               ))}
             </div>

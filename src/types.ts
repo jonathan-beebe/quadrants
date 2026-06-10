@@ -28,6 +28,7 @@ export interface FrameworkTemplate {
   axisY: string
   quadrants: string[]
   colors?: string[]
+  description?: string
 }
 
 export interface SharedPayload {
