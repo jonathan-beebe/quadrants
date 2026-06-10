@@ -104,7 +104,34 @@ describe('FrameworkBuilder', () => {
       axisX: 'Existing / New',
       axisY: 'Rethink / Embrace',
       quadrants: ['Continue', 'Start', 'Stop', 'Change'],
+      colors: ['#4ade80', '#60a5fa', '#ef4444', '#fbbf24'],
     })
+  })
+
+  // FEAT-002: a picked template's colors must survive submission so the created
+  // framework renders the spec palette — not the default fallback.
+  it('passes the template colors through to onCreate', async () => {
+    const user = userEvent.setup()
+    const onCreate = vi.fn()
+    render(<FrameworkBuilder {...defaultProps} onCreate={onCreate} />)
+
+    await user.click(screen.getByRole('button', { name: /Eisenhower Matrix/ }))
+    await user.click(screen.getByRole('button', { name: 'Create Framework' }))
+
+    expect(onCreate.mock.calls[0][0].colors).toEqual(['#60a5fa', '#4ade80', '#94a3b8', '#fbbf24'])
+  })
+
+  // FEAT-002: the quadrant preview boxes must reflect the picked template's
+  // colors, not the hardcoded defaults.
+  it('previews the picked template colors on the quadrant boxes', async () => {
+    const user = userEvent.setup()
+    render(<FrameworkBuilder {...defaultProps} />)
+
+    await user.click(screen.getByRole('button', { name: /Eisenhower Matrix/ }))
+
+    // Schedule is Eisenhower's first quadrant — blue (#60a5fa → rgb 96,165,250).
+    const scheduleInput = screen.getByDisplayValue('Schedule')
+    expect(scheduleInput.style.background).toBe('rgba(96, 165, 250, 0.08)')
   })
 
   it('calls onCancel when cancel button is clicked', async () => {

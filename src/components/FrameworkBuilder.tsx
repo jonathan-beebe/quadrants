@@ -18,6 +18,7 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
   const [axisX, setAxisX] = useState(editing?.axisX || '')
   const [axisY, setAxisY] = useState(editing?.axisY || '')
   const [quadrants, setQuadrants] = useState(editing ? editing.quadrants.map((q) => q.label) : ['', '', '', ''])
+  const [colors, setColors] = useState<string[]>(editing ? editing.quadrants.map((q) => q.color) : defaultColors)
 
   const isValid = name.trim() && quadrants.every((q) => q.trim())
 
@@ -29,6 +30,7 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
       axisX: axisX.trim(),
       axisY: axisY.trim(),
       quadrants: quadrants.map((q) => q.trim()),
+      colors,
     })
   }
 
@@ -37,6 +39,7 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
     setAxisX(t.axisX)
     setAxisY(t.axisY)
     setQuadrants([...t.quadrants])
+    setColors(t.colors ?? defaultColors)
   }
 
   const setQuadrant = (i: number, value: string) => {
@@ -111,8 +114,8 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
                     aria-label={`Quadrant ${i + 1} label`}
                     className="py-5 px-4 border rounded-lg text-sm font-medium text-center outline-none transition-all duration-150 focus:ring-2 focus:ring-accent"
                     style={{
-                      background: deriveColors(defaultColors[i]).bg,
-                      borderColor: deriveColors(defaultColors[i]).border,
+                      background: deriveColors(colors[i]).bg,
+                      borderColor: deriveColors(colors[i]).border,
                     }}
                   />
                 ))}
