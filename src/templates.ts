@@ -12,6 +12,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Schedule', 'Do First', 'Eliminate', 'Delegate'],
     colors: ['#60a5fa', '#4ade80', '#94a3b8', '#fbbf24'],
     description: 'Separate what truly matters from what merely feels urgent.',
+    category: 'Prioritize',
   },
   {
     name: 'Impact / Effort',
@@ -20,6 +21,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Quick Wins', 'Big Bets', 'Fill-Ins', 'Thankless Tasks'],
     colors: ['#4ade80', '#60a5fa', '#fbbf24', '#94a3b8'],
     description: 'Find the quick wins by weighing value against cost.',
+    category: 'Prioritize',
   },
   {
     name: 'One-Way / Two-Way Doors',
@@ -28,6 +30,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Just Decide', 'Experiment', "Don't Agonize", 'Deliberate'],
     colors: ['#4ade80', '#60a5fa', '#fbbf24', '#ef4444'],
     description: 'Match decision effort to how reversible the choice is.',
+    category: 'Prioritize',
   },
   {
     name: 'Risk Matrix',
@@ -36,6 +39,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Plan Contingency', 'Mitigate Now', 'Accept', 'Monitor'],
     colors: ['#fbbf24', '#ef4444', '#4ade80', '#f97316'],
     description: 'Rank risks by how likely they are against how bad they are.',
+    category: 'Prioritize',
   },
   {
     name: 'Growth–Share Matrix',
@@ -44,6 +48,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Question Marks', 'Stars', 'Dogs', 'Cash Cows'],
     colors: ['#a78bfa', '#fbbf24', '#94a3b8', '#4ade80'],
     description: 'Decide what to feed, milk, or drop across a portfolio.',
+    category: 'Strategize',
   },
   {
     name: 'Power × Interest',
@@ -52,6 +57,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Keep Satisfied', 'Manage Closely', 'Monitor', 'Keep Informed'],
     colors: ['#fbbf24', '#ef4444', '#94a3b8', '#60a5fa'],
     description: 'Manage stakeholders by their power and their interest.',
+    category: 'Strategize',
   },
   {
     name: 'Skill × Will',
@@ -60,6 +66,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Guide', 'Delegate', 'Direct', 'Motivate'],
     colors: ['#60a5fa', '#4ade80', '#fbbf24', '#f97316'],
     description: 'Coach each person by their skill paired with their motivation.',
+    category: 'People & Self',
   },
   {
     name: 'Passion × Proficiency',
@@ -68,6 +75,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Invest', 'Sweet Spot', 'Avoid', 'Burnout Zone'],
     colors: ['#60a5fa', '#4ade80', '#94a3b8', '#f97316'],
     description: 'Audit work by what you are good at versus what you love.',
+    category: 'People & Self',
   },
   {
     name: 'Mood Meter',
@@ -76,6 +84,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Tense', 'Excited', 'Down', 'Calm'],
     colors: ['#ef4444', '#fbbf24', '#60a5fa', '#4ade80'],
     description: 'Name an emotion by its pleasantness and its energy.',
+    category: 'People & Self',
   },
   // ── Extended ──────────────────────────────────────────────────────────
   {
@@ -85,6 +94,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Market Development', 'Diversification', 'Market Penetration', 'Product Development'],
     colors: ['#fbbf24', '#ef4444', '#4ade80', '#fbbf24'],
     description: 'Plan growth by how new the product and the market are to you.',
+    category: 'Strategize',
   },
   {
     name: 'Vision × Execution',
@@ -93,6 +103,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Challengers', 'Leaders', 'Niche Players', 'Visionaries'],
     colors: ['#60a5fa', '#4ade80', '#94a3b8', '#a78bfa'],
     description: 'Compare players by vision against ability to deliver.',
+    category: 'Strategize',
   },
   {
     name: 'Knowns & Unknowns',
@@ -101,6 +112,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Known Unknowns', 'Known Knowns', 'Unknown Unknowns', 'Unknown Knowns'],
     colors: ['#60a5fa', '#4ade80', '#ef4444', '#a78bfa'],
     description: 'Surface what you know, what you do not, and what you assume.',
+    category: 'Understand',
   },
   {
     name: 'Certainty × Agreement',
@@ -109,6 +121,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Experiment', 'Plan', 'Stabilize', 'Negotiate'],
     colors: ['#a78bfa', '#4ade80', '#ef4444', '#fbbf24'],
     description: 'Choose how to work as certainty and alignment vary.',
+    category: 'Understand',
   },
   {
     name: 'Johari Window',
@@ -117,6 +130,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Blind Spot', 'Open', 'Unknown', 'Hidden'],
     colors: ['#fbbf24', '#4ade80', '#94a3b8', '#60a5fa'],
     description: 'Grow self-awareness through feedback and disclosure.',
+    category: 'Understand',
   },
   {
     name: 'Competence Ladder',
@@ -125,6 +139,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Conscious Incompetence', 'Conscious Competence', 'Unconscious Incompetence', 'Unconscious Competence'],
     colors: ['#fbbf24', '#60a5fa', '#94a3b8', '#4ade80'],
     description: 'Locate where you are on the path from novice to mastery.',
+    category: 'Understand',
   },
   {
     name: 'Importance × Satisfaction',
@@ -133,6 +148,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Focus Here', 'Keep It Up', 'Low Priority', 'Overkill'],
     colors: ['#f97316', '#4ade80', '#94a3b8', '#fbbf24'],
     description: 'Spot opportunities users care about but rate poorly today.',
+    category: 'Build',
   },
   {
     name: 'Worry Matrix',
@@ -141,6 +157,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Accept & Adapt', 'Take Action', 'Let It Go', 'Not Worth It'],
     colors: ['#34d399', '#4ade80', '#94a3b8', '#fbbf24'],
     description: 'Focus worry where you have both stakes and control.',
+    category: 'People & Self',
   },
   {
     name: 'How–Now–Wow',
@@ -149,6 +166,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Now', 'Wow', 'Ciao', 'How'],
     colors: ['#60a5fa', '#fbbf24', '#94a3b8', '#a78bfa'],
     description: 'Triage brainstormed ideas by originality and ease.',
+    category: 'Build',
   },
   // ── Retro-style presets (original library) ──────────────────────────────
   {
@@ -158,6 +176,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Continue', 'Start', 'Stop', 'Change'],
     colors: ['#4ade80', '#60a5fa', '#ef4444', '#fbbf24'],
     description: 'Retro your habits: what to start, stop, continue, or change.',
+    category: 'Retrospect',
   },
   {
     name: 'Keep / Problem / Try / Question',
@@ -166,6 +185,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Keep', 'Problem', 'Try', 'Question'],
     colors: ['#4ade80', '#ef4444', '#60a5fa', '#a78bfa'],
     description: 'A lightweight retro: what to keep, fix, try, or question.',
+    category: 'Retrospect',
   },
   {
     name: 'Love / Loathe / Learn / Leave',
@@ -174,6 +194,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Love', 'Loathe', 'Learn', 'Leave'],
     colors: ['#f472b6', '#ef4444', '#60a5fa', '#94a3b8'],
     description: 'Reflect on what energizes you and what drains you.',
+    category: 'Retrospect',
   },
   {
     name: 'SWOT Analysis',
@@ -182,6 +203,7 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Strengths', 'Weaknesses', 'Opportunities', 'Threats'],
     colors: ['#4ade80', '#ef4444', '#60a5fa', '#f97316'],
     description: 'Assess strengths, weaknesses, opportunities, and threats.',
+    category: 'Retrospect',
   },
   {
     name: 'CRR — Cooperative Reciprocal Relationships',
@@ -190,5 +212,6 @@ export const templates: FrameworkTemplate[] = [
     quadrants: ['Is Working', 'Desire', 'Get Rid Of', 'Renegotiate'],
     colors: ['#4ade80', '#60a5fa', '#94a3b8', '#fbbf24'],
     description: 'Review a relationship: what works, what to change or renegotiate.',
+    category: 'Retrospect',
   },
 ]

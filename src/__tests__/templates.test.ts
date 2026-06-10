@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest'
 import { templates } from '../templates'
 import { colorPresets } from '../colors'
+import { TEMPLATE_CATEGORIES } from '../types'
 
 const paletteHexes = new Set(colorPresets.map((c) => c.hex))
 
@@ -49,6 +50,14 @@ describe('templates', () => {
       const clash = seen.get(key)
       expect(clash, `${template.name} shares a color set with ${clash}`).toBeUndefined()
       seen.set(key, template.name)
+    }
+  })
+
+  it('assigns every template to a known category', () => {
+    const known = new Set<string>(TEMPLATE_CATEGORIES)
+    for (const template of templates) {
+      expect(template.category, `${template.name} is missing a category`).toBeDefined()
+      expect(known, `${template.name}: ${template.category} is not a known category`).toContain(template.category)
     }
   })
 

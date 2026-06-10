@@ -22,6 +22,17 @@ export interface Framework {
   updatedAt: number
 }
 
+export const TEMPLATE_CATEGORIES = [
+  'Prioritize',
+  'Strategize',
+  'Understand',
+  'People & Self',
+  'Build',
+  'Retrospect',
+] as const
+
+export type TemplateCategory = (typeof TEMPLATE_CATEGORIES)[number]
+
 export interface FrameworkTemplate {
   name: string
   axisX: string
@@ -29,6 +40,7 @@ export interface FrameworkTemplate {
   quadrants: string[]
   colors?: string[]
   description?: string
+  category?: TemplateCategory
 }
 
 export interface SharedPayload {

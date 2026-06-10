@@ -1,10 +1,14 @@
-import { useState } from 'react'
+import { useState, useRef, useEffect, useCallback, useMemo } from 'react'
 import { templates } from '../templates'
 import { deriveColors, defaultColors } from '../colors'
+import { useIsMobile } from '../hooks/useIsMobile'
+import { useFocusTrap } from '../hooks/useFocusTrap'
+import { useClickOutside } from '../hooks/useClickOutside'
 import PageTitle from './atoms/PageTitle'
 import SectionLabel from './atoms/SectionLabel'
 import Caption from './atoms/Caption'
 import Button from './atoms/Button'
+import { TEMPLATE_CATEGORIES } from '../types'
 import type { Framework, FrameworkTemplate } from '../types'
 
 interface FrameworkBuilderProps {
@@ -13,12 +17,22 @@ interface FrameworkBuilderProps {
   onCancel: () => void
 }
 
+const CUSTOM_KEY = '__custom__'
+
 export default function FrameworkBuilder({ editing, onCreate, onCancel }: FrameworkBuilderProps) {
+  const isMobile = useIsMobile()
   const [name, setName] = useState(editing?.name || '')
   const [axisX, setAxisX] = useState(editing?.axisX || '')
   const [axisY, setAxisY] = useState(editing?.axisY || '')
   const [quadrants, setQuadrants] = useState(editing ? editing.quadrants.map((q) => q.label) : ['', '', '', ''])
   const [colors, setColors] = useState<string[]>(editing ? editing.quadrants.map((q) => q.color) : defaultColors)
+  const [selected, setSelected] = useState<string>(CUSTOM_KEY)
+  const [query, setQuery] = useState('')
+  const [listOpen, setListOpen] = useState(false)
+
+  const panelRef = useRef<HTMLDivElement>(null)
+  const triggerRef = useRef<HTMLButtonElement>(null)
+  const searchRef = useRef<HTMLInputElement>(null)
 
   const isValid = name.trim() && quadrants.every((q) => q.trim())
 
@@ -40,15 +54,183 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
     setAxisY(t.axisY)
     setQuadrants([...t.quadrants])
     setColors(t.colors ?? defaultColors)
+    setSelected(t.name)
+  }
+
+  const applyCustom = () => {
+    setName('')
+    setAxisX('')
+    setAxisY('')
+    setQuadrants(['', '', '', ''])
+    setColors(defaultColors)
+    setSelected(CUSTOM_KEY)
   }
 
   const setQuadrant = (i: number, value: string) => {
     setQuadrants((prev) => prev.map((q, idx) => (idx === i ? value : q)))
   }
 
+  const closeList = useCallback(() => {
+    setListOpen(false)
+    triggerRef.current?.focus()
+  }, [])
+
+  useClickOutside(panelRef, () => setListOpen(false), listOpen)
+  const handlePanelKeyDown = useFocusTrap(panelRef, closeList)
+
+  // Focus the filter input when the mobile dropdown opens.
+  useEffect(() => {
+    if (listOpen) searchRef.current?.focus()
+  }, [listOpen])
+
+  const pickTemplate = (t: FrameworkTemplate) => {
+    applyTemplate(t)
+    if (isMobile) closeList()
+  }
+
+  const pickCustom = () => {
+    applyCustom()
+    if (isMobile) closeList()
+  }
+
+  const q = query.trim().toLowerCase()
+  const groups = useMemo(() => {
+    const matches = templates.filter(
+      (t) => !q || t.name.toLowerCase().includes(q) || (t.description ?? '').toLowerCase().includes(q),
+    )
+    return TEMPLATE_CATEGORIES.map((cat) => ({
+      cat,
+      items: matches.filter((t) => t.category === cat),
+    })).filter((g) => g.items.length > 0)
+  }, [q])
+
+  const selectedLabel = selected === CUSTOM_KEY ? 'Blank / Custom' : selected
+
+  const list = (
+    <div className="flex flex-col gap-2 min-h-0">
+      <input
+        ref={searchRef}
+        type="search"
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+        placeholder="Filter templates…"
+        aria-label="Filter templates"
+        className="px-3 py-2 border border-border rounded-lg text-sm outline-none transition-[border-color] duration-150 focus:border-accent bg-surface text-text"
+      />
+      <div className="flex flex-col gap-3 overflow-y-auto min-h-0 md:max-h-[60vh] pr-1">
+        <button
+          type="button"
+          aria-current={selected === CUSTOM_KEY ? 'true' : undefined}
+          onClick={pickCustom}
+          className={`flex flex-col items-start p-2.5 px-3 border rounded-lg text-left transition-all duration-150 hover:border-accent hover:bg-accent-light ${
+            selected === CUSTOM_KEY ? 'border-accent bg-accent-light' : 'border-border bg-surface'
+          }`}>
+          <span className="text-[13px] font-medium">Blank / Custom</span>
+          <Caption className="mt-0.5">Start from scratch.</Caption>
+        </button>
+
+        {groups.map((g) => (
+          <div key={g.cat} className="flex flex-col gap-1">
+            <h4 className="text-xs font-semibold uppercase tracking-wide text-text-tertiary px-1">{g.cat}</h4>
+            {g.items.map((t) => (
+              <button
+                key={t.name}
+                type="button"
+                aria-current={selected === t.name ? 'true' : undefined}
+                onClick={() => pickTemplate(t)}
+                className={`flex flex-col items-start p-2.5 px-3 border rounded-lg text-left transition-all duration-150 hover:border-accent hover:bg-accent-light ${
+                  selected === t.name ? 'border-accent bg-accent-light' : 'border-border bg-surface'
+                }`}>
+                <span className="text-[13px] font-medium">{t.name}</span>
+                <Caption className="mt-0.5">{t.description ?? t.quadrants.join(' / ')}</Caption>
+              </button>
+            ))}
+          </div>
+        ))}
+
+        {groups.length === 0 && (
+          <p role="status" className="py-4 px-1 text-[13px] text-text-tertiary">
+            No templates match “{query}”.
+          </p>
+        )}
+      </div>
+    </div>
+  )
+
+  const form = (
+    <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
+      <div>
+        <SectionLabel>{editing ? 'Framework' : 'Customize'}</SectionLabel>
+        <label className="flex flex-col gap-1.5">
+          <span className="text-[13px] font-medium text-text-secondary">Framework Name</span>
+          <input
+            type="text"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="e.g., My Decision Matrix"
+            autoFocus
+            className="px-3 py-2.5 border border-border rounded-lg text-sm outline-none transition-[border-color] duration-150 focus:border-accent bg-surface text-text"
+          />
+        </label>
+      </div>
+
+      <div>
+        <SectionLabel>Quadrant Labels</SectionLabel>
+        <div className="flex flex-col items-center gap-2">
+          <div className="w-full text-center">
+            <input
+              type="text"
+              value={axisY}
+              onChange={(e) => setAxisY(e.target.value)}
+              placeholder="Y axis (optional)"
+              aria-label="Y axis label (optional)"
+              className="px-3 py-1.5 border border-dashed border-border rounded-lg text-xs text-center text-text-secondary outline-none w-[180px] transition-[border-color] duration-150 focus:border-accent bg-transparent"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-2 w-full">
+            {[0, 1, 2, 3].map((i) => (
+              <input
+                key={i}
+                type="text"
+                value={quadrants[i]}
+                onChange={(e) => setQuadrant(i, e.target.value)}
+                placeholder={`Quadrant ${i + 1}`}
+                aria-label={`Quadrant ${i + 1} label`}
+                className="py-5 px-4 border rounded-lg text-sm font-medium text-center outline-none transition-all duration-150 focus:ring-2 focus:ring-accent"
+                style={{
+                  background: deriveColors(colors[i]).bg,
+                  borderColor: deriveColors(colors[i]).border,
+                }}
+              />
+            ))}
+          </div>
+          <div className="w-full text-center">
+            <input
+              type="text"
+              value={axisX}
+              onChange={(e) => setAxisX(e.target.value)}
+              placeholder="X axis (optional)"
+              aria-label="X axis label (optional)"
+              className="px-3 py-1.5 border border-dashed border-border rounded-lg text-xs text-center text-text-secondary outline-none w-[180px] transition-[border-color] duration-150 focus:border-accent bg-transparent"
+            />
+          </div>
+        </div>
+      </div>
+
+      <div className="flex justify-end gap-2 pt-2">
+        <Button variant="secondary" type="button" onClick={onCancel}>
+          Cancel
+        </Button>
+        <Button type="submit" disabled={!isValid}>
+          {editing ? 'Save Changes' : 'Create Framework'}
+        </Button>
+      </div>
+    </form>
+  )
+
   return (
     <div className="flex justify-center px-6 py-10 min-h-screen">
-      <div className="w-full max-w-[640px]">
+      <div className="w-full max-w-[860px]">
         <div className="flex items-center justify-between mb-8">
           <PageTitle as="h2">{editing ? 'Edit Framework' : 'Create Framework'}</PageTitle>
           <Button variant="ghost" onClick={onCancel}>
@@ -56,92 +238,47 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
           </Button>
         </div>
 
-        {!editing && (
-          <div className="mb-8">
-            <SectionLabel>Start from a template</SectionLabel>
-            <div className="grid grid-cols-2 gap-2">
-              {templates.map((t) => (
-                <button
-                  key={t.name}
-                  className="flex flex-col items-start p-3 px-4 bg-surface border border-border rounded-lg text-left transition-all duration-150 hover:border-accent hover:bg-accent-light"
-                  aria-label={`Apply template: ${t.name}`}
-                  onClick={() => applyTemplate(t)}>
-                  <span className="text-[13px] font-medium">{t.name}</span>
-                  <Caption className="mt-0.5">{t.description ?? t.quadrants.join(' / ')}</Caption>
-                </button>
-              ))}
+        {editing ? (
+          form
+        ) : isMobile ? (
+          <div className="flex flex-col gap-6">
+            <div className="relative">
+              <SectionLabel>Start from a template</SectionLabel>
+              <button
+                ref={triggerRef}
+                type="button"
+                aria-haspopup="listbox"
+                aria-expanded={listOpen}
+                aria-label={`Choose a template (current: ${selectedLabel})`}
+                onClick={() => setListOpen((o) => !o)}
+                className="flex w-full items-center justify-between gap-2 px-3 py-2.5 border border-border rounded-lg text-sm bg-surface text-text text-left transition-[border-color] duration-150 hover:border-accent">
+                <span className="truncate font-medium">{selectedLabel}</span>
+                <span aria-hidden="true" className="text-text-tertiary">
+                  ▾
+                </span>
+              </button>
+              {listOpen && (
+                <div
+                  ref={panelRef}
+                  role="dialog"
+                  aria-label="Choose a template"
+                  onKeyDown={handlePanelKeyDown}
+                  className="absolute left-0 right-0 top-full mt-1 z-[200] max-h-[60vh] flex flex-col p-2 bg-surface border border-border rounded-lg shadow-lg">
+                  {list}
+                </div>
+              )}
             </div>
+            {form}
+          </div>
+        ) : (
+          <div className="grid grid-cols-[280px_1fr] gap-8 items-start">
+            <div className="flex flex-col min-h-0">
+              <SectionLabel>Start from a template</SectionLabel>
+              {list}
+            </div>
+            {form}
           </div>
         )}
-
-        <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
-          <div>
-            <SectionLabel>{editing ? 'Framework' : 'Or build your own'}</SectionLabel>
-            <label className="flex flex-col gap-1.5">
-              <span className="text-[13px] font-medium text-text-secondary">Framework Name</span>
-              <input
-                type="text"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="e.g., My Decision Matrix"
-                autoFocus
-                className="px-3 py-2.5 border border-border rounded-lg text-sm outline-none transition-[border-color] duration-150 focus:border-accent bg-surface text-text"
-              />
-            </label>
-          </div>
-
-          <div>
-            <SectionLabel>Quadrant Labels</SectionLabel>
-            <div className="flex flex-col items-center gap-2">
-              <div className="w-full text-center">
-                <input
-                  type="text"
-                  value={axisY}
-                  onChange={(e) => setAxisY(e.target.value)}
-                  placeholder="Y axis (optional)"
-                  aria-label="Y axis label (optional)"
-                  className="px-3 py-1.5 border border-dashed border-border rounded-lg text-xs text-center text-text-secondary outline-none w-[180px] transition-[border-color] duration-150 focus:border-accent bg-transparent"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-2 w-full">
-                {[0, 1, 2, 3].map((i) => (
-                  <input
-                    key={i}
-                    type="text"
-                    value={quadrants[i]}
-                    onChange={(e) => setQuadrant(i, e.target.value)}
-                    placeholder={`Quadrant ${i + 1}`}
-                    aria-label={`Quadrant ${i + 1} label`}
-                    className="py-5 px-4 border rounded-lg text-sm font-medium text-center outline-none transition-all duration-150 focus:ring-2 focus:ring-accent"
-                    style={{
-                      background: deriveColors(colors[i]).bg,
-                      borderColor: deriveColors(colors[i]).border,
-                    }}
-                  />
-                ))}
-              </div>
-              <div className="w-full text-center">
-                <input
-                  type="text"
-                  value={axisX}
-                  onChange={(e) => setAxisX(e.target.value)}
-                  placeholder="X axis (optional)"
-                  aria-label="X axis label (optional)"
-                  className="px-3 py-1.5 border border-dashed border-border rounded-lg text-xs text-center text-text-secondary outline-none w-[180px] transition-[border-color] duration-150 focus:border-accent bg-transparent"
-                />
-              </div>
-            </div>
-          </div>
-
-          <div className="flex justify-end gap-2 pt-2">
-            <Button variant="secondary" type="button" onClick={onCancel}>
-              Cancel
-            </Button>
-            <Button type="submit" disabled={!isValid}>
-              {editing ? 'Save Changes' : 'Create Framework'}
-            </Button>
-          </div>
-        </form>
       </div>
     </div>
   )
