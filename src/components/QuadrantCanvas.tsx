@@ -5,7 +5,7 @@ import { useIsMobile } from '../hooks/useIsMobile'
 import useDragAndDrop from '../hooks/useDragAndDrop'
 import type { DropResult } from '../hooks/useDragAndDrop'
 import { GhostCard, PLACEHOLDER } from './Card'
-import { EditIcon, ShareIcon, MaximizeIcon, SidebarIcon } from './Icons'
+import { EditIcon, ShareIcon, SidebarIcon } from './Icons'
 import PageTitle from './atoms/PageTitle'
 import Button from './atoms/Button'
 import QuadrantGrid from './QuadrantGrid'
@@ -19,7 +19,6 @@ interface QuadrantCanvasProps {
   sidebarOpen: boolean
   onToggleSidebar: () => void
   onUpdate: (framework: Framework) => void
-  onReflect: () => void
   onEdit: () => void
   onShare: (framework: Framework) => Promise<ShareResult>
 }
@@ -29,7 +28,6 @@ export default function QuadrantCanvas({
   sidebarOpen,
   onToggleSidebar,
   onUpdate,
-  onReflect,
   onEdit,
   onShare,
 }: QuadrantCanvasProps) {
@@ -187,10 +185,6 @@ export default function QuadrantCanvas({
             <span aria-live="polite">
               {shareStatus === 'copied' ? 'Link copied!' : shareStatus === 'error' ? 'Share failed' : 'Share'}
             </span>
-          </Button>
-          <Button variant="secondary" size="sm" onClick={onReflect}>
-            <MaximizeIcon size={14} />
-            Reflect
           </Button>
         </div>
       </div>

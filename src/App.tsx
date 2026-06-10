@@ -8,7 +8,6 @@ import { isNamedRoute, replacePath } from './logic/routing'
 import Sidebar from './components/Sidebar'
 import QuadrantCanvas from './components/QuadrantCanvas'
 import FrameworkBuilder from './components/FrameworkBuilder'
-import ReflectionMode from './components/ReflectionMode'
 import ConflictDialog from './components/ConflictDialog'
 import EmptyState from './components/EmptyState'
 import Toast from './components/Toast'
@@ -25,7 +24,6 @@ export default function App() {
   const isMobile = useIsMobile()
   const [showBuilder, setShowBuilder] = useState(false)
   const [editingFramework, setEditingFramework] = useState<Framework | null>(null)
-  const [reflectionMode, setReflectionMode] = useState(false)
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile)
 
   const {
@@ -122,10 +120,6 @@ export default function App() {
     return <DesignSystem />
   }
 
-  if (reflectionMode && activeFramework) {
-    return <ReflectionMode framework={activeFramework} onUpdate={update} onExit={() => setReflectionMode(false)} />
-  }
-
   return (
     <div className="flex h-screen overflow-hidden">
       <div inert={conflict ? true : undefined}>
@@ -171,7 +165,6 @@ export default function App() {
               sidebarOpen={sidebarOpen}
               onToggleSidebar={() => setSidebarOpen((s) => !s)}
               onUpdate={update}
-              onReflect={() => setReflectionMode(true)}
               onEdit={() => openEditor(activeFramework)}
               onShare={share}
             />

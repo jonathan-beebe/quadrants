@@ -375,8 +375,6 @@ export default function DesignSystem() {
         <Subsection title="Quadrant Grid — Mobile">
           <MobileGridDemo />
         </Subsection>
-
-        <Subsection title="Reflection Mode" />
       </main>
 
       {showToast && (

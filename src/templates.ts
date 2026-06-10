@@ -1,7 +1,7 @@
 import type { FrameworkTemplate } from './types'
 
 // Library of quadrant models. Ordered Core-first (broad, instantly understood)
-// then Extended (narrower), then the original reflection presets. Spec and
+// then Extended (narrower), then the original retro-style presets. Spec and
 // rationale live in work/0-research/quadrant-model-library.md.
 export const templates: FrameworkTemplate[] = [
   // ── Core ──────────────────────────────────────────────────────────────
@@ -150,7 +150,7 @@ export const templates: FrameworkTemplate[] = [
     colors: ['#60a5fa', '#fbbf24', '#94a3b8', '#a78bfa'],
     description: 'Triage brainstormed ideas by originality and ease.',
   },
-  // ── Reflection presets (original library) ───────────────────────────────
+  // ── Retro-style presets (original library) ──────────────────────────────
   {
     name: 'Start / Stop / Continue / Change',
     axisX: 'Existing / New',

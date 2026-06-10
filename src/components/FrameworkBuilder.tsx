@@ -80,7 +80,7 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                placeholder="e.g., My Reflection Framework"
+                placeholder="e.g., My Decision Matrix"
                 autoFocus
                 className="px-3 py-2.5 border border-border rounded-lg text-sm outline-none transition-[border-color] duration-150 focus:border-accent bg-surface text-text"
               />

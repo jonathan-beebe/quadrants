@@ -27,7 +27,6 @@ const defaultProps = {
   sidebarOpen: true,
   onToggleSidebar: vi.fn(),
   onUpdate: vi.fn(),
-  onReflect: vi.fn(),
   onEdit: vi.fn(),
   onShare: vi.fn(),
 }
@@ -76,14 +75,6 @@ describe('QuadrantCanvas', () => {
     render(<QuadrantCanvas {...defaultProps} onEdit={onEdit} />)
     await user.click(screen.getByText('Edit'))
     expect(onEdit).toHaveBeenCalledOnce()
-  })
-
-  it('calls onReflect when Reflect button is clicked', async () => {
-    const user = userEvent.setup()
-    const onReflect = vi.fn()
-    render(<QuadrantCanvas {...defaultProps} onReflect={onReflect} />)
-    await user.click(screen.getByText('Reflect'))
-    expect(onReflect).toHaveBeenCalledOnce()
   })
 
   it('calls onShare when Share button is clicked', async () => {
