@@ -244,7 +244,11 @@ export default function Card({
     commitEdit(editValue)
   }, [editValue, commitEdit])
 
-  const textClasses = 'flex-1 min-w-0 break-words outline-none rounded-sm'
+  // No outline-none here: the global *:focus-visible rule (index.css) must
+  // reach this button — it is the card's primary keyboard target and needs a
+  // visible focus indicator (A11Y-014). Pointer clicks stay outline-free via
+  // the :focus-visible heuristic.
+  const textClasses = 'flex-1 min-w-0 break-words rounded-sm'
 
   return (
     <div
