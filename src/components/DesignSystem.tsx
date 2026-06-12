@@ -95,7 +95,10 @@ function IconSwatch({ name, component: Icon }: { name: string; component: typeof
   return (
     <div className="flex flex-col items-center gap-2">
       <div className="p-3 rounded-lg bg-surface border border-border text-text">
-        <Icon size={20} aria-hidden={false} aria-label={name} />
+        {/* The gallery is the one place icons are semantic, not decorative:
+            role="img" makes the aria-label reliable across SR/browser combos
+            and replaces the discouraged aria-hidden="false" literal (A11Y-020). */}
+        <Icon size={20} role="img" aria-hidden={undefined} aria-label={name} />
       </div>
       <Caption>{name}</Caption>
     </div>
