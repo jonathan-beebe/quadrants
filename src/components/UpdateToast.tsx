@@ -21,7 +21,7 @@ export function UpdateToastView({ className = '', onReload, onDismiss }: UpdateT
       </button>
       <button
         onClick={onDismiss}
-        className="shrink-0 p-0.5 rounded text-text-secondary hover:bg-text-secondary/20 transition-colors duration-150"
+        className="shrink-0 w-6 h-6 grid place-items-center rounded text-text-secondary hover:bg-text-secondary/20 transition-colors duration-150"
         aria-label="Dismiss update notification">
         <XIcon size={14} />
       </button>

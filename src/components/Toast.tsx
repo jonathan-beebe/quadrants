@@ -13,7 +13,7 @@ export default function Toast({ message, onDismiss }: ToastProps) {
       <span className="flex-1">{message}</span>
       <button
         onClick={onDismiss}
-        className="shrink-0 p-0.5 rounded hover:bg-white/20 dark:hover:bg-black/10 transition-colors duration-150"
+        className="shrink-0 w-6 h-6 grid place-items-center rounded hover:bg-white/20 dark:hover:bg-black/10 transition-colors duration-150"
         aria-label="Dismiss error">
         <XIcon size={14} />
       </button>
