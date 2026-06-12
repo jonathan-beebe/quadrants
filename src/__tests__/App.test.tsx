@@ -12,9 +12,10 @@ vi.mock('../hooks/useIsMobile', () => ({
 
 beforeEach(() => {
   localStorage.clear()
-  // Reset URL
+  // Reset URL. replaceState also clears any hash — assigning
+  // window.location.hash would navigate and fire an async popstate that
+  // leaks into the next test (it consumes useRouting's skipPush guard).
   window.history.replaceState(null, '', '/')
-  window.location.hash = ''
   vi.mocked(useIsMobile).mockReturnValue(false)
 })
 
@@ -159,6 +160,103 @@ describe('App', () => {
     render(<App />)
     // Real conflict-dialog assertions live in the hash import block (FEAT-001).
     expect(screen.queryByText('Framework already exists')).not.toBeInTheDocument()
+  })
+
+  describe('history navigation and framework lifecycle (MAINT-003)', () => {
+    function storedFramework(id: string, name: string, labels: [string, string, string, string]) {
+      return {
+        id,
+        name,
+        axisX: '',
+        axisY: '',
+        quadrants: labels.map((label, i) => ({
+          label,
+          color: ['#fbbf24', '#60a5fa', '#34d399', '#f472b6'][i],
+          items: [],
+        })),
+        createdAt: 1000,
+        updatedAt: 1000,
+      }
+    }
+
+    beforeEach(() => {
+      localStorage.setItem(
+        'quadrants_frameworks',
+        JSON.stringify([
+          storedFramework('fw-a', 'Framework Alpha', ['A1', 'A2', 'A3', 'A4']),
+          storedFramework('fw-b', 'Framework Beta', ['B1', 'B2', 'B3', 'B4']),
+        ]),
+      )
+    })
+
+    it('returns to the previous framework on popstate without a duplicate history push', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByRole('button', { name: /Framework Alpha.*items/ }))
+      expect(screen.getByRole('heading', { name: 'Framework Alpha' })).toBeInTheDocument()
+      expect(window.location.pathname).toBe('/fw-a')
+
+      await user.click(screen.getByRole('button', { name: /Framework Beta.*items/ }))
+      expect(screen.getByRole('heading', { name: 'Framework Beta' })).toBeInTheDocument()
+      expect(window.location.pathname).toBe('/fw-b')
+
+      // Simulate the browser Back button: the URL is rewound to the previous
+      // entry and popstate fires (history.back() is a no-op in jsdom).
+      const pushSpy = vi.spyOn(window.history, 'pushState')
+      window.history.replaceState(null, '', '/fw-a')
+      await waitFor(() => {
+        window.dispatchEvent(new PopStateEvent('popstate'))
+        expect(screen.getByRole('heading', { name: 'Framework Alpha' })).toBeInTheDocument()
+      })
+
+      // The skipPush guard: handling popstate must not push a new entry.
+      expect(pushSpy).not.toHaveBeenCalled()
+      pushSpy.mockRestore()
+    })
+
+    it('returns to the empty state with a cleared URL when the active framework is deleted', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByRole('button', { name: /Framework Alpha.*items/ }))
+      expect(window.location.pathname).toBe('/fw-a')
+
+      await user.click(screen.getByRole('button', { name: /actions for framework alpha/i }))
+      await user.click(screen.getByRole('menuitem', { name: 'Delete' }))
+
+      expect(screen.getByText('No framework selected')).toBeInTheDocument()
+      expect(window.location.pathname).toBe('/')
+    })
+
+    it('shows the duplicate as the active framework after duplicating', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByRole('button', { name: /actions for framework alpha/i }))
+      await user.click(screen.getByRole('menuitem', { name: 'Duplicate' }))
+
+      expect(screen.getByRole('heading', { name: 'Framework Alpha (copy)' })).toBeInTheDocument()
+      expect(window.location.pathname).not.toBe('/')
+      expect(window.location.pathname).not.toBe('/fw-a')
+    })
+
+    it('updates canvas labels after editing the structure through the builder', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByRole('button', { name: /Framework Alpha.*items/ }))
+      await user.click(screen.getByRole('button', { name: 'Edit' }))
+
+      const quadrantInput = screen.getByRole('textbox', { name: /quadrant 1 label/i })
+      await user.clear(quadrantInput)
+      await user.type(quadrantInput, 'Renamed Quadrant')
+      await user.click(screen.getByRole('button', { name: 'Save Changes' }))
+
+      expect(screen.getByRole('heading', { name: 'Framework Alpha' })).toBeInTheDocument()
+      expect(screen.getByText('Renamed Quadrant')).toBeInTheDocument()
+      expect(screen.queryByText('A1')).not.toBeInTheDocument()
+    })
   })
 
   describe('hash import', () => {
