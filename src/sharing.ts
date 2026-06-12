@@ -1,3 +1,4 @@
+import { isValidPayload, toSharedPayload } from './logic/sharePayload'
 import type { Framework, SharedPayload } from './types'
 
 function assertCompressionSupport(): void {
@@ -11,19 +12,7 @@ function assertCompressionSupport(): void {
 
 export async function encodeFramework(framework: Framework): Promise<string> {
   assertCompressionSupport()
-  const payload: SharedPayload = {
-    id: framework.id,
-    name: framework.name,
-    axisX: framework.axisX,
-    axisY: framework.axisY,
-    quadrants: framework.quadrants.map((q) => ({
-      label: q.label,
-      color: q.color,
-      items: q.items.map((it) => ({ text: it.text, x: it.x, y: it.y })),
-    })),
-  }
-
-  const json = JSON.stringify(payload)
+  const json = JSON.stringify(toSharedPayload(framework))
   const bytes = new TextEncoder().encode(json)
 
   const cs = new CompressionStream('deflate')
@@ -40,27 +29,6 @@ export async function encodeFramework(framework: Framework): Promise<string> {
     binary += String.fromCharCode(...compressedBytes.subarray(i, i + chunkSize))
   }
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
-}
-
-function isValidPayload(p: unknown): p is SharedPayload {
-  if (typeof p !== 'object' || p === null) return false
-  const obj = p as Record<string, unknown>
-  if (typeof obj.id !== 'string' || !obj.id) return false
-  if (typeof obj.name !== 'string' || !obj.name) return false
-  if (!Array.isArray(obj.quadrants) || obj.quadrants.length !== 4) return false
-  return obj.quadrants.every((q: unknown) => {
-    if (typeof q !== 'object' || q === null) return false
-    const quad = q as Record<string, unknown>
-    if (typeof quad.label !== 'string') return false
-    if (quad.color !== undefined && typeof quad.color !== 'string') return false
-    if (quad.items !== undefined && !Array.isArray(quad.items)) return false
-    const items = (quad.items as unknown[] | undefined) ?? []
-    return items.every((it: unknown) => {
-      if (typeof it !== 'object' || it === null) return false
-      const item = it as Record<string, unknown>
-      return typeof item.text === 'string' && typeof item.x === 'number' && typeof item.y === 'number'
-    })
-  })
 }
 
 export async function decodeFramework(hash: string): Promise<SharedPayload | null> {
