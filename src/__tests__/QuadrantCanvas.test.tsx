@@ -1,9 +1,14 @@
-import { describe, it, expect, vi } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { useState } from 'react'
 import QuadrantCanvas from '../components/QuadrantCanvas'
+import { useIsMobile } from '../hooks/useIsMobile'
 import type { Framework } from '../types'
+
+vi.mock('../hooks/useIsMobile', () => ({
+  useIsMobile: vi.fn(() => false),
+}))
 
 function makeFramework(overrides: Partial<Framework> = {}): Framework {
   return {
@@ -33,6 +38,10 @@ const defaultProps = {
 }
 
 describe('QuadrantCanvas', () => {
+  beforeEach(() => {
+    vi.mocked(useIsMobile).mockReturnValue(false)
+  })
+
   it('displays the framework name', () => {
     render(<QuadrantCanvas {...defaultProps} />)
     expect(screen.getByText('Test Framework')).toBeInTheDocument()
@@ -145,6 +154,32 @@ describe('QuadrantCanvas', () => {
     expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
     // The pre-existing item is untouched.
     expect(screen.getByText('Task A')).toBeInTheDocument()
+  })
+
+  it('does not re-open edit mode when the grid remounts after a committed add (BUG-009)', async () => {
+    function Wrapper() {
+      const [fw, setFw] = useState(makeFramework())
+      return <QuadrantCanvas {...defaultProps} framework={fw} onUpdate={setFw} />
+    }
+    const user = userEvent.setup()
+    const { rerender } = render(<Wrapper />)
+
+    // Add an item and commit its text.
+    await user.click(screen.getAllByRole('button', { name: /Add item to/ })[0])
+    const textarea = await screen.findByRole('textbox')
+    fireEvent.change(textarea, { target: { value: 'Committed text' } })
+    act(() => {
+      fireEvent.blur(textarea)
+    })
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+
+    // Cross the 768px breakpoint: the grid component swaps and every Card
+    // remounts. The consumed autoFocusId must not re-trigger edit mode.
+    vi.mocked(useIsMobile).mockReturnValue(true)
+    rerender(<Wrapper />)
+
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    expect(screen.getByText('Committed text')).toBeInTheDocument()
   })
 
   // MAINT-001: end-to-end coverage for the pointer drag-and-drop drop resolution

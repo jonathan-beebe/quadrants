@@ -84,22 +84,31 @@ export default function QuadrantCanvas({
     [updateFramework, announce],
   )
 
+  // autoFocusId is one-shot: once the freshly added item's edit session ends
+  // (text committed or item deleted), clear it so a later grid remount (e.g.
+  // crossing the mobile breakpoint) doesn't re-open edit mode (BUG-009).
+  const consumeAutoFocus = useCallback((itemId: string) => {
+    setAutoFocusId((current) => (current === itemId ? null : current))
+  }, [])
+
   const handleDeleteItem = useCallback(
     (quadrantIdx: number, itemId: string) => {
       const item = frameworkRef.current.quadrants[quadrantIdx].items.find((i) => i.id === itemId)
       updateFramework((fw) => removeItem(fw, quadrantIdx, itemId))
+      consumeAutoFocus(itemId)
       const label = frameworkRef.current.quadrants[quadrantIdx].label
       const itemText = item ? `"${item.text}"` : ''
       announce(item ? `Item ${itemText} deleted from ${label}` : `Item deleted from ${label}`)
     },
-    [updateFramework, announce],
+    [updateFramework, announce, consumeAutoFocus],
   )
 
   const handleEditItem = useCallback(
     (quadrantIdx: number, itemId: string, text: string) => {
       updateFramework((fw) => updateItemText(fw, quadrantIdx, itemId, text))
+      consumeAutoFocus(itemId)
     },
-    [updateFramework],
+    [updateFramework, consumeAutoFocus],
   )
 
   const handleColorChange = useCallback(
