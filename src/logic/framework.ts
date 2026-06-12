@@ -1,5 +1,51 @@
 import { defaultColors } from '../colors'
-import type { Framework, FrameworkTemplate, SharedPayload } from '../types'
+import type { Framework, FrameworkTemplate, Item, Quadrant, SharedPayload } from '../types'
+
+function isRecord(v: unknown): v is Record<string, unknown> {
+  return typeof v === 'object' && v !== null
+}
+
+function isWellFormedItem(it: unknown): it is Item {
+  return (
+    isRecord(it) &&
+    typeof it.id === 'string' &&
+    typeof it.text === 'string' &&
+    typeof it.x === 'number' &&
+    typeof it.y === 'number'
+  )
+}
+
+function isWellFormedQuadrant(q: unknown): q is Quadrant {
+  return (
+    isRecord(q) &&
+    typeof q.label === 'string' &&
+    typeof q.color === 'string' &&
+    Array.isArray(q.items) &&
+    q.items.every(isWellFormedItem)
+  )
+}
+
+function isWellFormedFramework(fw: unknown): fw is Framework {
+  return (
+    isRecord(fw) &&
+    typeof fw.id === 'string' &&
+    typeof fw.name === 'string' &&
+    Array.isArray(fw.quadrants) &&
+    fw.quadrants.length === 4 &&
+    fw.quadrants.every(isWellFormedQuadrant)
+  )
+}
+
+/**
+ * Validate frameworks parsed from persistent storage. Frameworks with
+ * malformed quadrant internals are dropped wholesale — stored ids and
+ * timestamps must stay stable across loads, so repair (as the import
+ * path does) is not an option here.
+ */
+export function sanitizeStoredFrameworks(parsed: unknown): Framework[] {
+  if (!Array.isArray(parsed)) return []
+  return parsed.filter(isWellFormedFramework)
+}
 
 export function hydratePayload(payload: SharedPayload, id: string): Framework {
   return {

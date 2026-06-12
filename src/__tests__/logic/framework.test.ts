@@ -9,6 +9,7 @@ import {
   duplicateAsImport,
   replaceFramework,
   sanitizeImportedFramework,
+  sanitizeStoredFrameworks,
 } from '../../logic/framework'
 import type { Framework, SharedPayload } from '../../types'
 
@@ -373,5 +374,63 @@ describe('sanitizeImportedFramework', () => {
     const result = sanitizeImportedFramework(raw)!
     expect(result.axisX).toBe('')
     expect(result.axisY).toBe('')
+  })
+})
+
+describe('sanitizeStoredFrameworks', () => {
+  it('returns an empty array for non-array input', () => {
+    expect(sanitizeStoredFrameworks('hello')).toEqual([])
+    expect(sanitizeStoredFrameworks(null)).toEqual([])
+    expect(sanitizeStoredFrameworks({})).toEqual([])
+  })
+
+  it('keeps fully well-formed frameworks', () => {
+    const fw = makeFramework()
+    expect(sanitizeStoredFrameworks([fw])).toEqual([fw])
+  })
+
+  it('drops frameworks whose quadrants are not objects', () => {
+    // This shape passes the old shallow check but crashes Sidebar at render.
+    const broken = { id: 'x', name: 'Broken', quadrants: [1, 2, 3, 4] }
+    expect(sanitizeStoredFrameworks([broken])).toEqual([])
+  })
+
+  it('drops frameworks with a quadrant missing its items array', () => {
+    const fw = makeFramework()
+    const broken = {
+      ...fw,
+      quadrants: [{ label: 'A', color: '#fff' }, ...fw.quadrants.slice(1)],
+    }
+    expect(sanitizeStoredFrameworks([broken])).toEqual([])
+  })
+
+  it('drops frameworks with a quadrant missing its label', () => {
+    const fw = makeFramework()
+    const broken = {
+      ...fw,
+      quadrants: [{ color: '#fff', items: [] }, ...fw.quadrants.slice(1)],
+    }
+    expect(sanitizeStoredFrameworks([broken])).toEqual([])
+  })
+
+  it('drops frameworks containing malformed items', () => {
+    const fw = makeFramework()
+    const broken = {
+      ...fw,
+      quadrants: [{ label: 'A', color: '#fff', items: [{ id: 'i1', text: 42, x: 1, y: 1 }] }, ...fw.quadrants.slice(1)],
+    }
+    expect(sanitizeStoredFrameworks([broken])).toEqual([])
+  })
+
+  it('drops frameworks without exactly 4 quadrants', () => {
+    const fw = makeFramework()
+    const broken = { ...fw, quadrants: fw.quadrants.slice(0, 3) }
+    expect(sanitizeStoredFrameworks([broken])).toEqual([])
+  })
+
+  it('keeps valid frameworks while dropping invalid ones from a mixed list', () => {
+    const valid = makeFramework()
+    const invalid = { id: 2, name: 'bad', quadrants: 'nope' }
+    expect(sanitizeStoredFrameworks([valid, invalid])).toEqual([valid])
   })
 })

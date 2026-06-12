@@ -48,6 +48,12 @@ describe('loadFrameworks', () => {
     expect(loadFrameworks()).toEqual([])
   })
 
+  it('filters out frameworks with malformed quadrant internals', () => {
+    // Previously passed the shallow check and crashed Sidebar at render.
+    localStorage.setItem('quadrants_frameworks', JSON.stringify([{ id: 'x', name: 'Broken', quadrants: [1, 2, 3, 4] }]))
+    expect(loadFrameworks()).toEqual([])
+  })
+
   it('keeps valid frameworks and discards invalid ones from a mixed list', () => {
     const valid: Framework = {
       id: 'valid-1',
