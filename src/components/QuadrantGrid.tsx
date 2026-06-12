@@ -91,12 +91,13 @@ export default function QuadrantGrid({
           />
           {framework.quadrants.map((quadrant, idx) => {
             const qColor = quadrant.color || defaultColors[idx]
-            const { border } = deriveColors(qColor)
+            // accent is always a validated #rrggbb, even when qColor is garbage
+            const { border, accent } = deriveColors(qColor)
             const isRight = idx === 1 || idx === 3
             const isBottom = idx === 2 || idx === 3
-            const r = parseInt(qColor.slice(1, 3), 16)
-            const g = parseInt(qColor.slice(3, 5), 16)
-            const b = parseInt(qColor.slice(5, 7), 16)
+            const r = parseInt(accent.slice(1, 3), 16)
+            const g = parseInt(accent.slice(3, 5), 16)
+            const b = parseInt(accent.slice(5, 7), 16)
             const innerEdge = `rgba(${r}, ${g}, ${b}, 0.15)`
             const edgeStyle = {
               borderTopColor: !isBottom ? border : innerEdge,

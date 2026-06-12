@@ -15,8 +15,12 @@ export const colorPresets: { hex: string; name: string }[] = [
   { hex: '#94a3b8', name: 'Slate' },
 ]
 
+export function isValidHexColor(value: unknown): value is string {
+  return typeof value === 'string' && /^#[0-9a-fA-F]{6}$/.test(value)
+}
+
 export function deriveColors(hex: string): DerivedColors {
-  if (typeof hex !== 'string' || !/^#[0-9a-fA-F]{6}$/.test(hex)) {
+  if (!isValidHexColor(hex)) {
     hex = '#94a3b8'
   }
   const r = parseInt(hex.slice(1, 3), 16)

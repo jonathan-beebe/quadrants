@@ -84,6 +84,17 @@ describe('ColorPicker', () => {
     expect(colorInput).toHaveAttribute('type', 'color')
   })
 
+  it('feeds the custom input a valid fallback when the stored color is not #rrggbb (BUG-006)', async () => {
+    const user = userEvent.setup()
+    render(<ColorPicker {...defaultProps} color="red" />)
+
+    await user.click(getTrigger())
+
+    // <input type="color"> requires #rrggbb; the slate fallback keeps it valid.
+    const colorInput = screen.getByDisplayValue('#94a3b8')
+    expect(colorInput).toHaveAttribute('type', 'color')
+  })
+
   it('communicates expanded state via aria-expanded', async () => {
     const user = userEvent.setup()
     render(<ColorPicker {...defaultProps} />)

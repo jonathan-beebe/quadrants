@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
-import { colorPresets } from '../colors'
+import { colorPresets, deriveColors } from '../colors'
 import { useClickOutside } from '../hooks/useClickOutside'
 import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
 
@@ -80,7 +80,7 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
             <span>Custom</span>
             <input
               type="color"
-              value={color}
+              value={deriveColors(color).accent}
               onChange={(e) => onChange(e.target.value)}
               className="w-7 h-6 border border-border rounded cursor-pointer p-0 bg-transparent"
             />

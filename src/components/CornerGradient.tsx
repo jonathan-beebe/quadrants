@@ -11,10 +11,15 @@ const RENDER_SIZE = 256
 
 function parseHex(hex: string): [number, number, number] {
   const h = hex.startsWith('#') ? hex.slice(1) : hex
-  if (h.length === 3) {
+  if (/^[0-9a-fA-F]{3}$/.test(h)) {
     return [parseInt(h[0] + h[0], 16), parseInt(h[1] + h[1], 16), parseInt(h[2] + h[2], 16)]
   }
-  return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]
+  if (/^[0-9a-fA-F]{6}$/.test(h)) {
+    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]
+  }
+  // Garbage in (e.g. "red" from a hand-edited import) must not paint NaN
+  // black; fall back to the same slate deriveColors uses.
+  return [148, 163, 184]
 }
 
 const toLin = (c: number) => {

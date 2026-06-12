@@ -1,4 +1,4 @@
-import { defaultColors } from '../colors'
+import { defaultColors, isValidHexColor } from '../colors'
 import type { Framework, FrameworkTemplate, Item, Quadrant, SharedPayload } from '../types'
 
 function isRecord(v: unknown): v is Record<string, unknown> {
@@ -55,7 +55,7 @@ export function hydratePayload(payload: SharedPayload, id: string): Framework {
     axisY: payload.axisY || '',
     quadrants: payload.quadrants.map((q, i) => ({
       label: q.label,
-      color: q.color || defaultColors[i],
+      color: isValidHexColor(q.color) ? q.color : defaultColors[i],
       items: (q.items || []).map((it) => ({
         id: crypto.randomUUID(),
         text: it.text,
@@ -152,7 +152,7 @@ export function sanitizeImportedFramework(raw: any): Framework | null {
       const rawItems = Array.isArray(qObj.items) ? qObj.items : []
       return {
         label: typeof qObj.label === 'string' ? qObj.label : `Quadrant ${i + 1}`,
-        color: typeof qObj.color === 'string' ? qObj.color : defaultColors[i],
+        color: isValidHexColor(qObj.color) ? qObj.color : defaultColors[i],
         items: rawItems
           .filter(
             (it: unknown) => it && typeof it === 'object' && typeof (it as Record<string, unknown>).text === 'string',

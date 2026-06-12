@@ -59,6 +59,18 @@ describe('hydratePayload', () => {
     expect(fw.createdAt).toBeGreaterThan(0)
   })
 
+  it('replaces non-#rrggbb colors with defaultColors (BUG-006)', () => {
+    const payload = makePayload()
+    payload.quadrants[0].color = 'red'
+    payload.quadrants[1].color = '#abc'
+    payload.quadrants[2].color = 'rgb(255,0,0)'
+    const fw = hydratePayload(payload, 'id')
+    expect(fw.quadrants[0].color).toBe('#fbbf24')
+    expect(fw.quadrants[1].color).toBe('#60a5fa')
+    expect(fw.quadrants[2].color).toBe('#34d399')
+    expect(fw.quadrants[3].color).toBe('#f472b6')
+  })
+
   it('defaults missing colors to defaultColors', () => {
     const payload = makePayload()
     payload.quadrants[0].color = ''
@@ -322,6 +334,23 @@ describe('sanitizeImportedFramework', () => {
     const result = sanitizeImportedFramework(raw)!
     expect(result.quadrants[0].color).toBe('#fbbf24')
     expect(result.quadrants[1].color).toBe('#60a5fa')
+  })
+
+  it('replaces non-#rrggbb colors with defaultColors (BUG-006)', () => {
+    const raw = {
+      ...validRaw,
+      quadrants: [
+        { label: 'A', color: 'red', items: [] },
+        { label: 'B', color: '#abc', items: [] },
+        { label: 'C', color: 'rgb(255,0,0)', items: [] },
+        { label: 'D', color: '#34D399', items: [] },
+      ],
+    }
+    const result = sanitizeImportedFramework(raw)!
+    expect(result.quadrants[0].color).toBe('#fbbf24')
+    expect(result.quadrants[1].color).toBe('#60a5fa')
+    expect(result.quadrants[2].color).toBe('#34d399')
+    expect(result.quadrants[3].color).toBe('#34D399')
   })
 
   it('defaults missing items array to empty', () => {

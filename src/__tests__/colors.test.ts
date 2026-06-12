@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { defaultColors, colorPresets, deriveColors } from '../colors'
+import { defaultColors, colorPresets, deriveColors, isValidHexColor } from '../colors'
 
 describe('defaultColors', () => {
   it('provides exactly 4 default colors', () => {
@@ -87,5 +87,18 @@ describe('deriveColors', () => {
   it('does not export a module-level color cache (BUG-024)', async () => {
     const mod = await import('../colors')
     expect((mod as Record<string, unknown>).colorCache).toBeUndefined()
+  })
+})
+
+describe('isValidHexColor', () => {
+  it('accepts 6-digit hex colors and rejects everything else (BUG-006)', () => {
+    expect(isValidHexColor('#fbbf24')).toBe(true)
+    expect(isValidHexColor('#FBBF24')).toBe(true)
+    expect(isValidHexColor('#abc')).toBe(false)
+    expect(isValidHexColor('red')).toBe(false)
+    expect(isValidHexColor('rgb(255,0,0)')).toBe(false)
+    expect(isValidHexColor('')).toBe(false)
+    expect(isValidHexColor(42)).toBe(false)
+    expect(isValidHexColor(undefined)).toBe(false)
   })
 })
