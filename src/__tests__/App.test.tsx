@@ -1,15 +1,21 @@
-import { describe, it, expect, beforeEach } from 'vitest'
+import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../App'
 import { encodeFramework } from '../sharing'
+import { useIsMobile } from '../hooks/useIsMobile'
 import type { Framework } from '../types'
+
+vi.mock('../hooks/useIsMobile', () => ({
+  useIsMobile: vi.fn(() => false),
+}))
 
 beforeEach(() => {
   localStorage.clear()
   // Reset URL
   window.history.replaceState(null, '', '/')
   window.location.hash = ''
+  vi.mocked(useIsMobile).mockReturnValue(false)
 })
 
 describe('App', () => {
@@ -22,6 +28,38 @@ describe('App', () => {
   it('shows sidebar with app title', () => {
     render(<App />)
     expect(screen.getByText('Quadrants')).toBeInTheDocument()
+  })
+
+  describe('sidebar state across the 768px breakpoint (BUG-012)', () => {
+    // The floating "Open sidebar" button renders only while the sidebar is
+    // closed, making it the observable closed-state marker.
+    it('closes the drawer when crossing desktop → mobile, leaving main interactive', () => {
+      const { rerender } = render(<App />)
+      // Desktop default: sidebar open.
+      expect(screen.queryByRole('button', { name: /open sidebar/i })).not.toBeInTheDocument()
+
+      vi.mocked(useIsMobile).mockReturnValue(true)
+      rerender(<App />)
+
+      // No uninvited modal drawer: drawer closed, no backdrop, main not
+      // inert, focus not stolen into the drawer.
+      expect(screen.getAllByRole('button', { name: /open sidebar/i }).length).toBeGreaterThan(0)
+      expect(screen.queryByTestId('sidebar-backdrop')).not.toBeInTheDocument()
+      expect(screen.getByRole('main')).not.toHaveAttribute('inert')
+      expect(document.activeElement).not.toBe(screen.getByRole('button', { name: /close sidebar/i, hidden: true }))
+    })
+
+    it('reopens the sidebar when crossing mobile → desktop, matching a fresh desktop load', () => {
+      vi.mocked(useIsMobile).mockReturnValue(true)
+      const { rerender } = render(<App />)
+      // Mobile default: drawer closed.
+      expect(screen.getAllByRole('button', { name: /open sidebar/i }).length).toBeGreaterThan(0)
+
+      vi.mocked(useIsMobile).mockReturnValue(false)
+      rerender(<App />)
+
+      expect(screen.queryByRole('button', { name: /open sidebar/i })).not.toBeInTheDocument()
+    })
   })
 
   it('opens the framework builder when "Create Framework" is clicked from empty state', async () => {

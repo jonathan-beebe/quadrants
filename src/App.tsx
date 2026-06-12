@@ -26,6 +26,18 @@ export default function App() {
   const [editingFramework, setEditingFramework] = useState<Framework | null>(null)
   const [sidebarOpen, setSidebarOpen] = useState(!isMobile)
 
+  // Re-sync when the viewport crosses the 768px breakpoint: entering mobile
+  // must not leave the (modal) drawer open uninvited — it would steal focus
+  // and make <main> inert — and entering desktop restores the fresh-load
+  // default of an open sidebar (BUG-012). Adjusted during render (the
+  // derived-state pattern) rather than in an effect, so no commit ever shows
+  // the modal drawer and its focus effect never fires.
+  const [prevIsMobile, setPrevIsMobile] = useState(isMobile)
+  if (prevIsMobile !== isMobile) {
+    setPrevIsMobile(isMobile)
+    setSidebarOpen(!isMobile)
+  }
+
   const {
     conflict,
     error,
