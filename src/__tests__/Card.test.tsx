@@ -405,6 +405,43 @@ describe('Card', () => {
       expect(props.onDelete).toHaveBeenCalledOnce()
     })
   })
+
+  describe('move-menu popup semantics (A11Y-015)', () => {
+    function getItemButton() {
+      return screen.getByRole('button', { name: /edit item/i })
+    }
+
+    it('exposes aria-haspopup="menu" and a closed state when move targets exist', () => {
+      renderCard()
+      const button = getItemButton()
+      expect(button).toHaveAttribute('aria-haspopup', 'menu')
+      expect(button).toHaveAttribute('aria-expanded', 'false')
+    })
+
+    it('flips aria-expanded while the menu is open and points aria-controls at it', async () => {
+      const user = userEvent.setup()
+      renderCard()
+      const button = getItemButton()
+      button.focus()
+      await user.keyboard('m')
+
+      const menu = screen.getByRole('menu')
+      expect(button).toHaveAttribute('aria-expanded', 'true')
+      expect(button).toHaveAttribute('aria-controls', menu.id)
+
+      await user.keyboard('{Escape}')
+      expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+      expect(button).toHaveAttribute('aria-expanded', 'false')
+      expect(button).not.toHaveAttribute('aria-controls')
+    })
+
+    it('claims no popup semantics when there are no move targets', () => {
+      renderCard({ moveTargets: [] })
+      const button = getItemButton()
+      expect(button).not.toHaveAttribute('aria-haspopup')
+      expect(button).not.toHaveAttribute('aria-expanded')
+    })
+  })
 })
 
 describe('GhostCard', () => {

@@ -55,6 +55,7 @@ export default function Card({
   const pendingRef = useRef<{ startX: number; startY: number } | null>(null)
   const moveMenuRef = useRef<HTMLDivElement>(null)
   const cancelledRef = useRef(false)
+  const moveMenuId = `move-menu-${item.id}`
   const [editing, setEditing] = useState(autoFocus)
   const [editValue, setEditValue] = useState(item.text)
   const [minSize, setMinSize] = useState<{ width: number; height: number } | null>(null)
@@ -284,6 +285,11 @@ export default function Card({
           className={`${textClasses} ${editing ? 'cursor-text' : 'cursor-grab'} bg-transparent border-none p-0 m-0 text-left text-inherit text-[inherit] leading-[inherit]`}
           aria-label={`Edit item: ${item.text}. Press M to move to another quadrant, or arrow keys to reposition.`}
           aria-keyshortcuts="m ArrowLeft ArrowRight ArrowUp ArrowDown"
+          // Popup semantics only when M actually opens the menu — claiming
+          // them with zero move targets would be false (A11Y-015).
+          aria-haspopup={moveTargets.length > 0 ? 'menu' : undefined}
+          aria-expanded={moveTargets.length > 0 ? showMoveMenu : undefined}
+          aria-controls={moveTargets.length > 0 && showMoveMenu ? moveMenuId : undefined}
           onPointerDown={handleTextPointerDown}
           onKeyDown={handleDisplayKeyDown}>
           {item.text}
@@ -300,6 +306,7 @@ export default function Card({
       {showMoveMenu && moveTargets.length > 0 && (
         <div
           ref={moveMenuRef}
+          id={moveMenuId}
           role="menu"
           aria-label={`Move "${item.text}" to quadrant`}
           className="absolute left-0 top-full mt-1 bg-surface border border-border rounded-lg shadow-lg z-[200] min-w-[140px] p-1"
