@@ -59,7 +59,7 @@ describe('MobileQuadrantGrid', () => {
     renderGrid()
     for (const label of ['Do First', 'Schedule', 'Delegate', 'Eliminate']) {
       // In overview mode, sections expose role="button" so keyboard users can zoom.
-      expect(screen.getByRole('button', { name: new RegExp(`^${label} - tap to edit$`, 'i') })).toBeInTheDocument()
+      expect(screen.getByRole('button', { name: new RegExp(`^${label} - select to edit$`, 'i') })).toBeInTheDocument()
     }
   })
 
@@ -136,10 +136,10 @@ describe('MobileQuadrantGrid', () => {
     expect(grid.style.transform).toBe('scale(0.5)')
   })
 
-  it('exposes each overview quadrant as a focusable button with tap-to-edit label', () => {
+  it('exposes each overview quadrant as a focusable button with select-to-edit label', () => {
     renderGrid()
     for (const label of ['Do First', 'Schedule', 'Delegate', 'Eliminate']) {
-      const section = screen.getByRole('button', { name: new RegExp(`${label} .* tap to edit`, 'i') })
+      const section = screen.getByRole('button', { name: new RegExp(`${label} .* select to edit`, 'i') })
       expect(section).toHaveAttribute('tabIndex', '0')
     }
   })
@@ -147,7 +147,7 @@ describe('MobileQuadrantGrid', () => {
   it('zooms into a quadrant when its section receives keyboard activation', async () => {
     const user = userEvent.setup()
     renderGrid()
-    const section = screen.getByRole('button', { name: /schedule .* tap to edit/i })
+    const section = screen.getByRole('button', { name: /schedule .* select to edit/i })
     section.focus()
     expect(section).toHaveFocus()
     await user.keyboard('{Enter}')
@@ -158,7 +158,7 @@ describe('MobileQuadrantGrid', () => {
   it('zooms into a quadrant when Space is pressed on its section', async () => {
     const user = userEvent.setup()
     renderGrid()
-    const section = screen.getByRole('button', { name: /delegate .* tap to edit/i })
+    const section = screen.getByRole('button', { name: /delegate .* select to edit/i })
     section.focus()
     await user.keyboard(' ')
     expect(screen.getByRole('button', { name: /add item to delegate/i })).toBeInTheDocument()
@@ -180,6 +180,43 @@ describe('MobileQuadrantGrid', () => {
     // Do First's card is now in the focused canvas — not inside an inert subtree.
     const card = screen.getByText('Task A')
     expect(card.closest('[inert]')).toBeNull()
+  })
+
+  it('exposes only the focused quadrant section and heading to AT when zoomed (A11Y-019)', () => {
+    renderGrid()
+    const grid = screen.getByRole('group', { name: 'Quadrant grid' })
+    zoomInto(grid, 50, 50) // zoom into Do First (quadrant 0)
+
+    const sections = document.querySelectorAll('section')
+    expect(sections).toHaveLength(4)
+    const hidden = Array.from(sections).filter((s) => s.closest('[inert]'))
+    expect(hidden).toHaveLength(3)
+    // The focused quadrant stays fully exposed.
+    const focused = Array.from(sections).find((s) => !s.closest('[inert]'))!
+    expect(focused).toHaveAccessibleName('Do First')
+    // Exactly one heading is outside any inert subtree.
+    const visibleHeadings = Array.from(document.querySelectorAll('h2')).filter((h) => !h.closest('[inert]'))
+    expect(visibleHeadings).toHaveLength(1)
+    expect(visibleHeadings[0]).toHaveTextContent('Do First')
+  })
+
+  it('keeps keyboard focus out of hidden sections after zooming via keyboard (A11Y-019)', async () => {
+    const user = userEvent.setup()
+    renderGrid()
+    const section = screen.getByRole('button', { name: /schedule .* select to edit/i })
+    section.focus()
+    await user.keyboard('{Enter}')
+
+    // The activated section is the focused quadrant — not inside an inert
+    // subtree — so focus is never stranded in a hidden section.
+    expect(document.activeElement?.closest('[inert]')).toBeNull()
+  })
+
+  it('uses no pointer-specific wording in overview accessible names (A11Y-019)', () => {
+    renderGrid()
+    for (const section of screen.getAllByRole('button', { name: /select to edit/i })) {
+      expect(section.getAttribute('aria-label')).not.toMatch(/tap/i)
+    }
   })
 
   it('applies cell transform when zoomed into bottom-right', () => {

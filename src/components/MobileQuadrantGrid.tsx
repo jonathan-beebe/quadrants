@@ -80,7 +80,13 @@ export default function MobileQuadrantGrid({
           return (
             <section
               key={idx}
-              aria-label={!isFocused && !isZoomed ? `${quadrant.label} - tap to edit` : quadrant.label}
+              // Device-neutral wording: "select" reads correctly for touch,
+              // keyboard, and screen-reader activation alike (A11Y-019).
+              aria-label={!isFocused && !isZoomed ? `${quadrant.label} - select to edit` : quadrant.label}
+              // When zoomed, the three panned-out quadrants are invisible to
+              // sighted users; inert removes them from the accessibility
+              // tree so AT perceives the same single quadrant (A11Y-019).
+              inert={isZoomed && !isFocused ? true : undefined}
               tabIndex={!isZoomed ? 0 : undefined}
               role={!isZoomed ? 'button' : undefined}
               onClick={!isZoomed ? () => setZoomedIdx(idx) : undefined}
