@@ -50,4 +50,12 @@ describe.each(['light', 'dark'] as const)('%s theme token contrast', (theme) => 
   it('on-accent text on the hover accent surface meets AA (≥4.5:1) — A11Y-011', () => {
     expect(contrastRatio(t['--color-on-accent'], t['--color-accent-hover'])).toBeGreaterThanOrEqual(4.5)
   })
+
+  it('on-danger text on the danger surface meets AA (≥4.5:1) — A11Y-012', () => {
+    expect(contrastRatio(t['--color-on-danger'], t['--color-danger'])).toBeGreaterThanOrEqual(4.5)
+  })
+
+  it('on-danger text on the hover danger surface meets AA (≥4.5:1) — A11Y-012', () => {
+    expect(contrastRatio(t['--color-on-danger'], t['--color-danger-hover'])).toBeGreaterThanOrEqual(4.5)
+  })
 })
