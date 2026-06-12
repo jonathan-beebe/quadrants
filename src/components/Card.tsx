@@ -227,6 +227,10 @@ export default function Card({
         cancelledRef.current = true
         setEditing(false)
         setMinSize(null)
+        // A fresh add is persisted with PLACEHOLDER text before any edit, so
+        // cancelling must clean it up; re-editing an existing item keeps its
+        // original text (BUG-004).
+        if (itemTextRef.current === PLACEHOLDER) onDeleteRef.current()
       }
     },
     [editValue, commitEdit],

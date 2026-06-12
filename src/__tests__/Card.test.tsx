@@ -337,6 +337,29 @@ describe('Card', () => {
       // Original text preserved
       expect(screen.getByText('Test card')).toBeInTheDocument()
     })
+
+    it('deletes a never-committed placeholder item on Escape (BUG-004)', () => {
+      const { props } = renderCard({ item: makeItem({ text: PLACEHOLDER }), autoFocus: true })
+      const textarea = screen.getByRole('textbox') as HTMLTextAreaElement
+      act(() => {
+        fireEvent.keyDown(textarea, { key: 'Escape' })
+        fireEvent.blur(textarea)
+      })
+      expect(props.onDelete).toHaveBeenCalledOnce()
+      expect(props.onChange).not.toHaveBeenCalled()
+    })
+
+    it('deletes a placeholder item on Escape even after typing uncommitted text (BUG-004)', () => {
+      const { props } = renderCard({ item: makeItem({ text: PLACEHOLDER }), autoFocus: true })
+      const textarea = screen.getByRole('textbox') as HTMLTextAreaElement
+      fireEvent.change(textarea, { target: { value: 'Changed my mind' } })
+      act(() => {
+        fireEvent.keyDown(textarea, { key: 'Escape' })
+        fireEvent.blur(textarea)
+      })
+      expect(props.onDelete).toHaveBeenCalledOnce()
+      expect(props.onChange).not.toHaveBeenCalled()
+    })
   })
 
   describe('deletion', () => {

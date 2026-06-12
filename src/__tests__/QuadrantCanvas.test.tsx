@@ -1,6 +1,7 @@
 import { describe, it, expect, vi } from 'vitest'
-import { act, render, screen, waitFor } from '@testing-library/react'
+import { act, fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
+import { useState } from 'react'
 import QuadrantCanvas from '../components/QuadrantCanvas'
 import type { Framework } from '../types'
 
@@ -118,6 +119,32 @@ describe('QuadrantCanvas', () => {
     // The updated framework should have one more item in the first quadrant
     const updatedFw = onUpdate.mock.calls[0][0]
     expect(updatedFw.quadrants[0].items).toHaveLength(2)
+  })
+
+  it('removes the placeholder card when Escape cancels a fresh add (BUG-004)', async () => {
+    // Stateful wrapper so the canvas reflects its own updates, as in App.
+    function Wrapper() {
+      const [fw, setFw] = useState(makeFramework())
+      return <QuadrantCanvas {...defaultProps} framework={fw} onUpdate={setFw} />
+    }
+    const user = userEvent.setup()
+    render(<Wrapper />)
+
+    const addButtons = screen.getAllByRole('button', { name: /Add item to/ })
+    await user.click(addButtons[0])
+
+    // The fresh item mounts in edit mode.
+    const textarea = await screen.findByRole('textbox')
+    act(() => {
+      fireEvent.keyDown(textarea, { key: 'Escape' })
+      fireEvent.blur(textarea)
+    })
+
+    // No "New item..." card survives the cancelled add.
+    expect(screen.queryByText('New item...')).not.toBeInTheDocument()
+    expect(screen.queryByRole('textbox')).not.toBeInTheDocument()
+    // The pre-existing item is untouched.
+    expect(screen.getByText('Task A')).toBeInTheDocument()
   })
 
   // MAINT-001: end-to-end coverage for the pointer drag-and-drop drop resolution
