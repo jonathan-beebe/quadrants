@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../App'
 import { encodeFramework } from '../sharing'
@@ -256,6 +256,146 @@ describe('App', () => {
       expect(screen.getByRole('heading', { name: 'Framework Alpha' })).toBeInTheDocument()
       expect(screen.getByText('Renamed Quadrant')).toBeInTheDocument()
       expect(screen.queryByText('A1')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('undo/redo keyboard shortcuts (FEAT-003)', () => {
+    beforeEach(() => {
+      localStorage.setItem(
+        'quadrants_frameworks',
+        JSON.stringify([
+          {
+            id: 'fw-undo',
+            name: 'Undo Framework',
+            axisX: '',
+            axisY: '',
+            quadrants: [
+              {
+                label: 'Q1',
+                color: '#fbbf24',
+                items: [
+                  { id: 'i1', text: 'Task A', x: 10, y: 10, createdAt: 1000 },
+                  { id: 'i2', text: 'Task B', x: 30, y: 30, createdAt: 1000 },
+                ],
+              },
+              { label: 'Q2', color: '#60a5fa', items: [] },
+              { label: 'Q3', color: '#34d399', items: [] },
+              { label: 'Q4', color: '#f472b6', items: [] },
+            ],
+            createdAt: 1000,
+            updatedAt: 1000,
+          },
+        ]),
+      )
+    })
+
+    async function openFramework(user: ReturnType<typeof userEvent.setup>) {
+      await user.click(screen.getByRole('button', { name: /Undo Framework.*items/ }))
+      expect(screen.getByRole('heading', { name: 'Undo Framework' })).toBeInTheDocument()
+    }
+
+    it('undoes an item deletion with Ctrl+Z and redoes it with Ctrl+Y', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await openFramework(user)
+
+      await user.click(screen.getByRole('button', { name: /delete item: task a/i }))
+      expect(screen.queryByText('Task A')).not.toBeInTheDocument()
+
+      fireEvent.keyDown(document.body, { key: 'z', ctrlKey: true })
+      expect(screen.getByText('Task A')).toBeInTheDocument()
+
+      fireEvent.keyDown(document.body, { key: 'y', ctrlKey: true })
+      expect(screen.queryByText('Task A')).not.toBeInTheDocument()
+    })
+
+    it('redoes with Cmd+Shift+Z', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await openFramework(user)
+
+      await user.click(screen.getByRole('button', { name: /delete item: task a/i }))
+      fireEvent.keyDown(document.body, { key: 'z', metaKey: true })
+      expect(screen.getByText('Task A')).toBeInTheDocument()
+
+      fireEvent.keyDown(document.body, { key: 'Z', metaKey: true, shiftKey: true })
+      expect(screen.queryByText('Task A')).not.toBeInTheDocument()
+    })
+
+    it('discards the redo branch when a new action follows an undo', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await openFramework(user)
+
+      await user.click(screen.getByRole('button', { name: /delete item: task a/i }))
+      fireEvent.keyDown(document.body, { key: 'z', ctrlKey: true })
+      expect(screen.getByText('Task A')).toBeInTheDocument()
+
+      // A new action after undo: the re-delete of Task A is no longer redoable.
+      await user.click(screen.getByRole('button', { name: /delete item: task b/i }))
+
+      fireEvent.keyDown(document.body, { key: 'y', ctrlKey: true })
+      expect(screen.getByText('Task A')).toBeInTheDocument()
+      expect(screen.queryByText('Task B')).not.toBeInTheDocument()
+    })
+
+    it('persists the undone state to localStorage', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await openFramework(user)
+
+      await user.click(screen.getByRole('button', { name: /delete item: task a/i }))
+      fireEvent.keyDown(document.body, { key: 'z', ctrlKey: true })
+
+      await waitFor(() => {
+        const stored = JSON.parse(localStorage.getItem('quadrants_frameworks')!)
+        expect(stored[0].quadrants[0].items.map((it: { text: string }) => it.text)).toContain('Task A')
+      })
+    })
+
+    it('restores a deleted framework on undo', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await openFramework(user)
+
+      await user.click(screen.getByRole('button', { name: /actions for undo framework/i }))
+      await user.click(screen.getByRole('menuitem', { name: 'Delete' }))
+      expect(screen.getByText('No framework selected')).toBeInTheDocument()
+
+      fireEvent.keyDown(document.body, { key: 'z', ctrlKey: true })
+      expect(screen.getByRole('button', { name: /Undo Framework.*items/ })).toBeInTheDocument()
+    })
+
+    it('does not hijack undo while focus is in a text-editing field', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await openFramework(user)
+
+      await user.click(screen.getByRole('button', { name: /delete item: task b/i }))
+      expect(screen.queryByText('Task B')).not.toBeInTheDocument()
+
+      // Open the item editor; Cmd/Ctrl+Z must stay native text undo here.
+      await user.click(screen.getByRole('button', { name: /edit item: task a/i }))
+      const textarea = await screen.findByRole('textbox')
+      fireEvent.keyDown(textarea, { key: 'z', ctrlKey: true })
+
+      expect(screen.queryByText('Task B')).not.toBeInTheDocument()
+      expect(screen.getByRole('textbox')).toBeInTheDocument()
+    })
+
+    it('ignores the shortcuts on mobile', async () => {
+      const user = userEvent.setup()
+      const { rerender } = render(<App />)
+      await openFramework(user)
+
+      await user.click(screen.getByRole('button', { name: /delete item: task a/i }))
+      expect(screen.queryByText('Task A')).not.toBeInTheDocument()
+
+      vi.mocked(useIsMobile).mockReturnValue(true)
+      rerender(<App />)
+
+      fireEvent.keyDown(document.body, { key: 'z', ctrlKey: true })
+      expect(screen.queryByText('Task A')).not.toBeInTheDocument()
     })
   })
 

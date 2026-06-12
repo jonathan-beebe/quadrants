@@ -4,6 +4,7 @@ import { useRouting } from './hooks/useRouting'
 import { useDarkMode } from './hooks/useDarkMode'
 import { useIsMobile } from './hooks/useIsMobile'
 import { useShareImport } from './hooks/useShareImport'
+import { useUndoShortcuts } from './hooks/useUndoShortcuts'
 import { isNamedRoute, replacePath } from './logic/routing'
 import Sidebar from './components/Sidebar'
 import QuadrantCanvas from './components/QuadrantCanvas'
@@ -22,6 +23,8 @@ export default function App() {
     getFramework,
     saveError,
     clearSaveError,
+    undo,
+    redo,
     create,
     update,
     remove,
@@ -68,6 +71,9 @@ export default function App() {
     replace,
     addImport,
   })
+
+  // Undo/redo is keyboard-only and large-screen-only for now (FEAT-003).
+  useUndoShortcuts({ enabled: !isMobile, onUndo: undo, onRedo: redo })
 
   const activeFramework = getFramework(activeId)
 
