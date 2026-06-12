@@ -17,8 +17,11 @@ export async function encodeFramework(framework: Framework): Promise<string> {
 
   const cs = new CompressionStream('deflate')
   const writer = cs.writable.getWriter()
-  writer.write(bytes)
-  writer.close()
+  // Fire-and-forget on purpose (awaiting before the read can deadlock on
+  // backpressure); stream errors are delivered via the readable side below,
+  // so swallow the duplicate rejections here (BUG-011).
+  void writer.write(bytes).catch(() => {})
+  void writer.close().catch(() => {})
 
   const compressed = await new Response(cs.readable).arrayBuffer()
 
@@ -40,8 +43,10 @@ export async function decodeFramework(hash: string): Promise<SharedPayload | nul
 
   const ds = new DecompressionStream('deflate')
   const writer = ds.writable.getWriter()
-  writer.write(compressed)
-  writer.close()
+  // Corrupt deflate data must reject only through the readable-side promise
+  // below; see the matching note in encodeFramework (BUG-011).
+  void writer.write(compressed).catch(() => {})
+  void writer.close().catch(() => {})
 
   const decompressed = await new Response(ds.readable).arrayBuffer()
   const json = new TextDecoder().decode(decompressed)

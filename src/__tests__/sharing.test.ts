@@ -77,6 +77,37 @@ describe('encodeFramework / decodeFramework', () => {
     expect(encoded).not.toMatch(/[+/=]/)
   })
 
+  it('rejects corrupt deflate data solely through the returned promise, with no orphaned rejection (BUG-011)', async () => {
+    const unhandled: unknown[] = []
+    const onUnhandled = (reason: unknown) => {
+      unhandled.push(reason)
+    }
+    // No @types/node in this project; the test runner still provides process.
+    const proc = (
+      globalThis as unknown as {
+        process: {
+          on(event: 'unhandledRejection', listener: (reason: unknown) => void): void
+          off(event: 'unhandledRejection', listener: (reason: unknown) => void): void
+        }
+      }
+    ).process
+    proc.on('unhandledRejection', onUnhandled)
+    try {
+      // Valid base64url characters, but garbage deflate data.
+      const fw = makeFramework()
+      const encoded = await encodeFramework(fw)
+      const corrupt = encoded.slice(0, 10) + encoded.slice(18)
+
+      await expect(decodeFramework(corrupt)).rejects.toThrow()
+
+      // Give any orphaned writer promise a chance to surface.
+      await new Promise((r) => setTimeout(r, 20))
+      expect(unhandled).toEqual([])
+    } finally {
+      proc.off('unhandledRejection', onUnhandled)
+    }
+  })
+
   it('returns null when the decoded payload fails validation', async () => {
     // Wiring-level check only: the validation rule matrix is unit-tested
     // directly in logic/sharePayload.test.ts.
