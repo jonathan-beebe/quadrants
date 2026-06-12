@@ -95,6 +95,71 @@ describe('ColorPicker', () => {
     expect(colorInput).toHaveAttribute('type', 'color')
   })
 
+  describe('keyboard access to the custom color input (A11Y-013)', () => {
+    it('exposes a dialog popup whose type matches the trigger declaration', async () => {
+      const user = userEvent.setup()
+      render(<ColorPicker {...defaultProps} />)
+
+      const trigger = getTrigger()
+      expect(trigger).toHaveAttribute('aria-haspopup', 'dialog')
+
+      await user.click(trigger)
+      const dialog = screen.getByRole('dialog')
+      expect(dialog).toBeInTheDocument()
+      // The preset grid is a valid listbox containing only options.
+      const listbox = screen.getByRole('listbox')
+      expect(listbox).toBeInTheDocument()
+      expect(screen.getAllByRole('option')).toHaveLength(10)
+    })
+
+    it('lets Tab reach the custom input and return to the presets', async () => {
+      const user = userEvent.setup()
+      render(<ColorPicker {...defaultProps} />)
+      await user.click(getTrigger())
+
+      // Initial focus lands on the first preset option.
+      expect(screen.getAllByRole('option')[0]).toHaveFocus()
+
+      // Tab reaches the custom color input instead of closing the popup.
+      await user.tab()
+      const colorInput = screen.getByDisplayValue('#fbbf24')
+      expect(colorInput).toHaveFocus()
+
+      // Tab again wraps back into the preset grid.
+      await user.tab()
+      expect(screen.getAllByRole('option')[0]).toHaveFocus()
+    })
+
+    it('arrows through presets and closes on Escape with focus restored to the trigger', async () => {
+      const user = userEvent.setup()
+      render(<ColorPicker {...defaultProps} />)
+      await user.click(getTrigger())
+
+      const options = screen.getAllByRole('option')
+      expect(options[0]).toHaveFocus()
+      await user.keyboard('{ArrowRight}')
+      expect(options[1]).toHaveFocus()
+      await user.keyboard('{ArrowLeft}')
+      expect(options[0]).toHaveFocus()
+
+      await user.keyboard('{Escape}')
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      expect(getTrigger()).toHaveFocus()
+    })
+
+    it('closes on Escape from the custom input and restores trigger focus', async () => {
+      const user = userEvent.setup()
+      render(<ColorPicker {...defaultProps} />)
+      await user.click(getTrigger())
+      await user.tab()
+      expect(screen.getByDisplayValue('#fbbf24')).toHaveFocus()
+
+      await user.keyboard('{Escape}')
+      expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+      expect(getTrigger()).toHaveFocus()
+    })
+  })
+
   it('communicates expanded state via aria-expanded', async () => {
     const user = userEvent.setup()
     render(<ColorPicker {...defaultProps} />)

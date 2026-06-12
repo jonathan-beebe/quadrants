@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useCallback } from 'react'
 import { colorPresets, deriveColors } from '../colors'
 import { useClickOutside } from '../hooks/useClickOutside'
-import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
 
 interface ColorPickerProps {
   color: string
@@ -19,7 +18,40 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
   const close = () => setOpen(false)
   useClickOutside(ref, close, open)
 
-  const handleKeyDown = useMenuKeyboardNav(ref, close, triggerRef)
+  // Custom keyboard model (A11Y-013): arrows cycle the preset options, Tab
+  // toggles between the option grid and the custom color input (it must be
+  // reachable — Tab-closes would lock keyboard users out of it), Escape
+  // closes and restores focus to the trigger. useMenuKeyboardNav is not
+  // used here: its menu semantics (Tab closes) are right for menus only.
+  const customInputRef = useRef<HTMLInputElement>(null)
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Escape') {
+      e.preventDefault()
+      setOpen(false)
+      triggerRef.current?.focus()
+      return
+    }
+    if (e.key === 'Tab') {
+      e.preventDefault()
+      if (e.target === customInputRef.current) {
+        const options = ref.current?.querySelectorAll<HTMLElement>('[role="option"]')
+        options?.[0]?.focus()
+      } else {
+        customInputRef.current?.focus()
+      }
+      return
+    }
+    if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
+      const options = ref.current?.querySelectorAll<HTMLElement>('[role="option"]')
+      if (!options?.length) return
+      const currentIdx = Array.from(options).indexOf(e.target as HTMLElement)
+      if (currentIdx === -1) return
+      e.preventDefault()
+      const forward = e.key === 'ArrowDown' || e.key === 'ArrowRight'
+      const nextIdx = (currentIdx + (forward ? 1 : -1) + options.length) % options.length
+      options[nextIdx].focus()
+    }
+  }, [])
 
   useEffect(() => {
     if (open && ref.current) {
@@ -43,7 +75,7 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
           setOpen(!open)
         }}
         aria-label={`Change color (current: ${currentName})`}
-        aria-haspopup="listbox"
+        aria-haspopup="dialog"
         aria-expanded={open}>
         <span
           aria-hidden="true"
@@ -56,10 +88,10 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
       {open && (
         <div
           className={`absolute bg-surface border border-border rounded-lg shadow-lg p-2.5 z-[300] w-[180px] ${placement === 'above-center' ? 'bottom-[calc(100%+6px)] left-1/2 -translate-x-1/2' : `top-[calc(100%+6px)] ${alignLeft ? 'left-0' : 'right-0'}`}`}
-          role="listbox"
-          aria-label="Color options"
+          role="dialog"
+          aria-label="Choose a color"
           onKeyDown={handleKeyDown}>
-          <div className="grid grid-cols-5 gap-1.5 mb-2.5">
+          <div role="listbox" aria-label="Color presets" className="grid grid-cols-5 gap-1.5 mb-2.5">
             {colorPresets.map((c) => (
               <button
                 key={c.hex}
@@ -79,6 +111,7 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
           <label className="flex items-center justify-between text-xs text-text-secondary border-t border-border pt-2">
             <span>Custom</span>
             <input
+              ref={customInputRef}
               type="color"
               value={deriveColors(color).accent}
               onChange={(e) => onChange(e.target.value)}
