@@ -1,4 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
+import { StrictMode } from 'react'
 import { renderHook, act } from '@testing-library/react'
 import useDragAndDrop, { pageToQuadrantPercent, getQuadrantAtPoint } from '../../hooks/useDragAndDrop'
 import type { Item } from '../../types'
@@ -246,6 +247,45 @@ describe('useDragAndDrop hook', () => {
     })
 
     expect(onDrop).not.toHaveBeenCalled()
+  })
+
+  it('invokes onDrop exactly once per pointerup under StrictMode (MAINT-005)', () => {
+    // StrictMode double-invokes state updaters in development; a side effect
+    // inside the setDrag updater would fire onDrop twice per release.
+    const quadrant = {
+      getBoundingClientRect: () => ({
+        left: 0,
+        top: 0,
+        right: 200,
+        bottom: 200,
+        width: 200,
+        height: 200,
+      }),
+    } as HTMLDivElement
+    const refs = {
+      quadrantRefs: { current: [quadrant, null, null, null] } as React.RefObject<(HTMLDivElement | null)[]>,
+      canvasRefs: { current: [null, null, null, null] } as React.RefObject<(HTMLDivElement | null)[]>,
+    }
+    const onDrop = vi.fn()
+    const { result } = renderHook(() => useDragAndDrop({ ...refs, onDrop }), { wrapper: StrictMode })
+
+    act(() => {
+      result.current.handleDragStart(0, mockItem, {
+        clientX: 100,
+        clientY: 100,
+        grabX: 0,
+        grabY: 0,
+        width: 120,
+        height: 30,
+      })
+    })
+
+    act(() => {
+      window.dispatchEvent(new PointerEvent('pointerup', { clientX: 100, clientY: 100 }))
+    })
+
+    expect(onDrop).toHaveBeenCalledTimes(1)
+    expect(result.current.drag).toBeNull()
   })
 
   it('cleans up event listeners when drag ends', () => {

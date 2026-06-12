@@ -75,21 +75,22 @@ export default function useDragAndDrop({ quadrantRefs, canvasRefs, onDrop }: Use
     }
 
     const handleUp = (e: PointerEvent) => {
-      setDrag((prev) => {
-        if (!prev) return null
-        const target = getQuadrantAtPoint(e.clientX, e.clientY, quadrantRefs.current!, canvasRefs.current!)
-        if (target) {
-          const { x, y } = pageToQuadrantPercent(e.clientX - prev.grabX, e.clientY - prev.grabY, target.rect)
-          onDropRef.current({
-            itemId: prev.itemId,
-            sourceIdx: prev.sourceIdx,
-            targetIdx: target.index,
-            x,
-            y,
-          })
-        }
-        return null
-      })
+      // The effect re-subscribes on every `drag` change, so the closure's
+      // `drag` is current. The drop side effect must stay outside the state
+      // updater: React requires updaters to be pure, and StrictMode
+      // double-invokes them in dev (MAINT-005).
+      const target = getQuadrantAtPoint(e.clientX, e.clientY, quadrantRefs.current!, canvasRefs.current!)
+      if (target) {
+        const { x, y } = pageToQuadrantPercent(e.clientX - drag.grabX, e.clientY - drag.grabY, target.rect)
+        onDropRef.current({
+          itemId: drag.itemId,
+          sourceIdx: drag.sourceIdx,
+          targetIdx: target.index,
+          x,
+          y,
+        })
+      }
+      setDrag(null)
     }
 
     window.addEventListener('pointermove', handleMove)
