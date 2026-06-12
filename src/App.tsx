@@ -17,8 +17,20 @@ import DesignSystem from './components/DesignSystem'
 import type { Framework, FrameworkTemplate } from './types'
 
 export default function App() {
-  const { frameworks, getFramework, create, update, remove, duplicate, editStructure, replace, addImport, addRaw } =
-    useFrameworks()
+  const {
+    frameworks,
+    getFramework,
+    saveError,
+    clearSaveError,
+    create,
+    update,
+    remove,
+    duplicate,
+    editStructure,
+    replace,
+    addImport,
+    addRaw,
+  } = useFrameworks()
   const { activeId, navigate } = useRouting()
   const { darkMode, mode, cycleMode } = useDarkMode()
   const isMobile = useIsMobile()
@@ -185,7 +197,11 @@ export default function App() {
           <EmptyState onNew={openBuilder} />
         )}
       </main>
-      {error && <Toast message={error} onDismiss={clearError} />}
+      {error ? (
+        <Toast message={error} onDismiss={clearError} />
+      ) : (
+        saveError && <Toast message={saveError} onDismiss={clearSaveError} />
+      )}
       <UpdateToast />
     </div>
   )

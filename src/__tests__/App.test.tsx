@@ -89,6 +89,29 @@ describe('App', () => {
     expect(screen.getByText('Change')).toBeInTheDocument()
   })
 
+  it('shows an error toast when persisting to localStorage fails (BUG-010)', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    // No save-failure message while saves succeed.
+    expect(screen.queryByText(/could not be saved/i)).not.toBeInTheDocument()
+
+    // Storage starts failing (e.g. quota exceeded); the next edit must
+    // surface a visible error instead of silently losing data.
+    vi.spyOn(Storage.prototype, 'setItem').mockImplementation(() => {
+      throw new DOMException('Quota exceeded', 'QuotaExceededError')
+    })
+    vi.spyOn(console, 'error').mockImplementation(() => {})
+
+    await user.click(screen.getByText('Create Framework'))
+    await user.click(screen.getByRole('button', { name: /Start \/ Stop/ }))
+    await user.click(screen.getByRole('button', { name: 'Create Framework' }))
+
+    expect(await screen.findByText(/could not be saved/i)).toBeInTheDocument()
+
+    vi.restoreAllMocks()
+  })
+
   it('persists frameworks to localStorage', async () => {
     const user = userEvent.setup()
     render(<App />)

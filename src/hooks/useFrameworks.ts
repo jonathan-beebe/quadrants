@@ -12,10 +12,16 @@ import type { Framework, FrameworkTemplate } from '../types'
 
 export function useFrameworks() {
   const [frameworks, setFrameworks] = useState(() => loadFrameworks())
+  const [saveError, setSaveError] = useState<string | null>(null)
 
   useEffect(() => {
-    saveFrameworks(frameworks)
+    const saved = saveFrameworks(frameworks)
+    // Surface failures (e.g. quota exceeded) instead of silently losing
+    // data; clear the message once a later save succeeds (BUG-010).
+    setSaveError(saved ? null : 'Your changes could not be saved. Free up storage space and try again.')
   }, [frameworks])
+
+  const clearSaveError = useCallback(() => setSaveError(null), [])
 
   const activeFramework = useCallback((id: string | null) => frameworks.find((f) => f.id === id) ?? null, [frameworks])
 
@@ -61,6 +67,8 @@ export function useFrameworks() {
   return {
     frameworks,
     getFramework: activeFramework,
+    saveError,
+    clearSaveError,
     create,
     update,
     remove,
