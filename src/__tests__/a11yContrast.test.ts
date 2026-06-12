@@ -58,4 +58,11 @@ describe.each(['light', 'dark'] as const)('%s theme token contrast', (theme) => 
   it('on-danger text on the hover danger surface meets AA (≥4.5:1) — A11Y-012', () => {
     expect(contrastRatio(t['--color-on-danger'], t['--color-danger-hover'])).toBeGreaterThanOrEqual(4.5)
   })
+
+  it('placeholder text (text-tertiary) meets AA on every input surface (≥4.5:1) — A11Y-018', () => {
+    // Inputs render on bg-surface; the page background is the worst case
+    // for any input that inherits it.
+    expect(contrastRatio(t['--color-text-tertiary'], t['--color-surface'])).toBeGreaterThanOrEqual(4.5)
+    expect(contrastRatio(t['--color-text-tertiary'], t['--color-bg'])).toBeGreaterThanOrEqual(4.5)
+  })
 })
