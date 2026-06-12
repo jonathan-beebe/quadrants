@@ -63,4 +63,16 @@ describe('resolveImportAction', () => {
     expect(action.incoming.id).toBe('fw-1')
     expect(action.incoming.name).toBe('Updated name')
   })
+
+  it('navigates (not conflict) when re-importing a link whose coordinates were clamped on first import (BUG-007)', () => {
+    const payload = makePayload()
+    payload.quadrants[0].items = [{ text: 'item', x: 300, y: -50 }]
+    // First import stores the hydrated (clamped) framework.
+    const first = resolveImportAction(payload, null)
+    expect(first.kind).toBe('add')
+    if (first.kind !== 'add') return
+    // Opening the very same link again must navigate to the stored copy.
+    const second = resolveImportAction(payload, first.framework)
+    expect(second).toEqual({ kind: 'navigate', id: 'fw-1' })
+  })
 })

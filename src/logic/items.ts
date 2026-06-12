@@ -1,5 +1,16 @@
 import type { Framework, Item } from '../types'
 
+// Canonical envelope for persisted/imported item coordinates, matching the
+// widest range the app's own controls can produce (keyboard repositioning).
+// Drag-and-drop intentionally places drops in a narrower visual range, but
+// any value inside this envelope is valid and must survive a share round-trip.
+export const POSITION_MIN = 0
+export const POSITION_MAX = 95
+
+export function clampPosition(value: number): number {
+  return Math.max(POSITION_MIN, Math.min(value, POSITION_MAX))
+}
+
 export function addItem(framework: Framework, quadrantIndex: number, item: Item): Framework {
   return {
     ...framework,

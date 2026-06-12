@@ -2,6 +2,7 @@ import { useRef, useCallback, useEffect, useState } from 'react'
 import { XIcon } from './Icons'
 import { useClickOutside } from '../hooks/useClickOutside'
 import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
+import { clampPosition } from '../logic/items'
 import type { Item } from '../types'
 
 const DRAG_THRESHOLD = 4
@@ -36,8 +37,6 @@ interface CardProps {
 // Keyboard reposition step sizes in percent of the canvas. Shift = larger jumps.
 const REPOSITION_STEP = 5
 const REPOSITION_STEP_LARGE = 15
-const REPOSITION_MIN = 0
-const REPOSITION_MAX = 95
 
 export default function Card({
   item,
@@ -210,8 +209,8 @@ export default function Card({
         else if (e.key === 'ArrowDown') nextY = currentY + step
         else return
         e.preventDefault()
-        nextX = Math.min(REPOSITION_MAX, Math.max(REPOSITION_MIN, nextX))
-        nextY = Math.min(REPOSITION_MAX, Math.max(REPOSITION_MIN, nextY))
+        nextX = clampPosition(nextX)
+        nextY = clampPosition(nextY)
         if (nextX !== currentX || nextY !== currentY) onReposition(nextX, nextY)
       }
     },

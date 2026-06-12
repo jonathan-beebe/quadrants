@@ -30,6 +30,10 @@ export interface UseDragAndDropOptions {
 export function pageToQuadrantPercent(clientX: number, clientY: number, rect: DOMRect): { x: number; y: number } {
   const x = ((clientX - rect.left) / rect.width) * 100
   const y = ((clientY - rect.top) / rect.height) * 100
+  // Intentionally narrower than the canonical POSITION_MIN/MAX envelope
+  // (logic/items.ts): a drop placement keeps the card fully inside the
+  // quadrant. Positions outside [2,85] remain valid when produced by other
+  // controls and must not be re-clamped on import.
   return {
     x: Math.max(2, Math.min(x, 85)),
     y: Math.max(2, Math.min(y, 85)),

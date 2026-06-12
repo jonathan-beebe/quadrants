@@ -1,4 +1,5 @@
 import { defaultColors, isValidHexColor } from '../colors'
+import { clampPosition } from './items'
 import type { Framework, FrameworkTemplate, Item, Quadrant, SharedPayload } from '../types'
 
 function isRecord(v: unknown): v is Record<string, unknown> {
@@ -59,8 +60,8 @@ export function hydratePayload(payload: SharedPayload, id: string): Framework {
       items: (q.items || []).map((it) => ({
         id: crypto.randomUUID(),
         text: it.text,
-        x: Math.max(2, Math.min(it.x ?? 10, 85)),
-        y: Math.max(2, Math.min(it.y ?? 10, 85)),
+        x: clampPosition(it.x ?? 10),
+        y: clampPosition(it.y ?? 10),
         createdAt: Date.now(),
       })),
     })),
@@ -113,8 +114,15 @@ export function frameworksMatch(existing: Framework, payload: SharedPayload): bo
       if ((q.color || '') !== (pq.color || '')) return false
       const pqItems = pq.items ?? []
       if (q.items.length !== pqItems.length) return false
+      // Compare against what hydration would store (clamped), not the raw
+      // payload values — otherwise re-importing the same link reports a
+      // false conflict whenever the payload holds out-of-range coordinates.
       return q.items.every(
-        (item, j) => item.text === pqItems[j]?.text && item.x === pqItems[j]?.x && item.y === pqItems[j]?.y,
+        (item, j) =>
+          pqItems[j] !== undefined &&
+          item.text === pqItems[j].text &&
+          item.x === clampPosition(pqItems[j].x ?? 10) &&
+          item.y === clampPosition(pqItems[j].y ?? 10),
       )
     })
   )

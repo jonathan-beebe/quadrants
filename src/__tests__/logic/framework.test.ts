@@ -87,7 +87,7 @@ describe('hydratePayload', () => {
     expect(fw.quadrants[0].items[0].y).toBe(10)
   })
 
-  it('clamps item coordinates to valid range (2-85)', () => {
+  it('clamps item coordinates to the app-reachable range (0-95)', () => {
     const payload = makePayload()
     payload.quadrants[0].items = [
       { text: 'Too high', x: 9999, y: 200 },
@@ -95,12 +95,20 @@ describe('hydratePayload', () => {
       { text: 'In range', x: 50, y: 50 },
     ]
     const fw = hydratePayload(payload, 'id')
-    expect(fw.quadrants[0].items[0].x).toBe(85)
-    expect(fw.quadrants[0].items[0].y).toBe(85)
-    expect(fw.quadrants[0].items[1].x).toBe(2)
-    expect(fw.quadrants[0].items[1].y).toBe(2)
+    expect(fw.quadrants[0].items[0].x).toBe(95)
+    expect(fw.quadrants[0].items[0].y).toBe(95)
+    expect(fw.quadrants[0].items[1].x).toBe(0)
+    expect(fw.quadrants[0].items[1].y).toBe(0)
     expect(fw.quadrants[0].items[2].x).toBe(50)
     expect(fw.quadrants[0].items[2].y).toBe(50)
+  })
+
+  it('preserves positions reachable via keyboard repositioning (BUG-007)', () => {
+    const payload = makePayload()
+    payload.quadrants[0].items = [{ text: 'Keyboard edge', x: 95, y: 0 }]
+    const fw = hydratePayload(payload, 'id')
+    expect(fw.quadrants[0].items[0].x).toBe(95)
+    expect(fw.quadrants[0].items[0].y).toBe(0)
   })
 })
 
@@ -243,6 +251,24 @@ describe('frameworksMatch', () => {
     fw.quadrants[0].items[0].id = 'different-id'
     fw.quadrants[0].items[0].createdAt = 9999
     expect(frameworksMatch(fw, makePayload())).toBe(true)
+  })
+
+  it('matches when payload coordinates are out of range but hydrate to the stored values (BUG-007)', () => {
+    // Re-importing the same link must navigate, not raise a false conflict:
+    // the stored copy holds clamped coordinates while the payload holds raw ones.
+    const fw = makeMatchingFramework()
+    fw.quadrants[0].items[0].x = 95
+    fw.quadrants[0].items[0].y = 0
+    const payload = makePayload()
+    payload.quadrants[0].items[0] = { text: 'Shared item', x: 300, y: -50 }
+    expect(frameworksMatch(fw, payload)).toBe(true)
+  })
+
+  it('still reports a mismatch for genuinely different in-range coordinates', () => {
+    const fw = makeMatchingFramework()
+    const payload = makePayload()
+    payload.quadrants[0].items[0] = { text: 'Shared item', x: 50, y: 25 }
+    expect(frameworksMatch(fw, payload)).toBe(false)
   })
 })
 
