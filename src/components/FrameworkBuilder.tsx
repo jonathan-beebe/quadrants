@@ -109,7 +109,7 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
   const selectedLabel = selected === CUSTOM_KEY ? 'Blank / Custom' : selected
 
   const list = (
-    <div className="flex flex-col gap-2 min-h-0">
+    <div className="flex flex-col gap-2 min-h-0 flex-1">
       <input
         ref={searchRef}
         type="search"
@@ -119,7 +119,7 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
         aria-label="Filter templates"
         className="px-3 py-2 border border-border rounded-lg text-sm outline-none transition-[border-color] duration-150 focus:border-accent bg-surface text-text"
       />
-      <div className="flex flex-col gap-3 overflow-y-auto min-h-0 md:max-h-[60vh] pr-1">
+      <div className="flex flex-col gap-3 overflow-y-auto min-h-0 flex-1 pr-1">
         <button
           type="button"
           aria-current={selected === CUSTOM_KEY ? 'true' : undefined}
@@ -230,10 +230,15 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
     </form>
   )
 
+  // Desktop create mode pins the page to the viewport so the template list
+  // can scroll to the bottom edge (BUG-003); edit mode and mobile keep
+  // normal document flow.
+  const fullHeight = !editing && !isMobile
+
   return (
-    <div className="flex justify-center px-6 py-10 min-h-screen">
-      <div className="w-full max-w-[860px]">
-        <div className="flex items-center justify-between mb-8">
+    <div className={`flex justify-center px-6 py-10 ${fullHeight ? 'h-screen' : 'min-h-screen'}`}>
+      <div className={`w-full max-w-[860px] ${fullHeight ? 'flex flex-col min-h-0' : ''}`}>
+        <div className="flex items-center justify-between mb-8 shrink-0">
           <PageTitle as="h2">{editing ? 'Edit Framework' : 'Create Framework'}</PageTitle>
           <Button variant="ghost" onClick={onCancel}>
             Cancel
@@ -273,8 +278,8 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
             {form}
           </div>
         ) : (
-          <div className="grid grid-cols-[280px_1fr] gap-8 items-start">
-            <div className="flex flex-col min-h-0">
+          <div className="grid grid-cols-[280px_1fr] gap-8 items-start flex-1 min-h-0">
+            <div className="flex flex-col min-h-0 self-stretch">
               <SectionLabel>Start from a template</SectionLabel>
               {list}
             </div>
