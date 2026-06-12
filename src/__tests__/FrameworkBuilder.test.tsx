@@ -255,6 +255,44 @@ describe('FrameworkBuilder', () => {
       expect(screen.queryByRole('button', { name: /Eisenhower Matrix/ })).not.toBeInTheDocument()
     })
 
+    it('declares the popup type that actually opens (A11Y-016)', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilder {...defaultProps} />)
+
+      const trigger = screen.getByRole('button', { name: /choose a template/i })
+      await user.click(trigger)
+
+      const panel = screen.getByRole('dialog', { name: /choose a template/i })
+      expect(trigger.getAttribute('aria-haspopup')).toBe(panel.getAttribute('role'))
+    })
+
+    it('restores focus to the trigger when dismissed by clicking outside (A11Y-016)', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilder {...defaultProps} />)
+
+      const trigger = screen.getByRole('button', { name: /choose a template/i })
+      await user.click(trigger)
+      expect(screen.getByRole('dialog', { name: /choose a template/i })).toBeInTheDocument()
+
+      // The dismissal mechanism is the outside mousedown; focus must land on
+      // the trigger rather than being stranded in the unmounted dialog. (A
+      // real pointer press may subsequently move focus to its own target —
+      // that browser default is fine and out of scope here.)
+      fireEvent.mouseDown(screen.getByRole('heading', { name: /create framework/i }))
+      expect(screen.queryByRole('dialog', { name: /choose a template/i })).not.toBeInTheDocument()
+      expect(trigger).toHaveFocus()
+    })
+
+    it('restores focus to the trigger when dismissed via Escape (A11Y-016)', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilder {...defaultProps} />)
+
+      const trigger = screen.getByRole('button', { name: /choose a template/i })
+      await user.click(trigger)
+      fireEvent.keyDown(screen.getByRole('searchbox', { name: /filter templates/i }), { key: 'Escape' })
+      expect(trigger).toHaveFocus()
+    })
+
     it('selecting a template from the dropdown closes it and fills the detail', async () => {
       const user = userEvent.setup()
       render(<FrameworkBuilder {...defaultProps} />)

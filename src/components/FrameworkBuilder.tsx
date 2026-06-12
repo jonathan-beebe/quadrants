@@ -76,8 +76,10 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
   }, [])
 
   // triggerRef is excluded so the trigger's own onClick toggle can close the
-  // dropdown instead of racing the mousedown-close (BUG-005).
-  useClickOutside(panelRef, () => setListOpen(false), listOpen, triggerRef)
+  // dropdown instead of racing the mousedown-close (BUG-005). Dismissal
+  // routes through closeList so focus returns to the trigger on every path,
+  // matching Escape (A11Y-016).
+  useClickOutside(panelRef, closeList, listOpen, triggerRef)
   const handlePanelKeyDown = useFocusTrap(panelRef, closeList)
 
   // Focus the filter input when the mobile dropdown opens.
@@ -254,7 +256,7 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
               <button
                 ref={triggerRef}
                 type="button"
-                aria-haspopup="listbox"
+                aria-haspopup="dialog"
                 aria-expanded={listOpen}
                 aria-label={`Choose a template (current: ${selectedLabel})`}
                 onClick={() => setListOpen((o) => !o)}
@@ -268,6 +270,7 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
                 <div
                   ref={panelRef}
                   role="dialog"
+                  aria-modal="true"
                   aria-label="Choose a template"
                   onKeyDown={handlePanelKeyDown}
                   className="absolute left-0 right-0 top-full mt-1 z-[200] max-h-[60vh] flex flex-col p-2 bg-surface border border-border rounded-lg shadow-lg">
