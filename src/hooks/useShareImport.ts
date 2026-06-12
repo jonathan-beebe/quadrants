@@ -31,7 +31,6 @@ export function useShareImport({ getFramework, navigate, addRaw, replace, addImp
   const [error, setError] = useState<string | null>(null)
   const [importing, setImporting] = useState(() => !!getHashFromUrl())
   const errorTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
-  const lastHash = useRef<string | null>(null)
 
   const showError = useCallback((message: string) => {
     if (errorTimer.current) clearTimeout(errorTimer.current)
@@ -46,13 +45,15 @@ export function useShareImport({ getFramework, navigate, addRaw, replace, addImp
 
   const importFromHash = useCallback(() => {
     const hash = getHashFromUrl()
-    if (!hash || hash === lastHash.current) return
-    lastHash.current = hash
+    if (!hash) return
 
     // Clear the hash fragment from the URL synchronously, before the async
     // decode begins. Otherwise a refresh during the decode window (or before
     // the deferred `replacePath` calls run) re-enters this code path on
-    // remount and re-imports the same payload (BUG-020).
+    // remount and re-imports the same payload (BUG-020). This synchronous
+    // clear is also the only re-entry guard we need: any same-mount re-entry
+    // bails on `!hash`, and a later activation of the same link must import
+    // again rather than be silently ignored (BUG-008).
     replacePath(null)
 
     setImporting(true)
