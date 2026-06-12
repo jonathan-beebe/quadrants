@@ -16,7 +16,7 @@ export function UpdateToastView({ className = '', onReload, onDismiss }: UpdateT
       <span className="flex-1 text-text">A new version is available.</span>
       <button
         onClick={onReload}
-        className="shrink-0 px-3 py-1 bg-accent text-white rounded font-medium hover:bg-accent/90 transition-colors duration-150">
+        className="shrink-0 px-3 py-1 bg-accent text-on-accent rounded font-medium hover:bg-accent-hover transition-colors duration-150">
         Reload
       </button>
       <button
