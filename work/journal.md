@@ -2,18 +2,218 @@
 
 ## Next ticket numbers
 
-- RSRCH: 1
+- RSRCH: 2
 - DSGN: 1
 - ARCH: 1
-- FEAT: 2
-- IMPRV: 2
-- MAINT: 2
-- A11Y: 11
+- FEAT: 4
+- IMPRV: 5
+- MAINT: 6
+- A11Y: 21
 - RFCTR: 1
-- BUG: 3
+- BUG: 13
 
 ## Log
 
+- 2026-06-12:08:12:12 — FEAT-003 — done: pure History<T> snapshot core in
+  logic/history.ts; all 8 useFrameworks mutations route through one commit
+  dispatch point; Cmd/Ctrl+Z / Y / Shift+Z shortcuts desktop-only, native text
+  undo preserved (commit f5817f4)
+- 2026-06-12:08:04:48 — FEAT-003 — started
+- 2026-06-12:07:08:17 — FEAT-003 — defined: undo-redo history for all data
+  mutations via keyboard shortcuts
+- 2026-06-12:01:04:15 — RSRCH-001 — done: recommendation recorded in ticket —
+  keep ambient Date.now/randomUUID/Math.random; vitest fakes give exactness on
+  demand; re-open on flake, non-vitest runtime, or replay requirements; no
+  follow-up tickets
+- 2026-06-12:01:03:30 — RSRCH-001 — started
+
+- 2026-06-12:01:03:01 — MAINT-003 — done: 4 App-level flows covered (popstate
+  back, delete-active, duplicate, edit structure); also fixed hash-reset test
+  pollution that leaked popstate across tests (commit d8de845)
+- 2026-06-12:00:56:22 — MAINT-003 — started
+
+- 2026-06-12:00:55:46 — MAINT-004 — done: 5 weak tests now behavioral or
+  removed; mutation-verified the kept ones can fail (commit ce96ea1)
+- 2026-06-12:00:50:12 — MAINT-004 — started
+
+- 2026-06-12:00:48:56 — MAINT-005 — done: onDrop now fires outside the updater,
+  exactly once under StrictMode (test proved 2x before) (commit 0fae107)
+- 2026-06-12:00:46:12 — MAINT-005 — started
+
+- 2026-06-12:00:45:01 — A11Y-020 — done: gallery icons role=img + label, no
+  aria-hidden=false literal; DesignSystem gallery test added (commit 758ca61)
+- 2026-06-12:00:42:18 — A11Y-020 — started
+
+- 2026-06-12:00:41:40 — A11Y-019 — done: zoomed off-screen sections inert;
+  overview labels device-neutral ("select to edit") (commit a69d0d8)
+- 2026-06-12:00:38:21 — A11Y-019 — started
+
+- 2026-06-12:00:37:39 — A11Y-016 — done: trigger haspopup=dialog matches panel
+  role; aria-modal added; click-outside dismiss restores trigger focus (commit
+  8447f00)
+- 2026-06-12:00:33:38 — A11Y-016 — started
+
+- 2026-06-12:00:32:56 — A11Y-015 — done: conditional aria-haspopup/expanded/
+  controls on the card item button; 3-state tests added (commit ff17b1a)
+- 2026-06-12:00:29:27 — A11Y-015 — started
+
+- 2026-06-12:00:29:02 — A11Y-014 — done: outline-none dropped; global
+  focus-visible accent outline now reaches the card button (commit b5312c8)
+- 2026-06-12:00:27:17 — A11Y-014 — started
+
+- 2026-06-12:00:26:43 — A11Y-013 — done: picker popup is a dialog (listbox +
+  labeled input); Tab reaches the custom input; Escape restores trigger focus;
+  useMenuKeyboardNav left menu-only (commit 7459c20)
+- 2026-06-12:00:23:12 — A11Y-013 — started
+
+- 2026-06-12:00:22:27 — A11Y-018 — done: global ::placeholder rule with
+  text-tertiary + opacity 1; token contrast test extended (commit 7f2339c)
+- 2026-06-12:00:20:26 — A11Y-018 — started
+
+- 2026-06-12:00:20:00 — A11Y-017 — done: both toast dismiss buttons now 24x24
+  via the w-6 h-6 grid pattern (commit 10c18c1)
+- 2026-06-12:00:18:27 — A11Y-017 — started
+
+- 2026-06-12:00:18:00 — A11Y-012 — done: on-danger token mirrors on-accent;
+  Toast text + dismiss icon pass AA both themes (commit 630c3e2)
+- 2026-06-12:00:14:21 — A11Y-012 — started
+
+- 2026-06-12:00:13:43 — A11Y-011 — done: on-accent token + re-picked accent
+  fills; token-level contrast test guards ≥4.5:1 both themes (commit 1cd8c4f)
+- 2026-06-12:00:07:25 — A11Y-011 — started
+
+- 2026-06-12:00:06:58 — BUG-010 — done: save failures surface via Toast from
+  useFrameworks.saveError; auto-clears on next successful save (commit 7a9317f)
+- 2026-06-12:00:02:25 — BUG-010 — started
+
+- 2026-06-12:00:02:03 — BUG-012 — done: sidebar open state re-syncs on
+  breakpoint crossings via render-time derived state (effect-based sync still
+  stole focus for one commit — documented in ticket) (commit 2227a5d)
+- 2026-06-11:23:54:17 — BUG-012 — started
+
+- 2026-06-11:23:53:43 — BUG-003 — done: desktop create mode pinned to viewport;
+  list scrolls to bottom edge; mobile/edit unchanged; pixel result needs a quick
+  visual check (jsdom can't assert layout) (commit a79492f)
+- 2026-06-11:23:51:12 — BUG-003 — started
+
+- 2026-06-11:23:49:57 — BUG-005 — done: useClickOutside gains excludeRef;
+  Sidebar Actions menu and mobile template dropdown triggers now toggle closed
+  (commit fbb06f2)
+- 2026-06-11:23:44:12 — BUG-005 — started
+
+- 2026-06-11:23:42:59 — BUG-009 — done: autoFocusId consumed on the new item's
+  first commit/delete; grid remounts no longer re-open edit mode (commit
+  8414b50)
+- 2026-06-11:23:39:19 — BUG-009 — started
+
+- 2026-06-11:23:38:39 — BUG-004 — done: Escape on a never-committed placeholder
+  item now deletes it; re-edit cancel unchanged (commit 80df323)
+- 2026-06-11:23:33:35 — BUG-004 — started
+
+- 2026-06-11:23:33:20 — BUG-008 — done: lastHash guard removed; synchronous
+  hash-clear is the sole re-entry guard; re-activating the same link imports
+  again (commit 538b7a0)
+- 2026-06-11:23:27:25 — BUG-008 — started
+
+- 2026-06-11:23:26:54 — BUG-011 — done: writer write/close rejections now
+  observed (swallow handlers; readable side still delivers the error); corrupt
+  deflate regression test added (commit 16c98f6)
+- 2026-06-11:23:21:37 — BUG-011 — started (note: Blob.stream() alternative
+  rejected — unsupported in jsdom)
+
+- 2026-06-11:23:21:00 — BUG-007 — done: shared clampPosition [0,95] in
+  logic/items.ts; frameworksMatch compares clamped-vs-clamped; drag keeps
+  narrower visual range by design (commit a8ed56b)
+- 2026-06-11:23:14:12 — BUG-007 — started
+
+- 2026-06-11:23:12:53 — BUG-006 — done: import boundaries validate #rrggbb via
+  shared isValidHexColor; QuadrantGrid/CornerGradient/ColorPicker hardened
+  against legacy bad data (commit b6842fe)
+- 2026-06-11:23:03:25 — BUG-006 — started
+
+- 2026-06-11:23:02:46 — IMPRV-004 — done: toSharedPayload + isValidPayload
+  extracted to src/logic/sharePayload.ts with direct unit tests; sharing.ts is
+  codec-only (commit 9ee98dc)
+
+- 2026-06-11:22:58:12 — IMPRV-004 — started
+
+- 2026-06-11:22:57:27 — IMPRV-003 — done: extracted pure
+  sanitizeStoredFrameworks into src/logic/; loadFrameworks delegates; deep
+  validation kills the Sidebar render-crash class (commit 6ac1bff)
+
+- 2026-06-11:22:52:45 — IMPRV-003 — started (drain order: IMPRV-003,004 →
+  BUG-006,007,011,008 → BUG-004,009,005,003,012,010 →
+  A11Y-011,012,017,018,013,014,015,016,019,020 → MAINT-005,004,003 → RSRCH-001;
+  extractions first so sharing/storage bug fixes land on the new structure)
+- 2026-06-11:22:46:31 — BUG-012 — defined: sidebar open state not re-synced
+  across 768px breakpoint causes spontaneous modal overlay and focus steal
+- 2026-06-11:22:45:47 — BUG-011 — defined: orphaned writer promises in sharing
+  codec cause unhandled rejections on corrupt share links
+- 2026-06-11:22:45:30 — A11Y-020 — defined: design-system icon gallery svgs
+  named without image role
+- 2026-06-11:22:45:27 — MAINT-005 — defined: move onDrop side effect out of
+  setDrag updater in useDragAndDrop
+- 2026-06-11:22:43:08 — A11Y-019 — defined: hide off-screen quadrants from AT
+  when zoomed and de-pointer overview labels
+- 2026-06-11:22:43:04 — RSRCH-001 — defined: deterministic functional core via
+  injected time and id generation
+- 2026-06-11:22:40:27 — A11Y-018 — defined: form placeholder text fails AA
+  contrast in both themes
+- 2026-06-11:22:38:26 — A11Y-017 — defined: toast dismiss buttons fail 24px
+  target-size floor
+- 2026-06-11:22:36:32 — A11Y-016 — defined: mobile template picker trigger
+  announces listbox but opens dialog
+- 2026-06-11:22:34:20 — A11Y-015 — defined: card move-menu trigger missing popup
+  semantics
+- 2026-06-11:22:32:13 — A11Y-014 — defined: card item button missing visible
+  focus indicator
+- 2026-06-11:22:30:26 — BUG-010 — defined: silent localStorage save failure
+  loses data with no user feedback
+- 2026-06-11:22:30:19 — A11Y-013 — defined: color picker custom input
+  unreachable by keyboard
+- 2026-06-11:22:29:21 — BUG-009 — defined: stale autoFocusId re-opens edit mode
+  on grid remount
+- 2026-06-11:22:29:05 — BUG-008 — defined: lastHash guard blocks re-importing
+  same share link in session
+- 2026-06-11:22:28:47 — BUG-007 — defined: inconsistent position clamps shift
+  shared items and trigger false import conflicts
+- 2026-06-11:22:28:21 — MAINT-004 — defined: make no-signal and
+  implementation-pinning tests assert observable behavior or remove them
+- 2026-06-11:22:27:57 — A11Y-012 — defined: error toast danger-surface text
+  fails AA contrast in both themes
+- 2026-06-11:22:27:48 — BUG-006 — defined: imported quadrant colors not
+  validated as #rrggbb break rendering
+- 2026-06-11:22:27:21 — BUG-005 — defined: menu trigger cannot dismiss its own
+  open menu
+- 2026-06-11:22:27:08 — IMPRV-003 — bug-scope of corrupt-localStorage app brick
+  found it duplicates IMPRV-003; enriched its discovery notes with crash repro
+  and severity instead of filing a parallel BUG ticket
+- 2026-06-11:22:26:18 — BUG-004 — defined: escape on new item leaves persisted
+  placeholder card
+- 2026-06-11:22:26:03 — MAINT-003 — defined: test: cover history navigation
+  (popstate) and framework lifecycle flows at App level
+- 2026-06-11:22:25:28 — A11Y-011 — defined: accent-surface text fails AA
+  contrast in both themes
+- 2026-06-11:22:23:46 — IMPRV-004 — defined: extract pure share payload
+  projection and validation from sharing codec shell
+- 2026-06-11:22:21:35 — IMPRV-003 — defined: extract pure framework validation
+  from storage shell and align divergent validators
+- 2026-06-10:12:34:13 — BUG-003 — defined: desktop picker list extends to bottom
+  of viewport
+- 2026-06-10:12:17:22 — IMPRV-002 — done: responsive master-detail template
+  picker with preview near the top; categories + filter; mobile dropdown
+- 2026-06-10:12:08:42 — IMPRV-002 — started
+- 2026-06-10:12:06:47 — IMPRV-002 — defined: redesign template picker as
+  responsive master-detail with preview near the top
+- 2026-06-10:11:44:21 — MAINT-002 — done: removed Reflection Mode feature
+  (component, overlay branch, button, tests, design-system subsection)
+- 2026-06-10:11:39:40 — MAINT-002 — started
+- 2026-06-10:11:37:34 — FEAT-002 — done: expanded template library to 23
+  quadrant models with descriptions
+- 2026-06-10:11:28:46 — FEAT-002 — started
+- 2026-06-10:11:25:27 — FEAT-002 — defined: quadrant model template library with
+  descriptions
+- 2026-06-10:11:21:36 — MAINT-002 — defined: remove reflection mode feature
 - 2026-05-29:17:45:23 — MAINT-001 — done: integration tests for quadrant
   drag-and-drop drop resolution
 - 2026-05-29:17:42:19 — IMPRV-001 — done: extract resolveImportAction pure
