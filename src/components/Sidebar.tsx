@@ -51,7 +51,9 @@ export default function Sidebar({
   const isModal = isMobile && open
 
   const closeMenu = useCallback(() => setMenuId(null), [])
-  useClickOutside(menuRef, closeMenu, !!menuId)
+  // menuTriggerRef is excluded so the trigger's own onClick toggle can close
+  // the menu instead of racing the mousedown-close (BUG-005).
+  useClickOutside(menuRef, closeMenu, !!menuId, menuTriggerRef)
 
   // When the drawer becomes modal (mobile + open), move focus into it and
   // remember where focus came from so we can restore it on close.

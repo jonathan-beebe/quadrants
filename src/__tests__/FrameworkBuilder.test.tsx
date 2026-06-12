@@ -229,6 +229,19 @@ describe('FrameworkBuilder', () => {
       expect(screen.getByRole('button', { name: /Eisenhower Matrix/ })).toBeInTheDocument()
     })
 
+    it('closes the open dropdown when its own trigger is clicked again (BUG-005)', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilder {...defaultProps} />)
+
+      const trigger = screen.getByRole('button', { name: /choose a template/i })
+      await user.click(trigger)
+      expect(trigger).toHaveAttribute('aria-expanded', 'true')
+
+      await user.click(trigger)
+      expect(trigger).toHaveAttribute('aria-expanded', 'false')
+      expect(screen.queryByRole('button', { name: /Eisenhower Matrix/ })).not.toBeInTheDocument()
+    })
+
     it('closes the dropdown on Escape', async () => {
       const user = userEvent.setup()
       render(<FrameworkBuilder {...defaultProps} />)

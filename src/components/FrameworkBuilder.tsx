@@ -75,7 +75,9 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
     triggerRef.current?.focus()
   }, [])
 
-  useClickOutside(panelRef, () => setListOpen(false), listOpen)
+  // triggerRef is excluded so the trigger's own onClick toggle can close the
+  // dropdown instead of racing the mousedown-close (BUG-005).
+  useClickOutside(panelRef, () => setListOpen(false), listOpen, triggerRef)
   const handlePanelKeyDown = useFocusTrap(panelRef, closeList)
 
   // Focus the filter input when the mobile dropdown opens.

@@ -150,6 +150,20 @@ describe('Sidebar', () => {
     expect(onDuplicate).toHaveBeenCalledWith(fw)
   })
 
+  it('closes the open Actions menu when its own trigger is clicked again (BUG-005)', async () => {
+    const user = userEvent.setup()
+    render(<Sidebar {...defaultProps} frameworks={[makeFramework()]} />)
+
+    const menuButton = screen.getByRole('button', { name: /actions for test framework/i })
+    await user.click(menuButton)
+    expect(screen.getByRole('menu')).toBeInTheDocument()
+
+    // Clicking the trigger again must close the menu — and keep it closed.
+    await user.click(menuButton)
+    expect(screen.queryByRole('menu')).not.toBeInTheDocument()
+    expect(menuButton).toHaveAttribute('aria-expanded', 'false')
+  })
+
   it('communicates expanded state on sidebar toggle', () => {
     render(<Sidebar {...defaultProps} open={true} />)
     const toggle = screen.getByRole('button', { name: /close sidebar/i })
