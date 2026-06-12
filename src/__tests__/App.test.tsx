@@ -155,9 +155,9 @@ describe('App', () => {
     expect(window.location.pathname).toBe('/')
   })
 
-  it('shows the conflict dialog elements', () => {
+  it('does not show the conflict dialog on the empty state', () => {
     render(<App />)
-    // ConflictDialog is only shown on hash import conflicts — we just verify the empty state is clean
+    // Real conflict-dialog assertions live in the hash import block (FEAT-001).
     expect(screen.queryByText('Framework already exists')).not.toBeInTheDocument()
   })
 

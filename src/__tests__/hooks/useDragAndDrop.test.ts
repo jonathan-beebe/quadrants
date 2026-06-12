@@ -114,23 +114,6 @@ describe('getQuadrantAtPoint', () => {
   })
 })
 
-describe('coordinate system consistency', () => {
-  it('uses clientX/clientY (not pageX/pageY) so coordinates match getBoundingClientRect', () => {
-    // getBoundingClientRect() returns viewport-relative coords (client space).
-    // The drag system must use clientX/clientY from PointerEvents to match.
-    // If pageX/pageY were used instead, a scrolled page would cause mismatch.
-    const rect = { left: 100, top: 200, width: 400, height: 300 } as DOMRect
-
-    // clientX=300, clientY=350 → center of the rect
-    const result = pageToQuadrantPercent(300, 350, rect)
-    expect(result.x).toBe(50)
-    expect(result.y).toBe(50)
-
-    // Verify the function is named to reflect client coordinates
-    // (This test documents the expected coordinate system)
-  })
-})
-
 // --- Hook integration tests ---
 
 describe('useDragAndDrop hook', () => {
@@ -198,9 +181,12 @@ describe('useDragAndDrop hook', () => {
       window.dispatchEvent(new PointerEvent('pointermove', { clientX: 200, clientY: 300 }))
     })
 
-    // PointerEvent clientX/clientY default to 0 in jsdom, so drag.x/y become 0
-    // The important thing is the handler runs without error
     expect(result.current.drag).not.toBeNull()
+    expect(result.current.drag!.x).toBe(200)
+    expect(result.current.drag!.y).toBe(300)
+    // Grab offsets and identity are preserved across moves.
+    expect(result.current.drag!.itemId).toBe('item-1')
+    expect(result.current.drag!.grabX).toBe(10)
   })
 
   it('clears drag state on pointerup', () => {

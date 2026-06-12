@@ -50,17 +50,15 @@ describe('useShareImport error timer cleanup', () => {
       result.current.importJson(vi.fn())
     })
 
-    // Error should be set
+    // Error should be set, and its 5-second auto-dismiss timer pending.
     expect(result.current.error).toBe('The file is not a valid framework. It must have a name and 4 quadrants.')
-
-    // Spy on clearTimeout before unmount
-    const clearTimeoutSpy = vi.spyOn(globalThis, 'clearTimeout')
+    expect(vi.getTimerCount()).toBeGreaterThan(0)
 
     unmount()
 
-    // The cleanup effect should call clearTimeout for the pending 5-second timer
-    expect(clearTimeoutSpy).toHaveBeenCalled()
-
-    clearTimeoutSpy.mockRestore()
+    // The unmount cleanup clears the pending timer — observable as an empty
+    // fake-timer pool. Removing the cleanup leaves the 5s timer pending and
+    // fails this assertion.
+    expect(vi.getTimerCount()).toBe(0)
   })
 })
