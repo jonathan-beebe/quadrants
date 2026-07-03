@@ -9,11 +9,31 @@
 - IMPRV: 5
 - MAINT: 6
 - A11Y: 21
-- RFCTR: 1
+- RFCTR: 4
 - BUG: 13
 
 ## Log
 
+- 2026-07-03:16:24:18 — RFCTR-003 — done: swept residual noise names — inlined
+  handleDragStart\_ wrapper, pickerRef, json/storedJson, useFrameworkSharing
+  (file + 5 test files renamed), frameworkFromPayload; rename-only, 366/366
+  green (commit 0a7f2ca)
+- 2026-07-03:16:20:46 — RFCTR-003 — started
+- 2026-07-03:16:19:34 — RFCTR-002 — done: unified vocabulary — isValid\* guards,
+  filterValidFrameworks/repairImportedFramework, openBuilderForEdit,
+  onCycleTheme prop; rename-only, 366/366 green (commit 18bd7b0)
+- 2026-07-03:16:17:03 — RFCTR-002 — started
+- 2026-07-03:16:16:02 — RFCTR-001 — done: renamed 8 dishonest symbols
+  (clientToQuadrantPercent, decodeSharedPayload, isDark family,
+  displayButtonRef, getFramework, frameworkMatchesPayload, editingFramework,
+  openMenuFrameworkId); rename-only, 366/366 green (commit fec62c5)
+- 2026-07-03:16:10:16 — RFCTR-001 — started
+- 2026-07-03:16:03:24 — RFCTR-003 — defined: sweep residual noise names —
+  underscore wrapper, bare ref, data params, hook name, hydrate
+- 2026-07-03:16:03:23 — RFCTR-002 — defined: unify split vocabulary — validation
+  prefix, sanitize verbs, builder/editor, theme-cycle callback
+- 2026-07-03:16:03:22 — RFCTR-001 — defined: rename dishonest symbols that
+  assert wrong types or operands
 - 2026-06-12:08:12:12 — FEAT-003 — done: pure History<T> snapshot core in
   logic/history.ts; all 8 useFrameworks mutations route through one commit
   dispatch point; Cmd/Ctrl+Z / Y / Shift+Z shortcuts desktop-only, native text
