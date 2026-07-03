@@ -12,11 +12,11 @@ interface ColorPickerProps {
 export default function ColorPicker({ color, onChange, placement = 'auto', size = 'md' }: ColorPickerProps) {
   const [open, setOpen] = useState(false)
   const [alignLeft, setAlignLeft] = useState(false)
-  const ref = useRef<HTMLDivElement>(null)
+  const pickerRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
 
   const close = () => setOpen(false)
-  useClickOutside(ref, close, open)
+  useClickOutside(pickerRef, close, open)
 
   // Custom keyboard model (A11Y-013): arrows cycle the preset options, Tab
   // toggles between the option grid and the custom color input (it must be
@@ -34,7 +34,7 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
     if (e.key === 'Tab') {
       e.preventDefault()
       if (e.target === customInputRef.current) {
-        const options = ref.current?.querySelectorAll<HTMLElement>('[role="option"]')
+        const options = pickerRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
         options?.[0]?.focus()
       } else {
         customInputRef.current?.focus()
@@ -42,7 +42,7 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
       return
     }
     if (e.key === 'ArrowDown' || e.key === 'ArrowRight' || e.key === 'ArrowUp' || e.key === 'ArrowLeft') {
-      const options = ref.current?.querySelectorAll<HTMLElement>('[role="option"]')
+      const options = pickerRef.current?.querySelectorAll<HTMLElement>('[role="option"]')
       if (!options?.length) return
       const currentIdx = Array.from(options).indexOf(e.target as HTMLElement)
       if (currentIdx === -1) return
@@ -54,8 +54,8 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
   }, [])
 
   useEffect(() => {
-    if (open && ref.current) {
-      const first = ref.current.querySelector<HTMLElement>('[role="option"]')
+    if (open && pickerRef.current) {
+      const first = pickerRef.current.querySelector<HTMLElement>('[role="option"]')
       first?.focus()
     }
   }, [open])
@@ -63,7 +63,7 @@ export default function ColorPicker({ color, onChange, placement = 'auto', size 
   const currentName = colorPresets.find((c) => c.hex === color)?.name ?? 'Custom'
 
   return (
-    <div className="relative" ref={ref}>
+    <div className="relative" ref={pickerRef}>
       <button
         ref={triggerRef}
         className="group inline-grid place-items-center w-6 h-6 cursor-pointer focus:outline-none"

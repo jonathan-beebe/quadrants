@@ -67,7 +67,7 @@ describe('resolveImportAction', () => {
   it('navigates (not conflict) when re-importing a link whose coordinates were clamped on first import (BUG-007)', () => {
     const payload = makePayload()
     payload.quadrants[0].items = [{ text: 'item', x: 300, y: -50 }]
-    // First import stores the hydrated (clamped) framework.
+    // First import stores the clamped framework.
     const first = resolveImportAction(payload, null)
     expect(first.kind).toBe('add')
     if (first.kind !== 'add') return

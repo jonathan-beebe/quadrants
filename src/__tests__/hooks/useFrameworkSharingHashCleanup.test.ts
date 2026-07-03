@@ -15,7 +15,7 @@ vi.mock('../../io', () => ({
   pickJsonFile: vi.fn().mockResolvedValue(null),
 }))
 
-import { useShareImport } from '../../hooks/useShareImport'
+import { useFrameworkSharing } from '../../hooks/useFrameworkSharing'
 
 function makeOptions() {
   return {
@@ -27,7 +27,7 @@ function makeOptions() {
   }
 }
 
-describe('useShareImport URL hash cleanup', () => {
+describe('useFrameworkSharing URL hash cleanup', () => {
   const originalHash = window.location.hash
 
   beforeEach(() => {
@@ -44,7 +44,7 @@ describe('useShareImport URL hash cleanup', () => {
     expect(window.location.hash).toBe('#shared-payload-abc')
 
     const opts = makeOptions()
-    renderHook(() => useShareImport(opts))
+    renderHook(() => useFrameworkSharing(opts))
 
     // The hook's mount effect calls importFromHash(). Because decodeSharedPayload
     // returns a never-resolving promise, no .then/.catch handlers can run.

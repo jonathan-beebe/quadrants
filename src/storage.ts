@@ -6,9 +6,9 @@ const STORAGE_KEY = 'quadrants_frameworks'
 
 export function loadFrameworks(): Framework[] {
   try {
-    const data = localStorage.getItem(STORAGE_KEY)
-    if (!data) return []
-    return filterValidFrameworks(JSON.parse(data))
+    const storedJson = localStorage.getItem(STORAGE_KEY)
+    if (!storedJson) return []
+    return filterValidFrameworks(JSON.parse(storedJson))
   } catch {
     return []
   }

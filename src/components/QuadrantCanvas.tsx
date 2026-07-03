@@ -10,9 +10,8 @@ import PageTitle from './atoms/PageTitle'
 import Button from './atoms/Button'
 import QuadrantGrid from './QuadrantGrid'
 import MobileQuadrantGrid from './MobileQuadrantGrid'
-import type { Framework, Item } from '../types'
-import type { DragStartInfo } from './Card'
-import type { ShareResult } from '../hooks/useShareImport'
+import type { Framework } from '../types'
+import type { ShareResult } from '../hooks/useFrameworkSharing'
 
 interface QuadrantCanvasProps {
   framework: Framework
@@ -137,13 +136,6 @@ export default function QuadrantCanvas({
     [updateFramework, announce],
   )
 
-  const handleDragStart_ = useCallback(
-    (quadrantIdx: number, item: Item, info: DragStartInfo) => {
-      handleDragStart(quadrantIdx, item, info)
-    },
-    [handleDragStart],
-  )
-
   let draggedItem = null
   if (drag) {
     const q = framework.quadrants[drag.sourceIdx]
@@ -210,7 +202,7 @@ export default function QuadrantCanvas({
         onColorChange={handleColorChange}
         onMoveItem={handleMoveItem}
         onReposition={handleRepositionItem}
-        onDragStart={handleDragStart_}
+        onDragStart={handleDragStart}
       />
 
       {drag && draggedItem && <GhostCard drag={drag} text={draggedItem.text} />}

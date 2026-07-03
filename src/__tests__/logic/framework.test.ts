@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
-  hydratePayload,
+  frameworkFromPayload,
   updateFramework,
   deleteFramework,
   duplicateFramework,
@@ -46,9 +46,9 @@ function makePayload(): SharedPayload {
   }
 }
 
-describe('hydratePayload', () => {
+describe('frameworkFromPayload', () => {
   it('creates a full Framework from a SharedPayload', () => {
-    const fw = hydratePayload(makePayload(), 'new-id')
+    const fw = frameworkFromPayload(makePayload(), 'new-id')
     expect(fw.id).toBe('new-id')
     expect(fw.name).toBe('Shared')
     expect(fw.axisX).toBe('X')
@@ -64,7 +64,7 @@ describe('hydratePayload', () => {
     payload.quadrants[0].color = 'red'
     payload.quadrants[1].color = '#abc'
     payload.quadrants[2].color = 'rgb(255,0,0)'
-    const fw = hydratePayload(payload, 'id')
+    const fw = frameworkFromPayload(payload, 'id')
     expect(fw.quadrants[0].color).toBe('#fbbf24')
     expect(fw.quadrants[1].color).toBe('#60a5fa')
     expect(fw.quadrants[2].color).toBe('#34d399')
@@ -74,7 +74,7 @@ describe('hydratePayload', () => {
   it('defaults missing colors to defaultColors', () => {
     const payload = makePayload()
     payload.quadrants[0].color = ''
-    const fw = hydratePayload(payload, 'id')
+    const fw = frameworkFromPayload(payload, 'id')
     expect(fw.quadrants[0].color).toBe('#fbbf24')
   })
 
@@ -82,7 +82,7 @@ describe('hydratePayload', () => {
     const payload = makePayload()
     // @ts-expect-error - testing missing coords
     payload.quadrants[0].items = [{ text: 'No coords' }]
-    const fw = hydratePayload(payload, 'id')
+    const fw = frameworkFromPayload(payload, 'id')
     expect(fw.quadrants[0].items[0].x).toBe(10)
     expect(fw.quadrants[0].items[0].y).toBe(10)
   })
@@ -94,7 +94,7 @@ describe('hydratePayload', () => {
       { text: 'Too low', x: -500, y: -10 },
       { text: 'In range', x: 50, y: 50 },
     ]
-    const fw = hydratePayload(payload, 'id')
+    const fw = frameworkFromPayload(payload, 'id')
     expect(fw.quadrants[0].items[0].x).toBe(95)
     expect(fw.quadrants[0].items[0].y).toBe(95)
     expect(fw.quadrants[0].items[1].x).toBe(0)
@@ -106,7 +106,7 @@ describe('hydratePayload', () => {
   it('preserves positions reachable via keyboard repositioning (BUG-007)', () => {
     const payload = makePayload()
     payload.quadrants[0].items = [{ text: 'Keyboard edge', x: 95, y: 0 }]
-    const fw = hydratePayload(payload, 'id')
+    const fw = frameworkFromPayload(payload, 'id')
     expect(fw.quadrants[0].items[0].x).toBe(95)
     expect(fw.quadrants[0].items[0].y).toBe(0)
   })
@@ -253,7 +253,7 @@ describe('frameworkMatchesPayload', () => {
     expect(frameworkMatchesPayload(fw, makePayload())).toBe(true)
   })
 
-  it('matches when payload coordinates are out of range but hydrate to the stored values (BUG-007)', () => {
+  it('matches when payload coordinates are out of range but clamp to the stored values (BUG-007)', () => {
     // Re-importing the same link must navigate, not raise a false conflict:
     // the stored copy holds clamped coordinates while the payload holds raw ones.
     const fw = makeMatchingFramework()

@@ -18,7 +18,7 @@ export interface ShareResult {
   outcome: ShareOutcome
 }
 
-interface UseShareImportOptions {
+interface UseFrameworkSharingOptions {
   getFramework: (id: string | null) => Framework | null
   navigate: (id: string | null) => void
   addRaw: (fw: Framework) => void
@@ -26,7 +26,13 @@ interface UseShareImportOptions {
   addImport: (fw: Framework) => Framework
 }
 
-export function useShareImport({ getFramework, navigate, addRaw, replace, addImport }: UseShareImportOptions) {
+export function useFrameworkSharing({
+  getFramework,
+  navigate,
+  addRaw,
+  replace,
+  addImport,
+}: UseFrameworkSharingOptions) {
   const [conflict, setConflict] = useState<Conflict | null>(null)
   const [error, setError] = useState<string | null>(null)
   const [importing, setImporting] = useState(() => !!getHashFromUrl())

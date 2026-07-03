@@ -48,7 +48,7 @@ export function filterValidFrameworks(parsed: unknown): Framework[] {
   return parsed.filter(isValidFramework)
 }
 
-export function hydratePayload(payload: SharedPayload, id: string): Framework {
+export function frameworkFromPayload(payload: SharedPayload, id: string): Framework {
   return {
     id,
     name: payload.name,
@@ -114,7 +114,7 @@ export function frameworkMatchesPayload(existing: Framework, payload: SharedPayl
       if ((q.color || '') !== (pq.color || '')) return false
       const pqItems = pq.items ?? []
       if (q.items.length !== pqItems.length) return false
-      // Compare against what hydration would store (clamped), not the raw
+      // Compare against what frameworkFromPayload would store (clamped), not the raw
       // payload values — otherwise re-importing the same link reports a
       // false conflict whenever the payload holds out-of-range coordinates.
       return q.items.every(

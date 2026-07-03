@@ -3,7 +3,7 @@ import { useFrameworks } from './hooks/useFrameworks'
 import { useRouting } from './hooks/useRouting'
 import { useDarkMode } from './hooks/useDarkMode'
 import { useIsMobile } from './hooks/useIsMobile'
-import { useShareImport } from './hooks/useShareImport'
+import { useFrameworkSharing } from './hooks/useFrameworkSharing'
 import { useUndoShortcuts } from './hooks/useUndoShortcuts'
 import { isNamedRoute, replacePath } from './logic/routing'
 import Sidebar from './components/Sidebar'
@@ -64,7 +64,7 @@ export default function App() {
     share,
     exportJson,
     importJson,
-  } = useShareImport({
+  } = useFrameworkSharing({
     getFramework,
     navigate,
     addRaw,

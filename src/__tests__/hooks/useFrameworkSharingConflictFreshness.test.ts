@@ -17,7 +17,7 @@ vi.mock('../../io', () => ({
   pickJsonFile: vi.fn().mockResolvedValue(null),
 }))
 
-import { useShareImport } from '../../hooks/useShareImport'
+import { useFrameworkSharing } from '../../hooks/useFrameworkSharing'
 import { decodeSharedPayload } from '../../sharing'
 import { getHashFromUrl } from '../../logic/routing'
 import type { Framework, SharedPayload } from '../../types'
@@ -54,7 +54,7 @@ function makePayload(): SharedPayload {
   }
 }
 
-describe('useShareImport conflict replace freshness (BUG-027)', () => {
+describe('useFrameworkSharing conflict replace freshness (BUG-027)', () => {
   beforeEach(() => {
     vi.mocked(getHashFromUrl).mockReturnValue('payload-hash')
     vi.mocked(decodeSharedPayload).mockResolvedValue(makePayload())
@@ -72,7 +72,7 @@ describe('useShareImport conflict replace freshness (BUG-027)', () => {
     const addRaw = vi.fn()
     const addImport = vi.fn()
 
-    const { result } = renderHook(() => useShareImport({ getFramework, navigate, addRaw, replace, addImport }))
+    const { result } = renderHook(() => useFrameworkSharing({ getFramework, navigate, addRaw, replace, addImport }))
 
     // Wait for decodeSharedPayload promise and the queued setTimeout(0) that
     // surfaces the conflict to flush.

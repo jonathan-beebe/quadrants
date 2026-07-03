@@ -24,7 +24,7 @@ vi.mock('../../io', () => ({
   pickJsonFile: vi.fn().mockResolvedValue(null),
 }))
 
-import { useShareImport } from '../../hooks/useShareImport'
+import { useFrameworkSharing } from '../../hooks/useFrameworkSharing'
 
 function makeOptions() {
   return {
@@ -36,7 +36,7 @@ function makeOptions() {
   }
 }
 
-describe('useShareImport same-link re-import (BUG-008)', () => {
+describe('useFrameworkSharing same-link re-import (BUG-008)', () => {
   const originalHash = window.location.hash
 
   beforeEach(() => {
@@ -49,7 +49,7 @@ describe('useShareImport same-link re-import (BUG-008)', () => {
 
   it('imports again when the identical share link is activated after the first import resolved', async () => {
     const opts = makeOptions()
-    renderHook(() => useShareImport(opts))
+    renderHook(() => useFrameworkSharing(opts))
 
     // First activation: let the decode promise and the deferred
     // navigate/replacePath timeout fully resolve.

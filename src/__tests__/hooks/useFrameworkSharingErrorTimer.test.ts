@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 
-// Stub modules that useShareImport depends on
+// Stub modules that useFrameworkSharing depends on
 vi.mock('../../sharing', () => ({
   encodeFramework: vi.fn(),
   decodeSharedPayload: vi.fn().mockResolvedValue(null),
@@ -17,7 +17,7 @@ vi.mock('../../io', () => ({
   pickJsonFile: vi.fn().mockResolvedValue(null),
 }))
 
-import { useShareImport } from '../../hooks/useShareImport'
+import { useFrameworkSharing } from '../../hooks/useFrameworkSharing'
 
 function makeOptions() {
   return {
@@ -29,7 +29,7 @@ function makeOptions() {
   }
 }
 
-describe('useShareImport error timer cleanup', () => {
+describe('useFrameworkSharing error timer cleanup', () => {
   beforeEach(() => {
     vi.useFakeTimers()
   })
@@ -40,7 +40,7 @@ describe('useShareImport error timer cleanup', () => {
 
   it('clears the pending error timer on unmount', async () => {
     const opts = makeOptions()
-    const { result, unmount } = renderHook(() => useShareImport(opts))
+    const { result, unmount } = renderHook(() => useFrameworkSharing(opts))
 
     // Trigger an error by importing invalid JSON
     const { pickJsonFile } = await import('../../io')

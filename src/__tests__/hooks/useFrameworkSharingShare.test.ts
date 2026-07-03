@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
 import { renderHook } from '@testing-library/react'
 
-// Stub modules that useShareImport depends on so `share` runs in isolation.
+// Stub modules that useFrameworkSharing depends on so `share` runs in isolation.
 vi.mock('../../sharing', () => ({
   encodeFramework: vi.fn().mockResolvedValue('encoded-hash-payload'),
   decodeSharedPayload: vi.fn().mockResolvedValue(null),
@@ -17,7 +17,7 @@ vi.mock('../../io', () => ({
   pickJsonFile: vi.fn().mockResolvedValue(null),
 }))
 
-import { useShareImport } from '../../hooks/useShareImport'
+import { useFrameworkSharing } from '../../hooks/useFrameworkSharing'
 import type { Framework } from '../../types'
 
 function makeOptions() {
@@ -47,7 +47,7 @@ function makeFramework(): Framework {
   }
 }
 
-describe('useShareImport share clipboard feature detection (BUG-025)', () => {
+describe('useFrameworkSharing share clipboard feature detection (BUG-025)', () => {
   const originalClipboard = Object.getOwnPropertyDescriptor(navigator, 'clipboard')
   const originalShare = Object.getOwnPropertyDescriptor(navigator, 'share')
 
@@ -74,7 +74,7 @@ describe('useShareImport share clipboard feature detection (BUG-025)', () => {
       value: { writeText },
     })
 
-    const { result } = renderHook(() => useShareImport(makeOptions()))
+    const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
 
     const out = await result.current.share(makeFramework())
 
@@ -89,7 +89,7 @@ describe('useShareImport share clipboard feature detection (BUG-025)', () => {
     const share = vi.fn().mockResolvedValue(undefined)
     Object.defineProperty(navigator, 'share', { configurable: true, value: share })
 
-    const { result } = renderHook(() => useShareImport(makeOptions()))
+    const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
 
     const out = await result.current.share(makeFramework())
 
@@ -104,7 +104,7 @@ describe('useShareImport share clipboard feature detection (BUG-025)', () => {
     const share = vi.fn().mockResolvedValue(undefined)
     Object.defineProperty(navigator, 'share', { configurable: true, value: share })
 
-    const { result } = renderHook(() => useShareImport(makeOptions()))
+    const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
 
     const out = await result.current.share(makeFramework())
 
@@ -122,7 +122,7 @@ describe('useShareImport share clipboard feature detection (BUG-025)', () => {
       value: vi.fn().mockRejectedValue(abort),
     })
 
-    const { result } = renderHook(() => useShareImport(makeOptions()))
+    const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
 
     const out = await result.current.share(makeFramework())
 
@@ -135,7 +135,7 @@ describe('useShareImport share clipboard feature detection (BUG-025)', () => {
     // @ts-expect-error -- test-only cleanup
     delete (navigator as Navigator).share
 
-    const { result } = renderHook(() => useShareImport(makeOptions()))
+    const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
 
     const out = await result.current.share(makeFramework())
 
