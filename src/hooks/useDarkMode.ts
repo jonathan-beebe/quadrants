@@ -12,7 +12,7 @@ function subscribeToSystemTheme(callback: () => void) {
   return () => darkQuery?.removeEventListener('change', callback)
 }
 
-function getSystemDark() {
+function getIsSystemDark() {
   return darkQuery?.matches ?? false
 }
 
@@ -31,19 +31,19 @@ function getInitialMode(): ThemeMode {
   return 'system'
 }
 
-function resolveMode(mode: ThemeMode, systemDark: boolean): boolean {
-  if (mode === 'system') return systemDark
+function resolveIsDark(mode: ThemeMode, isSystemDark: boolean): boolean {
+  if (mode === 'system') return isSystemDark
   return mode === 'dark'
 }
 
 export function useDarkMode() {
   const [mode, setMode] = useState(getInitialMode)
-  const systemDark = useSyncExternalStore(subscribeToSystemTheme, getSystemDark)
-  const darkMode = resolveMode(mode, systemDark)
+  const isSystemDark = useSyncExternalStore(subscribeToSystemTheme, getIsSystemDark)
+  const isDark = resolveIsDark(mode, isSystemDark)
 
   useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode)
-  }, [darkMode])
+    document.documentElement.classList.toggle('dark', isDark)
+  }, [isDark])
 
   useEffect(() => {
     localStorage.setItem(STORAGE_KEY, mode)
@@ -57,5 +57,5 @@ export function useDarkMode() {
     })
   }, [])
 
-  return { darkMode, mode, setMode, cycleMode }
+  return { isDark, mode, setMode, cycleMode }
 }

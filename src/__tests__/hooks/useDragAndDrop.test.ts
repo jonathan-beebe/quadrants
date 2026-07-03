@@ -1,46 +1,46 @@
 import { describe, it, expect, vi } from 'vitest'
 import { StrictMode } from 'react'
 import { renderHook, act } from '@testing-library/react'
-import useDragAndDrop, { pageToQuadrantPercent, getQuadrantAtPoint } from '../../hooks/useDragAndDrop'
+import useDragAndDrop, { clientToQuadrantPercent, getQuadrantAtPoint } from '../../hooks/useDragAndDrop'
 import type { Item } from '../../types'
 
 // --- Pure function tests ---
 
-describe('pageToQuadrantPercent', () => {
+describe('clientToQuadrantPercent', () => {
   const rect = { left: 100, top: 200, width: 400, height: 300 } as DOMRect
 
   it('converts page coordinates to percentage within the rect', () => {
-    const result = pageToQuadrantPercent(300, 350, rect)
+    const result = clientToQuadrantPercent(300, 350, rect)
     // (300-100)/400*100 = 50, (350-200)/300*100 = 50
     expect(result.x).toBe(50)
     expect(result.y).toBe(50)
   })
 
   it('clamps x to minimum of 2', () => {
-    const result = pageToQuadrantPercent(100, 350, rect)
+    const result = clientToQuadrantPercent(100, 350, rect)
     // (0)/400*100 = 0, clamped to 2
     expect(result.x).toBe(2)
   })
 
   it('clamps x to maximum of 85', () => {
-    const result = pageToQuadrantPercent(600, 350, rect)
+    const result = clientToQuadrantPercent(600, 350, rect)
     // (500)/400*100 = 125, clamped to 85
     expect(result.x).toBe(85)
   })
 
   it('clamps y to minimum of 2', () => {
-    const result = pageToQuadrantPercent(300, 200, rect)
+    const result = clientToQuadrantPercent(300, 200, rect)
     expect(result.y).toBe(2)
   })
 
   it('clamps y to maximum of 85', () => {
-    const result = pageToQuadrantPercent(300, 600, rect)
+    const result = clientToQuadrantPercent(300, 600, rect)
     expect(result.y).toBe(85)
   })
 
   it('handles exact boundary values', () => {
     // At left+2% of width, top+2% of height
-    const result = pageToQuadrantPercent(108, 206, rect)
+    const result = clientToQuadrantPercent(108, 206, rect)
     expect(result.x).toBe(2)
     expect(result.y).toBe(2)
   })

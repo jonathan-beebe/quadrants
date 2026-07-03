@@ -34,7 +34,7 @@ export async function encodeFramework(framework: Framework): Promise<string> {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
 }
 
-export async function decodeFramework(hash: string): Promise<SharedPayload | null> {
+export async function decodeSharedPayload(hash: string): Promise<SharedPayload | null> {
   assertCompressionSupport()
   const base64 = hash.replace(/-/g, '+').replace(/_/g, '/')
   const padded = base64 + '='.repeat((4 - (base64.length % 4)) % 4)

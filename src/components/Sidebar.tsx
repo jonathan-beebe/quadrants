@@ -15,7 +15,7 @@ interface SidebarProps {
   activeId: string | null
   open: boolean
   themeMode: ThemeMode
-  darkMode: boolean
+  isDark: boolean
   onCycleTheme: () => void
   onToggle: () => void
   onSelect: (id: string) => void
@@ -31,7 +31,7 @@ export default function Sidebar({
   activeId,
   open,
   themeMode,
-  darkMode,
+  isDark,
   onCycleTheme,
   onToggle,
   onSelect,
@@ -41,7 +41,7 @@ export default function Sidebar({
   onExport,
   onImport,
 }: SidebarProps) {
-  const [menuId, setMenuId] = useState<string | null>(null)
+  const [openMenuFrameworkId, setOpenMenuFrameworkId] = useState<string | null>(null)
   const menuRef = useRef<HTMLDivElement>(null)
   const menuTriggerRef = useRef<HTMLButtonElement>(null)
   const asideRef = useRef<HTMLElement>(null)
@@ -50,10 +50,10 @@ export default function Sidebar({
   const isMobile = useIsMobile()
   const isModal = isMobile && open
 
-  const closeMenu = useCallback(() => setMenuId(null), [])
+  const closeMenu = useCallback(() => setOpenMenuFrameworkId(null), [])
   // menuTriggerRef is excluded so the trigger's own onClick toggle can close
   // the menu instead of racing the mousedown-close (BUG-005).
-  useClickOutside(menuRef, closeMenu, !!menuId, menuTriggerRef)
+  useClickOutside(menuRef, closeMenu, !!openMenuFrameworkId, menuTriggerRef)
 
   // When the drawer becomes modal (mobile + open), move focus into it and
   // remember where focus came from so we can restore it on close.
@@ -71,11 +71,11 @@ export default function Sidebar({
 
   // Focus first menu item when menu opens
   useEffect(() => {
-    if (menuId && menuRef.current) {
+    if (openMenuFrameworkId && menuRef.current) {
       const first = menuRef.current.querySelector<HTMLElement>('[role="menuitem"]')
       first?.focus()
     }
-  }, [menuId])
+  }, [openMenuFrameworkId])
 
   const handleMenuKeyDown = useMenuKeyboardNav(menuRef, closeMenu, menuTriggerRef)
 
@@ -103,7 +103,7 @@ export default function Sidebar({
             <span>Quadrants</span>
           </div>
           <div className="flex items-center gap-1">
-            <ThemeToggleButton mode={themeMode} darkMode={darkMode} onCycle={onCycleTheme} />
+            <ThemeToggleButton mode={themeMode} isDark={isDark} onCycle={onCycleTheme} />
             <Button
               ref={closeButtonRef}
               variant="icon"
@@ -145,15 +145,15 @@ export default function Sidebar({
                   <Caption>{fw.quadrants.reduce((sum, q) => sum + q.items.length, 0)} items</Caption>
                 </button>
                 <button
-                  ref={menuId === fw.id ? menuTriggerRef : undefined}
+                  ref={openMenuFrameworkId === fw.id ? menuTriggerRef : undefined}
                   className="opacity-0 group-hover:opacity-100 focus:opacity-100 [@media(pointer:coarse)]:opacity-100 p-1 rounded text-text-secondary transition-opacity duration-150 hover:bg-border mr-1"
                   aria-label={`Actions for ${fw.name}`}
                   aria-haspopup="true"
-                  aria-expanded={menuId === fw.id}
-                  onClick={() => setMenuId(menuId === fw.id ? null : fw.id)}>
+                  aria-expanded={openMenuFrameworkId === fw.id}
+                  onClick={() => setOpenMenuFrameworkId(openMenuFrameworkId === fw.id ? null : fw.id)}>
                   <MoreVerticalIcon />
                 </button>
-                {menuId === fw.id && (
+                {openMenuFrameworkId === fw.id && (
                   <div
                     className="absolute right-2 top-full bg-surface border border-border rounded-lg shadow-lg z-[200] min-w-[140px] p-1"
                     ref={menuRef}
@@ -165,7 +165,7 @@ export default function Sidebar({
                       role="menuitem"
                       onClick={() => {
                         onDuplicate(fw)
-                        setMenuId(null)
+                        setOpenMenuFrameworkId(null)
                       }}>
                       Duplicate
                     </button>
@@ -174,7 +174,7 @@ export default function Sidebar({
                       role="menuitem"
                       onClick={() => {
                         onExport(fw)
-                        setMenuId(null)
+                        setOpenMenuFrameworkId(null)
                       }}>
                       Export JSON
                     </button>
@@ -183,7 +183,7 @@ export default function Sidebar({
                       role="menuitem"
                       onClick={() => {
                         onDelete(fw.id)
-                        setMenuId(null)
+                        setOpenMenuFrameworkId(null)
                       }}>
                       Delete
                     </button>

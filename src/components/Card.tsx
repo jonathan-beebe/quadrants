@@ -51,7 +51,7 @@ export default function Card({
 }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
-  const spanRef = useRef<HTMLButtonElement>(null)
+  const displayButtonRef = useRef<HTMLButtonElement>(null)
   const pendingRef = useRef<{ startX: number; startY: number } | null>(null)
   const moveMenuRef = useRef<HTMLDivElement>(null)
   const cancelledRef = useRef(false)
@@ -72,7 +72,7 @@ export default function Card({
     }
   }, [showMoveMenu])
 
-  const handleMoveMenuKeyDown = useMenuKeyboardNav(moveMenuRef, closeMoveMenu, spanRef)
+  const handleMoveMenuKeyDown = useMenuKeyboardNav(moveMenuRef, closeMoveMenu, displayButtonRef)
 
   const resizeTextarea = useCallback(() => {
     const ta = textareaRef.current
@@ -115,9 +115,9 @@ export default function Card({
   }, [])
 
   const enterEditMode = useCallback(() => {
-    const span = spanRef.current
-    if (span) {
-      setMinSize({ width: span.offsetWidth, height: span.offsetHeight })
+    const displayButton = displayButtonRef.current
+    if (displayButton) {
+      setMinSize({ width: displayButton.offsetWidth, height: displayButton.offsetHeight })
     }
     setEditValue(itemTextRef.current)
     setEditing(true)
@@ -280,7 +280,7 @@ export default function Card({
         />
       ) : (
         <button
-          ref={spanRef}
+          ref={displayButtonRef}
           type="button"
           className={`${textClasses} ${editing ? 'cursor-text' : 'cursor-grab'} bg-transparent border-none p-0 m-0 text-left text-inherit text-[inherit] leading-[inherit]`}
           aria-label={`Edit item: ${item.text}. Press M to move to another quadrant, or arrow keys to reposition.`}

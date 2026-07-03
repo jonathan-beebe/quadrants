@@ -28,7 +28,7 @@ describe('useDarkMode', () => {
     const { useDarkMode } = await importFresh()
     const { result } = renderHook(() => useDarkMode())
     expect(result.current.mode).toBe('dark')
-    expect(result.current.darkMode).toBe(true)
+    expect(result.current.isDark).toBe(true)
   })
 
   it('ignores invalid stored values and defaults to system', async () => {
@@ -107,7 +107,7 @@ describe('useDarkMode', () => {
 
       act(() => result.current.setMode('dark'))
       expect(result.current.mode).toBe('dark')
-      expect(result.current.darkMode).toBe(true)
+      expect(result.current.isDark).toBe(true)
     })
   })
 })

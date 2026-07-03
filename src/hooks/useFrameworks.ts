@@ -25,7 +25,7 @@ export function useFrameworks() {
 
   const clearSaveError = useCallback(() => setSaveError(null), [])
 
-  const activeFramework = useCallback((id: string | null) => frameworks.find((f) => f.id === id) ?? null, [frameworks])
+  const getFramework = useCallback((id: string | null) => frameworks.find((f) => f.id === id) ?? null, [frameworks])
 
   // Single dispatch point: every data mutation funnels through here so each
   // one becomes an undoable history entry (FEAT-003).
@@ -102,7 +102,7 @@ export function useFrameworks() {
 
   return {
     frameworks,
-    getFramework: activeFramework,
+    getFramework,
     saveError,
     clearSaveError,
     undo,

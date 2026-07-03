@@ -4,7 +4,7 @@ import { renderHook, act } from '@testing-library/react'
 // Stub modules that useShareImport depends on
 vi.mock('../../sharing', () => ({
   encodeFramework: vi.fn(),
-  decodeFramework: vi.fn().mockResolvedValue(null),
+  decodeSharedPayload: vi.fn().mockResolvedValue(null),
 }))
 
 vi.mock('../../logic/routing', () => ({

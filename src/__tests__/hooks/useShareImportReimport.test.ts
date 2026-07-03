@@ -16,7 +16,7 @@ const validPayload = {
 
 vi.mock('../../sharing', () => ({
   encodeFramework: vi.fn(),
-  decodeFramework: vi.fn(() => Promise.resolve(validPayload)),
+  decodeSharedPayload: vi.fn(() => Promise.resolve(validPayload)),
 }))
 
 vi.mock('../../io', () => ({

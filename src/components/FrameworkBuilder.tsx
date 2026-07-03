@@ -12,20 +12,24 @@ import { TEMPLATE_CATEGORIES } from '../types'
 import type { Framework, FrameworkTemplate } from '../types'
 
 interface FrameworkBuilderProps {
-  editing: Framework | null
+  editingFramework: Framework | null
   onCreate: (template: FrameworkTemplate) => void
   onCancel: () => void
 }
 
 const CUSTOM_KEY = '__custom__'
 
-export default function FrameworkBuilder({ editing, onCreate, onCancel }: FrameworkBuilderProps) {
+export default function FrameworkBuilder({ editingFramework, onCreate, onCancel }: FrameworkBuilderProps) {
   const isMobile = useIsMobile()
-  const [name, setName] = useState(editing?.name || '')
-  const [axisX, setAxisX] = useState(editing?.axisX || '')
-  const [axisY, setAxisY] = useState(editing?.axisY || '')
-  const [quadrants, setQuadrants] = useState(editing ? editing.quadrants.map((q) => q.label) : ['', '', '', ''])
-  const [colors, setColors] = useState<string[]>(editing ? editing.quadrants.map((q) => q.color) : defaultColors)
+  const [name, setName] = useState(editingFramework?.name || '')
+  const [axisX, setAxisX] = useState(editingFramework?.axisX || '')
+  const [axisY, setAxisY] = useState(editingFramework?.axisY || '')
+  const [quadrants, setQuadrants] = useState(
+    editingFramework ? editingFramework.quadrants.map((q) => q.label) : ['', '', '', ''],
+  )
+  const [colors, setColors] = useState<string[]>(
+    editingFramework ? editingFramework.quadrants.map((q) => q.color) : defaultColors,
+  )
   const [selected, setSelected] = useState<string>(CUSTOM_KEY)
   const [query, setQuery] = useState('')
   const [listOpen, setListOpen] = useState(false)
@@ -164,7 +168,7 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
   const form = (
     <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
       <div>
-        <SectionLabel>{editing ? 'Framework' : 'Customize'}</SectionLabel>
+        <SectionLabel>{editingFramework ? 'Framework' : 'Customize'}</SectionLabel>
         <label className="flex flex-col gap-1.5">
           <span className="text-[13px] font-medium text-text-secondary">Framework Name</span>
           <input
@@ -226,7 +230,7 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
           Cancel
         </Button>
         <Button type="submit" disabled={!isValid}>
-          {editing ? 'Save Changes' : 'Create Framework'}
+          {editingFramework ? 'Save Changes' : 'Create Framework'}
         </Button>
       </div>
     </form>
@@ -235,19 +239,19 @@ export default function FrameworkBuilder({ editing, onCreate, onCancel }: Framew
   // Desktop create mode pins the page to the viewport so the template list
   // can scroll to the bottom edge (BUG-003); edit mode and mobile keep
   // normal document flow.
-  const fullHeight = !editing && !isMobile
+  const fullHeight = !editingFramework && !isMobile
 
   return (
     <div className={`flex justify-center px-6 py-10 ${fullHeight ? 'h-screen' : 'min-h-screen'}`}>
       <div className={`w-full max-w-[860px] ${fullHeight ? 'flex flex-col min-h-0' : ''}`}>
         <div className="flex items-center justify-between mb-8 shrink-0">
-          <PageTitle as="h2">{editing ? 'Edit Framework' : 'Create Framework'}</PageTitle>
+          <PageTitle as="h2">{editingFramework ? 'Edit Framework' : 'Create Framework'}</PageTitle>
           <Button variant="ghost" onClick={onCancel}>
             Cancel
           </Button>
         </div>
 
-        {editing ? (
+        {editingFramework ? (
           form
         ) : isMobile ? (
           <div className="flex flex-col gap-6">

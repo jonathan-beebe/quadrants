@@ -249,7 +249,7 @@ const iconEntries = [
 /* ── Page ── */
 
 export default function DesignSystem() {
-  const { darkMode, mode, cycleMode } = useDarkMode()
+  const { isDark, mode, cycleMode } = useDarkMode()
   const [pickerColor, setPickerColor] = useState('#60a5fa')
   const [showToast, setShowToast] = useState(false)
 
@@ -264,7 +264,7 @@ export default function DesignSystem() {
             Back to app
           </a>
         </div>
-        <ThemeToggleButton mode={mode} darkMode={darkMode} onCycle={cycleMode} />
+        <ThemeToggleButton mode={mode} isDark={isDark} onCycle={cycleMode} />
       </header>
 
       <main className="max-w-4xl mx-auto px-8 py-8">
@@ -325,7 +325,7 @@ export default function DesignSystem() {
             <Button variant="icon" aria-label="Edit">
               <EditIcon size={18} />
             </Button>
-            <ThemeToggleButton mode={mode} darkMode={darkMode} onCycle={cycleMode} />
+            <ThemeToggleButton mode={mode} isDark={isDark} onCycle={cycleMode} />
           </DemoRow>
         </Subsection>
 
@@ -348,7 +348,7 @@ export default function DesignSystem() {
         </Subsection>
 
         <Subsection title="Theme Toggle" layout="inline">
-          <ThemeToggleButton mode={mode} darkMode={darkMode} onCycle={cycleMode} />
+          <ThemeToggleButton mode={mode} isDark={isDark} onCycle={cycleMode} />
           <Caption>Current: {mode}</Caption>
         </Subsection>
 

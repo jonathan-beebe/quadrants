@@ -4,7 +4,7 @@ import { renderHook } from '@testing-library/react'
 // Stub modules that useShareImport depends on so `share` runs in isolation.
 vi.mock('../../sharing', () => ({
   encodeFramework: vi.fn().mockResolvedValue('encoded-hash-payload'),
-  decodeFramework: vi.fn().mockResolvedValue(null),
+  decodeSharedPayload: vi.fn().mockResolvedValue(null),
 }))
 
 vi.mock('../../logic/routing', () => ({

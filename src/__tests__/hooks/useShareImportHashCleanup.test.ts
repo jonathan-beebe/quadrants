@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook } from '@testing-library/react'
 
-// Mock decodeFramework to return a never-resolving promise so we can
+// Mock decodeSharedPayload to return a never-resolving promise so we can
 // observe state *before* the async decode completes.
 vi.mock('../../sharing', () => ({
   encodeFramework: vi.fn(),
-  decodeFramework: vi.fn(() => new Promise(() => {})),
+  decodeSharedPayload: vi.fn(() => new Promise(() => {})),
 }))
 
 // Use the real routing module so replacePath/getHashFromUrl actually
@@ -46,7 +46,7 @@ describe('useShareImport URL hash cleanup', () => {
     const opts = makeOptions()
     renderHook(() => useShareImport(opts))
 
-    // The hook's mount effect calls importFromHash(). Because decodeFramework
+    // The hook's mount effect calls importFromHash(). Because decodeSharedPayload
     // returns a never-resolving promise, no .then/.catch handlers can run.
     // The hash must already be cleared by this point — otherwise a refresh
     // during the async decode window re-imports the same payload.

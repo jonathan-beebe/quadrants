@@ -27,7 +27,7 @@ export interface UseDragAndDropOptions {
  *
  * Uses clientX/clientY space to match getBoundingClientRect().
  */
-export function pageToQuadrantPercent(clientX: number, clientY: number, rect: DOMRect): { x: number; y: number } {
+export function clientToQuadrantPercent(clientX: number, clientY: number, rect: DOMRect): { x: number; y: number } {
   const x = ((clientX - rect.left) / rect.width) * 100
   const y = ((clientY - rect.top) / rect.height) * 100
   // Intentionally narrower than the canonical POSITION_MIN/MAX envelope
@@ -81,7 +81,7 @@ export default function useDragAndDrop({ quadrantRefs, canvasRefs, onDrop }: Use
       // double-invokes them in dev (MAINT-005).
       const target = getQuadrantAtPoint(e.clientX, e.clientY, quadrantRefs.current!, canvasRefs.current!)
       if (target) {
-        const { x, y } = pageToQuadrantPercent(e.clientX - drag.grabX, e.clientY - drag.grabY, target.rect)
+        const { x, y } = clientToQuadrantPercent(e.clientX - drag.grabX, e.clientY - drag.grabY, target.rect)
         onDropRef.current({
           itemId: drag.itemId,
           sourceIdx: drag.sourceIdx,

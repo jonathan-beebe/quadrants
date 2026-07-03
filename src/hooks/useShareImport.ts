@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
-import { encodeFramework, decodeFramework } from '../sharing'
+import { encodeFramework, decodeSharedPayload } from '../sharing'
 import { sanitizeImportedFramework } from '../logic/framework'
 import { resolveImportAction } from '../logic/shareImport'
 import { getHashFromUrl, replacePath } from '../logic/routing'
@@ -58,7 +58,7 @@ export function useShareImport({ getFramework, navigate, addRaw, replace, addImp
 
     setImporting(true)
 
-    decodeFramework(hash)
+    decodeSharedPayload(hash)
       .then((payload) => {
         if (!payload) {
           setImporting(false)

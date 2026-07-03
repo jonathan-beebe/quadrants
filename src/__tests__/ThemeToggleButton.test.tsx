@@ -6,7 +6,7 @@ import ThemeToggleButton from '../components/atoms/ThemeToggleButton'
 describe('ThemeToggleButton', () => {
   it('shows light-mode label and calls onCycle when in light mode', async () => {
     const onCycle = vi.fn()
-    render(<ThemeToggleButton mode="light" darkMode={false} onCycle={onCycle} />)
+    render(<ThemeToggleButton mode="light" isDark={false} onCycle={onCycle} />)
     const btn = screen.getByRole('button', { name: /using light theme, switch to dark mode/i })
     expect(btn).toBeInTheDocument()
     await userEvent.setup().click(btn)
@@ -14,29 +14,29 @@ describe('ThemeToggleButton', () => {
   })
 
   it('shows dark-mode label when in dark mode', () => {
-    render(<ThemeToggleButton mode="dark" darkMode={true} onCycle={() => {}} />)
+    render(<ThemeToggleButton mode="dark" isDark={true} onCycle={() => {}} />)
     expect(screen.getByRole('button', { name: /using dark theme, switch to system theme/i })).toBeInTheDocument()
   })
 
   it('shows system-mode label with resolved light state', () => {
-    render(<ThemeToggleButton mode="system" darkMode={false} onCycle={() => {}} />)
+    render(<ThemeToggleButton mode="system" isDark={false} onCycle={() => {}} />)
     expect(screen.getByRole('button', { name: /following system theme \(light\)/i })).toBeInTheDocument()
   })
 
   it('shows system-mode label with resolved dark state', () => {
-    render(<ThemeToggleButton mode="system" darkMode={true} onCycle={() => {}} />)
+    render(<ThemeToggleButton mode="system" isDark={true} onCycle={() => {}} />)
     expect(screen.getByRole('button', { name: /following system theme \(dark\)/i })).toBeInTheDocument()
   })
 
   it('renders a small stacked sun icon in system mode', () => {
-    const { container } = render(<ThemeToggleButton mode="system" darkMode={false} onCycle={() => {}} />)
+    const { container } = render(<ThemeToggleButton mode="system" isDark={false} onCycle={() => {}} />)
     // System mode: base icon + small stacked sun = 2 SVGs
     const svgs = container.querySelectorAll('svg')
     expect(svgs.length).toBe(2)
   })
 
   it('renders a single icon in light or dark mode', () => {
-    const { container } = render(<ThemeToggleButton mode="light" darkMode={false} onCycle={() => {}} />)
+    const { container } = render(<ThemeToggleButton mode="light" isDark={false} onCycle={() => {}} />)
     const svgs = container.querySelectorAll('svg')
     expect(svgs.length).toBe(1)
   })

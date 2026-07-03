@@ -35,7 +35,7 @@ export default function App() {
     addRaw,
   } = useFrameworks()
   const { activeId, navigate } = useRouting()
-  const { darkMode, mode, cycleMode } = useDarkMode()
+  const { isDark, mode, cycleMode } = useDarkMode()
   const isMobile = useIsMobile()
   const [showBuilder, setShowBuilder] = useState(false)
   const [editingFramework, setEditingFramework] = useState<Framework | null>(null)
@@ -163,7 +163,7 @@ export default function App() {
           activeId={activeId}
           open={sidebarOpen}
           themeMode={mode}
-          darkMode={darkMode}
+          isDark={isDark}
           onCycleTheme={cycleMode}
           onToggle={() => setSidebarOpen((s) => !s)}
           onSelect={navigate}
@@ -187,7 +187,7 @@ export default function App() {
             onCancel={handleConflictCancel}
           />
         ) : showBuilder ? (
-          <FrameworkBuilder editing={editingFramework} onCreate={handleSaveEdit} onCancel={closeBuilder} />
+          <FrameworkBuilder editingFramework={editingFramework} onCreate={handleSaveEdit} onCancel={closeBuilder} />
         ) : activeFramework ? (
           <ErrorBoundary key={activeFramework.id}>
             <QuadrantCanvas

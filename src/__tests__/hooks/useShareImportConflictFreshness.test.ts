@@ -1,10 +1,10 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { renderHook, act } from '@testing-library/react'
 
-// Mock sharing so decodeFramework resolves with our crafted payload.
+// Mock sharing so decodeSharedPayload resolves with our crafted payload.
 vi.mock('../../sharing', () => ({
   encodeFramework: vi.fn(),
-  decodeFramework: vi.fn(),
+  decodeSharedPayload: vi.fn(),
 }))
 
 vi.mock('../../logic/routing', () => ({
@@ -18,7 +18,7 @@ vi.mock('../../io', () => ({
 }))
 
 import { useShareImport } from '../../hooks/useShareImport'
-import { decodeFramework } from '../../sharing'
+import { decodeSharedPayload } from '../../sharing'
 import { getHashFromUrl } from '../../logic/routing'
 import type { Framework, SharedPayload } from '../../types'
 
@@ -57,7 +57,7 @@ function makePayload(): SharedPayload {
 describe('useShareImport conflict replace freshness (BUG-027)', () => {
   beforeEach(() => {
     vi.mocked(getHashFromUrl).mockReturnValue('payload-hash')
-    vi.mocked(decodeFramework).mockResolvedValue(makePayload())
+    vi.mocked(decodeSharedPayload).mockResolvedValue(makePayload())
   })
 
   afterEach(() => {
@@ -74,7 +74,7 @@ describe('useShareImport conflict replace freshness (BUG-027)', () => {
 
     const { result } = renderHook(() => useShareImport({ getFramework, navigate, addRaw, replace, addImport }))
 
-    // Wait for decodeFramework promise and the queued setTimeout(0) that
+    // Wait for decodeSharedPayload promise and the queued setTimeout(0) that
     // surfaces the conflict to flush.
     await act(async () => {
       await Promise.resolve()

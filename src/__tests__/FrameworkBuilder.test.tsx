@@ -9,7 +9,7 @@ vi.mock('../hooks/useIsMobile', () => ({
 }))
 
 const defaultProps = {
-  editing: null,
+  editingFramework: null,
   onCreate: vi.fn(),
   onCancel: vi.fn(),
 }
@@ -40,7 +40,7 @@ describe('FrameworkBuilder', () => {
   })
 
   it('shows "Edit Framework" heading when editing', () => {
-    render(<FrameworkBuilder {...defaultProps} editing={editingFramework} />)
+    render(<FrameworkBuilder {...defaultProps} editingFramework={editingFramework} />)
     expect(screen.getByRole('heading', { name: 'Edit Framework' })).toBeInTheDocument()
   })
 
@@ -51,7 +51,7 @@ describe('FrameworkBuilder', () => {
   })
 
   it('hides the template list when editing', () => {
-    render(<FrameworkBuilder {...defaultProps} editing={editingFramework} />)
+    render(<FrameworkBuilder {...defaultProps} editingFramework={editingFramework} />)
     expect(screen.queryByRole('button', { name: /Eisenhower Matrix/ })).not.toBeInTheDocument()
     expect(screen.queryByRole('searchbox', { name: /filter templates/i })).not.toBeInTheDocument()
   })
@@ -196,7 +196,7 @@ describe('FrameworkBuilder', () => {
   })
 
   it('pre-fills form when editing an existing framework', () => {
-    render(<FrameworkBuilder {...defaultProps} editing={editingFramework} />)
+    render(<FrameworkBuilder {...defaultProps} editingFramework={editingFramework} />)
 
     expect(screen.getByDisplayValue('My Framework')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Alpha')).toBeInTheDocument()

@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { encodeFramework, decodeFramework } from '../sharing'
+import { encodeFramework, decodeSharedPayload } from '../sharing'
 import type { Framework } from '../types'
 
 afterEach(() => {
@@ -36,11 +36,11 @@ async function encodeRawPayload(payload: unknown): Promise<string> {
   return btoa(binary).replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '')
 }
 
-describe('encodeFramework / decodeFramework', () => {
+describe('encodeFramework / decodeSharedPayload', () => {
   it('round-trips a framework through encode and decode', async () => {
     const fw = makeFramework()
     const encoded = await encodeFramework(fw)
-    const decoded = await decodeFramework(encoded)
+    const decoded = await decodeSharedPayload(encoded)
 
     expect(decoded).not.toBeNull()
     expect(decoded!.name).toBe('Test Framework')
@@ -54,7 +54,7 @@ describe('encodeFramework / decodeFramework', () => {
   it('includes the framework id in the encoded payload', async () => {
     const fw = makeFramework({ id: 'my-uuid-123' })
     const encoded = await encodeFramework(fw)
-    const decoded = await decodeFramework(encoded)
+    const decoded = await decodeSharedPayload(encoded)
 
     expect(decoded!.id).toBe('my-uuid-123')
   })
@@ -62,7 +62,7 @@ describe('encodeFramework / decodeFramework', () => {
   it('strips item-level and framework-level metadata (createdAt, updatedAt, item ids)', async () => {
     const fw = makeFramework()
     const encoded = await encodeFramework(fw)
-    const decoded = await decodeFramework(encoded)
+    const decoded = await decodeSharedPayload(encoded)
 
     expect(decoded).not.toHaveProperty('createdAt')
     expect(decoded).not.toHaveProperty('updatedAt')
@@ -98,7 +98,7 @@ describe('encodeFramework / decodeFramework', () => {
       const encoded = await encodeFramework(fw)
       const corrupt = encoded.slice(0, 10) + encoded.slice(18)
 
-      await expect(decodeFramework(corrupt)).rejects.toThrow()
+      await expect(decodeSharedPayload(corrupt)).rejects.toThrow()
 
       // Give any orphaned writer promise a chance to surface.
       await new Promise((r) => setTimeout(r, 20))
@@ -112,7 +112,7 @@ describe('encodeFramework / decodeFramework', () => {
     // Wiring-level check only: the validation rule matrix is unit-tested
     // directly in logic/sharePayload.test.ts.
     const hash = await encodeRawPayload({ notAFramework: true })
-    expect(await decodeFramework(hash)).toBeNull()
+    expect(await decodeSharedPayload(hash)).toBeNull()
   })
 
   it('handles frameworks with unicode text', async () => {
@@ -120,7 +120,7 @@ describe('encodeFramework / decodeFramework', () => {
       name: 'Prüfung 测试 テスト',
     })
     const encoded = await encodeFramework(fw)
-    const decoded = await decodeFramework(encoded)
+    const decoded = await decodeSharedPayload(encoded)
     expect(decoded!.name).toBe('Prüfung 测试 テスト')
   })
 
@@ -160,7 +160,7 @@ describe('encodeFramework / decodeFramework', () => {
     const encoded = await encodeFramework(fw)
     expect(encoded.length).toBeGreaterThan(0)
 
-    const decoded = await decodeFramework(encoded)
+    const decoded = await decodeSharedPayload(encoded)
     expect(decoded).not.toBeNull()
     expect(decoded!.quadrants[0].items).toHaveLength(items.length)
     expect(decoded!.quadrants[0].items[0].text).toBe(items[0].text)
@@ -174,13 +174,13 @@ describe('encodeFramework / decodeFramework', () => {
     await expect(encodeFramework(fw)).rejects.toBeInstanceOf(Error)
   })
 
-  it('decodeFramework rejects with a friendly error when DecompressionStream is unsupported (BUG-026)', async () => {
+  it('decodeSharedPayload rejects with a friendly error when DecompressionStream is unsupported (BUG-026)', async () => {
     // First produce a valid hash with the real implementation.
     const fw = makeFramework()
     const encoded = await encodeFramework(fw)
 
     vi.stubGlobal('DecompressionStream', undefined)
-    await expect(decodeFramework(encoded)).rejects.toThrow(/browser|support/i)
-    await expect(decodeFramework(encoded)).rejects.toBeInstanceOf(Error)
+    await expect(decodeSharedPayload(encoded)).rejects.toThrow(/browser|support/i)
+    await expect(decodeSharedPayload(encoded)).rejects.toBeInstanceOf(Error)
   })
 })

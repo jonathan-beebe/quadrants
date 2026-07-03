@@ -1,4 +1,4 @@
-import { hydratePayload, frameworksMatch } from './framework'
+import { hydratePayload, frameworkMatchesPayload } from './framework'
 import type { Framework, SharedPayload } from '../types'
 
 export type ImportAction =
@@ -10,7 +10,7 @@ export function resolveImportAction(payload: SharedPayload, existing: Framework 
   if (!existing) {
     return { kind: 'add', framework: hydratePayload(payload, payload.id) }
   }
-  if (frameworksMatch(existing, payload)) {
+  if (frameworkMatchesPayload(existing, payload)) {
     return { kind: 'navigate', id: payload.id }
   }
   return { kind: 'conflict', existing, incoming: hydratePayload(payload, payload.id) }

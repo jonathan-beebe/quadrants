@@ -102,7 +102,7 @@ export function applyTemplateEdit(fw: Framework, template: FrameworkTemplate): F
   }
 }
 
-export function frameworksMatch(existing: Framework, payload: SharedPayload): boolean {
+export function frameworkMatchesPayload(existing: Framework, payload: SharedPayload): boolean {
   return (
     existing.name === payload.name &&
     existing.axisX === (payload.axisX || '') &&

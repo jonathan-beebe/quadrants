@@ -5,7 +5,7 @@ import {
   deleteFramework,
   duplicateFramework,
   applyTemplateEdit,
-  frameworksMatch,
+  frameworkMatchesPayload,
   duplicateAsImport,
   replaceFramework,
   sanitizeImportedFramework,
@@ -191,7 +191,7 @@ describe('applyTemplateEdit', () => {
   })
 })
 
-describe('frameworksMatch', () => {
+describe('frameworkMatchesPayload', () => {
   function makeMatchingFramework(): Framework {
     return makeFramework({
       name: 'Shared',
@@ -207,50 +207,50 @@ describe('frameworksMatch', () => {
   }
 
   it('returns true when name, axes, labels, and items match', () => {
-    expect(frameworksMatch(makeMatchingFramework(), makePayload())).toBe(true)
+    expect(frameworkMatchesPayload(makeMatchingFramework(), makePayload())).toBe(true)
   })
 
   it('returns false when names differ', () => {
     const fw = makeMatchingFramework()
     fw.name = 'Different'
-    expect(frameworksMatch(fw, makePayload())).toBe(false)
+    expect(frameworkMatchesPayload(fw, makePayload())).toBe(false)
   })
 
   it('returns false when axis labels differ', () => {
     const fw = makeMatchingFramework()
     fw.axisX = 'Different Axis'
-    expect(frameworksMatch(fw, makePayload())).toBe(false)
+    expect(frameworkMatchesPayload(fw, makePayload())).toBe(false)
   })
 
   it('returns false when item counts differ', () => {
     const fw = makeMatchingFramework()
     fw.quadrants[0].items.push({ id: 'extra', text: 'Extra', x: 0, y: 0, createdAt: 0 })
-    expect(frameworksMatch(fw, makePayload())).toBe(false)
+    expect(frameworkMatchesPayload(fw, makePayload())).toBe(false)
   })
 
   it('returns false when item text differs', () => {
     const fw = makeMatchingFramework()
     fw.quadrants[0].items[0].text = 'Edited locally'
-    expect(frameworksMatch(fw, makePayload())).toBe(false)
+    expect(frameworkMatchesPayload(fw, makePayload())).toBe(false)
   })
 
   it('returns false when item coordinates differ', () => {
     const fw = makeMatchingFramework()
     fw.quadrants[0].items[0].x = 99
-    expect(frameworksMatch(fw, makePayload())).toBe(false)
+    expect(frameworkMatchesPayload(fw, makePayload())).toBe(false)
   })
 
   it('returns false when quadrant colors differ', () => {
     const fw = makeMatchingFramework()
     fw.quadrants[0].color = '#000000'
-    expect(frameworksMatch(fw, makePayload())).toBe(false)
+    expect(frameworkMatchesPayload(fw, makePayload())).toBe(false)
   })
 
   it('ignores metadata fields like createdAt and item ids', () => {
     const fw = makeMatchingFramework()
     fw.quadrants[0].items[0].id = 'different-id'
     fw.quadrants[0].items[0].createdAt = 9999
-    expect(frameworksMatch(fw, makePayload())).toBe(true)
+    expect(frameworkMatchesPayload(fw, makePayload())).toBe(true)
   })
 
   it('matches when payload coordinates are out of range but hydrate to the stored values (BUG-007)', () => {
@@ -261,14 +261,14 @@ describe('frameworksMatch', () => {
     fw.quadrants[0].items[0].y = 0
     const payload = makePayload()
     payload.quadrants[0].items[0] = { text: 'Shared item', x: 300, y: -50 }
-    expect(frameworksMatch(fw, payload)).toBe(true)
+    expect(frameworkMatchesPayload(fw, payload)).toBe(true)
   })
 
   it('still reports a mismatch for genuinely different in-range coordinates', () => {
     const fw = makeMatchingFramework()
     const payload = makePayload()
     payload.quadrants[0].items[0] = { text: 'Shared item', x: 50, y: 25 }
-    expect(frameworksMatch(fw, payload)).toBe(false)
+    expect(frameworkMatchesPayload(fw, payload)).toBe(false)
   })
 })
 

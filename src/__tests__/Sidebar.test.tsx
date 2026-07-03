@@ -32,7 +32,7 @@ const defaultProps = {
   activeId: null as string | null,
   open: true,
   themeMode: 'system' as const,
-  darkMode: false,
+  isDark: false,
   onCycleTheme: vi.fn(),
   onToggle: vi.fn(),
   onSelect: vi.fn(),
