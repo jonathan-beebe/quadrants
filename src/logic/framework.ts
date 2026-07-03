@@ -6,7 +6,7 @@ function isRecord(v: unknown): v is Record<string, unknown> {
   return typeof v === 'object' && v !== null
 }
 
-function isWellFormedItem(it: unknown): it is Item {
+function isValidItem(it: unknown): it is Item {
   return (
     isRecord(it) &&
     typeof it.id === 'string' &&
@@ -16,24 +16,24 @@ function isWellFormedItem(it: unknown): it is Item {
   )
 }
 
-function isWellFormedQuadrant(q: unknown): q is Quadrant {
+function isValidQuadrant(q: unknown): q is Quadrant {
   return (
     isRecord(q) &&
     typeof q.label === 'string' &&
     typeof q.color === 'string' &&
     Array.isArray(q.items) &&
-    q.items.every(isWellFormedItem)
+    q.items.every(isValidItem)
   )
 }
 
-function isWellFormedFramework(fw: unknown): fw is Framework {
+function isValidFramework(fw: unknown): fw is Framework {
   return (
     isRecord(fw) &&
     typeof fw.id === 'string' &&
     typeof fw.name === 'string' &&
     Array.isArray(fw.quadrants) &&
     fw.quadrants.length === 4 &&
-    fw.quadrants.every(isWellFormedQuadrant)
+    fw.quadrants.every(isValidQuadrant)
   )
 }
 
@@ -43,9 +43,9 @@ function isWellFormedFramework(fw: unknown): fw is Framework {
  * timestamps must stay stable across loads, so repair (as the import
  * path does) is not an option here.
  */
-export function sanitizeStoredFrameworks(parsed: unknown): Framework[] {
+export function filterValidFrameworks(parsed: unknown): Framework[] {
   if (!Array.isArray(parsed)) return []
-  return parsed.filter(isWellFormedFramework)
+  return parsed.filter(isValidFramework)
 }
 
 export function hydratePayload(payload: SharedPayload, id: string): Framework {
@@ -140,12 +140,12 @@ export function replaceFramework(frameworks: Framework[], incoming: Framework): 
 }
 
 /**
- * Sanitize a parsed JSON object into a valid Framework, filling in missing
+ * Repair a parsed JSON object into a valid Framework, filling in missing
  * or invalid fields with safe defaults. Returns null if the input is not
  * salvageable (missing name or not exactly 4 quadrants).
  */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export function sanitizeImportedFramework(raw: any): Framework | null {
+export function repairImportedFramework(raw: any): Framework | null {
   if (!raw || typeof raw !== 'object') return null
   if (typeof raw.name !== 'string' || !raw.name.trim()) return null
   if (!Array.isArray(raw.quadrants) || raw.quadrants.length !== 4) return null

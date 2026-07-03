@@ -8,8 +8,8 @@ import {
   frameworkMatchesPayload,
   duplicateAsImport,
   replaceFramework,
-  sanitizeImportedFramework,
-  sanitizeStoredFrameworks,
+  repairImportedFramework,
+  filterValidFrameworks,
 } from '../../logic/framework'
 import type { Framework, SharedPayload } from '../../types'
 
@@ -299,7 +299,7 @@ describe('replaceFramework', () => {
   })
 })
 
-describe('sanitizeImportedFramework', () => {
+describe('repairImportedFramework', () => {
   const validRaw = {
     name: 'My Framework',
     axisX: 'Urgency',
@@ -313,23 +313,23 @@ describe('sanitizeImportedFramework', () => {
   }
 
   it('returns null for null/undefined/non-object input', () => {
-    expect(sanitizeImportedFramework(null)).toBeNull()
-    expect(sanitizeImportedFramework(undefined)).toBeNull()
-    expect(sanitizeImportedFramework('string')).toBeNull()
+    expect(repairImportedFramework(null)).toBeNull()
+    expect(repairImportedFramework(undefined)).toBeNull()
+    expect(repairImportedFramework('string')).toBeNull()
   })
 
   it('returns null when name is missing or empty', () => {
-    expect(sanitizeImportedFramework({ ...validRaw, name: '' })).toBeNull()
-    expect(sanitizeImportedFramework({ ...validRaw, name: 42 })).toBeNull()
+    expect(repairImportedFramework({ ...validRaw, name: '' })).toBeNull()
+    expect(repairImportedFramework({ ...validRaw, name: 42 })).toBeNull()
   })
 
   it('returns null when quadrants is not an array of 4', () => {
-    expect(sanitizeImportedFramework({ ...validRaw, quadrants: [] })).toBeNull()
-    expect(sanitizeImportedFramework({ ...validRaw, quadrants: [{ label: 'A' }] })).toBeNull()
+    expect(repairImportedFramework({ ...validRaw, quadrants: [] })).toBeNull()
+    expect(repairImportedFramework({ ...validRaw, quadrants: [{ label: 'A' }] })).toBeNull()
   })
 
-  it('sanitizes a valid framework', () => {
-    const result = sanitizeImportedFramework(validRaw)!
+  it('accepts a valid framework as-is', () => {
+    const result = repairImportedFramework(validRaw)!
     expect(result).not.toBeNull()
     expect(result.name).toBe('My Framework')
     expect(result.axisX).toBe('Urgency')
@@ -347,7 +347,7 @@ describe('sanitizeImportedFramework', () => {
       ...validRaw,
       quadrants: validRaw.quadrants.map((q) => ({ ...q, label: undefined })),
     }
-    const result = sanitizeImportedFramework(raw)!
+    const result = repairImportedFramework(raw)!
     expect(result.quadrants[0].label).toBe('Quadrant 1')
     expect(result.quadrants[3].label).toBe('Quadrant 4')
   })
@@ -357,7 +357,7 @@ describe('sanitizeImportedFramework', () => {
       ...validRaw,
       quadrants: validRaw.quadrants.map((q) => ({ ...q, color: undefined })),
     }
-    const result = sanitizeImportedFramework(raw)!
+    const result = repairImportedFramework(raw)!
     expect(result.quadrants[0].color).toBe('#fbbf24')
     expect(result.quadrants[1].color).toBe('#60a5fa')
   })
@@ -372,7 +372,7 @@ describe('sanitizeImportedFramework', () => {
         { label: 'D', color: '#34D399', items: [] },
       ],
     }
-    const result = sanitizeImportedFramework(raw)!
+    const result = repairImportedFramework(raw)!
     expect(result.quadrants[0].color).toBe('#fbbf24')
     expect(result.quadrants[1].color).toBe('#60a5fa')
     expect(result.quadrants[2].color).toBe('#34d399')
@@ -384,7 +384,7 @@ describe('sanitizeImportedFramework', () => {
       ...validRaw,
       quadrants: validRaw.quadrants.map((q) => ({ ...q, items: undefined })),
     }
-    const result = sanitizeImportedFramework(raw)!
+    const result = repairImportedFramework(raw)!
     expect(result.quadrants[0].items).toEqual([])
   })
 
@@ -398,7 +398,7 @@ describe('sanitizeImportedFramework', () => {
         { label: 'D', color: '#fff', items: [] },
       ],
     }
-    const result = sanitizeImportedFramework(raw)!
+    const result = repairImportedFramework(raw)!
     expect(result.quadrants[0].items[0].x).toBe(10)
     expect(result.quadrants[0].items[0].y).toBe(10)
   })
@@ -413,41 +413,41 @@ describe('sanitizeImportedFramework', () => {
         { label: 'D', color: '#fff', items: [] },
       ],
     }
-    const result = sanitizeImportedFramework(raw)!
+    const result = repairImportedFramework(raw)!
     expect(result.quadrants[0].items).toHaveLength(2)
     expect(result.quadrants[0].items[0].text).toBe('Good')
     expect(result.quadrants[0].items[1].text).toBe('Also good')
   })
 
   it('generates id for items missing one', () => {
-    const result = sanitizeImportedFramework(validRaw)!
+    const result = repairImportedFramework(validRaw)!
     expect(result.quadrants[0].items[0].id).toBeTruthy()
   })
 
   it('defaults axisX/axisY to empty string when missing', () => {
     const raw = { ...validRaw, axisX: undefined, axisY: undefined }
-    const result = sanitizeImportedFramework(raw)!
+    const result = repairImportedFramework(raw)!
     expect(result.axisX).toBe('')
     expect(result.axisY).toBe('')
   })
 })
 
-describe('sanitizeStoredFrameworks', () => {
+describe('filterValidFrameworks', () => {
   it('returns an empty array for non-array input', () => {
-    expect(sanitizeStoredFrameworks('hello')).toEqual([])
-    expect(sanitizeStoredFrameworks(null)).toEqual([])
-    expect(sanitizeStoredFrameworks({})).toEqual([])
+    expect(filterValidFrameworks('hello')).toEqual([])
+    expect(filterValidFrameworks(null)).toEqual([])
+    expect(filterValidFrameworks({})).toEqual([])
   })
 
   it('keeps fully well-formed frameworks', () => {
     const fw = makeFramework()
-    expect(sanitizeStoredFrameworks([fw])).toEqual([fw])
+    expect(filterValidFrameworks([fw])).toEqual([fw])
   })
 
   it('drops frameworks whose quadrants are not objects', () => {
     // This shape passes the old shallow check but crashes Sidebar at render.
     const broken = { id: 'x', name: 'Broken', quadrants: [1, 2, 3, 4] }
-    expect(sanitizeStoredFrameworks([broken])).toEqual([])
+    expect(filterValidFrameworks([broken])).toEqual([])
   })
 
   it('drops frameworks with a quadrant missing its items array', () => {
@@ -456,7 +456,7 @@ describe('sanitizeStoredFrameworks', () => {
       ...fw,
       quadrants: [{ label: 'A', color: '#fff' }, ...fw.quadrants.slice(1)],
     }
-    expect(sanitizeStoredFrameworks([broken])).toEqual([])
+    expect(filterValidFrameworks([broken])).toEqual([])
   })
 
   it('drops frameworks with a quadrant missing its label', () => {
@@ -465,7 +465,7 @@ describe('sanitizeStoredFrameworks', () => {
       ...fw,
       quadrants: [{ color: '#fff', items: [] }, ...fw.quadrants.slice(1)],
     }
-    expect(sanitizeStoredFrameworks([broken])).toEqual([])
+    expect(filterValidFrameworks([broken])).toEqual([])
   })
 
   it('drops frameworks containing malformed items', () => {
@@ -474,18 +474,18 @@ describe('sanitizeStoredFrameworks', () => {
       ...fw,
       quadrants: [{ label: 'A', color: '#fff', items: [{ id: 'i1', text: 42, x: 1, y: 1 }] }, ...fw.quadrants.slice(1)],
     }
-    expect(sanitizeStoredFrameworks([broken])).toEqual([])
+    expect(filterValidFrameworks([broken])).toEqual([])
   })
 
   it('drops frameworks without exactly 4 quadrants', () => {
     const fw = makeFramework()
     const broken = { ...fw, quadrants: fw.quadrants.slice(0, 3) }
-    expect(sanitizeStoredFrameworks([broken])).toEqual([])
+    expect(filterValidFrameworks([broken])).toEqual([])
   })
 
   it('keeps valid frameworks while dropping invalid ones from a mixed list', () => {
     const valid = makeFramework()
     const invalid = { id: 2, name: 'bad', quadrants: 'nope' }
-    expect(sanitizeStoredFrameworks([valid, invalid])).toEqual([valid])
+    expect(filterValidFrameworks([valid, invalid])).toEqual([valid])
   })
 })

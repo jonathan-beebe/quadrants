@@ -136,7 +136,7 @@ export default function App() {
     setShowBuilder(true)
   }, [])
 
-  const openEditor = useCallback((fw: Framework) => {
+  const openBuilderForEdit = useCallback((fw: Framework) => {
     setEditingFramework(fw)
     setShowBuilder(true)
   }, [])
@@ -195,7 +195,7 @@ export default function App() {
               sidebarOpen={sidebarOpen}
               onToggleSidebar={() => setSidebarOpen((s) => !s)}
               onUpdate={update}
-              onEdit={() => openEditor(activeFramework)}
+              onEdit={() => openBuilderForEdit(activeFramework)}
               onShare={share}
             />
           </ErrorBoundary>

@@ -1,5 +1,5 @@
 import { defaultColors } from './colors'
-import { sanitizeStoredFrameworks } from './logic/framework'
+import { filterValidFrameworks } from './logic/framework'
 import type { Framework, FrameworkTemplate, Item } from './types'
 
 const STORAGE_KEY = 'quadrants_frameworks'
@@ -8,7 +8,7 @@ export function loadFrameworks(): Framework[] {
   try {
     const data = localStorage.getItem(STORAGE_KEY)
     if (!data) return []
-    return sanitizeStoredFrameworks(JSON.parse(data))
+    return filterValidFrameworks(JSON.parse(data))
   } catch {
     return []
   }

@@ -5,7 +5,7 @@ import type { ThemeMode } from '../../hooks/useDarkMode'
 interface ThemeToggleButtonProps {
   mode: ThemeMode
   isDark: boolean
-  onCycle: () => void
+  onCycleTheme: () => void
 }
 
 function getLabel(mode: ThemeMode, isDark: boolean): string {
@@ -16,9 +16,9 @@ function getLabel(mode: ThemeMode, isDark: boolean): string {
   return 'Using dark theme, switch to system theme'
 }
 
-export default function ThemeToggleButton({ mode, isDark, onCycle }: ThemeToggleButtonProps) {
+export default function ThemeToggleButton({ mode, isDark, onCycleTheme }: ThemeToggleButtonProps) {
   return (
-    <Button variant="icon" onClick={onCycle} aria-label={getLabel(mode, isDark)}>
+    <Button variant="icon" onClick={onCycleTheme} aria-label={getLabel(mode, isDark)}>
       <span className="relative inline-flex items-center justify-center w-4 h-4">
         {isDark ? <MoonIcon size={16} /> : <SunIcon size={16} />}
         {mode === 'system' && <SunIcon size={9} className="absolute -top-1 -right-1" strokeWidth={2.5} />}

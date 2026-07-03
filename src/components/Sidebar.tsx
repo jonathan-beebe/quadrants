@@ -103,7 +103,7 @@ export default function Sidebar({
             <span>Quadrants</span>
           </div>
           <div className="flex items-center gap-1">
-            <ThemeToggleButton mode={themeMode} isDark={isDark} onCycle={onCycleTheme} />
+            <ThemeToggleButton mode={themeMode} isDark={isDark} onCycleTheme={onCycleTheme} />
             <Button
               ref={closeButtonRef}
               variant="icon"

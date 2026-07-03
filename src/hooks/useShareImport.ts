@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState, useCallback } from 'react'
 import { encodeFramework, decodeSharedPayload } from '../sharing'
-import { sanitizeImportedFramework } from '../logic/framework'
+import { repairImportedFramework } from '../logic/framework'
 import { resolveImportAction } from '../logic/shareImport'
 import { getHashFromUrl, replacePath } from '../logic/routing'
 import { downloadJson, pickJsonFile } from '../io'
@@ -195,7 +195,7 @@ export function useShareImport({ getFramework, navigate, addRaw, replace, addImp
         .then((text) => {
           if (text === null) return
           const raw = JSON.parse(text)
-          const imported = sanitizeImportedFramework(raw)
+          const imported = repairImportedFramework(raw)
           if (imported) {
             onImported(imported)
           } else {

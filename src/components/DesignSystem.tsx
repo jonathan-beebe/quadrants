@@ -264,7 +264,7 @@ export default function DesignSystem() {
             Back to app
           </a>
         </div>
-        <ThemeToggleButton mode={mode} isDark={isDark} onCycle={cycleMode} />
+        <ThemeToggleButton mode={mode} isDark={isDark} onCycleTheme={cycleMode} />
       </header>
 
       <main className="max-w-4xl mx-auto px-8 py-8">
@@ -325,7 +325,7 @@ export default function DesignSystem() {
             <Button variant="icon" aria-label="Edit">
               <EditIcon size={18} />
             </Button>
-            <ThemeToggleButton mode={mode} isDark={isDark} onCycle={cycleMode} />
+            <ThemeToggleButton mode={mode} isDark={isDark} onCycleTheme={cycleMode} />
           </DemoRow>
         </Subsection>
 
@@ -348,7 +348,7 @@ export default function DesignSystem() {
         </Subsection>
 
         <Subsection title="Theme Toggle" layout="inline">
-          <ThemeToggleButton mode={mode} isDark={isDark} onCycle={cycleMode} />
+          <ThemeToggleButton mode={mode} isDark={isDark} onCycleTheme={cycleMode} />
           <Caption>Current: {mode}</Caption>
         </Subsection>
 
