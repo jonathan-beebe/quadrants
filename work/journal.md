@@ -4,16 +4,34 @@
 
 - RSRCH: 2
 - DSGN: 1
-- ARCH: 1
+- ARCH: 2
 - FEAT: 4
 - IMPRV: 5
 - MAINT: 6
 - A11Y: 21
-- RFCTR: 4
+- RFCTR: 6
 - BUG: 13
 
 ## Log
 
+- 2026-07-05:09:26:04 — ARCH-001 — done: wrote src/architecture.md (layer rules,
+  module + data-flow Mermaid diagrams, recorded decisions with re-open triggers)
+  and pointed CLAUDE.md at it (commit 9665676)
+- 2026-07-05:09:23:12 — ARCH-001 — started
+- 2026-07-05:09:22:54 — RFCTR-005 — done: moved createFramework/createItem from
+  storage.ts into logic/framework.ts and logic/items.ts; components no longer
+  import storage, 374/374 green (commit 5afea5f)
+- 2026-07-05:09:20:17 — RFCTR-005 — started
+- 2026-07-05:09:19:54 — RFCTR-004 — done: split logic/routing into pure core
+  rules + src/routing.ts adapter; core now I/O-free, 374/374 green (commit
+  5e6826f)
+- 2026-07-05:09:16:49 — RFCTR-004 — started
+- 2026-07-05:09:12:11 — ARCH-001 — defined: write diagrammed architecture doc
+  with layer rules and recorded decisions
+- 2026-07-05:09:12:10 — RFCTR-005 — defined: split domain factories out of the
+  storage adapter
+- 2026-07-05:09:12:09 — RFCTR-004 — defined: move window/history side effects
+  out of logic/routing into an adapter
 - 2026-07-03:16:24:18 — RFCTR-003 — done: swept residual noise names — inlined
   handleDragStart\_ wrapper, pickerRef, json/storedJson, useFrameworkSharing
   (file + 5 test files renamed), frameworkFromPayload; rename-only, 366/366
