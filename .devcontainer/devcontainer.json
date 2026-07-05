@@ -13,13 +13,7 @@
   "initializeCommand": "touch .devcontainer/.env",
   "customizations": {
     "vscode": {
-      "extensions": [
-        "anthropic.claude-code",
-        "dbaeumer.vscode-eslint",
-        "esbenp.prettier-vscode",
-        "eamodio.gitlens",
-        "bierner.markdown-mermaid"
-      ],
+      "extensions": ["anthropic.claude-code", "dbaeumer.vscode-eslint", "esbenp.prettier-vscode", "eamodio.gitlens"],
       "settings": {
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "esbenp.prettier-vscode",
