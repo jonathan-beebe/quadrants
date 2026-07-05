@@ -2,7 +2,7 @@ import { useEffect, useRef, useState, useCallback } from 'react'
 import { encodeFramework, decodeSharedPayload } from '../sharing'
 import { repairImportedFramework } from '../logic/framework'
 import { resolveImportAction } from '../logic/shareImport'
-import { getHashFromUrl, replacePath } from '../logic/routing'
+import { getHashFromUrl, replacePath } from '../routing'
 import { downloadJson, pickJsonFile } from '../io'
 import type { Framework } from '../types'
 

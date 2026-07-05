@@ -7,7 +7,7 @@ vi.mock('../../sharing', () => ({
   decodeSharedPayload: vi.fn(),
 }))
 
-vi.mock('../../logic/routing', () => ({
+vi.mock('../../routing', () => ({
   getHashFromUrl: vi.fn(),
   replacePath: vi.fn(),
 }))
@@ -19,7 +19,7 @@ vi.mock('../../io', () => ({
 
 import { useFrameworkSharing } from '../../hooks/useFrameworkSharing'
 import { decodeSharedPayload } from '../../sharing'
-import { getHashFromUrl } from '../../logic/routing'
+import { getHashFromUrl } from '../../routing'
 import type { Framework, SharedPayload } from '../../types'
 
 function makeExisting(): Framework {

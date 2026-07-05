@@ -1,67 +1,44 @@
-// @vitest-environment jsdom
-import { describe, it, expect, beforeEach } from 'vitest'
-import { getIdFromPath, getHashFromUrl, pushPath, replacePath } from '../../logic/routing'
+import { describe, it, expect } from 'vitest'
+import { isNamedRoute, idFromPathname, pathForId } from '../../logic/routing'
 
 const BASE = import.meta.env.BASE_URL ?? '/'
 
-beforeEach(() => {
-  window.history.replaceState(null, '', BASE)
-  window.location.hash = ''
+describe('isNamedRoute', () => {
+  it('recognizes the design-system route', () => {
+    expect(isNamedRoute('design-system')).toBe(true)
+  })
+
+  it('rejects framework ids and null', () => {
+    expect(isNamedRoute('my-framework-id')).toBe(false)
+    expect(isNamedRoute(null)).toBe(false)
+  })
 })
 
-describe('getIdFromPath', () => {
+describe('idFromPathname', () => {
   it('returns null for the base path', () => {
-    window.history.replaceState(null, '', BASE)
-    expect(getIdFromPath()).toBeNull()
+    expect(idFromPathname(BASE)).toBeNull()
   })
 
   it('returns the path segment as an id', () => {
-    window.history.replaceState(null, '', `${BASE}my-framework-id`)
-    expect(getIdFromPath()).toBe('my-framework-id')
+    expect(idFromPathname(`${BASE}my-framework-id`)).toBe('my-framework-id')
+  })
+
+  it('falls back to stripping the leading slash when the pathname is outside the base', () => {
+    expect(idFromPathname('/other')).toBe('other')
   })
 })
 
-describe('getHashFromUrl', () => {
-  it('returns empty string when no hash', () => {
-    expect(getHashFromUrl()).toBe('')
+describe('pathForId', () => {
+  it('builds the path for a framework id', () => {
+    expect(pathForId('fw-1')).toBe(`${BASE}fw-1`)
   })
 
-  it('returns the hash without the # prefix', () => {
-    window.location.hash = '#abc123'
-    expect(getHashFromUrl()).toBe('abc123')
-  })
-})
-
-describe('pushPath', () => {
-  it('pushes a framework path', () => {
-    pushPath('fw-1')
-    expect(window.location.pathname).toBe(`${BASE}fw-1`)
+  it('returns the base path for null', () => {
+    expect(pathForId(null)).toBe(BASE)
   })
 
-  it('pushes base when id is null', () => {
-    window.history.replaceState(null, '', `${BASE}something`)
-    pushPath(null)
-    expect(window.location.pathname).toBe(BASE)
-  })
-
-  it('does not push if already on the correct path', () => {
-    window.history.replaceState(null, '', `${BASE}fw-1`)
-    const before = window.history.length
-    pushPath('fw-1')
-    // History length should not increase
-    expect(window.history.length).toBe(before)
-  })
-})
-
-describe('replacePath', () => {
-  it('replaces to a framework path', () => {
-    replacePath('fw-1')
-    expect(window.location.pathname).toBe(`${BASE}fw-1`)
-  })
-
-  it('replaces to base when id is null', () => {
-    window.history.replaceState(null, '', `${BASE}something`)
-    replacePath(null)
-    expect(window.location.pathname).toBe(BASE)
+  it('round-trips with idFromPathname', () => {
+    expect(idFromPathname(pathForId('fw-1'))).toBe('fw-1')
+    expect(idFromPathname(pathForId(null))).toBeNull()
   })
 })

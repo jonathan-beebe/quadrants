@@ -7,7 +7,7 @@ vi.mock('../../sharing', () => ({
   decodeSharedPayload: vi.fn().mockResolvedValue(null),
 }))
 
-vi.mock('../../logic/routing', () => ({
+vi.mock('../../routing', () => ({
   getHashFromUrl: vi.fn().mockReturnValue(null),
   replacePath: vi.fn(),
 }))

@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
-import { getIdFromPath, pushPath } from '../logic/routing'
+import { getIdFromPath, pushPath } from '../routing'
 
 export function useRouting() {
   const [activeId, setActiveId] = useState<string | null>(() => getIdFromPath())
