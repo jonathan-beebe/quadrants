@@ -2,9 +2,38 @@
 
 The app is a single deployable — a client-only PWA — organized as a functional
 core inside an imperative shell, with one-way data flow. This doc records the
-layer rules, the module relationships, and the accepted decisions (with the
-triggers that re-open them). If you are adding code and wondering where it
-belongs, the answer is here.
+system context, the layer rules, the module relationships, and the accepted
+decisions (with the triggers that re-open them). If you are adding code and
+wondering where it belongs, the answer is here.
+
+## System context
+
+What is the deployable, and what does it talk to? There is no backend: a static
+host serves the built assets once, and from then on everything runs in the
+browser. Each external box below is a browser facility wrapped by exactly one
+adapter module, and user data leaves the device only through an explicit export
+or share link.
+
+```mermaid
+flowchart TD
+  user(["User<br/>organizes ideas on a two-axis canvas"])
+  host["Static host<br/>GitHub Pages (Netlify-ready)"]
+  subgraph browser ["Browser"]
+    quadrants["Quadrants PWA<br/>client-only React SPA, offline-capable"]
+    storage[("localStorage")]
+    files["Device file system"]
+    share["Share link<br/>URL fragment, no server round-trip"]
+  end
+  user -- "uses / installs" --> quadrants
+  host -- "static assets + SW precache" --> quadrants
+  quadrants -- "saves / loads Framework[] as JSON" --> storage
+  quadrants -- "exports / imports framework JSON file" --> files
+  quadrants -- "encodes / decodes SharedPayload<br/>(deflate + base64url)" --> share
+```
+
+The external boxes map one-to-one onto the adapter layer below: `storage.ts`,
+`io.ts`, `sharing.ts` + `routing.ts` (a share link is the routing adapter's URL
+plus the sharing adapter's payload codec).
 
 ## Layers
 
