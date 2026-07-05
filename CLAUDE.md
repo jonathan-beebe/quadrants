@@ -7,6 +7,9 @@
 
 # Details
 
+- **Architecture.** Layer rules, module diagrams, the one-way data-flow loop,
+  and recorded decisions live in [src/architecture.md](src/architecture.md).
+  Consult it before placing new code and when reviewing for layer violations.
 - **Accessibility.** This app needs to adhere to strict WCAG guidelines. Always
   favor highly-accessible solutions.
 - **Tabular Numbers.** All numbers are represented using tabular numbers so they
