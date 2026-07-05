@@ -181,3 +181,20 @@ export function repairImportedFramework(raw: any): Framework | null {
     updatedAt: Date.now(),
   }
 }
+
+export function createFramework(template: FrameworkTemplate): Framework {
+  const now = Date.now()
+  return {
+    id: crypto.randomUUID(),
+    name: template.name,
+    axisX: template.axisX || '',
+    axisY: template.axisY || '',
+    quadrants: template.quadrants.map((label, i) => ({
+      label,
+      color: template.colors?.[i] || defaultColors[i],
+      items: [],
+    })),
+    createdAt: now,
+    updatedAt: now,
+  }
+}

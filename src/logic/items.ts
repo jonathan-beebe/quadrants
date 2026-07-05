@@ -76,3 +76,13 @@ export function setQuadrantColor(framework: Framework, quadrantIndex: number, co
     quadrants: framework.quadrants.map((q, i) => (i === quadrantIndex ? { ...q, color } : q)),
   }
 }
+
+export function createItem(text: string, x?: number, y?: number): Item {
+  return {
+    id: crypto.randomUUID(),
+    text,
+    x: x ?? Math.random() * 60 + 10,
+    y: y ?? Math.random() * 50 + 10,
+    createdAt: Date.now(),
+  }
+}

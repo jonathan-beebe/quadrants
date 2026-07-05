@@ -1,6 +1,5 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
-import { createItem } from '../storage'
-import { addItem, removeItem, updateItemText, setQuadrantColor, moveItem } from '../logic/items'
+import { createItem, addItem, removeItem, updateItemText, setQuadrantColor, moveItem } from '../logic/items'
 import { useIsMobile } from '../hooks/useIsMobile'
 import useDragAndDrop from '../hooks/useDragAndDrop'
 import type { DropResult } from '../hooks/useDragAndDrop'

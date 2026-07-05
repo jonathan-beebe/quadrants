@@ -1,6 +1,5 @@
-import { defaultColors } from './colors'
 import { filterValidFrameworks } from './logic/framework'
-import type { Framework, FrameworkTemplate, Item } from './types'
+import type { Framework } from './types'
 
 const STORAGE_KEY = 'quadrants_frameworks'
 
@@ -21,32 +20,5 @@ export function saveFrameworks(frameworks: Framework[]): boolean {
   } catch (e) {
     console.error('Failed to save frameworks to localStorage:', e)
     return false
-  }
-}
-
-export function createFramework(template: FrameworkTemplate): Framework {
-  const now = Date.now()
-  return {
-    id: crypto.randomUUID(),
-    name: template.name,
-    axisX: template.axisX || '',
-    axisY: template.axisY || '',
-    quadrants: template.quadrants.map((label, i) => ({
-      label,
-      color: template.colors?.[i] || defaultColors[i],
-      items: [],
-    })),
-    createdAt: now,
-    updatedAt: now,
-  }
-}
-
-export function createItem(text: string, x?: number, y?: number): Item {
-  return {
-    id: crypto.randomUUID(),
-    text,
-    x: x ?? Math.random() * 60 + 10,
-    y: y ?? Math.random() * 50 + 10,
-    createdAt: Date.now(),
   }
 }

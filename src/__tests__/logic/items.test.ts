@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { addItem, removeItem, updateItemText, moveItem, setQuadrantColor } from '../../logic/items'
+import { createItem, addItem, removeItem, updateItemText, moveItem, setQuadrantColor } from '../../logic/items'
 import type { Framework, Item } from '../../types'
 
 function makeFramework(): Framework {
@@ -107,5 +107,28 @@ describe('setQuadrantColor', () => {
   it('does not modify other quadrants', () => {
     const result = setQuadrantColor(makeFramework(), 1, '#ff0000')
     expect(result.quadrants[0].color).toBe('#fbbf24')
+  })
+})
+
+describe('createItem', () => {
+  it('creates an item with the given text', () => {
+    const item = createItem('Hello')
+    expect(item.id).toBeTruthy()
+    expect(item.text).toBe('Hello')
+    expect(item.createdAt).toBeGreaterThan(0)
+  })
+
+  it('uses explicit coordinates when provided', () => {
+    const item = createItem('Test', 50, 75)
+    expect(item.x).toBe(50)
+    expect(item.y).toBe(75)
+  })
+
+  it('generates random coordinates when not provided', () => {
+    const item = createItem('Random')
+    expect(item.x).toBeGreaterThanOrEqual(10)
+    expect(item.x).toBeLessThanOrEqual(70)
+    expect(item.y).toBeGreaterThanOrEqual(10)
+    expect(item.y).toBeLessThanOrEqual(60)
   })
 })
