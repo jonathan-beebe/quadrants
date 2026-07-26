@@ -1,0 +1,109 @@
+# Love / Loathe / Learn / Leave
+
+Love / Loathe / Learn / Leave is a personal-reflection quadrant for auditing
+your work by how it affects you: **Love** — activities that energize you, where
+time flies and you feel strong; **Loathe** — activities that drain you and that
+you dread or procrastinate on; **Learn** — activities and areas that are
+teaching you something and are worth investing in; and **Leave** — activities,
+habits, or commitments you should shed. A session runs as an observation
+exercise rather than a one-shot brainstorm: over a period (a week of normal work
+is the classic protocol), you note activities into the quadrants as you actually
+experience them, then review the filled board to decide what to weave more of
+into your work, what to reduce, hand off, or drop, and where to direct learning
+effort. Unlike team retro formats, this one is primarily an individual
+job-crafting tool, though it also works as a team-reflection round.
+
+## When was it created?
+
+There is no single creation event to report; this format is a modern blend of
+two documented threads, and the specific Love/Loathe/Learn/Leave four-quadrant
+combination has no identifiable published origin. Thread one: Marcus
+Buckingham's two-column **"Loved It / Loathed It"** exercise from his
+strengths-based work, in circulation by the late 2000s — it appears in an O, The
+Oprah Magazine strengths piece from 2007 built on his work
+([PDF](http://static.oprah.com/download/pdfs/omag/omag_200709_strength_tips.pdf),
+via [wellfesto, 2013](https://wellfesto.com/2013/04/08/loved-itloathed-it/)),
+alongside his book _Go Put Your Strengths to Work_ (2007), and was restated
+through _StandOut_ (2011) and _Love + Work_ (Harvard Business Review Press,
+2022). Thread two: the alliterative four-L retrospective pattern established by
+Mary Gorman and Ellen Gottesdiener's **4Ls** (Liked / Learned / Lacked / Longed
+For), first published on the EBG Consulting blog in 2010
+([EBG Consulting](https://ebgconsulting.com/blog/the-4ls-a-retrospective-technique/))
+and since catalogued widely ([Retromat #78](https://retromat.org/en/?id=78),
+[Atlassian Team Playbook](https://www.atlassian.com/team-playbook/plays/4-ls-retrospective-technique)).
+Love/Loathe/Learn/Leave-style quadrants appear in coaching and productivity
+material from the 2010s onward as a fusion of these threads.
+
+## Who created it?
+
+No individual can honestly be credited with this exact four-quadrant format. Its
+clearest intellectual parents are **Marcus Buckingham**, whose Loved It/Loathed
+It listing exercise supplies the energize/drain axis and the underlying theory —
+a strength is defined by how an activity makes you feel (anticipation, flow,
+fulfillment), not by competence
+([Awesome Office interview with Buckingham](http://awesomeoffice.org/blog/marcus-buckingham/))
+— and **Mary Gorman and Ellen Gottesdiener**, whose 2010 4Ls retrospective
+established the four-L reflection-board pattern that Learn/Leave-style variants
+riff on
+([EBG Consulting](https://ebgconsulting.com/blog/the-4ls-a-retrospective-technique/);
+attribution corroborated by
+[TeamRetro](https://www.teamretro.com/retrospectives/4ls-retrospective/) and
+[Atlassian](https://www.atlassian.com/team-playbook/plays/4-ls-retrospective-technique)).
+Related quadrant variants (e.g. Loved/Loathed/Learned/Longed For) circulate in
+the retro-template ecosystem without firm attribution; whoever first swapped in
+"Leave" is unrecorded.
+
+## What problem were they trying to solve?
+
+Buckingham's exercise attacks a measurement error in career development: people
+(and the strengths-finder industry) equate strengths with what you are _good
+at_, but competence at a draining activity is a trap — his definition is that
+"strengths are not activities you're good at, they're activities that strengthen
+you" ([Awesome Office](http://awesomeoffice.org/blog/marcus-buckingham/)). The
+Loved/Loathed log replaces retrospective self-assessment (unreliable) with
+in-the-moment observation of what actually energizes or depletes you, so you can
+redesign your job around the "red threads" of love in it. Gorman and
+Gottesdiener's 4Ls, meanwhile, aimed to make team retrospectives capture both
+the factual and the **emotional** texture of an iteration in a fast, positive
+frame. The Love/Loathe/Learn/Leave blend extends both with explicit action
+categories: Learn directs growth investment, and Leave forces the often-avoided
+decision to actually shed draining commitments rather than merely catalog them.
+
+## Why should someone use it?
+
+Use it when the question is not "how did the sprint go?" but "is my work
+sustainable and pointed in the right direction?" It is one of the few retro
+formats aimed at the individual: burnout risk shows up concretely as a heavy
+Loathe column, misalignment shows up as a Love column with nothing from your
+core role in it, stagnation shows up as an empty Learn quadrant. The
+observation-log protocol makes it more truthful than a one-sitting reflection,
+because entries are recorded as feelings occur rather than reconstructed
+([wellfesto's account of the exercise](https://wellfesto.com/2013/04/08/loved-itloathed-it/)).
+And the Leave quadrant gives it teeth that pure mood-mapping lacks — every
+review ends with candidates for elimination, delegation, or renegotiation, not
+just awareness.
+
+## What is the expected outcome?
+
+A concrete, evidence-based redesign of how you spend your working time: a list
+of loved activities to deliberately weave more of into each week (Buckingham's
+"pull on the red threads"), a list of loathed activities to reduce, reframe, or
+hand off, chosen learning investments, and named commitments to drop.
+Buckingham's claim for the underlying practice is that even modest rebalancing
+toward loved activities measurably raises engagement and resilience — the goal
+is not a job containing zero loathed tasks but one where love outweighs drain
+([Awesome Office](http://awesomeoffice.org/blog/marcus-buckingham/)). Repeated
+periodically, it functions as a personal continuous-improvement loop: the same
+observational audit, run again, shows whether the Leave decisions were actually
+executed and whether the Love column is growing.
+
+## Sources
+
+- [Marcus Buckingham's "Loved It / Loathed It" strengths tips, O, The Oprah Magazine, 2007 (PDF)](http://static.oprah.com/download/pdfs/omag/omag_200709_strength_tips.pdf)
+- [wellfesto, "Loved It/Loathed It", April 2013 — walkthrough of Buckingham's exercise](https://wellfesto.com/2013/04/08/loved-itloathed-it/)
+- [Awesome Office, interview with Marcus Buckingham on the Loved It/Loathed It exercise and strengths definition](http://awesomeoffice.org/blog/marcus-buckingham/)
+- [Mary Gorman & Ellen Gottesdiener, "The 4L's: A Retrospective Technique", EBG Consulting, 2010](https://ebgconsulting.com/blog/the-4ls-a-retrospective-technique/)
+- [Retromat #78, "4 Ls — Loved, Learned, Lacked, Longed for"](https://retromat.org/en/?id=78)
+- [Atlassian Team Playbook, "The 4 Ls Retrospective Technique"](https://www.atlassian.com/team-playbook/plays/4-ls-retrospective-technique)
+- [TeamRetro, "Four Ls Retrospective" — attribution to Gorman & Gottesdiener](https://www.teamretro.com/retrospectives/4ls-retrospective/)
+- [Retrospective — Wikipedia](https://en.wikipedia.org/wiki/Retrospective)
