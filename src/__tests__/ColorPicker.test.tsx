@@ -34,7 +34,7 @@ describe('ColorPicker', () => {
     await user.click(getTrigger())
 
     const presetOptions = screen.getAllByRole('option')
-    expect(presetOptions).toHaveLength(10)
+    expect(presetOptions).toHaveLength(14)
 
     // Click Red (#ef4444)
     await user.click(screen.getByRole('option', { name: 'Red' }))
@@ -109,7 +109,7 @@ describe('ColorPicker', () => {
       // The preset grid is a valid listbox containing only options.
       const listbox = screen.getByRole('listbox')
       expect(listbox).toBeInTheDocument()
-      expect(screen.getAllByRole('option')).toHaveLength(10)
+      expect(screen.getAllByRole('option')).toHaveLength(14)
     })
 
     it('lets Tab reach the custom input and return to the presets', async () => {

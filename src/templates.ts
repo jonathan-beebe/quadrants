@@ -72,8 +72,10 @@ export const templates: FrameworkTemplate[] = [
     name: 'Passion × Proficiency',
     axisX: 'Good At It',
     axisY: 'Love It',
+    // Amber = eager anticipation, green = fulfilled flow, slate =
+    // indifference, ash-stone = joyless grind toward burnout.
     quadrants: ['Invest', 'Sweet Spot', 'Avoid', 'Burnout Zone'],
-    colors: ['#60a5fa', '#4ade80', '#94a3b8', '#f97316'],
+    colors: ['#fbbf24', '#4ade80', '#94a3b8', '#a8a29e'],
     description: 'Audit work by what you are good at versus what you love.',
     category: 'People & Self',
   },
@@ -82,8 +84,10 @@ export const templates: FrameworkTemplate[] = [
     name: 'Mood Meter',
     axisX: 'Pleasantness',
     axisY: 'Energy',
+    // RULER canon: red = tense, yellow = excited (joy), blue-indigo = down
+    // (sadness), green = calm (contentment).
     quadrants: ['Tense', 'Excited', 'Down', 'Calm'],
-    colors: ['#ef4444', '#fbbf24', '#60a5fa', '#4ade80'],
+    colors: ['#ef4444', '#facc15', '#818cf8', '#4ade80'],
     description: 'Name an emotion by its pleasantness and its energy.',
     category: 'Mental Health',
   },
@@ -91,8 +95,10 @@ export const templates: FrameworkTemplate[] = [
     name: 'Thayer Mood Model',
     axisX: 'Tension',
     axisY: 'Energy',
+    // Green = calm vitality (flow), orange = anxious drive, blue = restful
+    // ease, slate = weary gloom (Thayer's worst-mood state).
     quadrants: ['Calm-Energy', 'Tense-Energy', 'Calm-Tiredness', 'Tense-Tiredness'],
-    colors: ['#4ade80', '#f97316', '#60a5fa', '#ef4444'],
+    colors: ['#4ade80', '#f97316', '#60a5fa', '#94a3b8'],
     description: 'Read a mood as energy crossed with tension, then shift it.',
     category: 'Mental Health',
   },
@@ -100,8 +106,10 @@ export const templates: FrameworkTemplate[] = [
     name: 'Affect Grid',
     axisX: 'Pleasure',
     axisY: 'Arousal',
+    // Red = stress alarm, yellow = exhilaration, slate = depressive
+    // flatness, teal = tranquil unwinding.
     quadrants: ['Stress', 'Excitement', 'Depression', 'Relaxation'],
-    colors: ['#ef4444', '#fbbf24', '#94a3b8', '#4ade80'],
+    colors: ['#ef4444', '#facc15', '#94a3b8', '#2dd4bf'],
     description: 'Plot a feeling by its pleasure and arousal on one grid.',
     category: 'Mental Health',
   },
@@ -109,6 +117,8 @@ export const templates: FrameworkTemplate[] = [
     name: 'Positive × Negative Affect',
     axisX: 'Positive Affect',
     axisY: 'Negative Affect',
+    // Red = distress, violet = ambivalence (the one hue with mixed
+    // valence in the research), slate = flat disengagement, green = content.
     quadrants: ['Distressed', 'Conflicted', 'Disengaged', 'Content'],
     colors: ['#ef4444', '#a78bfa', '#94a3b8', '#4ade80'],
     description: 'Track positive and negative affect as independent scales.',
@@ -118,8 +128,10 @@ export const templates: FrameworkTemplate[] = [
     name: 'Dual Continuum of Mental Health',
     axisX: 'Mental Illness / No Illness',
     axisY: 'Wellbeing',
+    // Teal = calm resilience, green = flourishing growth, red = acute
+    // distress, stone = the stagnant emptiness of languishing.
     quadrants: ['Flourishing with Illness', 'Flourishing', 'Struggling', 'Languishing'],
-    colors: ['#60a5fa', '#4ade80', '#ef4444', '#fbbf24'],
+    colors: ['#2dd4bf', '#4ade80', '#ef4444', '#a8a29e'],
     description: 'Separate mental illness from wellbeing — two continua, not one.',
     category: 'Mental Health',
   },
@@ -127,8 +139,10 @@ export const templates: FrameworkTemplate[] = [
     name: 'Energy Quadrants',
     axisX: 'Emotional Positivity',
     axisY: 'Energy',
+    // Red = fight-or-flight alarm, green = engaged vitality, ash-stone =
+    // burned-out depletion, blue = restorative relief.
     quadrants: ['Survival', 'Performance', 'Burnout', 'Recovery'],
-    colors: ['#f97316', '#4ade80', '#ef4444', '#60a5fa'],
+    colors: ['#ef4444', '#4ade80', '#a8a29e', '#60a5fa'],
     description: 'Manage energy, not time, to stay out of the burnout zone.',
     category: 'Mental Health',
   },
@@ -136,8 +150,9 @@ export const templates: FrameworkTemplate[] = [
     name: 'Zones of Regulation',
     axisX: '',
     axisY: '',
+    // The curriculum's literal zone colors; true yellow, not amber.
     quadrants: ['Blue Zone', 'Green Zone', 'Yellow Zone', 'Red Zone'],
-    colors: ['#60a5fa', '#4ade80', '#fbbf24', '#ef4444'],
+    colors: ['#60a5fa', '#4ade80', '#facc15', '#ef4444'],
     description: 'Name your zone of alertness and pick a tool to regulate it.',
     category: 'Mental Health',
   },
@@ -145,8 +160,10 @@ export const templates: FrameworkTemplate[] = [
     name: 'Attachment Styles',
     axisX: 'Avoidance',
     axisY: 'Anxiety',
+    // Orange = anxious activation, violet = fear, green = secure calm,
+    // slate = cool emotional distance.
     quadrants: ['Preoccupied', 'Fearful-Avoidant', 'Secure', 'Dismissive-Avoidant'],
-    colors: ['#fbbf24', '#ef4444', '#4ade80', '#60a5fa'],
+    colors: ['#f97316', '#a78bfa', '#4ade80', '#94a3b8'],
     description: 'Locate a relating style by attachment anxiety and avoidance.',
     category: 'Mental Health',
   },
@@ -154,8 +171,10 @@ export const templates: FrameworkTemplate[] = [
     name: 'OK Corral',
     axisX: "I'm OK",
     axisY: "You're OK",
+    // Indigo = sad one-down withdrawal, green = healthy relating, slate =
+    // hopeless futility, red = angry one-up rejection.
     quadrants: ['Get Away From', 'Get On With', 'Get Nowhere With', 'Get Rid Of'],
-    colors: ['#60a5fa', '#4ade80', '#94a3b8', '#ef4444'],
+    colors: ['#818cf8', '#4ade80', '#94a3b8', '#ef4444'],
     description: 'Notice the life position you relate from: OK or not OK.',
     category: 'Mental Health',
   },
@@ -227,8 +246,11 @@ export const templates: FrameworkTemplate[] = [
     name: 'Worry Matrix',
     axisX: 'Control',
     axisY: 'Importance',
+    // A deliberately cool, calming set for an anxiety tool: teal = serene
+    // acceptance, green = empowered action, blue = relief of release,
+    // slate = indifferent shrug.
     quadrants: ['Accept & Adapt', 'Take Action', 'Let It Go', 'Not Worth It'],
-    colors: ['#34d399', '#4ade80', '#94a3b8', '#fbbf24'],
+    colors: ['#2dd4bf', '#4ade80', '#60a5fa', '#94a3b8'],
     description: 'Focus worry where you have both stakes and control.',
     category: 'People & Self',
   },
@@ -236,8 +258,11 @@ export const templates: FrameworkTemplate[] = [
     name: 'How–Now–Wow',
     axisX: 'Originality',
     axisY: 'Ease of Implementation',
+    // Blue = comfortable confidence (COCD's "feasible" blue), yellow =
+    // surprise and joy, slate = the polite goodbye, violet = imaginative
+    // "how might we".
     quadrants: ['Now', 'Wow', 'Ciao', 'How'],
-    colors: ['#60a5fa', '#fbbf24', '#94a3b8', '#a78bfa'],
+    colors: ['#60a5fa', '#facc15', '#94a3b8', '#a78bfa'],
     description: 'Triage brainstormed ideas by originality and ease.',
     category: 'Build',
   },
@@ -264,6 +289,8 @@ export const templates: FrameworkTemplate[] = [
     name: 'Love / Loathe / Learn / Leave',
     axisX: '',
     axisY: '',
+    // Pink = love, red = loathing, blue = open curiosity, slate = detached
+    // goodbye.
     quadrants: ['Love', 'Loathe', 'Learn', 'Leave'],
     colors: ['#f472b6', '#ef4444', '#60a5fa', '#94a3b8'],
     description: 'Reflect on what energizes you and what drains you.',

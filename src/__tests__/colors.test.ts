@@ -14,8 +14,8 @@ describe('defaultColors', () => {
 })
 
 describe('colorPresets', () => {
-  it('provides 10 preset colors', () => {
-    expect(colorPresets).toHaveLength(10)
+  it('provides 14 preset colors', () => {
+    expect(colorPresets).toHaveLength(14)
   })
 
   it('contains valid hex color strings with names', () => {

@@ -3,16 +3,20 @@ import type { DerivedColors } from './types'
 export const defaultColors: string[] = ['#fbbf24', '#60a5fa', '#34d399', '#f472b6']
 
 export const colorPresets: { hex: string; name: string }[] = [
+  { hex: '#facc15', name: 'Yellow' },
   { hex: '#fbbf24', name: 'Amber' },
   { hex: '#f97316', name: 'Orange' },
   { hex: '#ef4444', name: 'Red' },
   { hex: '#f472b6', name: 'Pink' },
   { hex: '#a78bfa', name: 'Violet' },
+  { hex: '#818cf8', name: 'Indigo' },
   { hex: '#60a5fa', name: 'Blue' },
+  { hex: '#2dd4bf', name: 'Teal' },
   { hex: '#34d399', name: 'Emerald' },
   { hex: '#4ade80', name: 'Green' },
   { hex: '#a3e635', name: 'Lime' },
   { hex: '#94a3b8', name: 'Slate' },
+  { hex: '#a8a29e', name: 'Stone' },
 ]
 
 export function isValidHexColor(value: unknown): value is string {
