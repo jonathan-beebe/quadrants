@@ -1,7 +1,7 @@
 ---
 id: BUG-015
 type: bug
-status: open
+status: resolved
 created: 2026-07-26
 ---
 
@@ -152,9 +152,8 @@ tests.
   page background sits behind the floating toolbar. The drawer is a real but
   separate instance of the same cause. Filed as a research candidate in
   `0-research` rather than widened into this ticket.
-- **Outstanding: the pixel outcome is unverified.** The recent floating-toolbar
-  Safari is the open risk the ticket named — if `svh` does not exclude the
-  floating bar, this change will not be sufficient on its own and the fallback
-  is safe-area insets (which would then require `viewport-fit=cover` after all).
-  Needs a look on the simulator in both Safari and standalone mode before this
-  ticket can be accepted.
+- **Verified on device.** Human confirmed the fix on the iOS simulator. The
+  ticket's open risk did not materialize: the recent floating-toolbar Safari
+  does exclude that bar from `svh`, so the viewport unit alone is sufficient and
+  the safe-area fallback was not needed. `viewport-fit=cover` stays out of the
+  codebase.

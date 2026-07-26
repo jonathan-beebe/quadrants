@@ -14,6 +14,16 @@
 
 ## Log
 
+- 2026-07-26:18:46:17 — BUG-015 — done: `QuadrantCanvas` sized with `h-svh`
+  instead of `h-screen`, lifting the zoomed cell's footer controls and the
+  overview's bottom-row labels clear of mobile Safari's toolbar; `svh` over
+  `dvh` to preserve 4996ae3's no-reflow guarantee. `viewport-fit=cover` proved
+  unnecessary — the default `auto` already keeps content inside the safe area,
+  so the anticipated inset work was dropped. No new test (CSS unit, no layout in
+  jsdom, class-pinning ruled out); 397/397 green, human verified on the iOS
+  simulator (commit bc63326). Filed a research candidate in `0-research` on the
+  app having no shared viewport-height convention — third ticket circling it,
+  and `Sidebar.tsx:99` is still `h-screen`
 - 2026-07-26:18:36:18 — BUG-015 — started
 - 2026-07-26:18:23:35 — BUG-015 — defined: mobile safari bottom toolbar occludes
   the quadrant canvas footer controls
