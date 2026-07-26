@@ -27,6 +27,7 @@ export const TEMPLATE_CATEGORIES = [
   'Strategize',
   'Understand',
   'People & Self',
+  'Mental Health',
   'Build',
   'Retrospect',
 ] as const
