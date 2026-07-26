@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-07-26:17:38:52 — DSGN-001 — started: human settled the open design
+  question — keep the existing Y-axis input element, rotate it in place
 - 2026-07-26:17:33:37 — IMPRV-005 — done: ArrowUp/ArrowDown walk the template
   list across category groups, wrap at both ends, and enter from the filter
   input; focus-only, Enter/Space still applies, 386/386 green (commit 5015e3c)

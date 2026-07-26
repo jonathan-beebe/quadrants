@@ -197,34 +197,44 @@ export default function FrameworkBuilder({
       <div>
         <SectionLabel>Quadrant Labels</SectionLabel>
         <div className="flex flex-col items-center gap-2">
-          <div className="w-full text-center">
-            <input
-              type="text"
-              value={axisY}
-              onChange={(e) => setAxisY(e.target.value)}
-              placeholder="Y axis (optional)"
-              aria-label="Y axis label (optional)"
-              className="px-3 py-1.5 border border-dashed border-border rounded-lg text-xs text-center text-text-secondary outline-none w-[180px] transition-[border-color] duration-150 focus:border-accent bg-transparent"
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-2 w-full">
-            {[0, 1, 2, 3].map((i) => (
+          <div className="flex w-full gap-2">
+            {/* Y-axis rail, echoing the canvas (QuadrantGrid): the label runs
+                bottom-to-top along the grid's left edge. The rail is a narrow
+                stretched column and the input is taken out of flow, so its
+                unrotated 132px box cannot widen the column. That width is the
+                grid's height (two 62px rows plus the 8px gap), which makes the
+                label span the axis it names. */}
+            <div className="relative w-9 shrink-0">
               <input
-                key={i}
                 type="text"
-                value={quadrants[i]}
-                onChange={(e) => setQuadrant(i, e.target.value)}
-                placeholder={`Quadrant ${i + 1}`}
-                aria-label={`Quadrant ${i + 1} label`}
-                className="py-5 px-4 border rounded-lg text-sm font-medium text-center outline-none transition-all duration-150 focus:ring-2 focus:ring-accent"
-                style={{
-                  background: deriveColors(colors[i]).bg,
-                  borderColor: deriveColors(colors[i]).border,
-                }}
+                value={axisY}
+                onChange={(e) => setAxisY(e.target.value)}
+                placeholder="Y axis (optional)"
+                aria-label="Y axis label (optional)"
+                className="absolute top-1/2 left-1/2 w-[132px] -translate-x-1/2 -translate-y-1/2 -rotate-90 px-3 py-1.5 border border-dashed border-border rounded-lg text-xs text-center text-text-secondary outline-none transition-[border-color] duration-150 focus:border-accent bg-transparent"
               />
-            ))}
+            </div>
+            <div className="grid grid-cols-2 gap-2 flex-1">
+              {[0, 1, 2, 3].map((i) => (
+                <input
+                  key={i}
+                  type="text"
+                  value={quadrants[i]}
+                  onChange={(e) => setQuadrant(i, e.target.value)}
+                  placeholder={`Quadrant ${i + 1}`}
+                  aria-label={`Quadrant ${i + 1} label`}
+                  className="py-5 px-4 border rounded-lg text-sm font-medium text-center outline-none transition-all duration-150 focus:ring-2 focus:ring-accent"
+                  style={{
+                    background: deriveColors(colors[i]).bg,
+                    borderColor: deriveColors(colors[i]).border,
+                  }}
+                />
+              ))}
+            </div>
           </div>
-          <div className="w-full text-center">
+          {/* Offset by the rail plus the gap so the X axis centers under the
+              grid rather than under the row. */}
+          <div className="w-full text-center pl-11">
             <input
               type="text"
               value={axisX}

@@ -58,3 +58,38 @@ grid (`:198`) below usable tap-target width.
 ## Related work
 
 - IMPRV-002 — redesign template picker as responsive master-detail
+
+## Working
+
+The open design question — rotate the input itself vs. a vertical display label
+paired with a horizontal input — was settled by the human on 2026-07-26: keep
+the same element, rotate it in place.
+
+Mechanism: `rotate: -90deg` (Tailwind `-rotate-90`), matching the canvas rail in
+`QuadrantGrid.tsx:65`, rather than `writing-mode: vertical-rl`. The canvas
+already establishes the transform idiom, and vertical writing-mode on form
+controls has a shorter support history and its own caret quirks.
+
+Layout: the rail is a narrow (`w-9`) stretched flex column and the input is
+absolutely positioned and centered inside it, so its unrotated 132px box never
+widens the column or pushes the grid. Tailwind v4 emits `translate` and `rotate`
+as independent CSS properties, which the spec applies in that order — so the box
+centers on the rail first, then rotates about its own centre, landing as a
+30x132 vertical label spanning the grid's left edge.
+
+The 132px width is the grid's height (two 62px rows plus the 8px gap) so the
+label spans the axis it names. It is a fixed number in a file that already sizes
+both axis inputs with `w-[180px]`; if the grid's height drifts the label just
+runs slightly short or long rather than breaking. The X axis input gains `pl-11`
+(rail 36px + 8px gap) so it stays centred under the grid rather than under the
+whole row.
+
+Mobile holds: at a 360px viewport the row keeps 312px of content, the rail takes
+44px, and the two-column grid still gets ~134px per quadrant.
+
+Verification: no browser is available in this environment (jsdom only), so the
+automated checks cover the four utilities being emitted into the built
+stylesheet (`-rotate-90` → `rotate:-90deg`, `w-[132px]`, `pl-11`, `w-9`), DOM
+and tab order unchanged (Y, quadrants, X), the accessible name intact, and the
+input still submitting its value. The human confirmed the rendered result
+visually on 2026-07-26.

@@ -310,6 +310,61 @@ describe('FrameworkBuilder', () => {
     })
   })
 
+  describe('y-axis reads as a vertical axis beside the grid (DSGN-001)', () => {
+    function axisRow() {
+      const quadrant = screen.getByRole('textbox', { name: /quadrant 1 label/i })
+      const grid = quadrant.parentElement
+      if (!grid?.parentElement) throw new Error('quadrant grid row not found')
+      return grid.parentElement
+    }
+
+    it('puts the Y axis input beside the quadrant grid and leaves the X axis below', () => {
+      render(<FrameworkBuilder {...defaultProps} />)
+      const row = axisRow()
+
+      expect(row).toContainElement(screen.getByRole('textbox', { name: /y axis label/i }))
+      expect(row).not.toContainElement(screen.getByRole('textbox', { name: /x axis label/i }))
+    })
+
+    it('rotates the Y axis input so it reads bottom-to-top', () => {
+      render(<FrameworkBuilder {...defaultProps} />)
+      // The visual orientation is the whole point of the ticket, and it is
+      // carried by the rotation utility — jsdom computes no layout.
+      expect(screen.getByRole('textbox', { name: /y axis label/i })).toHaveClass('-rotate-90')
+    })
+
+    it('keeps the Y axis input editable in place', async () => {
+      const user = userEvent.setup()
+      const onCreate = vi.fn()
+      render(<FrameworkBuilder {...defaultProps} onCreate={onCreate} />)
+
+      await user.type(screen.getByRole('textbox', { name: /framework name/i }), 'Mine')
+      await user.type(screen.getByRole('textbox', { name: /y axis label/i }), 'Importance')
+      for (const i of [1, 2, 3, 4]) {
+        await user.type(screen.getByRole('textbox', { name: new RegExp(`quadrant ${i} label`, 'i') }), `Q${i}`)
+      }
+      await user.click(screen.getByRole('button', { name: 'Create Framework' }))
+
+      expect(onCreate.mock.calls[0][0].axisY).toBe('Importance')
+    })
+
+    it('tabs through the axes in reading order: Y, quadrants, then X', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilder {...defaultProps} />)
+
+      screen.getByRole('textbox', { name: /y axis label/i }).focus()
+      await user.tab()
+      expect(screen.getByRole('textbox', { name: /quadrant 1 label/i })).toHaveFocus()
+
+      // Past the remaining three quadrant labels.
+      await user.tab()
+      await user.tab()
+      await user.tab()
+      await user.tab()
+      expect(screen.getByRole('textbox', { name: /x axis label/i })).toHaveFocus()
+    })
+  })
+
   describe('arrow-key navigation through the template list (IMPRV-005)', () => {
     // Entries share a container with "Blank / Custom"; category groups nest
     // inside it, so DOM order here is the order on screen. Scoped to the
