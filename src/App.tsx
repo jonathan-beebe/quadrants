@@ -188,7 +188,13 @@ export default function App() {
             onCancel={handleConflictCancel}
           />
         ) : showBuilder ? (
-          <FrameworkBuilder editingFramework={editingFramework} onCreate={handleSaveEdit} onCancel={closeBuilder} />
+          <FrameworkBuilder
+            editingFramework={editingFramework}
+            sidebarOpen={sidebarOpen}
+            onToggleSidebar={() => setSidebarOpen((s) => !s)}
+            onCreate={handleSaveEdit}
+            onCancel={closeBuilder}
+          />
         ) : activeFramework ? (
           <ErrorBoundary key={activeFramework.id}>
             <QuadrantCanvas
@@ -201,7 +207,7 @@ export default function App() {
             />
           </ErrorBoundary>
         ) : (
-          <EmptyState onNew={openBuilder} />
+          <EmptyState sidebarOpen={sidebarOpen} onToggleSidebar={() => setSidebarOpen((s) => !s)} onNew={openBuilder} />
         )}
       </main>
       {error ? (

@@ -3,16 +3,24 @@
 ## Next ticket numbers
 
 - RSRCH: 2
-- DSGN: 1
+- DSGN: 2
 - ARCH: 2
 - FEAT: 4
-- IMPRV: 5
+- IMPRV: 6
 - MAINT: 6
 - A11Y: 21
 - RFCTR: 6
-- BUG: 13
+- BUG: 14
 
 ## Log
+
+- 2026-07-26:17:16:57 — BUG-013 — started
+- 2026-07-26:17:09:35 — DSGN-001 — defined: y-axis affordance reads as vertical
+  left-edge axis on builder
+- 2026-07-26:17:08:05 — IMPRV-005 — defined: arrow-key navigation through
+  template list on create screen
+- 2026-07-26:17:06:36 — BUG-013 — defined: mobile floating sidebar opener
+  misaligned and overlaps title
 
 - 2026-07-05:09:26:04 — ARCH-001 — done: wrote src/architecture.md (layer rules,
   module + data-flow Mermaid diagrams, recorded decisions with re-open triggers)

@@ -63,6 +63,85 @@ describe('App', () => {
     })
   })
 
+  describe('mobile sidebar trigger placement (BUG-013)', () => {
+    function storeFramework() {
+      localStorage.setItem(
+        'quadrants_frameworks',
+        JSON.stringify([
+          {
+            id: 'stored-fw',
+            name: 'Stored Framework',
+            axisX: '',
+            axisY: '',
+            quadrants: [
+              { label: 'A', color: '#fbbf24', items: [] },
+              { label: 'B', color: '#60a5fa', items: [] },
+              { label: 'C', color: '#34d399', items: [] },
+              { label: 'D', color: '#f472b6', items: [] },
+            ],
+            createdAt: 1000,
+            updatedAt: 1000,
+          },
+        ]),
+      )
+    }
+
+    // On mobile each screen owns its trigger inside <main>, so the trigger
+    // flows with that screen's title row instead of floating over it. The
+    // shell's floating opener would sit outside <main>.
+    function soleTrigger() {
+      const triggers = screen.getAllByRole('button', { name: /open sidebar/i })
+      expect(triggers).toHaveLength(1)
+      expect(screen.getByRole('main')).toContainElement(triggers[0])
+      return triggers[0]
+    }
+
+    beforeEach(() => {
+      vi.mocked(useIsMobile).mockReturnValue(true)
+    })
+
+    it('shows one in-flow trigger on the empty state', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(soleTrigger())
+      expect(screen.getByRole('dialog', { name: /frameworks sidebar/i })).toBeInTheDocument()
+    })
+
+    it('shows one in-flow trigger on the framework canvas', () => {
+      storeFramework()
+      window.history.replaceState(null, '', '/stored-fw')
+      render(<App />)
+
+      const trigger = soleTrigger()
+      // Sits in the same row as the framework title, not stacked over it.
+      expect(trigger.parentElement).toContainElement(screen.getByRole('heading', { name: 'Stored Framework' }))
+    })
+
+    it('shows one in-flow trigger on the framework builder', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+      await user.click(screen.getByRole('button', { name: 'Create Framework' }))
+
+      const trigger = soleTrigger()
+      expect(trigger.parentElement).toContainElement(screen.getByRole('heading', { name: 'Create Framework' }))
+
+      await user.click(trigger)
+      expect(screen.getByRole('dialog', { name: /frameworks sidebar/i })).toBeInTheDocument()
+    })
+
+    it('keeps the floating opener outside the screen content on desktop', async () => {
+      const user = userEvent.setup()
+      vi.mocked(useIsMobile).mockReturnValue(false)
+      render(<App />)
+      await user.click(screen.getByRole('button', { name: /close sidebar/i }))
+
+      const triggers = screen.getAllByRole('button', { name: /open sidebar/i })
+      expect(triggers).toHaveLength(1)
+      expect(screen.getByRole('main')).not.toContainElement(triggers[0])
+    })
+  })
+
   it('opens the framework builder when "Create Framework" is clicked from empty state', async () => {
     const user = userEvent.setup()
     render(<App />)

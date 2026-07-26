@@ -10,6 +10,8 @@ vi.mock('../hooks/useIsMobile', () => ({
 
 const defaultProps = {
   editingFramework: null,
+  sidebarOpen: false,
+  onToggleSidebar: vi.fn(),
   onCreate: vi.fn(),
   onCancel: vi.fn(),
 }

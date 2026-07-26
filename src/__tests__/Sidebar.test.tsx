@@ -111,12 +111,18 @@ describe('Sidebar', () => {
     expect(screen.getByRole('button', { name: /open sidebar/i })).toBeInTheDocument()
   })
 
-  it('open sidebar button is visible on mobile when closed (BUG-009)', () => {
+  it('open sidebar button is visible when closed rather than hidden by a utility class (BUG-009)', () => {
     render(<Sidebar {...defaultProps} open={false} />)
     const openButton = screen.getByRole('button', { name: /open sidebar/i })
-    // The button must not be hidden by the `hidden` utility class, otherwise
-    // mobile users cannot reopen the sidebar from EmptyState/FrameworkBuilder.
     expect(openButton.className).not.toMatch(/(^|\s)hidden(\s|$)/)
+  })
+
+  it('omits the floating opener on mobile, where each screen carries its own (BUG-013)', () => {
+    vi.mocked(useIsMobile).mockReturnValue(true)
+    render(<Sidebar {...defaultProps} open={false} />)
+    // Reopening from every mobile screen is covered in App.test.tsx; a copy
+    // here would stack on top of the screen's own trigger.
+    expect(screen.queryByRole('button', { name: /open sidebar/i })).not.toBeInTheDocument()
   })
 
   it('highlights the active framework', () => {

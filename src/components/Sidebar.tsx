@@ -199,7 +199,9 @@ export default function Sidebar({
         </div>
       </aside>
 
-      {!open && (
+      {/* Desktop-only: on mobile every screen carries its own opener in its
+          title row, so a floating copy would stack on top of it (BUG-013). */}
+      {!open && !isMobile && (
         <button
           className="fixed top-4 left-4 z-50 p-2 bg-surface border border-border rounded-lg shadow text-text-secondary transition-all duration-150 hover:text-text hover:border-border-hover"
           onClick={onToggle}

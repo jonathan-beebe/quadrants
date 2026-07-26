@@ -8,18 +8,27 @@ import PageTitle from './atoms/PageTitle'
 import SectionLabel from './atoms/SectionLabel'
 import Caption from './atoms/Caption'
 import Button from './atoms/Button'
+import SidebarToggleButton from './atoms/SidebarToggleButton'
 import { TEMPLATE_CATEGORIES } from '../types'
 import type { Framework, FrameworkTemplate } from '../types'
 
 interface FrameworkBuilderProps {
   editingFramework: Framework | null
+  sidebarOpen: boolean
+  onToggleSidebar: () => void
   onCreate: (template: FrameworkTemplate) => void
   onCancel: () => void
 }
 
 const CUSTOM_KEY = '__custom__'
 
-export default function FrameworkBuilder({ editingFramework, onCreate, onCancel }: FrameworkBuilderProps) {
+export default function FrameworkBuilder({
+  editingFramework,
+  sidebarOpen,
+  onToggleSidebar,
+  onCreate,
+  onCancel,
+}: FrameworkBuilderProps) {
   const isMobile = useIsMobile()
   const [name, setName] = useState(editingFramework?.name || '')
   const [axisX, setAxisX] = useState(editingFramework?.axisX || '')
@@ -245,7 +254,10 @@ export default function FrameworkBuilder({ editingFramework, onCreate, onCancel 
     <div className={`flex justify-center px-6 py-10 ${fullHeight ? 'h-screen' : 'min-h-screen'}`}>
       <div className={`w-full max-w-[860px] ${fullHeight ? 'flex flex-col min-h-0' : ''}`}>
         <div className="flex items-center justify-between mb-8 shrink-0">
-          <PageTitle as="h2">{editingFramework ? 'Edit Framework' : 'Create Framework'}</PageTitle>
+          <div className="flex items-center gap-2 min-w-0">
+            {isMobile && <SidebarToggleButton open={sidebarOpen} onToggle={onToggleSidebar} />}
+            <PageTitle as="h2">{editingFramework ? 'Edit Framework' : 'Create Framework'}</PageTitle>
+          </div>
           <Button variant="ghost" onClick={onCancel}>
             Cancel
           </Button>

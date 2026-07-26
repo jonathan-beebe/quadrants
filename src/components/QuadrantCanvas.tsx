@@ -4,9 +4,10 @@ import { useIsMobile } from '../hooks/useIsMobile'
 import useDragAndDrop from '../hooks/useDragAndDrop'
 import type { DropResult } from '../hooks/useDragAndDrop'
 import { GhostCard, PLACEHOLDER } from './Card'
-import { EditIcon, ShareIcon, SidebarIcon } from './Icons'
+import { EditIcon, ShareIcon } from './Icons'
 import PageTitle from './atoms/PageTitle'
 import Button from './atoms/Button'
+import SidebarToggleButton from './atoms/SidebarToggleButton'
 import QuadrantGrid from './QuadrantGrid'
 import MobileQuadrantGrid from './MobileQuadrantGrid'
 import type { Framework } from '../types'
@@ -166,11 +167,7 @@ export default function QuadrantCanvas({
       <div
         className={`flex items-center justify-between shrink-0 ${isMobile ? 'px-3 py-2.5 border-b border-border' : 'mb-5'} ${!isMobile && !sidebarOpen ? 'pl-12' : ''}`}>
         <div className="flex items-center gap-2 min-w-0">
-          {isMobile && (
-            <Button variant="icon" onClick={onToggleSidebar} aria-label="Open sidebar" aria-expanded={sidebarOpen}>
-              <SidebarIcon size={18} />
-            </Button>
-          )}
+          {isMobile && <SidebarToggleButton open={sidebarOpen} onToggle={onToggleSidebar} />}
           <PageTitle className={isMobile ? 'text-base truncate' : undefined}>{framework.name}</PageTitle>
           {!isMobile && (
             <Button variant="ghost" size="sm" onClick={onEdit} title="Edit framework">
