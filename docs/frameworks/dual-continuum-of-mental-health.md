@@ -124,6 +124,137 @@ The sober caveat: flourishing is the minority outcome in every measured
 population (roughly a fifth to a third of adults), so the model sets an
 ambition, not a default.
 
+## What is the hard evidence it works?
+
+The model's central claim — two dimensions, not one — has direct statistical
+support:
+
+- **Confirmatory factor analysis.** In the MIDUS sample (n = 3,032), Keyes
+  tested competing measurement models and found that mental-illness indicators
+  and wellbeing measures load on two separate, correlated factors; a
+  single-factor model fit worse
+  ([Keyes 2005](https://pubmed.ncbi.nlm.nih.gov/15982151/)). The factors are
+  correlated, not independent — the model claims distinctness, not
+  orthogonality.
+- **Outcome differences by quadrant.** In the same study, adults with complete
+  mental health (flourishing and free of recent mental illness, 16.6% of the
+  sample) reported the fewest limitations of daily activities, fewest missed
+  workdays, lowest helplessness, and highest resilience and intimacy; the
+  languishing — with or without a diagnosis — fared worse than the flourishing
+  on every functioning measure
+  ([Keyes 2005](https://pubmed.ncbi.nlm.nih.gov/15982151/)).
+- **Replication across populations.** The two-factor structure has been
+  replicated in U.S. adolescents aged 12–18 (Keyes 2006), Dutch adults
+  (Westerhof & Keyes 2008), and South African adults (Keyes et al. 2008), as
+  reviewed in
+  [Westerhof & Keyes 2010](https://pmc.ncbi.nlm.nih.gov/articles/PMC2866965/).
+- **A validated instrument.** The 14-item Mental Health Continuum–Short Form
+  (MHC-SF) measures the emotional, psychological, and social wellbeing axis with
+  internal consistency (Cronbach's alpha) of .74–.83 for subscales and .89 for
+  the total scale
+  ([Westerhof & Keyes 2010](https://pmc.ncbi.nlm.nih.gov/articles/PMC2866965/)).
+- **Ongoing validation.** The model is still generating clinical research: a
+  2025 study of 277 undergraduates screening positive for eating-disorder risk
+  found that the flourishing subgroup (19.4%) showed better academic, social,
+  and mental-health outcomes than non-flourishing peers with the same risk
+  ([Fowler, Wareham-Fowler & Keyes 2025, _Psychology, Health & Medicine_](https://pubmed.ncbi.nlm.nih.gov/41294304/)).
+
+Limits of the evidence: the foundational studies are cross-sectional self-report
+surveys, so quadrant membership predicts but does not prove causal pathways, and
+critiques in the literature question whether Keyes's categorical flourishing
+threshold is too restrictive
+([Westerhof & Keyes 2010](https://pmc.ncbi.nlm.nih.gov/articles/PMC2866965/)).
+Evidence that the two-factor structure is real is strong; evidence that any
+specific intervention moves people between quadrants is thinner and rests on the
+broader wellbeing-intervention literature rather than on the model itself.
+
+## How does one use it properly?
+
+1. **Assess the two axes separately.** Screen symptoms with a standard clinical
+   instrument, and measure wellbeing with the
+   [MHC-SF](https://pmc.ncbi.nlm.nih.gov/articles/PMC2866965/): 14 items rating
+   past-month frequency of feelings such as "happy" and "that your life has a
+   sense of direction" from "never" to "every day."
+2. **Place the person (or population) in a quadrant.** Flourishing requires
+   near-daily experience of at least one hedonic item and a majority of the
+   positive-functioning items; languishing is the mirror threshold at "never" or
+   "once or twice"; everything between is moderate mental health
+   ([Westerhof & Keyes 2010](https://pmc.ncbi.nlm.nih.gov/articles/PMC2866965/)).
+3. **Run two strategies in parallel.** Treat symptoms to move along the illness
+   axis, and build wellbeing to move along the flourishing axis — the second
+   does not follow automatically from the first
+   ([Keyes 2005](https://pubmed.ncbi.nlm.nih.gov/15982151/)).
+4. **Work the wellbeing axis concretely.** Evidence-aligned levers for moving
+   out of languishing: build social connection and community participation,
+   pursue activities that produce flow, set goals aligned with personal values,
+   maintain exercise, sleep, and nutrition, and use structured stress management
+   such as mindfulness-based stress reduction
+   ([positivepsychology.com](https://positivepsychology.com/languishing/)).
+5. **Reassess on the instrument's cadence.** The MHC-SF uses a past-month
+   window, so monthly re-measurement matches its granularity; population
+   programs re-survey annually, as the CDC and Public Health Agency of Canada do
+   with Keyes's measures
+   ([Wikipedia: Corey Keyes](https://en.wikipedia.org/wiki/Corey_Keyes)).
+6. **Use plain language with non-specialists.** Practitioners operationalize the
+   model in conversation as steps on a staircase of mental health, keeping the
+   wellbeing axis discussable outside clinical vocabulary
+   ([NCBI Bookshelf](https://www.ncbi.nlm.nih.gov/books/NBK585669/)).
+
+## How does it relate to other frameworks?
+
+Within this library, the closest structural relative is
+[Positive × Negative Affect](./positive-negative-affect.md): both frameworks
+split what intuition treats as one bipolar scale into two distinct dimensions,
+and Watson and Tellegen's affect findings are the moment-to-moment analogue of
+Keyes's month-scale finding. The mood frameworks —
+[Mood Meter](./mood-meter.md), [Affect Grid](./affect-grid.md), and the
+[Thayer Mood Model](./thayer-mood-model.md) — map transient emotional states,
+and pair well with the dual continuum as the fast-timescale layer beneath its
+slow-timescale wellbeing axis. [Energy Quadrants](./energy-quadrants.md) and
+[Zones of Regulation](./zones-of-regulation.md) serve the same self-monitoring
+role in workplace and classroom settings.
+[Importance × Satisfaction](./importance-satisfaction.md) and the
+[Worry Matrix](./worry-matrix.md) are practical companions on the wellbeing
+axis: the first locates the life domains where flourishing work will pay most,
+and the second manages the rumination that languishing feeds on.
+
+Outside the library, the model sits in a family of positive-mental-health
+frameworks it both draws on and competes with: Marie Jahoda's 1958 six
+components of positive mental health
+([Wikipedia: Marie Jahoda](https://en.wikipedia.org/wiki/Marie_Jahoda)) and
+Carol Ryff's six-factor psychological-wellbeing model
+([Wikipedia: Eudaimonia](https://en.wikipedia.org/wiki/Eudaimonia)) are its
+direct precursors; Ed Diener's subjective-wellbeing model and Flourishing Scale
+([Wikipedia: Subjective well-being](https://en.wikipedia.org/wiki/Subjective_well-being))
+and Seligman's PERMA model
+([Wikipedia: Positive psychology](https://en.wikipedia.org/wiki/Positive_psychology))
+offer alternative decompositions of the wellbeing axis; and Antonovsky's
+salutogenesis asks the same "what makes people healthy?" question with an
+ease/dis-ease continuum instead of a dual-factor structure
+([Wikipedia: Salutogenesis](https://en.wikipedia.org/wiki/Salutogenesis)).
+
+## What is the core insight?
+
+Mental illness and mental wellbeing are separate, correlated dimensions, so
+removing symptoms and building flourishing are two different jobs that both need
+doing.
+
+## What is its intellectual-property status?
+
+Free to use. "Dual continuum," "two continua model," "flourishing," and
+"languishing" are conceptual terms introduced in peer-reviewed literature, not
+trademarks, and the quadrant structure carries no proprietary restriction —
+competing frameworks and critiques circulate openly
+([Wikipedia: Positive psychology](https://en.wikipedia.org/wiki/Positive_psychology)).
+The MHC-SF instrument is used without licensing fees by the CDC, the Public
+Health Agency of Canada, and academic researchers
+([Wikipedia: Corey Keyes](https://en.wikipedia.org/wiki/Corey_Keyes)), though
+formal licensing terms are not documented in the sources reviewed; the
+instrument items remain under Keyes's copyright as published. Organizations
+wanting a wellbeing measure with no Keyes-associated provenance can use Diener's
+Flourishing Scale, Seligman's PERMA-Profiler, or Ryff's scales as alternatives
+([Wikipedia: Positive psychology](https://en.wikipedia.org/wiki/Positive_psychology)).
+
 ## Sources
 
 - [Keyes, C. L. M. (2002). The Mental Health Continuum: From Languishing to Flourishing in Life. _Journal of Health and Social Behavior_, 43, 207–222 (Semantic Scholar record)](https://www.semanticscholar.org/paper/The-Mental-Health-Continuum:-from-languishing-to-in-Keyes/c8d11ed1a76147dced36ecd14f1bd191270180f4)
@@ -131,12 +262,15 @@ ambition, not a default.
 - [Keyes, C. L. M. (2005). Mental Illness and/or Mental Health? Investigating Axioms of the Complete State Model of Health. _JCCP_, 73(3), 539–548 (PubMed)](https://pubmed.ncbi.nlm.nih.gov/15982151/)
   — the factor-analytic proof that illness and wellbeing are separate axes
 - [Westerhof, G. J., & Keyes, C. L. M. (2010). Mental Illness and Mental Health: The Two Continua Model Across the Lifespan. _Journal of Adult Development_, 17(2), 110–119 (open access, PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC2866965/)
-  — consolidates the model, its name, and its intellectual roots
+  — consolidates the model, its name, its intellectual roots, cross-national
+  replications, and MHC-SF psychometrics
 - [Keyes, C. L. M. (2014). Mental Health as a Complete State: How the Salutogenic Perspective Completes the Picture (PDF)](https://globalhealth.duke.edu/sites/default/files/event-attachments/mental_health_as_a_complete_state_-_keyes_2014.pdf)
   — Keyes's own retrospective on the complete-state model
+- [Fowler, K., Wareham-Fowler, S., & Keyes, C. L. M. (2025). Flourishing despite eating disorder risk. _Psychology, Health & Medicine_ (PubMed)](https://pubmed.ncbi.nlm.nih.gov/41294304/)
+  — recent application of the dual continua model to a clinical-risk sample
 - [Wikipedia: Corey Keyes](https://en.wikipedia.org/wiki/Corey_Keyes) — Keyes
-  biography including the two continua diagram; no standalone Wikipedia article
-  exists for the dual-continuum model itself
+  biography including the two continua diagram and institutional adoption; no
+  standalone Wikipedia article exists for the dual-continuum model itself
 - [Wikipedia: Flourishing](https://en.wikipedia.org/wiki/Flourishing) — covers
   Keyes's 2002 work and the Mental Health Continuum measures
 - [Canadian Public Health Association — A Public Health Approach to Population Mental Wellness](https://www.cpha.ca/public-health-approach-population-mental-wellness)
@@ -148,4 +282,14 @@ ambition, not a default.
 - [BCcampus Open Textbook — Framework for Evaluating Mental Health and Wellness Education, Appendix B: Dual-Continuum Model](https://opentextbc.ca/mhwframework/back-matter/appendix-b/)
   — the model in mental-health literacy teaching
 - [positivepsychology.com — Overcome Languishing & Flourish](https://positivepsychology.com/languishing/)
-  — accessible explainer on languishing and the dual continua
+  — accessible explainer on languishing and strategies for leaving it
+- [Wikipedia: Marie Jahoda](https://en.wikipedia.org/wiki/Marie_Jahoda) — 1958
+  positive-mental-health precursor work
+- [Wikipedia: Eudaimonia](https://en.wikipedia.org/wiki/Eudaimonia) — links
+  Jahoda, Ryff, Keyes, and Diener wellbeing frameworks
+- [Wikipedia: Positive psychology](https://en.wikipedia.org/wiki/Positive_psychology)
+  — Keyes's tripartite model, PERMA, and critiques of positive psychology
+- [Wikipedia: Subjective well-being](https://en.wikipedia.org/wiki/Subjective_well-being)
+  — Diener's tripartite model of subjective wellbeing
+- [Wikipedia: Salutogenesis](https://en.wikipedia.org/wiki/Salutogenesis) —
+  Antonovsky's sense-of-coherence model as a related framework

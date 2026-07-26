@@ -43,6 +43,11 @@ The three categories are most credibly credited to **Alistair Cockburn**
 (co-author of the Agile Manifesto) via his Crystal reflection workshop, and
 several template vendors state this attribution directly
 ([Parabol](https://www.parabol.co/templates/sprint-retrospectives/keep-problem-try/)).
+Cockburn was one of the 17 signatories of the
+[Agile Manifesto](https://en.wikipedia.org/wiki/Agile_Manifesto) in 2001 and
+holds a PhD from the University of Oslo for work on people and methodologies in
+software development
+([Alistair Cockburn — Wikipedia](https://en.wikipedia.org/wiki/Alistair_Cockburn)).
 The KPT branding, board layout, and enormous popularity in Japan are the work of
 the Japanese agile community — most prominently **Kenji Hiranabe** and the
 ObjectClub / Project Facilitation practitioners around ESM, including **Masaru
@@ -103,6 +108,115 @@ With the Question quadrant, the team additionally leaves with an explicit list
 of unknowns to investigate, preventing premature decisions on issues the team
 does not yet understand.
 
+## What is the hard evidence it works?
+
+No peer-reviewed study directly compares KPT to other retrospective formats
+(Start/Stop/Continue, Sailboat, 4Ls); evidence for the format specifically is
+practitioner and vendor experience, not controlled research. What exists is
+evidence about the practice KPT structures — the recurring team retrospective:
+
+- **Team reflexivity.** Organizational research on reflexivity — the extent to
+  which a team collectively reflects on its objectives, strategies, and
+  processes — links higher reflexivity to better decision-making,
+  problem-solving, innovation, and adaptability; Atlassian cites this body of
+  work as the rationale for retrospectives
+  ([Atlassian Team Playbook](https://www.atlassian.com/team-playbook/plays/retrospective)).
+- **Kaizen.** Research on continuous improvement finds that significant results
+  accrue from the cumulative effect of many small improvements made through a
+  structured method
+  ([Kaizen — Wikipedia](https://en.wikipedia.org/wiki/Kaizen)).
+- **Boundary conditions.** A three-year longitudinal case study of 37 sprint
+  retrospectives (Lehtinen, Itkonen & Lassenius, _Empirical Software
+  Engineering_ 22, 2017) found retrospectives effective at surfacing issues
+  within the team's control but weak at resolving problems external to the team
+  — the same corrective actions recurred without organizational-level follow-up
+  ([Springer](https://link.springer.com/article/10.1007/s10664-016-9464-2)).
+- **Measurement.** Marshburn (2018) proposed approaches for measuring and
+  improving Scrum retrospective effectiveness, reflecting that effectiveness is
+  studied but not settled
+  ([Semantic Scholar](https://www.semanticscholar.org/paper/6e6ee5eaa40702cda9c718e65d39c38cd9e6ebc1)).
+- **Vendor data.** Parabol reports 92% of its users agree its retrospective tool
+  (with KPT among its templates) improves meeting efficiency — self- reported
+  vendor data, not independent research
+  ([Parabol](https://www.parabol.co/templates/sprint-retrospectives/keep-problem-try/)).
+
+## How does one use it properly?
+
+Run it as a recurring, time-boxed team session — 45 minutes to 3 hours depending
+on iteration length, with 4–8 participants, at the end of every iteration
+([Atlassian](https://www.atlassian.com/team-playbook/plays/retrospective)).
+
+1. **Set the tone** (~5 min). Frame the session around improving the process,
+   and establish that anything can be said without blame
+   ([Atlassian](https://www.atlassian.com/team-playbook/plays/retrospective)).
+2. **Review last session's Tries.** Re-sort each prior Try into Keep (the
+   experiment worked — adopt it) or Problem (it didn't — rethink it), keeping
+   the board a stateful loop
+   ([Parabol](https://www.parabol.co/templates/sprint-retrospectives/keep-problem-try/)).
+3. **Write individually** (~15 min). Each person writes Keep, Problem, and
+   Question items — one item per note, specific enough to act on. Fill Keep
+   before Problem so successes are recorded, and keep Problem items as
+   observations, not solutions
+   ([Nulab](https://nulab.com/learn/project-management/run-keep-problem-try-retrospective/)).
+4. **Share and cluster** (~20 min). Read items aloud, group duplicates, and look
+   for patterns across items rather than reacting to one-offs
+   ([Atlassian](https://www.atlassian.com/team-playbook/plays/retrospective)).
+5. **Generate Tries** (~15 min). Brainstorm Try items against the clustered
+   Problems, then select a small number to actually run. Phrase each Try as a
+   concrete experiment with an owner and a deadline. Route open unknowns to
+   Question with a named investigator instead of forcing them into Try.
+6. **Conclude** (~5 min). Summarize the selected Tries and Questions, and carry
+   them forward to open the next session
+   ([Atlassian](https://www.atlassian.com/team-playbook/plays/retrospective)).
+
+## How does it relate to other frameworks?
+
+- [Start / Stop / Continue / Change](./start-stop-continue-change.md) is the
+  closest sibling: the same retro job with imperative-verb categories. KPT
+  differs by separating problem-naming (Problem) from solutioning (Try) and by
+  re-judging last cycle's Tries each session.
+- [Love / Loathe / Learn / Leave](./love-loathe-learn-leave.md) covers the same
+  reflective territory for an individual's work and career rather than a team's
+  process.
+- [Knowns & Unknowns](./knowns-unknowns.md) is the natural companion to the
+  Question quadrant — it gives the "we don't know yet" items their own structure
+  for triage.
+- [How–Now–Wow](./how-now-wow.md) and [Impact / Effort](./impact-effort.md)
+  reinforce the Try step: when a retro generates more candidate experiments than
+  the team can run, either matrix selects the few worth committing to.
+- [SWOT Analysis](./swot-analysis.md) is the strategic-altitude analogue —
+  strengths/weaknesses map to Keep/Problem — applied to a position rather than a
+  period of work.
+- Outside this library: **KPTA** (Keep/Problem/Try/Action), the documented
+  Japanese extension that splits exploratory Tries from committed Actions
+  ([Agile Studio / ESM](https://www.agile-studio.jp/post/difference-try-action));
+  the **PDCA cycle** and **kaizen**, the continuous-improvement lineage KPT
+  enacts at team scale
+  ([Continuous improvement — Wikipedia](https://en.wikipedia.org/wiki/Continuous_improvement));
+  and **Scrum**, whose mandatory sprint retrospective is the ceremony KPT is
+  most often used to run
+  ([Scrum — Wikipedia](<https://en.wikipedia.org/wiki/Scrum_(software_development)>)).
+  Alternative retro formats include Sailboat, Mad/Sad/Glad, and the 4Ls
+  ([Atlassian](https://www.atlassian.com/team-playbook/plays/retrospective)).
+
+## What is the core insight?
+
+Improvement compounds only when reflection is forced to end in named experiments
+that the next reflection is obligated to judge.
+
+## What is its intellectual-property status?
+
+Free to use. "Keep / Problem / Try" and "KPT" are descriptive terms with no
+trademark, certification, or licensing restrictions; Cockburn published the
+reflection workshop in a commercial book but the practice is freely adopted
+industry-wide, and the ObjectClub / ESM Project Facilitation materials are
+distributed as freely licensed documents
+([ObjectClub PDF](https://objectclub.jp/download/files/pf/RetrospectiveMeetingGuide.pdf)).
+The Question and KPTA extensions are unrestricted community variants. No generic
+alternative name is needed. The framework has no dedicated Wikipedia article;
+the nearest coverage is the general
+[Retrospective](https://en.wikipedia.org/wiki/Retrospective) article.
+
 ## Sources
 
 - [Alistair Cockburn, _Crystal Clear: A Human-Powered Methodology for Small Teams_, Addison-Wesley, 2004 (Google Books)](https://books.google.com/books/about/Crystal_Clear.html?id=O_cMM5ztyMIC)
@@ -111,4 +225,12 @@ does not yet understand.
 - [Parabol, "Keep Problem Try (KPT) Activity"](https://www.parabol.co/templates/sprint-retrospectives/keep-problem-try/)
 - [Nulab, "How to run a Keep, Problem, Try retrospective"](https://nulab.com/learn/project-management/run-keep-problem-try-retrospective/)
 - [Agile Studio (ESM), on KPTA's Try vs Action (Japanese)](https://www.agile-studio.jp/post/difference-try-action)
+- [Atlassian Team Playbook, "Retrospective" — protocol, timing, reflexivity research, alternative formats](https://www.atlassian.com/team-playbook/plays/retrospective)
+- [Lehtinen, Itkonen & Lassenius, "Recurring opinions or productive improvements — what agile teams actually discuss in retrospectives", _Empirical Software Engineering_ 22, 2017](https://link.springer.com/article/10.1007/s10664-016-9464-2)
+- [Marshburn, "Scrum Retrospectives: Measuring and Improving Effectiveness", 2018 (Semantic Scholar)](https://www.semanticscholar.org/paper/6e6ee5eaa40702cda9c718e65d39c38cd9e6ebc1)
+- [Alistair Cockburn — Wikipedia](https://en.wikipedia.org/wiki/Alistair_Cockburn)
+- [Agile Manifesto — Wikipedia](https://en.wikipedia.org/wiki/Agile_Manifesto)
+- [Kaizen — Wikipedia](https://en.wikipedia.org/wiki/Kaizen)
+- [Continuous improvement — Wikipedia](https://en.wikipedia.org/wiki/Continuous_improvement)
+- [Scrum — Wikipedia](<https://en.wikipedia.org/wiki/Scrum_(software_development)>)
 - [Retrospective — Wikipedia](https://en.wikipedia.org/wiki/Retrospective)

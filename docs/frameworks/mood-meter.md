@@ -23,8 +23,9 @@ emotions by David Caruso and Peter Salovey in _The Emotionally Intelligent
 Manager_ (2004); in the early 2000s Caruso and Marc Brackett reworked it into
 the Mood Meter as the signature tool of the RULER program
 ([marcbrackett.com](https://marcbrackett.com/how-we-feel-app-3/)). A Mood Meter
-mobile app followed in 2013, and the successor app "How We Feel" in 2022
-([marcbrackett.com](https://marcbrackett.com/how-we-feel-app-3/)).
+mobile app followed in 2013, and the successor app "How We Feel" — built by The
+How We Feel Project with Ben Silbermann and Brackett, carrying 144 emotion words
+— in 2022 ([marcbrackett.com](https://marcbrackett.com/how-we-feel-app-3/)).
 
 ## Who created it?
 
@@ -88,11 +89,159 @@ For an individual, the honest expectation is smaller but real: a habit of
 noticing and naming feelings precisely enough to respond to them deliberately
 instead of being driven by them.
 
+## What is the hard evidence it works?
+
+The evidence base sits at the program (RULER) level rather than on the Mood
+Meter in isolation:
+
+- A 2012 quasi-experimental study of 273 fifth- and sixth-graders in 15
+  classrooms across three schools found higher year-end English language arts
+  grades and higher teacher-rated social-emotional competence (leadership,
+  social skills, study skills) in RULER classrooms than in comparison classrooms
+  ([Brackett et al., ERIC EJ958389](https://eric.ed.gov/?id=EJ958389)).
+- A preschool quasi-experimental study (2017–2018) found greater pre-literacy
+  growth in RULER classrooms than in control groups
+  ([UVA School of Education](https://education.virginia.edu/research-initiatives/research-centers-labs/research-labs/uva-social-development-lab/examining-efficacy-ruler-school-climate-teacher-well-being-classroom-climate-and-student-outcomes)).
+- The largest test to date is a University of Virginia randomized controlled
+  trial (begun 2018) covering 60 schools, 800+ classrooms, and 5,000+ students
+  over four years, examining school climate, teacher well-being, classroom
+  climate, and student outcomes; peer-reviewed results are not yet published
+  ([Social Development Lab](https://www.socialdevelopmentlab.org/ruler),
+  [UVA](https://education.virginia.edu/research-initiatives/research-centers-labs/research-labs/uva-social-development-lab/examining-efficacy-ruler-school-climate-teacher-well-being-classroom-climate-and-student-outcomes)).
+- A high-school efficacy trial is ongoing at the Yale Child Study Center,
+  examining emotional-intelligence skills, academic performance, school
+  engagement, emotional health, and educator outcomes
+  ([Yale Child Study Center](https://medicine.yale.edu/childstudy/services/community-and-schools-programs/center-for-emotional-intelligence/research/current-research/efficacy-trial-hs-ruler/)).
+- Brackett has published over 200 scholarly articles on emotional intelligence
+  ([Yale faculty profile](https://medicine.yale.edu/profile/marc-brackett/)).
+
+Caveats: the strongest published RULER studies are quasi-experimental, not
+randomized; the large RCTs are still in progress. For mood tracking generally, a
+systematic review notes that the science of defining and measuring "mood"
+remains unsettled, that common measures trade compliance against precision, that
+samples are often small and selection-biased, that long-term real-world use is
+under-studied, and that mood-tracking tools show lower usability among
+low-income and minoritized populations
+([PMC8387890](https://pmc.ncbi.nlm.nih.gov/articles/PMC8387890/)).
+
+## How does one use it properly?
+
+1. **Pause.** Stop the current activity and check in with mind and body in the
+   moment
+   ([rewardcharts4kids.com](https://www.rewardcharts4kids.com/mood-meter/)).
+2. **Rate pleasantness.** Ask how pleasant or unpleasant you feel; the advanced
+   grid runs roughly −5 to +5 on the x-axis
+   ([appliedcoaching.org](https://www.appliedcoaching.org/post/the-mood-meter-for-self-awareness)).
+3. **Rate energy.** Ask whether your body feels energized or depleted (y-axis,
+   low to high arousal)
+   ([appliedcoaching.org](https://www.appliedcoaching.org/post/the-mood-meter-for-self-awareness)).
+4. **Plot the point.** Locate your quadrant — or exact coordinates on the
+   gridded version
+   ([appliedcoaching.org](https://www.appliedcoaching.org/post/the-mood-meter-for-self-awareness)).
+5. **Label it.** Name a specific emotion word — move from "bad" to "overwhelmed"
+   or "resentful." This is the L of RULER, and the granular label determines
+   which regulation strategy fits.
+6. **Understand the cause.** Reflect on what triggered or is sustaining the
+   state
+   ([LinkedIn: managing stress with the Mood Meter](https://www.linkedin.com/pulse/use-mood-meter-manage-stress-jenn-gile-pmp)).
+7. **Repeat on a cadence.** Check in daily or several times a day; vocabulary
+   and regulation habits build through repetition. The
+   [How We Feel app](https://apps.apple.com/us/app/how-we-feel/id1562706384)
+   supports this with 144 emotion words and regulation strategies.
+
+Match the tool to the audience: the Simple Mood Meter (no gridlines) suits
+children and lower developmental levels; the Advanced Mood Meter (gridded) suits
+adults. Both are published in English and Spanish
+([rulerapproach.org](https://rulerapproach.org/ruler-resources-for-families/)).
+
+## How does it relate to other frameworks?
+
+Same axes, different lineage:
+
+- [Affect Grid](./affect-grid.md) — Russell's own single-item research
+  instrument on the identical pleasure × arousal axes; the Mood Meter is its
+  pedagogical cousin.
+- [Thayer Mood Model](./thayer-mood-model.md) — crosses energy with tension
+  rather than pleasantness; useful for separating "tired-tense" from
+  "tired-calm," which the Mood Meter folds into one axis.
+- [Positive × Negative Affect](./positive-negative-affect.md) — treats positive
+  and negative affect as independent dimensions (a 45° rotation of the
+  circumplex) rather than opposite ends of one axis.
+- [Energy Quadrants](./energy-quadrants.md) — the workplace-performance
+  adaptation of the same energy × pleasantness space.
+
+Reinforcing companions:
+
+- [Zones of Regulation](./zones-of-regulation.md) — a classroom regulation
+  curriculum whose four color zones map closely onto the Mood Meter's quadrants;
+  the Mood Meter adds the granular-labeling step.
+- [Dual Continuum of Mental Health](./dual-continuum-of-mental-health.md) —
+  frames well-being at the trait level while the Mood Meter samples states;
+  together they separate "how I am today" from "how I am doing overall."
+- [Worry Matrix](./worry-matrix.md) — a natural next step when a check-in lands
+  in the high-energy unpleasant quadrant: sort what is fueling the feeling by
+  control and importance.
+
+Further afield, Plutchik's Wheel of Emotions offers a categorical alternative —
+eight primary emotions with intensity gradations — that trades the Mood Meter's
+two clean dimensions for more built-in vocabulary
+([6seconds.org](https://www.6seconds.org/2025/02/06/plutchik-wheel-emotions/)),
+and the valence–arousal space remains the dominant dimensional model in emotion
+research and affective computing
+([emergentmind.com](https://www.emergentmind.com/topics/valence-arousal-space)).
+The Mood Meter is also the applied arm of the Salovey–Mayer
+emotional-intelligence theory
+([neurolaunch.com](https://neurolaunch.com/salovey-and-mayer-emotional-intelligence/)),
+whose ability-based measurement counterpart is the
+[MSCEIT](https://en.wikipedia.org/wiki/Mayer%E2%80%93Salovey%E2%80%93Caruso_Emotional_Intelligence_Test).
+
+## What is the core insight?
+
+Any felt state can be located by answering two questions — how pleasant, how
+energized — and once located, it can be named precisely enough to be regulated
+deliberately.
+
+## What is its intellectual-property status?
+
+Not free to use under its branded names. "RULER" is a trademark of Yale
+University, and its trademarks and service marks may not be used without prior
+written consent ([RULER terms of use](https://rulerapproach.org/terms-of-use/));
+Yale requires manufacturers of goods bearing its trademarks to be licensed
+([Yale trademark licensing](https://licensing.yale.edu/licensing/yale-trademark-licensing)).
+"Mood Meter" is presented as a proprietary branded tool of the RULER program
+([marcbrackett.com](https://marcbrackett.com/how-we-feel-app-3/)), and the RULER
+curriculum itself is a licensed program with copyright administered by the Yale
+Center for Emotional Intelligence
+([RULER terms of use](https://rulerapproach.org/terms-of-use/)).
+
+The underlying concept is unrestricted: Russell's 1980 circumplex model is
+published peer-reviewed science, and anyone may build an emotion tool on the
+valence × arousal dimensions without infringing
+([Russell 1980](https://www.scirp.org/reference/referencespapers?referenceid=1051239)).
+Usable generic names include valence–arousal grid, circumplex model of affect,
+dimensional emotion model, and two-dimensional emotion space.
+
 ## Sources
 
 - [Marc Brackett — "How We Feel" app page, including the Mood Meter's history](https://marcbrackett.com/how-we-feel-app-3/)
 - [Marc Brackett — RULER overview](https://marcbrackett.com/ruler/)
 - [RULER Approach (Yale) — resources for families](https://rulerapproach.org/ruler-resources-for-families/)
+- [RULER Approach — terms of use (trademark and copyright)](https://rulerapproach.org/terms-of-use/)
+- [Yale trademark licensing policy](https://licensing.yale.edu/licensing/yale-trademark-licensing)
+- [ERIC EJ958389 — 2012 RULER study on grades and social-emotional competence](https://eric.ed.gov/?id=EJ958389)
+- [UVA Social Development Lab — RULER efficacy RCT (60 schools, 5,000+ students)](https://education.virginia.edu/research-initiatives/research-centers-labs/research-labs/uva-social-development-lab/examining-efficacy-ruler-school-climate-teacher-well-being-classroom-climate-and-student-outcomes)
+- [Social Development Lab — RULER study overview](https://www.socialdevelopmentlab.org/ruler)
+- [Yale Child Study Center — high-school RULER efficacy trial](https://medicine.yale.edu/childstudy/services/community-and-schools-programs/center-for-emotional-intelligence/research/current-research/efficacy-trial-hs-ruler/)
+- [Marc Brackett — Yale faculty profile](https://medicine.yale.edu/profile/marc-brackett/)
+- [PMC8387890 — systematic review of mood-monitoring app limitations](https://pmc.ncbi.nlm.nih.gov/articles/PMC8387890/)
+- [Applied Coaching — Mood Meter usage steps](https://www.appliedcoaching.org/post/the-mood-meter-for-self-awareness)
+- [Rewardcharts4kids — Mood Meter instructions](https://www.rewardcharts4kids.com/mood-meter/)
+- [Jenn Gile — using the Mood Meter to manage stress](https://www.linkedin.com/pulse/use-mood-meter-manage-stress-jenn-gile-pmp)
+- [How We Feel app (App Store)](https://apps.apple.com/us/app/how-we-feel/id1562706384)
+- [Neurolaunch — Salovey–Mayer emotional-intelligence model](https://neurolaunch.com/salovey-and-mayer-emotional-intelligence/)
+- [Wikipedia: MSCEIT](https://en.wikipedia.org/wiki/Mayer%E2%80%93Salovey%E2%80%93Caruso_Emotional_Intelligence_Test)
+- [6seconds — Plutchik's Wheel of Emotions](https://www.6seconds.org/2025/02/06/plutchik-wheel-emotions/)
+- [Emergent Mind — valence–arousal space in emotion research](https://www.emergentmind.com/topics/valence-arousal-space)
 - [Wikipedia: Marc Brackett](https://en.wikipedia.org/wiki/Marc_Brackett) — no
   standalone Wikipedia article exists for the Mood Meter itself
 - [Wikipedia: James A. Russell](https://en.wikipedia.org/wiki/James_A._Russell)

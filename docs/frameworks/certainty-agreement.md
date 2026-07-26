@@ -30,16 +30,20 @@ work in the 1990s and spread from the textbook into management, healthcare, and
 **Ralph Douglas Stacey** (1942–2021), a British organizational theorist,
 complexity researcher, and Professor of Management at Hertfordshire Business
 School, University of Hertfordshire
-([Wikipedia](https://en.wikipedia.org/wiki/Ralph_Douglas_Stacey)). He was a
-pioneer in applying the complexity sciences to human organizations
+([Wikipedia](https://en.wikipedia.org/wiki/Ralph_Douglas_Stacey)). He held a PhD
+in econometrics from the London School of Economics and was a pioneer in
+applying the complexity sciences to human organizations
 ([Mowles, obituary, 2022](https://journals.sagepub.com/doi/abs/10.1177/05333164221075533)).
 Important caveat: **Stacey later disowned the matrix.** In his later "responsive
 processes" phase he dropped the diagram from his own work and argued against its
 use, "because it is easily interpreted in a way that collapses the paradox of
 certainty and uncertainty and so sustains the dominant discourse on management
 while using an alternative jargon of complexity"
-([Wikipedia](https://en.wikipedia.org/wiki/Ralph_Douglas_Stacey); see also
-[The Cynefin Co, "Stacey Unresolved"](https://thecynefin.co/stacey-unresolved/)).
+([Wikipedia](https://en.wikipedia.org/wiki/Ralph_Douglas_Stacey)). His colleague
+Doug Griffin persuaded him that any spatial artefact — a map, matrix, or diagram
+— had "already betrayed" the living, dynamic process that complexity theory
+describes
+([The Cynefin Co, "Stacey Unresolved"](https://thecynefin.co/stacey-unresolved/)).
 Most versions in circulation today — including four-zone quadrant renderings
 with labels like "complicated" and "complex" — are third-party adaptations that
 Stacey did not endorse.
@@ -82,6 +86,96 @@ instead of applying one habitual style everywhere — while staying alert to
 Stacey's own warning that neatly categorizing a situation can create a false
 sense of control.
 
+## What is the hard evidence it works?
+
+There is none of the usual kind. No peer-reviewed empirical studies validating
+the matrix's predictive validity or its effect on team performance were located;
+it circulates as a conceptual heuristic in management consulting, healthcare,
+and Agile training rather than as an empirically tested instrument
+([Informal Coalitions](https://informalcoalitions.typepad.com/informal_coalitions/2009/08/staceys-certainty-agreement-matrix-and-levels-of-complexity.html)).
+The strongest evidence on record points the other way: the creator himself
+abandoned the diagram and argued that it is "easily interpreted in a way that
+collapses the paradox of certainty and uncertainty"
+([Wikipedia](https://en.wikipedia.org/wiki/Ralph_Douglas_Stacey)), and in his
+later theoretical work held that people and groups "co-emerge through continuous
+interaction" and cannot be captured by any static categorization
+([The Cynefin Co, "Stacey Unresolved"](https://thecynefin.co/stacey-unresolved/)).
+Anyone adopting the matrix should treat it as a discussion aid with face
+validity, not a validated method.
+
+## How does one use it properly?
+
+1. **Name the situation.** Pick one concrete decision or piece of work, not a
+   whole program. The unit of analysis is a single situation at a point in time.
+2. **Rate certainty.** Ask: how well do we understand cause and effect here? Is
+   there past experience or data that predicts what an action will produce?
+3. **Rate agreement.** Ask: how much do the key stakeholders agree on the goal
+   and on what should be done? List who the stakeholders are before answering.
+4. **Locate and pick the mode.**
+   - High certainty, high agreement → **Plan**: detailed planning, delegation,
+     and execution against milestones.
+   - High certainty, low agreement → **Negotiate**: put effort into
+     coalition-building and goal alignment before detailed planning.
+   - Low certainty, high agreement → **Experiment**: run small, safe-to-fail
+     probes, prioritize learning over prediction, and iterate.
+   - Low certainty, low agreement → **Stabilize**: act to reduce chaos and
+     restore enough order to shift into one of the other modes.
+5. **Do it together.** Have the team place the situation on the grid
+   independently, then discuss divergent placements — the conversation about
+   where the work sits is where the value is.
+6. **Revisit on cadence.** Re-place the situation at natural checkpoints
+   (kickoff, each planning cycle, after major events); certainty and agreement
+   both move as work progresses, and the mode should move with them.
+
+## How does it relate to other frameworks?
+
+- **Cynefin** (David Snowden, late 1990s) is the best-known successor: it maps
+  decision contexts into Clear, Complicated, Complex, and Chaotic domains plus
+  Disorder, and prescribes probe–sense–respond cycles in the complex domain. It
+  shares Stacey's core contingency insight while addressing some of the
+  criticisms that led Stacey to abandon his own diagram
+  ([The Cynefin Co](https://thecynefin.co/stacey-unresolved/)).
+- [Knowns & Unknowns](./knowns-unknowns.md) decomposes the Certainty axis: known
+  unknowns are researchable (Plan or Experiment), while unknown unknowns keep a
+  situation in the low-certainty half no matter how confident the plan feels.
+- [Power × Interest](./power-interest.md) is the natural companion when a
+  situation lands in the low-Agreement half: it maps exactly whose agreement
+  matters and how much energy to spend winning it.
+- [One-Way / Two-Way Doors](./one-way-two-way-doors.md) reinforces the
+  Experiment quadrant: safe-to-fail probes are only safe when the decisions
+  inside them are reversible two-way doors.
+- [Risk Matrix](./risk-matrix.md) complements the Certainty axis by scoring
+  individual risks (likelihood × impact) once you know which situations are too
+  uncertain to plan in detail.
+- [Vision × Execution](./vision-execution.md) covers the adjacent leadership
+  question: once the mode is chosen, whether the team has the direction and
+  delivery capacity to work in it.
+
+## What is the core insight?
+
+The right way to manage work depends on how well cause-and-effect is understood
+and how much the people involved agree — so diagnose the situation before
+choosing between planning, negotiating, experimenting, and stabilizing.
+
+## What is its intellectual-property status?
+
+Free to use. The underlying idea — vary the decision-making approach by
+certainty and agreement — is unbranded, and no trademark on "Stacey Matrix" or
+"Certainty-Agreement matrix" was found. The framework is treated as cultural
+knowledge in the management and Agile communities and is widely taught and
+adapted without formal licensing
+([Informal Coalitions](https://informalcoalitions.typepad.com/informal_coalitions/2009/08/staceys-certainty-agreement-matrix-and-levels-of-complexity.html)).
+The original diagram and its supporting text are copyrighted material in
+Stacey's _Strategic Management and Organisational Dynamics_ (Pearson Education,
+1993–2016), so direct reproduction or quotation requires citation; the popular
+2×2 zone-labelled renderings are third-party adaptations (e.g.
+[Praxis Framework](https://www.praxisframework.org/en/library/stacey-matrix)),
+not licensed products. Generic reframings — axes named "Clarity" and
+"Consensus," or "Predictability" and "Alignment" — carry the same logic with no
+attribution burden, though attribution to Stacey is customary. Note the
+provenance wrinkle: Stacey disavowed the adaptations that bear his name
+([The Cynefin Co](https://thecynefin.co/stacey-unresolved/)).
+
 ## Sources
 
 - [Ralph Douglas Stacey — Wikipedia](https://en.wikipedia.org/wiki/Ralph_Douglas_Stacey)
@@ -91,9 +185,12 @@ sense of control.
   1993; 7th ed. with Chris Mowles, 2016) — primary source for the original
   diagram and its later removal
 - [Chris Rodgers, "Stacey's certainty-agreement matrix and 'levels' of complexity" — Informal Coalitions blog](https://informalcoalitions.typepad.com/informal_coalitions/2009/08/staceys-certainty-agreement-matrix-and-levels-of-complexity.html)
-  — on Stacey no longer seeing the framework as valid and useful
+  — on Stacey no longer seeing the framework as valid and useful, and on its
+  spread through practitioner communities
 - [The Cynefin Co, "Stacey Unresolved"](https://thecynefin.co/stacey-unresolved/)
-  — on Stacey's regret at how the matrix was used
+  — on Griffin's influence, Stacey's abandonment of the matrix, and the
+  relationship to Cynefin
 - [Chris Mowles, "Ralph Stacey (1942–2021)" — Group Analysis (obituary)](https://journals.sagepub.com/doi/abs/10.1177/05333164221075533)
+  — biographical dates and Stacey's intellectual evolution
 - [Stacey matrix — Praxis Framework](https://www.praxisframework.org/en/library/stacey-matrix)
-  — on the common adapted forms of the diagram
+  — on the common adapted 2×2 forms of the diagram and their zone labels

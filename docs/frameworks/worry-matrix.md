@@ -7,7 +7,7 @@ matter to me?). The four quadrants each prescribe a response: **Take Action**
 (important but outside your control — grieve it, plan around it, adjust), **Not
 Worth It** (controllable but unimportant — you _could_ act, but it doesn't merit
 the energy), and **Let It Go** (neither controllable nor important — drop it
-entirely). The matrix converts free- floating anxiety into a sorting exercise
+entirely). The matrix converts free-floating anxiety into a sorting exercise
 with an explicit next move per quadrant.
 
 ## When was it created?
@@ -97,15 +97,136 @@ and reduced rumination from routing worries to action or attention-refocusing
 The 2×2 itself has no outcome research of its own; its plausibility is inherited
 from those ancestors.
 
+## What is the hard evidence it works?
+
+No study validates the Worry Matrix grid itself — that is a fact, not an
+omission. Every empirical claim attaches to its ancestor traditions:
+
+- **Stoicism → cognitive therapy.** Precursors of CBT's fundamental aspects
+  "have been identified in various ancient philosophical traditions,
+  particularly Stoicism," and Epictetus directly influenced Albert Ellis, whose
+  Rational Emotive Behavior Therapy (1950s) was the first formal cognitive
+  behavioral therapy
+  ([Wikipedia: CBT](https://en.wikipedia.org/wiki/Cognitive_behavioral_therapy),
+  [Wikipedia: Albert Ellis](https://en.wikipedia.org/wiki/Albert_Ellis),
+  [Wikipedia: Stoicism](https://en.wikipedia.org/wiki/Stoicism)).
+- **CBT for worry and anxiety.** CBT delivered in primary care is "potentially
+  more effective than usual care" for anxiety; one caveat: a study of self-help
+  CBT guides found "a negative effect in patients who tended to ruminate"
+  ([Wikipedia: CBT](https://en.wikipedia.org/wiki/Cognitive_behavioral_therapy)).
+- **ACT for accepting the uncontrollable.** Acceptance and Commitment Therapy —
+  whose accept-what-you-can't-control, act-on-what-you-value structure parallels
+  the matrix's Accept & Adapt and Take Action quadrants — counts over 1,300
+  randomized controlled trials as of January 2025. A 2020 systematic review
+  found it "efficacious for all conditions examined, including anxiety,
+  depression, substance use, pain"; a 2015 review found it better than placebo
+  for anxiety, depression, and addiction; the WHO and the U.S. Department of
+  Veterans Affairs endorse it
+  ([Wikipedia: ACT](https://en.wikipedia.org/wiki/Acceptance_and_commitment_therapy)).
+
+In short: the two questions the matrix asks are each well-evidenced in clinical
+form; the specific 2×2 packaging of them is not studied.
+
+## How does one use it properly?
+
+1. **Capture the worry in one sentence.** One worry per pass — "my job" is a
+   cloud; "my role may be cut in the reorg" is sortable.
+2. **Ask the control question:** can I influence this through my own actions?
+3. **Ask the importance question:** does this genuinely matter to me and my
+   goals?
+4. **Place it in its quadrant and execute that quadrant's move:**
+   - **Take Action** — write the concrete next steps and schedule the first one.
+   - **Accept & Adapt** — name what is lost, plan around it, adjust
+     expectations.
+   - **Not Worth It** — decide, on purpose, not to spend the energy.
+   - **Let It Go** — release it; if it returns, refocus attention rather than
+     re-litigate
+     ([Worry Tree practice](https://www.getselfhelp.co.uk/docs/worrytree.pdf)).
+5. **Run it on two cadences:** in the moment, whenever a worry starts looping;
+   and in a periodic review (weekly works well), sweeping accumulated worries
+   through the grid in one sitting. Re-sort long-lived worries — control and
+   importance both change over time.
+
+Each pass should end with the worry in exactly one quadrant and its move either
+done or scheduled.
+
+## How does it relate to other frameworks?
+
+**Ancestors and clinical parallels** (covered above): the Stoic dichotomy of
+control ([Epictetus](https://en.wikipedia.org/wiki/Epictetus)), Covey's
+[Circles of Concern and Influence](https://en.wikipedia.org/wiki/The_7_Habits_of_Highly_Effective_People),
+the [CBT Worry Tree](https://www.getselfhelp.co.uk/docs/worrytree.pdf),
+[REBT](https://en.wikipedia.org/wiki/Albert_Ellis), and
+[ACT](https://en.wikipedia.org/wiki/Acceptance_and_commitment_therapy).
+
+**Similar grids in this library:**
+
+- [Eisenhower Matrix](./eisenhower-matrix.md) — the framework it is most often
+  confused with. Eisenhower crosses urgency × importance to prioritize tasks;
+  the Worry Matrix crosses control × importance to triage worries. They chain
+  well: a worry that lands in Take Action becomes a task, which Eisenhower then
+  schedules.
+- [Importance × Satisfaction](./importance-satisfaction.md) — shares the
+  importance axis but pairs it with satisfaction to find improvement gaps rather
+  than worry destinations.
+- [Risk Matrix](./risk-matrix.md) — the forward-looking cousin. It triages
+  potential events by likelihood × impact; the Worry Matrix triages your felt
+  response to them. Sorting a worry as Take Action often means doing a risk
+  assessment next.
+- [Impact / Effort](./impact-effort.md) — useful downstream: when the Take
+  Action quadrant fills up, impact × effort ranks which actions to do first.
+
+**Reinforcing companions:**
+
+- [Knowns & Unknowns](./knowns-unknowns.md) — many uncontrollable worries are
+  really unknowns; classifying what you don't know clarifies whether influence
+  exists at all.
+- [Dual Continuum of Mental Health](./dual-continuum-of-mental-health.md) —
+  situates worry triage in the larger picture: reducing rumination and building
+  well-being are related but separate axes.
+- [Mood Meter](./mood-meter.md) — naming the feeling before sorting the worry
+  makes the control and importance judgments less distorted by the mood itself.
+
+## What is the core insight?
+
+Worry is only useful as a signal to sort — every worry resolves into act, adapt,
+deprioritize, or release once you ask whether you control it and whether it
+matters.
+
+## What is its intellectual-property status?
+
+Free to use. "Worry Matrix" carries no trademark; no patent or licensed
+instrument covers the grid, and no vendor claims ownership — the term circulates
+generically across coaching, therapy, and productivity writing. Its ancestors:
+the Stoic dichotomy of control is public domain; Covey's Circles of
+Concern/Influence appear in the copyrighted
+[_7 Habits_](https://en.wikipedia.org/wiki/The_7_Habits_of_Highly_Effective_People)
+(Franklin Covey holds the book's content, though the idea itself may be
+referenced and taught); the Worry Tree appears in the copyrighted _Managing Your
+Mind_
+([Butler & Hope, OUP 1995](https://www.abebooks.com/first-edition/Managing-Mind-Mental-Fitness-Guide-Butler/254948640/bd)),
+with worksheets circulating as free educational material
+([Get Self Help](https://www.getselfhelp.co.uk/docs/worrytree.pdf)). Generic
+names for the same structure include "control–importance matrix" and "2×2 worry
+grid."
+
 ## Sources
 
 - [Wikipedia: Epictetus](https://en.wikipedia.org/wiki/Epictetus) — the Stoic
   dichotomy of control (_Enchiridion_, c. 125 AD)
+- [Wikipedia: Stoicism](https://en.wikipedia.org/wiki/Stoicism) — Stoic
+  philosophy as inspiration for modern cognitive psychotherapy
 - [Wikipedia: The 7 Habits of Highly Effective People](https://en.wikipedia.org/wiki/The_7_Habits_of_Highly_Effective_People)
   — Covey's Circles of Concern/Influence (1989)
 - [Stephen Covey's circle of concern and circle of influence — Oxford MPLS training summary (PDF)](https://www.mpls.ox.ac.uk/files/training/circles-of-influence)
 - [The Worry Tree worksheet — Get Self Help (PDF)](https://www.getselfhelp.co.uk/docs/worrytree.pdf)
 - [Butler & Hope, _Managing Your Mind_ (OUP, 1995) — first-edition record](https://www.abebooks.com/first-edition/Managing-Mind-Mental-Fitness-Guide-Butler/254948640/bd)
+- [Wikipedia: Cognitive behavioral therapy](https://en.wikipedia.org/wiki/Cognitive_behavioral_therapy)
+  — CBT evidence for anxiety; Stoic precursors; rumination caveat
+- [Wikipedia: Albert Ellis](https://en.wikipedia.org/wiki/Albert_Ellis) — REBT,
+  the first formal cognitive behavioral therapy, influenced by Epictetus
+- [Wikipedia: Acceptance and commitment therapy](https://en.wikipedia.org/wiki/Acceptance_and_commitment_therapy)
+  — 1,300+ RCTs, 2015 and 2020 reviews, WHO and VA endorsements
 - No Wikipedia article exists for the Worry Matrix itself, and
   en.wikipedia.org/wiki/Dichotomy_of_control does not resolve (verified
   2026-07); the concept is covered within the Epictetus and Stoicism articles.

@@ -132,16 +132,136 @@ The honest expectation for everyday use is not a personality verdict but a map:
 knowing which quadrant you drift toward under stress, and what secure
 functioning would look like from there.
 
+## What is the hard evidence it works?
+
+The evidence base is unusually deep for a 2×2 framework, spanning structure,
+prediction, and mechanism:
+
+- **The two axes are empirically derived, not asserted.** Brennan, Clark, and
+  Shaver factor-analyzed the item pool of the existing adult-attachment
+  questionnaires and found they all reduced to the same two orthogonal
+  dimensions — anxiety and avoidance — which became the ECR's subscales
+  ([Brennan, Clark & Shaver, 1998](https://labs.psychology.illinois.edu/~rcfraley/measures/brennan.html)).
+- **The original studies replicated the structure.** Hazan and Shaver's 1987
+  studies found the three-style distribution (roughly 56% secure, 25% avoidant,
+  19% anxious) and showed the styles predicted differing beliefs about love and
+  differing childhood relationships with parents
+  ([Hazan & Shaver, 1987](https://pubmed.ncbi.nlm.nih.gov/3572722/)).
+  Bartholomew and Horowitz validated the four-category model against interview
+  ratings, self-report, and friend-report in two studies of young adults
+  ([Bartholomew & Horowitz, 1991](https://www.semanticscholar.org/paper/Attachment-styles-among-young-adults:-a-test-of-a-Bartholomew-Horowitz/6b6000ae9911fa9f9ec6345048b5a20501bdcedf)).
+- **The dimensions predict distinct stress strategies.** A large research
+  literature shows attachment anxiety predicts hyperactivating strategies
+  (proximity- and reassurance-seeking) and avoidance predicts deactivating
+  strategies (denial of attachment needs, distance-keeping), with insecurity on
+  either dimension linked to vulnerability across a range of psychological
+  disorders and security acting as a resilience factor
+  ([Mikulincer & Shaver, 2012](https://pmc.ncbi.nlm.nih.gov/articles/PMC3266769/)).
+- **The dimensions predict emotion-regulation outcomes.** Recent work confirms
+  the two-dimensional model and links avoidance to impaired cognitive
+  reappraisal under stress, with the dimensional approach now standard in the
+  field
+  ([Domic-Siede et al., 2023](https://pmc.ncbi.nlm.nih.gov/articles/PMC10359990/)).
+
+Caveats the evidence itself supplies: styles are moderately stable rather than
+fixed — roughly 20–30% of people shift over time — and self-report measures
+capture conscious self-perception, not the unconscious processes tapped by
+interview methods like the Adult Attachment Interview
+([Wikipedia: Attachment in adults](https://en.wikipedia.org/wiki/Attachment_in_adults)).
+
+## How does one use it properly?
+
+1. **Score the anxiety axis.** Ask: _how much do I worry about abandonment, and
+   how preoccupied am I with my partner's availability and responsiveness?_ For
+   a validated score, use the ECR's 18 anxiety items
+   ([Fraley — ECR items and scoring](https://labs.psychology.illinois.edu/~rcfraley/measures/brennan.html)).
+2. **Score the avoidance axis.** Ask: _how uncomfortable am I with closeness,
+   and how reluctant am I to depend on others?_ The ECR's 18 avoidance items
+   measure this dimension
+   ([Fraley](https://labs.psychology.illinois.edu/~rcfraley/measures/brennan.html)).
+3. **Locate the quadrant.** Low/low is **secure**, high anxiety with low
+   avoidance is **preoccupied**, low anxiety with high avoidance is
+   **dismissive-avoidant**, high/high is **fearful-avoidant**
+   ([Bartholomew & Horowitz, 1991](https://www.semanticscholar.org/paper/Attachment-styles-among-young-adults:-a-test-of-a-Bartholomew-Horowitz/6b6000ae9911fa9f9ec6345048b5a20501bdcedf)).
+4. **Keep the scores, not just the label.** Treat the two dimensions as sliding
+   scales — the quadrant is a summary of position, and someone near the center
+   behaves differently from someone in a corner
+   ([Domic-Siede et al., 2023](https://pmc.ncbi.nlm.nih.gov/articles/PMC10359990/)).
+5. **Watch your stress response.** Under relational distress, note whether you
+   reach for protest and reassurance-seeking (anxiety) or withdrawal and
+   self-reliance (avoidance); that live observation is the framework's daily use
+   ([Mikulincer & Shaver, 2012](https://pmc.ncbi.nlm.nih.gov/articles/PMC3266769/)).
+6. **Re-assess over time and per relationship.** Styles are learned adaptations
+   that shift with experience, so revisit the scores after major relationship
+   events or every year or two rather than filing a one-time verdict
+   ([Wikipedia: Attachment in adults](https://en.wikipedia.org/wiki/Attachment_in_adults)).
+
+## How does it relate to other frameworks?
+
+Closest relatives in this library:
+
+- [OK Corral](./ok-corral.md) — Transactional Analysis's I'm OK / You're OK grid
+  is structurally the same 2×2 as Bartholomew and Horowitz's original
+  model-of-self × model-of-other formulation; the two frameworks reached a near
+  identical map from independent traditions, and reading them together makes
+  each quadrant's stance toward self and other concrete.
+- [CRR — Cooperative Reciprocal Relationships](./crr-cooperative-reciprocal-relationships.md)
+  — describes what healthy relating looks like in practice; attachment styles
+  explain which learned reflexes pull people away from that reciprocity, and the
+  secure quadrant describes the person for whom it comes easiest.
+- [Dual Continuum of Mental Health](./dual-continuum-of-mental-health.md) — both
+  separate two dimensions that folk intuition collapses into one; and since
+  attachment security functions as a resilience resource, the two grids
+  cross-illuminate trait-level well-being
+  ([Mikulincer & Shaver, 2012](https://pmc.ncbi.nlm.nih.gov/articles/PMC3266769/)).
+- [Johari Window](./johari-window.md) — a companion for acting on an attachment
+  insight: anxiety and avoidance shape how much one discloses and how feedback
+  is received, the two moves that resize the Johari panes.
+
+Outside this library, the framework's direct lineage runs through Ainsworth's
+three-category infant typology and Bowlby's attachment theory
+([Wikipedia: Attachment theory](https://en.wikipedia.org/wiki/Attachment_theory)),
+and its measurement family includes the categorical Relationship Questionnaire
+(RQ), the dimensional ECR, and the refined ECR-R
+([Fraley](https://labs.psychology.illinois.edu/~rcfraley/measures/brennan.html)).
+The Adult Attachment Interview measures the same construct by narrative
+coherence rather than self-report
+([Wikipedia: Attachment in adults](https://en.wikipedia.org/wiki/Attachment_in_adults)).
+
+## What is the core insight?
+
+Recurring trouble in close relationships is not one thing but two independent
+learned strategies — anxiety about abandonment and avoidance of closeness — and
+naming which one is active tells you what secure functioning would look like
+from there.
+
+## What is its intellectual-property status?
+
+Free to use. The framework is published academic science: Bowlby's theory,
+Ainsworth's typology, Hazan and Shaver's extension, and the Bartholomew and
+Horowitz four-quadrant model are all peer-reviewed literature with no trademark
+on "attachment styles" or the quadrant names, and the terms are used freely
+across academic and popular writing. The ECR questionnaire's items, scoring
+instructions, and background are published openly for research use on R. Chris
+Fraley's University of Illinois page, with no licensing restrictions stated
+([Fraley — self-report measures of adult attachment](https://labs.psychology.illinois.edu/~rcfraley/measures/brennan.html)).
+The generic underlying structure — an anxiety × avoidance grid — is open for
+adaptation; "two-dimensional model of adult attachment" is the standard
+unbranded name
+([Domic-Siede et al., 2023](https://pmc.ncbi.nlm.nih.gov/articles/PMC10359990/)).
+
 ## Sources
 
 - [Hazan, C., & Shaver, P. (1987). Romantic love conceptualized as an attachment process. _JPSP_, 52(3), 511–524 (PubMed record)](https://pubmed.ncbi.nlm.nih.gov/3572722/)
 - [Bartholomew, K., & Horowitz, L. M. (1991). Attachment styles among young adults: A test of a four-category model. _JPSP_, 61(2), 226–244 (Semantic Scholar record)](https://www.semanticscholar.org/paper/Attachment-styles-among-young-adults:-a-test-of-a-Bartholomew-Horowitz/6b6000ae9911fa9f9ec6345048b5a20501bdcedf)
 - [Bartholomew & Horowitz (1991) citation record](https://www.scirp.org/reference/referencespapers?referenceid=1341430)
 - [Brennan, K. A., Clark, C. L., & Shaver, P. R. (1998). Self-report measurement of adult romantic attachment: An integrative overview (citation record)](https://www.scirp.org/reference/referencespapers?referenceid=1617488)
-- [Fraley, R. C. — Self-report measures of adult attachment (ECR items and background)](https://labs.psychology.illinois.edu/~rcfraley/measures/brennan.html)
+- [Fraley, R. C. — Self-report measures of adult attachment (ECR items, scoring, and background)](https://labs.psychology.illinois.edu/~rcfraley/measures/brennan.html)
 - [Mikulincer, M., & Shaver, P. R. (2012). An attachment perspective on psychopathology. _World Psychiatry_ (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC3266769/)
 - [Domic-Siede et al. (2023). Emotion regulation strategies and the two-dimensional model of adult attachment. _Frontiers in Behavioral Neuroscience_ (PMC)](https://pmc.ncbi.nlm.nih.gov/articles/PMC10359990/)
 - [Wikipedia: Attachment in adults](https://en.wikipedia.org/wiki/Attachment_in_adults)
+  — the closest Wikipedia coverage; no dedicated article exists for the 2×2
+  attachment-styles framework itself
 - [Wikipedia: Attachment theory](https://en.wikipedia.org/wiki/Attachment_theory)
 - [Wikipedia: John Bowlby](https://en.wikipedia.org/wiki/John_Bowlby)
 - [Wikipedia: Mary Ainsworth](https://en.wikipedia.org/wiki/Mary_Ainsworth)

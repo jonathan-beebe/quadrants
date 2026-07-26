@@ -10,7 +10,8 @@ both axes), **Challengers** (execute well but with less vision), **Visionaries**
 (strong vision, weaker execution), and **Niche Players** (focused or limited on
 both) ([Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)). Unlike the
 other classic 2×2s, it is a proprietary, analyst-scored research product,
-published per technology market and refreshed every one to two years.
+published per technology market and refreshed every one to two years. Buyers use
+it as a first-pass map of a vendor market, not as a buying decision.
 
 ## When was it created?
 
@@ -83,13 +84,106 @@ requirements, since a Niche Player can be the right answer for a specific use
 case. The anti-pattern is treating "top-right" as a verdict; the intended result
 is a better-informed evaluation, faster.
 
+## What is the hard evidence it works?
+
+There is none in the scientific sense. No peer-reviewed study validates the
+Magic Quadrant's predictive accuracy or its value as a decision aid. The
+published academic commentary is critical: researchers note that Gartner's
+analysts "change that marketplace to fit their tools" and that the methodology
+under-weights open-source vendors
+([Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)). The 2005 shift from
+connoisseurial (expert-judgment) to procedural (comparative-testing) evaluation
+has itself been argued to trade domain depth for process consistency
+([Influencer Relations](https://www.influencerrelations.com/4705/is-this-how-the-quadrant-lost-its-magic)).
+In 2009, ZL Technologies sued Gartner over its Quadrant placement; Gartner won
+on First Amendment grounds by arguing the reports are "pure opinion" — a legal
+defense that concedes the ratings are opinion, not measurement
+([Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)). The supporting
+evidence is practice-based: continuous publication across 100+ market segments,
+sustained vendor participation in the evaluation process, and wide enterprise
+use in vendor selection — adoption data, not effectiveness data.
+
+## How does one use it properly?
+
+For a buyer evaluating a market:
+
+1. **Get the latest Quadrant for your market.** Each is refreshed every one to
+   two years and old versions are retired when new ones publish; work only from
+   the current edition
+   ([Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)).
+2. **Read the axes before the dots.** The Y-axis (**Ability to Execute**) tells
+   you who can deliver at your required scale today; the X-axis (**Completeness
+   of Vision**) tells you who is betting on where the market is going.
+3. **Match quadrant profile to your context.** Leaders for a safe broad choice;
+   Challengers when operational solidity outranks innovation; Visionaries for
+   early adopters; Niche Players when a vendor's focus matches your segment
+   ([Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)).
+4. **Build a shortlist, not a decision.** Use position to narrow the field to a
+   handful of vendors whose risk profile fits yours.
+5. **Pair it with companion research and your own requirements.** Gartner's
+   Critical Capabilities documents score vendors against specific use cases; run
+   your own requirements analysis before final selection
+   ([Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)).
+
+For a vendor being evaluated, the protocol is set by Gartner: complete the
+detailed technical RFI, enable 20+ customer reference surveys, and submit to
+analyst scoring on eight vision criteria and seven execution criteria
+([CIO Wiki](https://cio-wiki.org/wiki/Gartner_Magic_Quadrant)).
+
+## How does it relate to other frameworks?
+
+- **[Growth–Share Matrix](./growth-share-matrix.md)** — the earliest widely-used
+  2×2 portfolio grid (market growth × relative share). The Magic Quadrant
+  applies the same compress-a-landscape-into-four-cells move to a vendor market
+  instead of a product portfolio.
+- **[Ansoff Matrix](./ansoff-matrix.md)** — another strategy 2×2; where Ansoff
+  maps your own growth options, the Magic Quadrant maps the suppliers you might
+  buy from.
+- **[SWOT Analysis](./swot-analysis.md)** — complements the Quadrant: a Quadrant
+  position is a starting point, and a SWOT on each shortlisted vendor deepens it
+  into a per-vendor evaluation.
+- **[Skill × Will](./skill-will.md)** — the closest structural cousin in the
+  people domain: current capability on one axis, forward drive on the other,
+  with four prescribed responses per quadrant.
+- **Gartner Hype Cycle** — Gartner's companion model; it positions technologies
+  on a visibility-vs-maturity timeline and shows the innovation trajectory
+  behind the vendors the Quadrant scores
+  ([Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)).
+- **Gartner Critical Capabilities** — the designed companion document, scoring
+  the same vendors against specific use cases; Gartner advises using the two
+  together ([Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)).
+
+## What is the core insight?
+
+Judging a vendor requires separating what it can deliver today from where it is
+steering, because a single blended score hides which of the two you are buying.
+
+## What is its intellectual-property status?
+
+The underlying concept is free; the brand and the reports are not. "Magic
+Quadrant" is a proprietary Gartner, Inc. product name, the reports are
+copyrighted and sold under subscription terms that restrict republication, and
+competitors cannot label their own frameworks "Magic Quadrant"
+([Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)). But the generic 2×2
+— plotting vendors on vision versus execution — is not protectable: no patent
+exists, and Gartner's own 2009 legal defense established that its reports are
+protected as "pure opinion," meaning only Gartner's data and analyst judgments
+are proprietary, not the method
+([Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)). Anyone may build
+and publish a "vision × execution quadrant," "vendor positioning matrix," or
+"Completeness of Vision vs. Ability to Execute" chart under those generic names.
+
 ## Sources
 
 - [Magic Quadrant — Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)
+  (history, axes, quadrants, criticisms, 2009 ZL Technologies litigation,
+  related frameworks, usage guidance)
 - [Gartner Magic Quadrant research methodology — Gartner](https://www.gartner.com/en/research/methodologies/magic-quadrants-research)
   (Gartner's own methodology page; note gartner.com blocks automated access, so
   contents here are corroborated via the secondary sources below)
 - [Is this how the Quadrant lost its Magic? — Influencer Relations](https://www.influencerrelations.com/4705/is-this-how-the-quadrant-lost-its-magic)
-  (history of origins under Gideon Gartner and 1990s evolution)
+  (history of origins under Gideon Gartner, 1990s evolution, and the 2005
+  connoisseurial-to-procedural shift)
 - [Gartner Magic Quadrant — CIO Wiki](https://cio-wiki.org/wiki/Gartner_Magic_Quadrant)
-  (secondary; axis and quadrant definitions)
+  (secondary; axis and quadrant definitions, RFI and customer-survey protocol,
+  vision and execution criteria counts)

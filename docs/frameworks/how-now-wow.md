@@ -1,8 +1,8 @@
 # How–Now–Wow Matrix
 
 The How–Now–Wow matrix is a 2×2 idea-selection tool used at the convergent stage
-of brainstorming. Ideas are plotted by _originality_ on one axis and _ease of
-implementation_ on the other, producing three named categories plus a discard
+of brainstorming. Ideas are plotted by **originality** on one axis and **ease of
+implementation** on the other, producing three named categories plus a discard
 quadrant: **Now** (ordinary ideas that are easy to implement — incremental
 improvements), **Wow** (original ideas that are also easy to implement — the
 breakthrough sweet spot), **How** (original ideas that are not yet feasible —
@@ -11,7 +11,9 @@ future potential worth revisiting), and the unoriginal, infeasible leftovers
 the popular name for the COCD Box, a method from the Belgian creative-thinking
 tradition, and its purpose is to break the "creadox" (creative paradox): groups
 brainstorm wild ideas and then reflexively pick the safest, most familiar ones
-([Gamestorming](https://gamestorming.com/how-now-wow-matrix/)).
+([Gamestorming](https://gamestorming.com/how-now-wow-matrix/)). In a workshop,
+participants dot-vote ideas into the categories and the group leaves with a
+sorted portfolio of quick wins, innovation bets, and parked future ideas.
 
 ## When was it created?
 
@@ -90,12 +92,112 @@ explicit reasoning about why each idea was chosen or parked
 ([Gamestorming](https://gamestorming.com/how-now-wow-matrix/),
 [SessionLab](https://www.sessionlab.com/methods/how-now-wow-matrix)).
 
+## What is the hard evidence it works?
+
+There is none in the formal sense. No empirical studies, peer-reviewed research,
+or quantitative effectiveness data comparing the matrix to unstructured idea
+selection were found; the primary practitioner sources —
+[Gamestorming](https://gamestorming.com/how-now-wow-matrix/),
+[Toolshero](https://www.toolshero.com/creativity/cocd-box-method/), and
+[SessionLab](https://www.sessionlab.com/methods/how-now-wow-matrix) — cite no
+research at all. The evidence base is practitioner testimony: decades of
+facilitated use across the COCD tradition and the Gamestorming/SessionLab
+communities. [Toolshero](https://www.toolshero.com/creativity/cocd-box-method/)
+itself notes limitations: the assessments remain subjective, teams may judge
+ideas too hastily, and creative ideas can still get short shrift even inside the
+structure. The nearest connection to research is institutional: COCD's successor
+organization maintains a partnership with the Creativity and Change Leadership
+faculty at SUNY Buffalo to stay aligned with current creativity research
+([School of Creative Thinking](https://schoolofcreativethinking.nl/en/school/)),
+but that speaks to the field, not to this tool specifically.
+
+## How does one use it properly?
+
+Use it as the convergent step immediately after a divergent ideation session,
+with the brainstormed ideas visible to everyone. The protocol, per
+[Gamestorming](https://gamestorming.com/how-now-wow-matrix/) and
+[SessionLab](https://www.sessionlab.com/methods/how-now-wow-matrix):
+
+1. Draw the 2×2 matrix on flip-chart paper or a shared whiteboard, with
+   **originality** on one axis and **ease of implementation** on the other. Flip
+   an axis if you want Wow in the upper-right.
+2. Post all brainstormed ideas where the group can see them.
+3. Give each participant three sticky dots of each category color (blue = Now,
+   green = Wow, yellow = How in the Gamestorming scheme); adjust the count to
+   the time available and the number of ideas. Works with 1–30 participants.
+4. Everyone votes by placing dots on the ideas they judge to belong in each
+   category.
+5. Tally the dots per idea; the dominant color assigns its category. Break ties
+   with Gamestorming's rules: "If blue dots = green dots, the idea is blue. If
+   yellow dots = green dots, the idea is green."
+6. Discuss the sorted result as a group, then act: implement Now ideas, commit
+   to selected Wow ideas, park How ideas in a backlog, and drop the rest.
+
+Plan 10–40 minutes depending on group size and idea count. For remote sessions,
+use a zoomable whiteboard (e.g. Mural) with emoji or token voting
+([SessionLab](https://www.sessionlab.com/methods/how-now-wow-matrix)). Rerun the
+exercise on the parked How backlog periodically — feasibility changes as
+technology, budget, and constraints change, and yesterday's How can become
+today's Wow.
+
+## How does it relate to other frameworks?
+
+- [Impact / Effort](./impact-effort.md) is its closest structural sibling: both
+  plot options against implementation cost, but Impact/Effort weighs expected
+  value while How–Now–Wow weighs originality — pairing them evaluates a Wow
+  idea's novelty and its payoff separately.
+- [Eisenhower Matrix](./eisenhower-matrix.md) applies the same 2×2 sort-then-act
+  pattern to tasks (urgency × importance) rather than ideas.
+- [Importance × Satisfaction](./importance-satisfaction.md) is another
+  convergent selection tool; it ranks opportunities by user need rather than
+  originality, making it a natural second filter on Now and Wow ideas.
+- [Ansoff Matrix](./ansoff-matrix.md) classifies the risk profile of growth
+  ideas after selection, which complements the How quadrant's "original but not
+  yet feasible" bets.
+- Upstream, the matrix depends on a divergent method to feed it — classically
+  Osborn-style brainstorming, or the broader Creative Problem Solving model;
+  COCD's successor also teaches the Torrance Incubation Model and the FourSight
+  thinking profile alongside it
+  ([School of Creative Thinking](https://schoolofcreativethinking.nl/en/school/)).
+- It is one method in the
+  [Gamestorming](https://gamestorming.com/how-now-wow-matrix/) suite of workshop
+  games and appears in the
+  [SessionLab](https://www.sessionlab.com/methods/how-now-wow-matrix)
+  facilitation library alongside other convergence techniques.
+
+## What is the core insight?
+
+Judging every idea on originality and feasibility at the same time keeps a
+group's boldest ideas alive through selection instead of losing them to
+familiarity bias.
+
+## What is its intellectual-property status?
+
+Free to use in practice, with one trademark to respect. "COCD-box®" is a
+registered trademark, shown with the ® symbol by COCD's successor organization
+([School of Creative Thinking](https://schoolofcreativethinking.nl/en/school/)).
+The underlying concept — a 2×2 matrix evaluating originality against feasibility
+— is generic and not legally restricted; the method is taught openly by
+facilitators, republished with attribution in _Gamestorming_ (2010), and
+documented in public method libraries without licensing terms
+([Gamestorming](https://gamestorming.com/how-now-wow-matrix/),
+[SessionLab](https://www.sessionlab.com/methods/how-now-wow-matrix)). The books
+_Creativity Today_ (2007) and _Gamestorming_ (2010) are copyrighted works. If
+the trademarked "COCD Box" name is a concern, use "How–Now–Wow matrix" — the
+dominant term in English-language literature — or a generic name such as
+"originality–feasibility matrix" or "2×2 idea-selection matrix".
+
 ## Sources
 
 - [How-Now-Wow Matrix — Gamestorming](https://gamestorming.com/how-now-wow-matrix/)
+  — usage protocol, dot-voting mechanics, tiebreaker rules, creadox framing
 - [COCD Box: explanation of the method — Toolshero](https://www.toolshero.com/creativity/cocd-box-method/)
-- [School — School of Creative Thinking (COCD's successor organization, with founding history)](https://schoolofcreativethinking.nl/en/school/)
+  — Mark Raison attribution, COCD color scheme, stated limitations
+- [School — School of Creative Thinking](https://schoolofcreativethinking.nl/en/school/)
+  — COCD founding history, COCD-box® trademark, SUNY Buffalo partnership,
+  related frameworks
 - [How-Now-Wow Matrix — SessionLab](https://www.sessionlab.com/methods/how-now-wow-matrix)
+  — step-by-step facilitation card, remote adaptation, duration and group size
 - [COCD Box (How Now Wow Matrix) — CreativeSolvers](https://creativesolvers.com/methods/cocd-box-how-now-wow-matrix/)
 - Byttebier, I. & Vullings, R., _Creativity Today_ (BIS Publishers, 2007) — the
   book Gamestorming cites as its source (print; no canonical online edition)

@@ -13,7 +13,7 @@ its row a 1–9 arousal score
 ([Russell, Weiss & Mendelsohn, 1989, full paper PDF](http://emotiondevelopmentlab.weebly.com/uploads/2/5/2/0/25200250/russell_j.a._weiss_a.__mendelsohn_g.a._1989.pdf);
 [ARC instrument page, UW–Madison](https://arc.psych.wisc.edu/self-report/affect-grid-agrid/)).
 It is the direct academic ancestor of the quadrant check-in tools documented
-alongside it, most notably the [Mood Meter](mood-meter.md), which popularizes
+alongside it, most notably the [Mood Meter](./mood-meter.md), which popularizes
 the same pleasure × energy space.
 
 ## When was it created?
@@ -39,11 +39,12 @@ Mendelsohn of the University of California, Berkeley
 ([Semantic Scholar record](https://www.semanticscholar.org/paper/Affect-grid-:-A-single-item-scale-of-pleasure-and-Russell-Weiss/e9a2b67cc02c1fb6d2cb70a96b466988ea92cb6c),
 [ResearchGate record](https://www.researchgate.net/publication/232501584_Affect_Grid_A_Single-Item_Scale_of_Pleasure_and_Arousal)).
 Russell is the same psychologist whose 1980 circumplex model underlies the
-[Mood Meter](mood-meter.md); the Affect Grid is his own operationalization of
+[Mood Meter](./mood-meter.md); the Affect Grid is his own operationalization of
 that model as a measurement instrument. The provenance is unambiguous — the 1989
-paper is the single primary source. Note that no standalone Wikipedia article
-exists for the Affect Grid itself (only for Russell), so the citations here rest
-on the paper and academic instrument databases.
+paper is the single primary source. No standalone Wikipedia article exists for
+the Affect Grid itself (only for
+[Russell](https://en.wikipedia.org/wiki/James_A._Russell)), so the citations
+here rest on the paper and academic instrument databases.
 
 ## What problem were they trying to solve?
 
@@ -88,12 +89,125 @@ comparable across people, stimuli, and occasions; the Affect Grid has since been
 used well beyond social psychology, for example in UX and multimedia evaluation
 ([EXPRESSO](https://experienceresearchsociety.org/ux-methods/affect-grid/)). For
 an individual using it as a check-in tool, the outcome is the same one the
-[Mood Meter](mood-meter.md) pursues: a vague felt sense becomes a concrete point
-in a two-dimensional space, which is the first step toward naming and regulating
-the feeling. The difference in emphasis is worth knowing — the Affect Grid is a
-measurement instrument built for research speed and psychometric validity, while
-the Mood Meter wraps the same space in a teaching practice; the grid gives you
-numbers, the Mood Meter gives you words.
+[Mood Meter](./mood-meter.md) pursues: a vague felt sense becomes a concrete
+point in a two-dimensional space, which is the first step toward naming and
+regulating the feeling. The difference in emphasis is worth knowing — the Affect
+Grid is a measurement instrument built for research speed and psychometric
+validity, while the Mood Meter wraps the same space in a teaching practice; the
+grid gives you numbers, the Mood Meter gives you words.
+
+## What is the hard evidence it works?
+
+- **Original validation (1989).** The publication itself reports four studies
+  with college students who used the grid to rate current mood, emotion-related
+  words, and facial expressions. The authors report adequate reliability and
+  both convergent and discriminant validity of the pleasure and arousal scores
+  against established multi-item mood scales
+  ([Russell, Weiss & Mendelsohn, 1989](http://emotiondevelopmentlab.weebly.com/uploads/2/5/2/0/25200250/russell_j.a._weiss_a.__mendelsohn_g.a._1989.pdf);
+  [DOI record](https://doi.org/10.1037/0022-3514.57.3.493)).
+- **Independent validation (1998).** Killgore correlated Affect Grid scores from
+  284 college students with the Beck Depression Inventory, the PANAS, and the
+  Profile of Mood States, concluding the grid is "a moderately valid measure of
+  the general dimensions of pleasure and arousal but has little specificity in
+  discriminating among various qualities of affective experience"
+  ([Killgore, 1998, Psychological Reports](https://journals.sagepub.com/doi/10.2466/pr0.1998.83.2.639);
+  [PubMed abstract](https://pubmed.ncbi.nlm.nih.gov/9819938/)).
+- **Applied adoption.** The grid is listed in research instrument databases and
+  UX-method catalogs and has been used for repeated mood measurement and
+  stimulus evaluation in field and laboratory studies
+  ([ARC instrument page](https://arc.psych.wisc.edu/self-report/affect-grid-agrid/);
+  [EXPRESSO](https://experienceresearchsociety.org/ux-methods/affect-grid/);
+  [UX evaluation methods review, PMC](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5982399/)).
+- **Limits of the evidence.** The independent validation base is thin: the
+  EXPRESSO method catalog flags the grid as "not widely validated"
+  ([EXPRESSO](https://experienceresearchsociety.org/ux-methods/affect-grid/)),
+  and a decade passed between the 1989 paper and the first published independent
+  validation ([PubMed](https://pubmed.ncbi.nlm.nih.gov/9819938/)). The evidence
+  supports it as a quick, broad-spectrum measure of pleasure and arousal, not as
+  a discriminator of specific emotions or a clinical diagnostic.
+
+## How does one use it properly?
+
+1. Present the blank 9×9 grid with the axes labeled — pleasure–displeasure
+   horizontal, arousal–sleepiness vertical — and the four corner labels (stress,
+   excitement, depression, relaxation) visible
+   ([ARC instrument page](https://arc.psych.wisc.edu/self-report/affect-grid-agrid/)).
+2. Give the instruction to rate how the respondent is feeling right now, and
+   have them place a single mark in the one square that best matches that
+   feeling
+   ([Killgore, 1998](https://journals.sagepub.com/doi/10.2466/pr0.1998.83.2.639)).
+3. Score by reading the mark's coordinates: the column number is the pleasure
+   score (1–9), the row number is the arousal score (1–9)
+   ([ARC instrument page](https://arc.psych.wisc.edu/self-report/affect-grid-agrid/)).
+4. Repeat at whatever cadence the design calls for — before/after an
+   intervention, several times a day in experience sampling, or once per
+   stimulus when rating images, interfaces, or media; the grid's speed is the
+   point, so use it wherever a multi-item scale would be too slow
+   ([EXPRESSO](https://experienceresearchsociety.org/ux-methods/affect-grid/)).
+5. Analyze the two scores as separate dimensions or as positions in the quadrant
+   space; within-subject comparisons across occasions are the grid's home ground
+   ([EXPRESSO](https://experienceresearchsociety.org/ux-methods/affect-grid/)).
+6. When the design also needs to know _which_ emotion, pair the grid with a
+   categorical or multi-item measure — for example a labeled instrument such as
+   the PANAS or the Self-Assessment Manikin
+   ([Killgore, 1998](https://journals.sagepub.com/doi/10.2466/pr0.1998.83.2.639);
+   [Self-Assessment Manikin, Wikipedia](https://en.wikipedia.org/wiki/Self-Assessment_Manikin)).
+
+The grid works on paper or on screen; digital administration is now common in
+research and UX settings
+([EXPRESSO](https://experienceresearchsociety.org/ux-methods/affect-grid/)).
+
+## How does it relate to other frameworks?
+
+- [Mood Meter](./mood-meter.md) — the popular derivative: the same pleasure ×
+  energy space packaged with color quadrants, emotion vocabulary, and a teaching
+  practice for emotional literacy. Use the grid for numbers, the Mood Meter for
+  words.
+- [Thayer Mood Model](./thayer-mood-model.md) — a contemporaneous dimensional
+  model that splits arousal into energetic and tense components; reading both
+  sharpens what the grid's single arousal axis does and does not capture.
+- [Positive × Negative Affect](./positive-negative-affect.md) — the PANAS
+  tradition treats positive and negative affect as separate dimensions rather
+  than opposite ends of one pleasure axis; the 20-item PANAS is slower but more
+  specific, and Killgore used it as a comparison standard
+  ([PANAS, Wikipedia](https://en.wikipedia.org/wiki/Positive_and_Negative_Affect_Schedule);
+  [Killgore, 1998](https://journals.sagepub.com/doi/10.2466/pr0.1998.83.2.639)).
+- [Energy Quadrants](./energy-quadrants.md) and
+  [Zones of Regulation](./zones-of-regulation.md) — practice-oriented tools
+  built on the same intuition that energy/arousal plus valence locates a state
+  worth acting on; the Affect Grid supplies their research lineage.
+- Outside this library: the Self-Assessment Manikin (Bradley & Lang, 1994) is a
+  pictorial rival that adds a dominance dimension
+  ([Wikipedia](https://en.wikipedia.org/wiki/Self-Assessment_Manikin)); the
+  circumplex model (Russell, 1980) is the parent theory
+  ([citation record](https://www.scirp.org/reference/referencespapers?referenceid=1051239));
+  and discrete-emotion models such as Ekman's basic emotions and Plutchik's
+  wheel are the categorical alternatives the dimensional approach was built to
+  complement
+  ([Plutchik's wheel, Wikiversity](https://en.wikiversity.org/wiki/Motivation_and_emotion/Book/2014/Plutchik%27s_wheel_of_emotions)).
+
+## What is the core insight?
+
+Any momentary feeling can be located as a single point in a two-dimensional
+pleasure × arousal space, so one mark on a grid can measure what would otherwise
+take a full questionnaire.
+
+## What is its intellectual-property status?
+
+Free to use. No trademark registration for "Affect Grid" appears in trademark
+databases, and the name is descriptive. The 1989 article's text is copyrighted
+by the American Psychological Association, but the instrument itself — a 9×9
+grid with functional axis labels — was published in the open peer-reviewed
+literature and is used in research without licensing fees or permission
+requests; it is listed in public research instrument databases
+([ARC instrument page](https://arc.psych.wisc.edu/self-report/affect-grid-agrid/);
+[ePROVIDE listing](https://eprovide.mapi-trust.org/instruments/affect-grid)).
+Standard practice is to cite
+[Russell, Weiss & Mendelsohn (1989)](https://doi.org/10.1037/0022-3514.57.3.493)
+when using or adapting it. Because the underlying pleasure × arousal concept
+comes from Russell's 1980 circumplex model, any generic two-dimensional valence
+× arousal grid serves the same function if a fully unencumbered alternative is
+wanted.
 
 ## Sources
 
@@ -105,8 +219,14 @@ numbers, the Mood Meter gives you words.
 - [Affect Grid (AGRID) — Addiction Research Center instrument database, UW–Madison](https://arc.psych.wisc.edu/self-report/affect-grid-agrid/)
 - [Affect Grid — EXPRESSO / Experience Research Society method overview](https://experienceresearchsociety.org/ux-methods/affect-grid/)
 - [Killgore, W.D.S. (1998). The Affect Grid: A moderately valid, nonspecific measure of pleasure and arousal. _Psychological Reports_](https://journals.sagepub.com/doi/10.2466/pr0.1998.83.2.639)
+- [PubMed abstract of Killgore (1998)](https://pubmed.ncbi.nlm.nih.gov/9819938/)
 - [Russell, J.A. (1980). A Circumplex Model of Affect. _JPSP_, 39(6), 1161–1178 (citation record)](https://www.scirp.org/reference/referencespapers?referenceid=1051239)
+- [UX evaluation methods review including Affect Grid applications (PMC)](https://www.ncbi.nlm.nih.gov/pmc/articles/PMC5982399/)
+- [ePROVIDE clinical instruments database listing](https://eprovide.mapi-trust.org/instruments/affect-grid)
 - [Wikipedia: James A. Russell](https://en.wikipedia.org/wiki/James_A._Russell)
   — no standalone Wikipedia article exists for the Affect Grid itself
-- [Mood Meter (sibling doc)](mood-meter.md) — the popular check-in tool built on
-  the same pleasure × arousal space
+- [Wikipedia: Self-Assessment Manikin](https://en.wikipedia.org/wiki/Self-Assessment_Manikin)
+- [Wikipedia: Positive and Negative Affect Schedule](https://en.wikipedia.org/wiki/Positive_and_Negative_Affect_Schedule)
+- [Wikiversity: Plutchik's wheel of emotions](https://en.wikiversity.org/wiki/Motivation_and_emotion/Book/2014/Plutchik%27s_wheel_of_emotions)
+- [Mood Meter (sibling doc)](./mood-meter.md) — the popular check-in tool built
+  on the same pleasure × arousal space

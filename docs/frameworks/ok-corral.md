@@ -119,6 +119,105 @@ you and the other person stand right now, and a nudge toward the get-on-with
 corner
 ([Wikipedia: I'm OK – You're OK](https://en.wikipedia.org/wiki/I%27m_OK_%E2%80%93_You%27re_OK)).
 
+## What is the hard evidence it works?
+
+No peer-reviewed empirical studies validating the OK Corral grid itself have
+been located in publicly accessible sources; the evidence base is for
+Transactional Analysis broadly, not for the grid or the life-positions model
+specifically. Within that broader base: a 1995 Consumer Reports study found
+psychotherapy conducted by Transactional Analysts more effective than that
+conducted by psychiatrists, psychologists, social workers, marriage counselors,
+and physicians, and a 2010 review identified 50 studies concluding a positive
+effect for TA, 10 finding no positive effect, and none finding a negative effect
+([Wikipedia: Transactional analysis](https://en.wikipedia.org/wiki/Transactional_analysis)).
+The theory has known weaknesses. Harris grounded his life-positions account in
+Wilder Penfield's memory research, which has not proved readily repeatable,
+undermining the claimed neurological foundation; a 2008 study on the insula's
+role in value judgments has been read as loose neurological context for Harris's
+theory, but direct correlation remains unestablished
+([Wikipedia: I'm OK – You're OK](https://en.wikipedia.org/wiki/I%27m_OK_%E2%80%93_You%27re_OK)).
+Berne's TA has also been critiqued for lacking a script-reversal technique that
+meets his own criteria of conciseness and theoretical consistency
+([Wikipedia: Transactional analysis](https://en.wikipedia.org/wiki/Transactional_analysis)).
+
+## How does one use it properly?
+
+Ernst's 1971 article and monograph are the authoritative usage sources but are
+not publicly accessible in full; the steps below follow his published framing of
+the grid as a live diagnostic aimed at get-on-with
+([Ernst, 1971](https://journals.sagepub.com/doi/10.1177/036215377100100409),
+[lifewithkindness.co.uk](https://lifewithkindness.co.uk/okcorralorigins)).
+
+1. Learn the grid cold: two axes (view of self, view of other), four quadrants,
+   and the operation each produces — get-on-with, get-rid-of, get-away-from,
+   get-nowhere-with.
+2. In a live encounter, ask the two axis questions: _am I treating myself as OK
+   right now?_ and _am I treating this person as OK right now?_
+3. Confirm the quadrant by its observable operation — blaming and dismissing
+   signal get-rid-of; appeasing and withdrawing signal get-away-from; stuck,
+   hopeless exchanges signal get-nowhere-with.
+4. Name the position, then choose the move that restores both OKs: state your
+   own view without discounting the other person's, and credit theirs without
+   discounting your own.
+5. Work at the granularity of moments, not personalities — per Ernst, positions
+   are dynamic social operations everyone moves between, so diagnose the current
+   exchange, not the person.
+6. Review recurring encounters afterward to spot your default corner under
+   stress, and rehearse the return route to I'm OK, You're OK.
+
+Cadence: in the moment during charged conversations, plus periodic review of
+patterns — the grid is cheap enough to run many times a day.
+
+## How does it relate to other frameworks?
+
+Within TA, the OK Corral sits alongside two sibling models. Berne's
+Parent–Adult–Child ego-state model describes _which internal voice_ is
+transacting, while the OK Corral describes _the stance_ toward self and other;
+they are used together in TA practice
+([Wikipedia: Eric Berne](https://en.wikipedia.org/wiki/Eric_Berne)). The
+[Karpman drama triangle](https://en.wikipedia.org/wiki/Karpman_drama_triangle)
+(1968) maps the Victim, Rescuer, and Persecutor roles people rotate through in
+destructive interactions — its roles are the not-OK quadrants in motion, and the
+two models reinforce each other for spotting unhealthy patterns. Berne's games
+and scripts concepts connect at the outcome level: each quadrant predicts a
+characteristic game payoff
+([Wikipedia: Transactional analysis](https://en.wikipedia.org/wiki/Transactional_analysis)).
+
+In this library, [Attachment Styles](./attachment-styles.md) covers adjacent
+ground — a 2×2 of views of self and other formed in early relationships — and
+pairs well for asking where a default position came from. The
+[Johari Window](./johari-window.md) is structurally similar (a 2×2 of
+self-knowledge and other-knowledge) and complements the OK Corral by locating
+the blind spots that keep a position invisible, though no direct historical
+relationship between the two has been documented.
+[CRR — Cooperative Reciprocal Relationships](./crr-cooperative-reciprocal-relationships.md)
+describes the relational quality that sustained get-on-with operating produces.
+For catching the emotional slide out of I'm-OK-You're-OK as it happens,
+in-the-moment affect tools such as the [Mood Meter](./mood-meter.md) and
+[Zones of Regulation](./zones-of-regulation.md) supply the noticing layer the
+grid assumes.
+
+## What is the core insight?
+
+Your view of yourself and your view of the other person jointly determine how an
+encounter ends, and only the position where both are OK gets anything resolved.
+
+## What is its intellectual-property status?
+
+Free to use. The underlying life-positions theory (Berne, Harris) is openly
+published, and the framework is discussed and applied in academic literature,
+training programs, and practice without evident licensing restrictions
+([Ernst, 1971](https://journals.sagepub.com/doi/10.1177/036215377100100409)). No
+trademark registration for "OK Corral" as applied to the framework has been
+located; the name is Ernst's pun on the Tombstone, Arizona gunfight site.
+Ernst's specific publications — the 1971 journal article and the monograph
+hosted at
+[ernstokcorral.com](http://ernstokcorral.com/Publications/OK%20CORRAL%20monograph.pdf)
+— remain under standard academic copyright, so reproduce his diagrams and text
+only with permission. The underlying concept (self-perception and
+other-perception as dimensions of interpersonal stance) is not proprietary and
+can be expressed under generic names such as "life positions grid."
+
 ## Sources
 
 - [Ernst, F.H. Jr. (1971). "The OK Corral: The Grid for Get-on-With." _Transactional Analysis Journal_, 1(4), 33–42](https://journals.sagepub.com/doi/10.1177/036215377100100409)
@@ -126,15 +225,18 @@ corner
 - [Ernst, F.H. Jr. — _Transactional Analysis in the OK Corral: Grid for What's Happening_ (monograph PDF, ernstokcorral.com)](http://ernstokcorral.com/Publications/OK%20CORRAL%20monograph.pdf)
   — Ernst's own later book-length treatment
 - [Wikipedia: I'm OK – You're OK](https://en.wikipedia.org/wiki/I%27m_OK_%E2%80%93_You%27re_OK)
-  — Harris's 1967 book, sales history, and the Berne–Harris disagreement
+  — Harris's 1967 book, sales history, the Berne–Harris disagreement, and
+  critiques of Harris's neurological assumptions
 - [Wikipedia: Transactional analysis](https://en.wikipedia.org/wiki/Transactional_analysis)
-  — TA's history and the four life positions; no standalone article exists for
-  the OK Corral grid or for life positions
+  — TA's history, the four life positions, research evidence, and critiques; no
+  standalone article exists for the OK Corral grid or for life positions
 - [Wikipedia: Eric Berne](https://en.wikipedia.org/wiki/Eric_Berne) — TA's
-  founder
+  founder and the Parent–Adult–Child ego-state model
+- [Wikipedia: Karpman drama triangle](https://en.wikipedia.org/wiki/Karpman_drama_triangle)
+  — Stephen B. Karpman's 1968 related TA framework
 - [White, T. (1994). "Life Positions." _Transactional Analysis Journal_, 24(4)](https://journals.sagepub.com/doi/abs/10.1177/036215379402400406)
   — reviews Berne's 1962 "Classification of Positions"
 - [Jacobs, A. (1997). "Berne's Life Positions: Science and Morality." _Transactional Analysis Journal_, 27(3)](https://journals.sagepub.com/doi/10.1177/036215379702700309)
   — scholarly discussion of Berne's positions concept
 - [Life with Kindness — OK Corral origins](https://lifewithkindness.co.uk/okcorralorigins)
-  — secondary overview of Ernst's grid and its 1971 publication
+  — secondary overview of Ernst's grid and its dynamic-operations reading

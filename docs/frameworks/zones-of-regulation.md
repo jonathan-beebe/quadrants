@@ -13,16 +13,17 @@ situation
 ([CHADD Attention magazine, 2012](https://chadd.org/wp-content/uploads/2018/06/ATTN_10_12_Zones.pdf)).
 One structural note for this collection: although it is often drawn as a
 four-square grid, the Zones is not a true two-axis 2×2. It is a single
-arousal/regulation continuum cut into four colored bands — Blue at the bottom,
-Red at the top — closer in spirit to a thermometer or speedometer than to a
-quadrant matrix like the Mood Meter, which crosses energy with pleasantness.
+**arousal/regulation** continuum cut into four colored bands — Blue at the
+bottom, Red at the top — closer in spirit to a thermometer or speedometer than
+to a quadrant matrix like the [Mood Meter](./mood-meter.md), which crosses
+energy with pleasantness.
 
 ## When was it created?
 
 The curriculum was published in 2011 as _The Zones of Regulation: A Curriculum
 Designed to Foster Self-Regulation and Emotional Control_ (Social Thinking
-Publishing, now Think Social Publishing), a lesson book with reproducible
-visuals and handouts
+Publishing, now Think Social Publishing), a 185-page lesson book with
+reproducible visuals and handouts
 ([CHADD Attention magazine, 2012](https://chadd.org/wp-content/uploads/2018/06/ATTN_10_12_Zones.pdf),
 [Google Books record](https://books.google.com/books/about/The_Zones_of_Regulation.html?id=ggKWZwEACAAJ)).
 The framework itself predates the book slightly: Kuypers developed it as the
@@ -93,13 +94,9 @@ taught in groups or individually
 - It is very widely adopted, so a shared language likely already exists across a
   school or clinic; the publisher reports use in all 50 US states and more than
   40 countries ([zonesofregulation.com](https://zonesofregulation.com/)).
-- Honest caveat: adoption has outrun evidence. An
-  [ASAT review](https://asatonline.org/for-parents/becoming-a-savvy-consumer/zones-of-regulation-is-there-science-behind-that/)
-  found little empirical support for the program with autistic learners, and a
-  2024 systematic review (Mason et al.) concluded it does not yet meet the bar
-  for an evidence-based practice. Its research base is far thinner than, for
-  example, RULER's (see the Mood Meter doc). Choose it as a plausible, low-cost
-  shared vocabulary — not as a validated intervention.
+- Honest caveat: adoption has outrun evidence (see the hard-evidence section
+  below). Choose it as a plausible, low-cost shared vocabulary — not as a
+  validated intervention.
 
 ## What is the expected outcome?
 
@@ -119,25 +116,147 @@ A fair summary: expect a genuinely useful shared vocabulary and check-in habit;
 do not expect the curriculum alone to produce durable behavior change without
 sustained practice and complementary supports.
 
+## What is the hard evidence it works?
+
+The evidence base is thin, and the most rigorous reviews say so directly. A
+critical review by the Association for Science in Autism Treatment (ASAT) found
+little empirical support for the program with autistic learners
+([ASAT](https://asatonline.org/for-parents/becoming-a-savvy-consumer/zones-of-regulation-is-there-science-behind-that/)).
+The 2024 systematic review it summarizes (Mason et al.) located only three
+articles meeting its inclusion criteria and concluded that the Zones "does not
+have a research foundation to be considered an EBP [evidence-based practice] as
+outlined by the American Psychological Association," recommending against its
+use as a scientific treatment for autism
+([ASAT](https://asatonline.org/for-parents/becoming-a-savvy-consumer/zones-of-regulation-is-there-science-behind-that/)).
+
+The published studies are small and confounded: Quale (2019) measured off-task
+behavior in three elementary students; Nowell et al. (2019) tested a combined
+intervention with 17 first- and second-graders with autism, so the Zones'
+specific contribution cannot be isolated; Spence & Tseng (2018) is a conceptual
+paper; Piller et al. (2021) studied technology-enhanced sensory interventions
+([ASAT](https://asatonline.org/for-parents/becoming-a-savvy-consumer/zones-of-regulation-is-there-science-behind-that/)).
+Recurring weaknesses across the literature include unreported implementation
+steps, combined interventions that muddy causality, samples drawn from general
+education classrooms with unclear applicability to learners needing substantial
+support, untracked engagement with the taught strategies, and effects that
+disappear after the curriculum ends
+([ASAT](https://asatonline.org/for-parents/becoming-a-savvy-consumer/zones-of-regulation-is-there-science-behind-that/)).
+By contrast, RULER — the program behind the [Mood Meter](./mood-meter.md) — has
+a substantially stronger research base.
+
+## How does one use it properly?
+
+1. **Teach proactively, during calm.** Deliver the lessons when learners are
+   regulated, not mid-crisis; as Kuypers puts it, "we're teaching the kids the
+   skills of regulation before they need them"
+   ([Beacon podcast](https://beaconschoolsupport.co.uk/podcast/the-zones-of-regulation-how-to-help-kids-manage-strong-emotions-with-leah-kuypers)).
+2. **Work through the curriculum in order.** The original book is eighteen
+   structured lessons for K–12 learners (roughly age 4 and up, readiness
+   varying), taught in groups or one-on-one, each with discussion questions,
+   activities, and adaptations
+   ([CHADD](https://chadd.org/wp-content/uploads/2018/06/ATTN_10_12_Zones.pdf),
+   [Google Books](https://books.google.com/books/about/The_Zones_of_Regulation.html?id=ggKWZwEACAAJ),
+   [Beacon podcast](https://beaconschoolsupport.co.uk/podcast/the-zones-of-regulation-how-to-help-kids-manage-strong-emotions-with-leah-kuypers)).
+3. **Build awareness first.** Learners practice naming their zone, reading
+   facial expressions and body cues, and spotting personal triggers
+   ([Google Books](https://books.google.com/books/about/The_Zones_of_Regulation.html?id=ggKWZwEACAAJ)).
+4. **Rehearse until over-learned.** Use roleplay, video modeling, and social
+   stories to practice responses — including pretending to be in the Red Zone —
+   so the tools are available under real stress
+   ([Beacon podcast](https://beaconschoolsupport.co.uk/podcast/the-zones-of-regulation-how-to-help-kids-manage-strong-emotions-with-leah-kuypers)).
+5. **Build a personal toolbox per zone.** Each learner assembles their own
+   calming techniques, cognitive strategies, and sensory supports for each zone
+   ([Google Books](https://books.google.com/books/about/The_Zones_of_Regulation.html?id=ggKWZwEACAAJ)).
+6. **Make check-ins routine.** Frame every zone as acceptable and keep the focus
+   on skill-building; Kuypers stresses keeping the Zones free of contingencies
+   and consequences so it stays a learning framework
+   ([Beacon podcast](https://beaconschoolsupport.co.uk/podcast/the-zones-of-regulation-how-to-help-kids-manage-strong-emotions-with-leah-kuypers)).
+
+## How does it relate to other frameworks?
+
+- [Mood Meter](./mood-meter.md) — the closest sibling in this library, and a
+  true 2×2: it crosses energy with pleasantness, where the Zones collapses
+  everything onto one arousal band. The Mood Meter's parent program (RULER) has
+  the stronger evidence base; the Zones has the simpler vocabulary for young or
+  high-support learners. Using both views — "how activated am I?" plus "pleasant
+  or unpleasant?" — is more precise than either alone.
+- [Thayer Mood Model](./thayer-mood-model.md) and
+  [Affect Grid](./affect-grid.md) — the academic energy/valence models the Mood
+  Meter descends from; they supply the two-axis theory the Zones simplifies
+  away.
+- [Energy Quadrants](./energy-quadrants.md) — the workplace analogue: energy
+  crossed with quality of feeling, aimed at adult performance rather than
+  classroom regulation.
+- [Positive × Negative Affect](./positive-negative-affect.md) — measures
+  pleasant and unpleasant activation as independent dimensions, a useful
+  corrective to reading the four colors as a single good-to-bad scale.
+- [Dual Continuum of Mental Health](./dual-continuum-of-mental-health.md) —
+  shares the Zones' core stance that difficult states are normal and distinct
+  from pathology.
+- The Alert Program ("How Does Your Engine Run?") by Williams & Shellenberger —
+  the direct OT predecessor, using an engine metaphor (high, low, just right)
+  for the same arousal continuum; it runs in over 85 countries and, unlike the
+  Zones, is listed on the California Evidence-Based Clearinghouse
+  ([alertprogram.com](https://alertprogram.com/)).
+- The Incredible 5-Point Scale (Kari Dunn Buron) — a complementary numeric scale
+  for teaching social-emotional concepts; Buron sat on Kuypers's capstone
+  committee ([5pointscale.com](https://www.5pointscale.com/),
+  [Beacon podcast](https://beaconschoolsupport.co.uk/podcast/the-zones-of-regulation-how-to-help-kids-manage-strong-emotions-with-leah-kuypers)).
+- Social Thinking (Michelle Garcia Winner) — the broader methodology the Zones
+  is published within; it supplies the perspective-taking and social-competency
+  context around the regulation skills
+  ([socialthinking.com](https://www.socialthinking.com/)).
+
+## What is the core insight?
+
+Self-regulation is a teachable skill, not a character trait — so give learners a
+simple shared vocabulary for their arousal state and a rehearsed toolbox for
+changing it, instead of punishing them for skills nobody taught.
+
+## What is its intellectual-property status?
+
+Not free to use as branded. "The Zones of Regulation®" is a registered trademark
+owned by Leah Kuypers and The Zones of Regulation, Inc., with formal licensing
+and permissions policies governing institutional use
+([zonesofregulation.com](https://zonesofregulation.com/)). The curriculum,
+digital materials, trainings, posters, games, apps, and the 2024 companion book
+are proprietary, copyrighted products; the original 2011 book is distributed by
+Think Social Publishing
+([Think Social Publishing](https://www.socialthinking.com/zones-of-regulation),
+[Google Books](https://books.google.com/books/about/The_Zones_of_Regulation.html?id=ggKWZwEACAAJ)).
+The underlying idea — an arousal continuum with named bands and matched
+regulation strategies — is not ownable: practitioners can teach the same skill
+domain under generic language (energy levels, alertness states) or through the
+established alternatives, the Alert Program's engine metaphor and the Incredible
+5-Point Scale ([alertprogram.com](https://alertprogram.com/),
+[5pointscale.com](https://www.5pointscale.com/)).
+
 ## Sources
 
 - [CHADD Attention magazine (Oct 2012) — "The Zones of Regulation" by Mark Katz](https://chadd.org/wp-content/uploads/2018/06/ATTN_10_12_Zones.pdf)
   — detailed primary-adjacent description of the zones, the 18-lesson
   curriculum, and its CBT/Social Thinking roots
 - [zonesofregulation.com](https://zonesofregulation.com/) — official site;
-  adoption claims and framework overview
+  adoption claims, trademark, and licensing information
 - [zonesofregulation.com — Meet the Creator](https://zonesofregulation.com/meet-the-creator-and-founder/)
   — Kuypers's background and stated influences
 - [Think Social Publishing — The Zones of Regulation series](https://www.socialthinking.com/zones-of-regulation)
-  — publisher page; 2024 companion book
+  — publisher page; products and 2024 companion book
 - [Google Books — The Zones of Regulation (2011)](https://books.google.com/books/about/The_Zones_of_Regulation.html?id=ggKWZwEACAAJ)
-  — book record
+  — book record; 185 pages, curriculum structure
 - [Beacon School Support podcast — interview with Leah Kuypers](https://beaconschoolsupport.co.uk/podcast/the-zones-of-regulation-how-to-help-kids-manage-strong-emotions-with-leah-kuypers)
-  — origin story, capstone project, Kari Dunn Buron and Ross Greene influences
+  — origin story, capstone project, proactive-teaching protocol, Kari Dunn Buron
+  and Ross Greene influences
 - [ASAT — "Zones of Regulation: Is There Science Behind That?"](https://asatonline.org/for-parents/becoming-a-savvy-consumer/zones-of-regulation-is-there-science-behind-that/)
-  — critical review of the evidence base
+  — critical review of the evidence base; summarizes Mason et al. (2024) and the
+  underlying studies (Quale 2019; Nowell et al. 2019; Spence & Tseng 2018;
+  Piller et al. 2021)
 - [The Alert Program ("How Does Your Engine Run?")](https://alertprogram.com/) —
   predecessor OT self-regulation program by Williams & Shellenberger
+- [The Incredible 5-Point Scale](https://www.5pointscale.com/) — Kari Dunn
+  Buron's complementary scale
+- [Social Thinking](https://www.socialthinking.com/) — Michelle Garcia Winner's
+  methodology; publisher's broader framework
 - Wikipedia — no article exists for the Zones of Regulation or Leah Kuypers;
   both appear only as citations inside other articles (e.g. Occupational
   therapist, History of autism)

@@ -47,10 +47,11 @@ energy-management training to business audiences
 [jim-loehr.com](https://www.jim-loehr.com/about)). His co-author,
 [Tony Schwartz](<https://en.wikipedia.org/wiki/Tony_Schwartz_(author)>), is a
 journalist and author who, after the book, founded The Energy Project (2003), a
-consultancy built around the same ideas. Schwartz has a Wikipedia article;
-notably, there is no Wikipedia article for Jim Loehr, for the book, or for the
-energy-quadrant framework itself — its documented provenance rests on the
-authors' own publications and secondary summaries.
+consultancy built around the same ideas, later extending them in _Be Excellent
+at Anything_ (2010, with Jean Gomes and Catherine McCarthy). Schwartz has a
+Wikipedia article; notably, there is no Wikipedia article for Jim Loehr, for the
+book, or for the energy-quadrant framework itself — its documented provenance
+rests on the authors' own publications and secondary summaries.
 
 ## What problem were they trying to solve?
 
@@ -109,18 +110,165 @@ athletes and corporate clients rather than controlled studies, so the realistic
 individual outcome is a sharper vocabulary for energy states and a disciplined
 habit of recovery — valuable, but self-reported rather than clinically proven.
 
+## What is the hard evidence it works?
+
+**There is no peer-reviewed validation of the framework itself.** No published
+controlled study tests whether the quadrant self-assessment or the full
+Loehr/Schwartz program produces the promised outcome of sustainable high
+performance, and the quadrant grid has never been validated as a diagnostic
+instrument. What exists instead:
+
+- **Field observation with elite athletes.** The oscillation principle derives
+  from Loehr's direct study of world-class tennis players — including 17 players
+  who reached a world number-one ranking — whose between-point recovery rituals
+  distinguished them from lower-ranked peers
+  ([HBR](https://hbr.org/2001/01/the-making-of-a-corporate-athlete),
+  [jim-loehr.com](https://www.jim-loehr.com/about)). This is systematic
+  practitioner observation, not a controlled experiment.
+- **Large-scale corporate adoption.** The model was applied to Fortune 100
+  executives (Procter & Gamble, Estée Lauder, GlaxoSmithKline, PepsiCo,
+  Citigroup Smith Barney), FBI Hostage Rescue Teams, and military Special
+  Forces, and The Energy Project later consulted for Fortune 500 firms including
+  Facebook ([jim-loehr.com](https://www.jim-loehr.com/about),
+  [Wikipedia: Tony Schwartz](<https://en.wikipedia.org/wiki/Tony_Schwartz_(author)>)).
+  Adoption is evidence of market demand, not of efficacy; client results are
+  reported as case anecdotes in the HBR article and the book, not as measured
+  comparisons against controls.
+- **Plausible but uncited scientific grounding.** The oscillation thesis is
+  consistent with the Yerkes–Dodson arousal-performance curve and with ultradian
+  rhythm research on 90–120-minute activity/rest cycles, but the Loehr/Schwartz
+  publications do not cite either literature, and no independent study connects
+  the quadrant model to them
+  ([HBR](https://hbr.org/2001/01/the-making-of-a-corporate-athlete)).
+
+State of the evidence: a genuine athletic-observation pedigree and two decades
+of consulting practice, with no controlled or peer-reviewed outcome research
+([fs.blog](https://fs.blog/the-power-of-full-engagement/)).
+
+## How does one use it properly?
+
+1. **Check in with the two axis questions.** Ask _how much energy do I have?_
+   (low to high) and _how does it feel?_ (negative to positive). The two answers
+   place you in one quadrant. A check-in takes seconds
+   ([fs.blog](https://fs.blog/the-power-of-full-engagement/)).
+2. **Name the zone.** Performance (high positive — energized, confident,
+   engaged), Survival (high negative — angry, fearful, anxious), Burnout (low
+   negative — exhausted, hopeless, depressed), or Recovery (low positive —
+   relaxed, peaceful, renewed)
+   ([fs.blog](https://fs.blog/the-power-of-full-engagement/)).
+3. **Choose the move the zone calls for.** From Survival, down-regulate — the
+   energy is there but misdirected. From Burnout, renew — the tank is empty.
+   From Performance, schedule the next recovery before it is needed. Recovery is
+   the gateway back to Performance, so treat time there as scheduled work.
+4. **Build energy rituals.** Create precise, scheduled routines for both
+   expenditure and renewal across the four energy sources — physical (sleep,
+   exercise, eating), emotional, mental (preparation rituals), and spiritual
+   (alignment with values). Rituals must be automatic and tied to a specific
+   trigger or time slot; routines that require fresh deliberation each time do
+   not persist
+   ([HBR](https://hbr.org/2001/01/the-making-of-a-corporate-athlete)).
+5. **Oscillate deliberately.** Structure work as sprints — fully engage for a
+   bounded period, then fully disengage to renew — rather than pacing at partial
+   engagement all day
+   ([fs.blog](https://fs.blog/the-power-of-full-engagement/)).
+6. **Repeat on a rhythm.** Run the two-question check-in at natural transition
+   points (start of day, between meetings, after hard blocks) and review your
+   ritual set periodically. The sources prescribe no fixed durations; Loehr's
+   tennis research observed micro-recoveries of seconds between points, and the
+   book's unit of oscillation is the sprint, at whatever length the work demands
+   ([HBR](https://hbr.org/2001/01/the-making-of-a-corporate-athlete)).
+
+## How does it relate to other frameworks?
+
+- [Thayer Mood Model](./thayer-mood-model.md) is the closest academic relative:
+  the same 2×2 logic with **energy** and **tension** as axes, published by a
+  research psychologist with peer-reviewed backing the energy quadrants lack.
+- [Mood Meter](./mood-meter.md) plots energy against pleasantness — nearly
+  identical axes — but targets emotion vocabulary and regulation skills rather
+  than workload design; use it to name the feeling, this grid to plan recovery.
+- [Affect Grid](./affect-grid.md) is the validated measurement instrument for
+  the same two-dimensional space (arousal × pleasure); it supplies the
+  psychometric rigor the energy quadrants omit.
+- [Positive × Negative Affect](./positive-negative-affect.md) treats positive
+  and negative feeling as independent dimensions rather than one valence axis —
+  a useful correction when a state feels both energized and anxious at once.
+- [Dual Continuum of Mental Health](./dual-continuum-of-mental-health.md) makes
+  the same structural move at a longer timescale: wellbeing and illness as
+  separate axes, where this grid maps momentary state.
+- [Zones of Regulation](./zones-of-regulation.md) is the classroom sibling —
+  four color-coded arousal/valence states with regulation strategies per zone.
+- [Passion × Proficiency](./passion-proficiency.md) audits which activities
+  drain or energize you; pair it with the energy quadrants to trace _why_ your
+  week keeps routing through the Survival zone.
+- [Eisenhower Matrix](./eisenhower-matrix.md) is the time-management counterpart
+  the book positions itself against: it allocates hours by urgency and
+  importance, while this grid asks whether you have the energy to use those
+  hours well. Run together, one schedules the work, the other the recovery.
+- [Worry Matrix](./worry-matrix.md) is a targeted exit from the Survival zone:
+  sorting concerns by control and importance discharges the anxious energy the
+  quadrants only diagnose.
+- **Yerkes–Dodson law** (1908) is the predecessor principle — performance rises
+  with arousal to an optimum, then falls — which the quadrants refine by
+  splitting high arousal into positive (Performance) and negative (Survival)
+  ([Wikipedia: Yerkes–Dodson law](https://en.wikipedia.org/wiki/Yerkes%E2%80%93Dodson_law)).
+- **Ultradian rhythms** — 90–120-minute cycles of activity and rest — supply the
+  physiological rationale for oscillation, though the authors do not cite the
+  research
+  ([Wikipedia: Ultradian rhythm](https://en.wikipedia.org/wiki/Ultradian_rhythm)).
+- **The Corporate Athlete model** (Loehr & Schwartz, 2001) is the parent
+  program: the quadrant grid is its diagnostic surface, wrapped in the
+  performance-pyramid and ritual-building methodology
+  ([HBR](https://hbr.org/2001/01/the-making-of-a-corporate-athlete)).
+
+## What is the core insight?
+
+Energy, not time, is the limiting resource of performance, and high output is
+sustained by oscillating between full engagement and deliberate recovery rather
+than by continuous effort.
+
+## What is its intellectual-property status?
+
+**The concept is free to use; the specific text and diagram are not.** "Energy
+quadrants" is a descriptive, untrademarked term, and the underlying
+stress/recovery oscillation principle long predates Loehr and Schwartz in
+athletic training science
+([HBR](https://hbr.org/2001/01/the-making-of-a-corporate-athlete)). Constraints
+on adjacent property:
+
+- _The Power of Full Engagement_ and its quadrant diagram are copyrighted by
+  Free Press / Simon & Schuster; reproducing the book's figures or text requires
+  permission
+  ([Simon & Schuster](https://www.simonandschuster.com/books/The-Power-of-Full-Engagement/Jim-Loehr/9780743226752)).
+- **The Energy Project** is the registered name of Schwartz's consultancy, and
+  its training methodology is proprietary
+  ([Wikipedia: Tony Schwartz](<https://en.wikipedia.org/wiki/Tony_Schwartz_(author)>)).
+- The Human Performance Institute (acquired by Johnson & Johnson) sells a
+  proprietary "energy management training system" built on Loehr's work
+  ([jim-loehr.com](https://www.jim-loehr.com/about)).
+
+Drawing your own 2×2 with the axis questions and generic labels — or using
+generic names such as "stress-recovery cycle," "oscillation model," or "energy
+management" — carries no restriction.
+
 ## Sources
 
 - [Loehr, J. & Schwartz, T. (2001). "The Making of a Corporate Athlete." Harvard Business Review, January 2001](https://hbr.org/2001/01/the-making-of-a-corporate-athlete)
   — the framework's first corporate publication; Ideal Performance State,
-  oscillation, and the performance pyramid
+  oscillation, ritual-building, and the performance pyramid
 - [Simon & Schuster — official publisher page for _The Power of Full Engagement_ (Free Press, 2003)](https://www.simonandschuster.com/books/The-Power-of-Full-Engagement/Jim-Loehr/9780743226752)
+  — publication details and copyright
 - [Jim Loehr — official bio](https://www.jim-loehr.com/about) — sports
-  psychology career, Human Performance Institute, Johnson & Johnson acquisition
+  psychology career, Human Performance Institute, Johnson & Johnson acquisition,
+  athlete and corporate client roster
 - [Wikipedia: Tony Schwartz (author)](<https://en.wikipedia.org/wiki/Tony_Schwartz_(author)>)
-  — the only principal with a Wikipedia article; no article exists for Jim
-  Loehr, the book, or the framework itself
+  — biography, The Energy Project (2003), _Be Excellent at Anything_ (2010); the
+  only principal with a Wikipedia article — no article exists for Jim Loehr, the
+  book, or the energy-quadrant framework itself
 - [Farnam Street — "The Power of Full Engagement: The Four Energy Management Principles That Drive Performance"](https://fs.blog/the-power-of-full-engagement/)
   — detailed secondary summary of the axes, quadrant states, and four principles
 - [Amazon listing for _The Power of Full Engagement_](https://www.amazon.com/Power-Full-Engagement-Managing-Performance/dp/0743226755)
   — publication details and author bios
+- [Wikipedia: Yerkes–Dodson law](https://en.wikipedia.org/wiki/Yerkes%E2%80%93Dodson_law)
+  — predecessor arousal-performance principle
+- [Wikipedia: Ultradian rhythm](https://en.wikipedia.org/wiki/Ultradian_rhythm)
+  — physiological activity/rest cycles aligned with the oscillation thesis
