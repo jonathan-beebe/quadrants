@@ -14,6 +14,12 @@
 
 ## Log
 
+- 2026-07-26:18:03:36 — BUG-014 — done: the four navigating drawer actions
+  (select, New Framework, Import, Duplicate) now dismiss the mobile drawer and
+  land focus on `<main>` (tabIndex -1) instead of stranding it on the detached
+  opener; desktop untouched, 397/397 green (commit 31f7b08). Filed a research
+  candidate in `0-research` on drawer focus ownership being split between App
+  and Sidebar — sixth ticket on this surface
 - 2026-07-26:17:58:41 — BUG-014 — started
 - 2026-07-26:17:52:41 — RSRCH-002 — defined: hold the mobile keyboard open and
   keep the edit target above it
