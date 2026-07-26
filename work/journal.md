@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-26:17:33:37 — IMPRV-005 — done: ArrowUp/ArrowDown walk the template
+  list across category groups, wrap at both ends, and enter from the filter
+  input; focus-only, Enter/Space still applies, 386/386 green (commit 5015e3c)
 - 2026-07-26:17:28:10 — IMPRV-005 — started
 - 2026-07-26:17:27:27 — DSGN-001 — blocked: left in 1-inbox, not started.
   `work-start/types/design.md` is still "TO BE DEFINED — owner: human", so the

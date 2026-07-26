@@ -1,8 +1,9 @@
 ---
 id: IMPRV-005
 type: improvement
-status: open
+status: resolved
 created: 2026-07-26
+resolved: 2026-07-26
 ---
 
 # IMPRV-005: arrow-key navigation through template list on create screen
