@@ -13,18 +13,18 @@ Three goals:
 2. **Permissive Claude.** `claude` runs with `--dangerously-skip-permissions`
    inside the container. No prompt-per-write. Containment comes from the
    sandbox, not from prompts.
-3. **Tight blast radius.** Claude can only write to this repo (bind mount) and
-   only reach an allowlist of network endpoints (iptables firewall). Everything
-   else is off-limits.
+3. **Tight blast radius.** Claude can only write to this repo (bind mount).
+   Network access is unrestricted; containment is filesystem and auth isolation
+   only.
 
 ## The containment model
 
-| Surface        | What Claude can touch                                                     | How it's enforced                                                                                     |
-| -------------- | ------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
-| **Filesystem** | This repo only, at `/workspace`                                           | Bind mount of `${localWorkspaceFolder}`; nothing else from the host is mounted                        |
-| **Network**    | Anthropic API, npm, GitHub, VS Code marketplace, Sentry/Statsig telemetry | `init-firewall.sh` builds an iptables allowlist; default policy is DROP                               |
-| **Auth**       | Container's own `~/.claude` (a Docker volume)                             | Volume `claude-code-config-${devcontainerId}` is project-scoped and never crosses to host `~/.claude` |
-| **Privileges** | Non-root `node` user                                                      | `remoteUser: node`; sudo only for `init-firewall.sh`                                                  |
+| Surface        | What Claude can touch                         | How it's enforced                                                                                     |
+| -------------- | --------------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| **Filesystem** | This repo only, at `/workspace`               | Bind mount of `${localWorkspaceFolder}`; nothing else from the host is mounted                        |
+| **Network**    | Unrestricted                                  | No firewall; the container has normal outbound network access                                         |
+| **Auth**       | Container's own `~/.claude` (a Docker volume) | Volume `claude-code-config-${devcontainerId}` is project-scoped and never crosses to host `~/.claude` |
+| **Privileges** | Non-root `node` user                          | `remoteUser: node`; no sudo access                                                                    |
 
 What's **not** mounted: `~/.ssh`, `~/.config/gh`, any host env vars, host
 `~/.claude`. The container is fresh: you log in once per devcontainer rebuild,
@@ -141,25 +141,15 @@ If you are Claude Code running inside this devcontainer, here is your situation:
 - **Your filesystem.** Only `/workspace` is bind-mounted from the host. Anything
   you write there appears in the user's real repo. Anything outside `/workspace`
   is ephemeral container state and will not persist.
-- **Your network is restricted by allowlist.** You can reach:
-  - `api.anthropic.com` (your own API, for Claude)
-  - `registry.npmjs.org` (`npm install`)
-  - GitHub's IP ranges (`gh`, `git push/pull`, GitHub API)
-  - VS Code marketplace and update servers
-  - Sentry and Statsig telemetry
-  - LAN hosts on the Docker bridge network
-  - Anything else returns `connection refused` / `icmp-admin-prohibited`. If you
-    see those errors, the firewall is doing its job. Tell the user — don't try
-    to work around it. Adding a domain means editing
-    `.devcontainer/init-firewall.sh`.
+- **Your network is unrestricted.** There is no firewall; outbound access works
+  normally.
 - **Auth lives in a Docker volume.** Your `~/.claude` is mounted as a named
   volume, scoped to this devcontainer. Treat its contents as sensitive.
 - **The host is offline-by-design for this app.** All plant data is bundled JSON
   in `src/data/seed/`. You should never need to fetch external data at runtime.
   If something seems to require network, double-check the data layer in
   `src/data/db.ts` and `src/data/api.ts`.
-- **`sudo` is available for one thing only:** running
-  `/usr/local/bin/init-firewall.sh`. Do not assume general root access.
+- **No `sudo` access.** Do not assume root access.
 - **Node version is 22** (matches the project's `.nvmrc`). Use `npm`, not yarn
   or pnpm.
 
@@ -168,12 +158,11 @@ discipline, TDD-on-refactor, no `!` non-null assertions, etc.).
 
 ## Files in this directory
 
-| File                | Purpose                                                                                  |
-| ------------------- | ---------------------------------------------------------------------------------------- |
-| `Dockerfile`        | Node 22 base + dev tools + zsh + Claude Code CLI + sudoers entry for the firewall script |
-| `devcontainer.json` | Mounts, capabilities, env, VS Code extensions, lifecycle hooks                           |
-| `init-firewall.sh`  | Builds the iptables allowlist; runs on every container start via `postStartCommand`      |
-| `README.md`         | This file                                                                                |
+| File                | Purpose                                          |
+| ------------------- | ------------------------------------------------ |
+| `Dockerfile`        | Node 22 base + dev tools + zsh + Claude Code CLI |
+| `devcontainer.json` | Mounts, env, VS Code extensions, lifecycle hooks |
+| `README.md`         | This file                                        |
 
 ## Caveats and known sharp edges
 
@@ -186,30 +175,5 @@ discipline, TDD-on-refactor, no `!` non-null assertions, etc.).
 - **First build is slow** (~5–10 min): apt installs, zsh-in-docker download,
   `git-delta`, `npm install -g claude-code`, then `npm install` for the repo.
   Subsequent starts are seconds.
-- **Firewall verification can fail loudly** at container start if Docker DNS is
-  in a weird state on macOS. Restart Docker Desktop if you see "Firewall
-  verification failed". The container will not be usable until the script exits
-  clean.
-- **The firewall does not block SSH outbound.** Port 22 is allowed for
-  convenience (git over SSH). If you want it locked down, edit
-  `init-firewall.sh`.
 - **No MCP servers are wired up.** If you want MCP inside the container, add a
-  `.mcp.json` at the repo root and add the server's domains to the firewall
-  allowlist.
-
-## Adding a domain to the allowlist
-
-Edit `init-firewall.sh`, add the hostname to the `for domain in \` block, then
-rebuild. Example: adding the Figma API:
-
-```sh
-for domain in \
-    "registry.npmjs.org" \
-    "api.anthropic.com" \
-    "api.figma.com" \         # ← new
-    ...
-```
-
-```bash
-devcontainer up --workspace-folder . --remove-existing-container
-```
+  `.mcp.json` at the repo root.
