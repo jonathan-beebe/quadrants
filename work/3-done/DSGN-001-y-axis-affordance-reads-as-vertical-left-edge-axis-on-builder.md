@@ -1,8 +1,9 @@
 ---
 id: DSGN-001
 type: design
-status: open
+status: resolved
 created: 2026-07-26
+resolved: 2026-07-26
 ---
 
 # DSGN-001: y-axis affordance reads as vertical left-edge axis on builder

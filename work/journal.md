@@ -14,6 +14,10 @@
 
 ## Log
 
+- 2026-07-26:17:42:27 — DSGN-001 — done: Y-axis input rotated -90deg into a rail
+  down the grid's left edge (same element, absolutely positioned so it cannot
+  widen the column); X axis offset to stay centred under the grid. Human
+  confirmed visually, 390/390 green (commit 0f1c518)
 - 2026-07-26:17:38:52 — DSGN-001 — started: human settled the open design
   question — keep the existing Y-axis input element, rotate it in place
 - 2026-07-26:17:33:37 — IMPRV-005 — done: ArrowUp/ArrowDown walk the template
