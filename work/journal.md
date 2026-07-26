@@ -2,7 +2,7 @@
 
 ## Next ticket numbers
 
-- RSRCH: 2
+- RSRCH: 3
 - DSGN: 2
 - ARCH: 2
 - FEAT: 4
@@ -10,10 +10,15 @@
 - MAINT: 6
 - A11Y: 21
 - RFCTR: 6
-- BUG: 14
+- BUG: 15
 
 ## Log
 
+- 2026-07-26:17:58:41 — BUG-014 — started
+- 2026-07-26:17:52:41 — RSRCH-002 — defined: hold the mobile keyboard open and
+  keep the edit target above it
+- 2026-07-26:17:46:41 — BUG-014 — defined: mobile drawer stays open over the
+  screen its own actions navigate to
 - 2026-07-26:17:42:27 — DSGN-001 — done: Y-axis input rotated -90deg into a rail
   down the grid's left edge (same element, absolutely positioned so it cannot
   widen the column); X axis offset to stay centred under the grid. Human

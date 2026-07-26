@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useRef, useCallback, useEffect } from 'react'
 import { useFrameworks } from './hooks/useFrameworks'
 import { useRouting } from './hooks/useRouting'
 import { useDarkMode } from './hooks/useDarkMode'
@@ -147,6 +147,28 @@ export default function App() {
     setEditingFramework(null)
   }, [])
 
+  // On mobile the drawer is modal: it covers the screen its own actions
+  // navigate to, and <main> is inert behind it. Any drawer action that changes
+  // what <main> renders therefore has to dismiss it (BUG-014). Focus is handed
+  // to <main> in an effect rather than here, because <main> is still inert
+  // until this state change commits.
+  const [focusMainAfterDismiss, setFocusMainAfterDismiss] = useState(false)
+  const mainRef = useRef<HTMLElement>(null)
+
+  const dismissDrawer = useCallback(() => {
+    if (!isMobile) return
+    setSidebarOpen(false)
+    setFocusMainAfterDismiss(true)
+  }, [isMobile])
+
+  useEffect(() => {
+    if (!focusMainAfterDismiss) return
+    setFocusMainAfterDismiss(false)
+    // Runs after Sidebar's restore-focus cleanup (child effects first), so it
+    // wins over A11Y-005 refocusing the opener the navigation just unmounted.
+    mainRef.current?.focus()
+  }, [focusMainAfterDismiss])
+
   if (activeId === 'design-system') {
     return <DesignSystem />
   }
@@ -167,16 +189,32 @@ export default function App() {
           isDark={isDark}
           onCycleTheme={cycleMode}
           onToggle={() => setSidebarOpen((s) => !s)}
-          onSelect={navigate}
-          onNew={openBuilder}
+          onSelect={(id) => {
+            navigate(id)
+            dismissDrawer()
+          }}
+          onNew={() => {
+            openBuilder()
+            dismissDrawer()
+          }}
           onDelete={handleDelete}
-          onDuplicate={handleDuplicate}
+          onDuplicate={(fw) => {
+            handleDuplicate(fw)
+            dismissDrawer()
+          }}
           onExport={exportJson}
-          onImport={handleImport}
+          onImport={() => {
+            handleImport()
+            dismissDrawer()
+          }}
         />
       </div>
       <main
         id="main-content"
+        ref={mainRef}
+        // Programmatically focusable only: the landing spot after a drawer
+        // navigation, and the skip link's target.
+        tabIndex={-1}
         inert={isMobile && sidebarOpen ? true : undefined}
         className={`flex-1 overflow-y-auto transition-[margin-left] duration-150 ease-in-out ${!isMobile && sidebarOpen ? 'ml-[280px]' : 'ml-0'}`}>
         {conflict ? (

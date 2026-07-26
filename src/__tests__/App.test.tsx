@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { fireEvent, render, screen, waitFor } from '@testing-library/react'
+import { fireEvent, render, screen, waitFor, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import App from '../App'
 import { encodeFramework } from '../sharing'
@@ -139,6 +139,133 @@ describe('App', () => {
       const triggers = screen.getAllByRole('button', { name: /open sidebar/i })
       expect(triggers).toHaveLength(1)
       expect(screen.getByRole('main')).not.toContainElement(triggers[0])
+    })
+  })
+
+  describe('mobile drawer dismissal on navigation (BUG-014)', () => {
+    function storeFrameworks() {
+      const quadrants = [
+        { label: 'A', color: '#fbbf24', items: [] },
+        { label: 'B', color: '#60a5fa', items: [] },
+        { label: 'C', color: '#34d399', items: [] },
+        { label: 'D', color: '#f472b6', items: [] },
+      ]
+      localStorage.setItem(
+        'quadrants_frameworks',
+        JSON.stringify([
+          { id: 'fw-one', name: 'First Framework', axisX: '', axisY: '', quadrants, createdAt: 1000, updatedAt: 1000 },
+          { id: 'fw-two', name: 'Second Framework', axisX: '', axisY: '', quadrants, createdAt: 2000, updatedAt: 2000 },
+        ]),
+      )
+    }
+
+    /** Open the drawer from the screen's own in-flow trigger (BUG-013). */
+    async function openDrawer(user: ReturnType<typeof userEvent.setup>) {
+      await user.click(screen.getByRole('button', { name: /open sidebar/i }))
+      return screen.getByRole('dialog', { name: /frameworks sidebar/i })
+    }
+
+    /** The drawer is dismissed and the screen behind it is usable again. */
+    function expectDrawerDismissed() {
+      expect(screen.queryByRole('dialog', { name: /frameworks sidebar/i })).not.toBeInTheDocument()
+      expect(screen.queryByTestId('sidebar-backdrop')).not.toBeInTheDocument()
+      expect(screen.getByRole('main')).not.toHaveAttribute('inert')
+    }
+
+    beforeEach(() => {
+      vi.mocked(useIsMobile).mockReturnValue(true)
+    })
+
+    it('dismisses the drawer when a framework is selected', async () => {
+      const user = userEvent.setup()
+      storeFrameworks()
+      window.history.replaceState(null, '', '/fw-one')
+      render(<App />)
+
+      const drawer = await openDrawer(user)
+      await user.click(within(drawer).getByRole('button', { name: /^Second Framework/ }))
+
+      expectDrawerDismissed()
+      expect(screen.getByRole('heading', { name: 'Second Framework' })).toBeInTheDocument()
+    })
+
+    it('dismisses the drawer when "New Framework" is chosen', async () => {
+      const user = userEvent.setup()
+      storeFrameworks()
+      window.history.replaceState(null, '', '/fw-one')
+      render(<App />)
+
+      const drawer = await openDrawer(user)
+      await user.click(within(drawer).getByRole('button', { name: /new framework/i }))
+
+      expectDrawerDismissed()
+      expect(screen.getByRole('heading', { name: 'Create Framework' })).toBeInTheDocument()
+    })
+
+    it('dismisses the drawer when a framework is duplicated from its actions menu', async () => {
+      const user = userEvent.setup()
+      storeFrameworks()
+      window.history.replaceState(null, '', '/fw-one')
+      render(<App />)
+
+      const drawer = await openDrawer(user)
+      await user.click(within(drawer).getByRole('button', { name: /actions for second framework/i }))
+      await user.click(within(drawer).getByRole('menuitem', { name: /duplicate/i }))
+
+      expectDrawerDismissed()
+    })
+
+    it('dismisses the drawer when Import is chosen', async () => {
+      const user = userEvent.setup()
+      storeFrameworks()
+      window.history.replaceState(null, '', '/fw-one')
+      render(<App />)
+
+      const drawer = await openDrawer(user)
+      await user.click(within(drawer).getByRole('button', { name: /import/i }))
+
+      expectDrawerDismissed()
+    })
+
+    it('lands focus on the revealed screen rather than stranding it on the dismissed drawer', async () => {
+      const user = userEvent.setup()
+      storeFrameworks()
+      window.history.replaceState(null, '', '/fw-one')
+      render(<App />)
+
+      const drawer = await openDrawer(user)
+      await user.click(within(drawer).getByRole('button', { name: /^Second Framework/ }))
+
+      // Not stranded on <body> (where refocusing the now-detached opener that
+      // opened the drawer would leave it), and not inside the drawer.
+      const main = screen.getByRole('main')
+      expect(document.activeElement).not.toBe(document.body)
+      expect(main).toContainElement(document.activeElement as HTMLElement)
+    })
+
+    it('leaves the desktop sidebar open when a framework is selected', async () => {
+      const user = userEvent.setup()
+      vi.mocked(useIsMobile).mockReturnValue(false)
+      storeFrameworks()
+      window.history.replaceState(null, '', '/fw-one')
+      render(<App />)
+
+      await user.click(screen.getByRole('button', { name: /^Second Framework/ }))
+
+      // The floating opener renders only while the sidebar is closed.
+      expect(screen.queryByRole('button', { name: /open sidebar/i })).not.toBeInTheDocument()
+      expect(screen.getByRole('heading', { name: 'Second Framework' })).toBeInTheDocument()
+    })
+
+    it('leaves the desktop sidebar open when "New Framework" is chosen', async () => {
+      const user = userEvent.setup()
+      vi.mocked(useIsMobile).mockReturnValue(false)
+      storeFrameworks()
+      render(<App />)
+
+      await user.click(screen.getByRole('button', { name: /new framework/i }))
+
+      expect(screen.queryByRole('button', { name: /open sidebar/i })).not.toBeInTheDocument()
     })
   })
 
