@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import FrameworkBuilder from '../components/FrameworkBuilder'
 import { useIsMobile } from '../hooks/useIsMobile'
@@ -307,6 +307,112 @@ describe('FrameworkBuilder', () => {
       expect(trigger).toHaveAttribute('aria-expanded', 'false')
       expect(screen.queryByRole('searchbox', { name: /filter templates/i })).not.toBeInTheDocument()
       expect(screen.getByDisplayValue('Eisenhower Matrix')).toBeInTheDocument()
+    })
+  })
+
+  describe('arrow-key navigation through the template list (IMPRV-005)', () => {
+    // Entries share a container with "Blank / Custom"; category groups nest
+    // inside it, so DOM order here is the order on screen. Scoped to the
+    // filter input's list so the mobile trigger — whose label also carries
+    // the selected entry's name — stays out of it.
+    function entries() {
+      const list = screen.getByRole('searchbox', { name: /filter templates/i }).parentElement
+      if (!list) throw new Error('template list not found')
+      const custom = within(list).getByRole('button', { name: /blank \/ custom/i })
+      return within(custom.parentElement as HTMLElement).getAllByRole('button')
+    }
+
+    it('moves to the next and previous entry with ArrowDown and ArrowUp', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilder {...defaultProps} />)
+      const [first, second] = entries()
+
+      first.focus()
+      await user.keyboard('{ArrowDown}')
+      expect(second).toHaveFocus()
+
+      await user.keyboard('{ArrowUp}')
+      expect(first).toHaveFocus()
+    })
+
+    it('crosses category group boundaries', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilder {...defaultProps} />)
+      const all = entries()
+      // First pair split across two category groups. Index 0 is the ungrouped
+      // "Blank / Custom" entry, so a boundary there is not a category change.
+      const boundary = all.findIndex((el, i) => i > 1 && el.parentElement !== all[i - 1].parentElement)
+      expect(boundary).toBeGreaterThan(1)
+
+      all[boundary - 1].focus()
+      await user.keyboard('{ArrowDown}')
+      expect(all[boundary]).toHaveFocus()
+    })
+
+    it('wraps around at both ends of the list', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilder {...defaultProps} />)
+      const all = entries()
+      const last = all[all.length - 1]
+
+      all[0].focus()
+      await user.keyboard('{ArrowUp}')
+      expect(last).toHaveFocus()
+
+      await user.keyboard('{ArrowDown}')
+      expect(all[0]).toHaveFocus()
+    })
+
+    it('enters the list from the filter input', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilder {...defaultProps} />)
+      const all = entries()
+
+      screen.getByRole('searchbox', { name: /filter templates/i }).focus()
+      await user.keyboard('{ArrowDown}')
+      expect(all[0]).toHaveFocus()
+    })
+
+    it('traverses only the entries left by the filter', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilder {...defaultProps} />)
+
+      await user.type(screen.getByRole('searchbox', { name: /filter templates/i }), 'eisenhower')
+      const filtered = entries()
+      expect(filtered.length).toBeLessThan(5)
+
+      filtered[0].focus()
+      await user.keyboard('{ArrowUp}')
+      expect(filtered[filtered.length - 1]).toHaveFocus()
+    })
+
+    it('leaves the form untouched until the focused entry is activated', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilder {...defaultProps} />)
+      const nameField = screen.getByRole('textbox', { name: /framework name/i })
+      await user.type(nameField, 'My own name')
+
+      const [first, second] = entries()
+      first.focus()
+      await user.keyboard('{ArrowDown}')
+      expect(second).toHaveFocus()
+      // Arrowing past a template must not overwrite what the user typed.
+      expect(nameField).toHaveValue('My own name')
+
+      await user.keyboard('{Enter}')
+      expect(nameField).toHaveValue('Eisenhower Matrix')
+    })
+
+    it('navigates inside the mobile picker dialog', async () => {
+      const user = userEvent.setup()
+      vi.mocked(useIsMobile).mockReturnValue(true)
+      render(<FrameworkBuilder {...defaultProps} />)
+      await user.click(screen.getByRole('button', { name: /choose a template/i }))
+
+      // The dialog opens with the filter input focused.
+      const all = entries()
+      await user.keyboard('{ArrowDown}{ArrowDown}')
+      expect(all[1]).toHaveFocus()
     })
   })
 })

@@ -14,6 +14,14 @@
 
 ## Log
 
+- 2026-07-26:17:28:10 — IMPRV-005 — started
+- 2026-07-26:17:27:27 — DSGN-001 — blocked: left in 1-inbox, not started.
+  `work-start/types/design.md` is still "TO BE DEFINED — owner: human", so the
+  deliverable (proposal for review vs. implemented UI) and the definition of
+  done for design tickets are undefined. Needs a human call.
+- 2026-07-26:17:25:30 — BUG-013 — done: floating sidebar opener is now
+  desktop-only; builder and empty state carry their own in-flow trigger via a
+  new SidebarToggleButton atom, 379/379 green (commit e10894f)
 - 2026-07-26:17:16:57 — BUG-013 — started
 - 2026-07-26:17:09:35 — DSGN-001 — defined: y-axis affordance reads as vertical
   left-edge axis on builder

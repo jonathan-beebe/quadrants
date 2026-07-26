@@ -4,6 +4,7 @@ import { deriveColors, defaultColors } from '../colors'
 import { useIsMobile } from '../hooks/useIsMobile'
 import { useFocusTrap } from '../hooks/useFocusTrap'
 import { useClickOutside } from '../hooks/useClickOutside'
+import { useListArrowNav } from '../hooks/useListArrowNav'
 import PageTitle from './atoms/PageTitle'
 import SectionLabel from './atoms/SectionLabel'
 import Caption from './atoms/Caption'
@@ -46,6 +47,7 @@ export default function FrameworkBuilder({
   const panelRef = useRef<HTMLDivElement>(null)
   const triggerRef = useRef<HTMLButtonElement>(null)
   const searchRef = useRef<HTMLInputElement>(null)
+  const entriesRef = useRef<HTMLDivElement>(null)
 
   const isValid = name.trim() && quadrants.every((q) => q.trim())
 
@@ -94,6 +96,7 @@ export default function FrameworkBuilder({
   // matching Escape (A11Y-016).
   useClickOutside(panelRef, closeList, listOpen, triggerRef)
   const handlePanelKeyDown = useFocusTrap(panelRef, closeList)
+  const handleEntriesKeyDown = useListArrowNav(entriesRef)
 
   // Focus the filter input when the mobile dropdown opens.
   useEffect(() => {
@@ -124,7 +127,7 @@ export default function FrameworkBuilder({
   const selectedLabel = selected === CUSTOM_KEY ? 'Blank / Custom' : selected
 
   const list = (
-    <div className="flex flex-col gap-2 min-h-0 flex-1">
+    <div className="flex flex-col gap-2 min-h-0 flex-1" onKeyDown={handleEntriesKeyDown}>
       <input
         ref={searchRef}
         type="search"
@@ -134,7 +137,7 @@ export default function FrameworkBuilder({
         aria-label="Filter templates"
         className="px-3 py-2 border border-border rounded-lg text-sm outline-none transition-[border-color] duration-150 focus:border-accent bg-surface text-text"
       />
-      <div className="flex flex-col gap-3 overflow-y-auto min-h-0 flex-1 pr-1">
+      <div ref={entriesRef} className="flex flex-col gap-3 overflow-y-auto min-h-0 flex-1 pr-1">
         <button
           type="button"
           aria-current={selected === CUSTOM_KEY ? 'true' : undefined}
