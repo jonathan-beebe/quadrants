@@ -67,6 +67,27 @@ CSS variables (Chromium only); and the `svh` / `lvh` / `dvh` units, noting that
 on iOS the keyboard shifts the visual viewport without shrinking the layout
 viewport, so `dvh` may not move at all there.
 
+Ruled out before device testing: `env(safe-area-inset-*)` cannot size a
+container around the keyboard. Safe-area insets describe static display
+obstructions — the notch, the home indicator, rounded corners — and are constant
+for the life of an orientation; the keyboard is not part of that model and does
+not grow them. On iOS the expectation is worse than neutral: the keyboard covers
+the home indicator, so `safe-area-inset-bottom` is expected to report `0` while
+the keyboard is up, moving a `calc()` sized against it in the wrong direction.
+Confirm that on device — it is cheap to check alongside item 1 and may vary by
+iOS version and between Safari and standalone mode — but do not spend a session
+on it as a candidate mechanism. The keyboard-shaped analog is
+`env(keyboard-inset-bottom)` from the VirtualKeyboard API already listed above,
+which is Chromium-only and leaves iOS to `visualViewport`.
+
+Baseline for that work: the app has no safe-area handling today. `index.html:5`
+is `width=device-width, initial-scale=1.0` with no `viewport-fit=cover`, and
+there is no `env(...)` anywhere in the source, so all four insets currently
+resolve to `0`. Safe areas still belong in the implementation follow-up for a
+separate reason — a container sized against the visual viewport should also
+clear the home indicator in the no-keyboard state — but as a second inset
+composed with the keyboard measurement, not as a substitute for it.
+
 On holding the keyboard open: there is no API to summon a keyboard without a
 focused editable element, and moving focus between inputs synchronously within
 the same user gesture is the known way to avoid a dismissal — worth testing

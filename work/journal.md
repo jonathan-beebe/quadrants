@@ -10,10 +10,13 @@
 - MAINT: 6
 - A11Y: 21
 - RFCTR: 6
-- BUG: 15
+- BUG: 16
 
 ## Log
 
+- 2026-07-26:18:36:18 — BUG-015 — started
+- 2026-07-26:18:23:35 — BUG-015 — defined: mobile safari bottom toolbar occludes
+  the quadrant canvas footer controls
 - 2026-07-26:18:03:36 — BUG-014 — done: the four navigating drawer actions
   (select, New Framework, Import, Duplicate) now dismiss the mobile drawer and
   land focus on `<main>` (tabIndex -1) instead of stranding it on the detached
