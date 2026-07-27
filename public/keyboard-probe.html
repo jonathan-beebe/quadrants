@@ -446,7 +446,7 @@ top 80% — the blind spot</textarea
         t0: performance.now(),
         log: [],
         snapshots: [],
-        lastVvHeight: vv ? vv.height : null,
+        lastKeyboardUp: false,
       }
 
       function stamp() {
@@ -488,11 +488,27 @@ top 80% — the blind spot</textarea
           kbInsetBottom: Math.round(parseFloat(kb.paddingBottom) || 0),
           activeElement: describe(document.activeElement),
         }
-        // How much of the layout viewport the keyboard (or other UI) is covering.
-        m.occludedPx = vv
-          ? Math.max(0, Math.round(window.innerHeight - (vv.height + vv.offsetTop)))
+        // Keyboard height, measured against documentElement.clientHeight.
+        //
+        // NOT window.innerHeight: on iOS that is the *dynamic* viewport and
+        // swings with the Safari toolbar (660 <-> 768 observed) while the
+        // keyboard is doing nothing. clientHeight held at 660 across every
+        // sample of both device runs, so it is the stable reference.
+        //
+        // And not `innerHeight - (vv.height + vv.offsetTop)`, the first attempt:
+        // iOS scrolls the visual viewport within the layout viewport when a
+        // field is focused, so offsetTop absorbs exactly what the shrunken
+        // height gave up and the two cancel to zero. That reported
+        // "keyboard up: no" with vv.height collapsed 768 -> 365.
+        m.keyboardPx = vv ? Math.max(0, Math.round(m.clientHeight - vv.height)) : null
+        m.keyboardUp = m.keyboardPx != null && m.keyboardPx > 120
+        // Where the visible slice sits inside the layout viewport. Content can
+        // be lost off the top (iOS scrolled past it) as well as under the
+        // keyboard, and a fixed-position container loses both ends.
+        m.hiddenAbove = vv ? Math.round(vv.offsetTop) : null
+        m.hiddenBelow = vv
+          ? Math.max(0, Math.round(m.clientHeight - (vv.offsetTop + vv.height)))
           : null
-        m.keyboardUp = m.occludedPx != null && m.occludedPx > 100
         // Does the LAYOUT viewport shrink (Chromium resizes-content) or only the
         // VISUAL one (iOS)? This is the single most decisive number on the page.
         m.layoutViewportShrank = m.svh > 0 ? m.clientHeight < m.svh - 20 : null
@@ -512,7 +528,8 @@ top 80% — the blind spot</textarea
 
       const LIVE_ROWS = [
         ['keyboard up', (m) => (m.keyboardUp ? 'YES' : 'no'), true],
-        ['occluded px', (m) => m.occludedPx],
+        ['keyboard px', (m) => m.keyboardPx, true],
+        ['hidden above / below', (m) => `${m.hiddenAbove} / ${m.hiddenBelow}`],
         [
           'layout vp shrank',
           (m) => (m.layoutViewportShrank == null ? '?' : m.layoutViewportShrank ? 'YES' : 'no'),
@@ -558,7 +575,10 @@ top 80% — the blind spot</textarea
           hasVirtualKeyboardAPI: 'virtualKeyboard' in navigator,
           supportsSvh: CSS.supports('height', '100svh'),
           supportsDvh: CSS.supports('height', '100dvh'),
-          supportsKeyboardInset: CSS.supports('padding-bottom', 'env(keyboard-inset-bottom)'),
+          // Unreliable, kept only to record that it lies: CSS.supports accepts
+          // any env() name that merely parses, so iOS 18 reports true here
+          // while implementing nothing. hasVirtualKeyboardAPI is the real gate.
+          claimsKeyboardInsetSupport: CSS.supports('padding-bottom', 'env(keyboard-inset-bottom)'),
         }
       }
 
@@ -576,7 +596,7 @@ top 80% — the blind spot</textarea
         $('snapCount').textContent = `${state.snapshots.length} captured`
         log(
           'SNAPSHOT',
-          `${label} — occluded ${m.occludedPx}px, vv.height ${m.vvHeight}, clientHeight ${m.clientHeight}`,
+          `${label} — keyboard ${m.keyboardPx}px, vv.height ${m.vvHeight}, clientHeight ${m.clientHeight}`,
         )
       }
 
@@ -589,13 +609,16 @@ top 80% — the blind spot</textarea
           kind,
           `vv.h ${m.vvHeight} vv.top ${m.vvOffsetTop} inner ${m.innerHeight} client ${m.clientHeight}`,
         )
-        // Auto-snapshot on keyboard transitions.
-        if (vv && state.lastVvHeight != null) {
-          const delta = vv.height - state.lastVvHeight
-          if (delta < -100) snapshot('auto: keyboard opened')
-          else if (delta > 100) snapshot('auto: keyboard closed')
+        // Auto-snapshot on keyboard transitions only. Snapshotting on a raw
+        // height delta misfired on the Safari toolbar, whose retract/expand is
+        // a 108px change — over the old 100px threshold. Tracking the derived
+        // keyboardUp edge ignores it, and the toolbar is distinguishable
+        // anyway: it ramps over ~500ms of events where the keyboard lands in a
+        // single discontinuous jump.
+        if (m.keyboardUp !== state.lastKeyboardUp) {
+          snapshot(m.keyboardUp ? 'auto: keyboard opened' : 'auto: keyboard closed')
+          state.lastKeyboardUp = m.keyboardUp
         }
-        if (vv) state.lastVvHeight = vv.height
       }
 
       if (vv) {
@@ -618,10 +641,11 @@ top 80% — the blind spot</textarea
       function watchHold(name) {
         if (!vv) return
         const start = vv.height
-        const full = $('svhProbe').offsetHeight
         let restored = false
+        // Same derived signal the rest of the page uses, so a toolbar movement
+        // mid-test cannot be misread as the keyboard collapsing.
         const tick = () => {
-          if (vv.height > full - 100) restored = true
+          if (document.documentElement.clientHeight - vv.height <= 120) restored = true
         }
         const iv = setInterval(tick, 50)
         setTimeout(() => {
@@ -715,13 +739,21 @@ top 80% — the blind spot</textarea
 
       function renderChainLive(m) {
         if (!$('chain').classList.contains('on')) return
+        // getBoundingClientRect is relative to the LAYOUT viewport, and #chain
+        // is position:fixed, so the cell's rect and the visual viewport's
+        // offset/height are in the same coordinate space. A fixed container
+        // loses both ends when iOS scrolls the visual viewport: the top slides
+        // out of view above, the bottom goes under the keyboard.
         const wrap = $('chainWrap').getBoundingClientRect()
-        const vvBottom = (m.vvOffsetTop || 0) + (m.vvHeight || 0)
-        const hidden = Math.max(0, Math.round(wrap.bottom - vvBottom))
+        const vvTop = m.vvOffsetTop || 0
+        const vvBottom = vvTop + (m.vvHeight || 0)
+        const above = Math.max(0, Math.round(vvTop - wrap.top))
+        const below = Math.max(0, Math.round(wrap.bottom - vvBottom))
+        const visible = Math.max(0, Math.round(wrap.height) - above - below)
         $('chainLive').innerHTML =
-          `<strong>cell</strong> ${Math.round(wrap.height)}px tall, bottom at ${Math.round(wrap.bottom)} · ` +
-          `<strong>visible bottom</strong> ${Math.round(vvBottom)} · ` +
-          `<span class="hl">${hidden}px of the cell is under the keyboard</span>`
+          `<strong>cell</strong> ${Math.round(wrap.height)}px tall · ` +
+          `<strong>visible</strong> ${visible}px · ` +
+          `<span class="hl">${below}px under the keyboard, ${above}px scrolled off the top</span>`
         if (vv) $('chainLive').style.top = `${vv.offsetTop}px`
         if (chainSizeMode === 'vv') applyChainSize()
       }
