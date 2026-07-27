@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-07-27:11:28:03 — BUG-016 — done: form controls are floored at 16px under
+  a coarse pointer, so focus no longer triggers the iOS layout-viewport zoom
 - 2026-07-27:11:16:50 — BUG-016 — started
 - 2026-07-27:11:15:39 — BUG-016 — defined: mobile inputs under 16px make iOS
   auto-zoom and clip the canvas

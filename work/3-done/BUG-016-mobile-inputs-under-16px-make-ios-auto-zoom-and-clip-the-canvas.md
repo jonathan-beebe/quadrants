@@ -1,7 +1,7 @@
 ---
 id: BUG-016
 type: bug
-status: open
+status: resolved
 created: 2026-07-27
 ---
 
