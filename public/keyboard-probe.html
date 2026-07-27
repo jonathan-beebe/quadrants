@@ -459,6 +459,9 @@
           <button type="button" id="chainEditorBtn" style="min-height: 36px; font-size: 13px">
             editor: inline
           </button>
+          <button type="button" id="chainCopyBtn" style="min-height: 36px; font-size: 13px">
+            Copy
+          </button>
           <button type="button" id="chainCloseBtn" style="min-height: 36px; font-size: 13px">
             Close
           </button>
@@ -664,7 +667,13 @@ top 80% — the blind spot</textarea
       // ---- Snapshots ------------------------------------------------------
       function snapshot(label) {
         const m = measure()
-        state.snapshots.push({ label, t: round(performance.now() - state.t0), ...m })
+        const chain = chainMetrics(m)
+        state.snapshots.push({
+          label,
+          t: round(performance.now() - state.t0),
+          ...m,
+          ...(chain ? { chain } : {}),
+        })
         $('snapCount').textContent = `${state.snapshots.length} captured`
         log(
           'SNAPSHOT',
@@ -817,6 +826,11 @@ top 80% — the blind spot</textarea
           'TOPSHEET',
           `opened for "${(source && source.value.trim()) || '?'}" — focus taken in gesture`,
         )
+        // Two captures: one now, one after iOS has settled. A pan, if it comes
+        // at all, arrives after the keyboard animates in — so an immediate
+        // reading on its own could report a clean 0 and be wrong.
+        snapshot('topsheet: opened')
+        setTimeout(() => snapshot('topsheet: settled +700ms'), 700)
       }
 
       function closeTopSheet(reason) {
@@ -857,29 +871,56 @@ top 80% — the blind spot</textarea
           chainSizeMode === 'svh' ? 'size: 100svh' : 'size: visualViewport'
       }
 
-      function renderChainLive(m) {
-        if (!$('chain').classList.contains('on')) return
-        // getBoundingClientRect is relative to the LAYOUT viewport, and #chain
-        // is position:fixed, so the cell's rect and the visual viewport's
-        // offset/height are in the same coordinate space. A fixed container
-        // loses both ends when iOS scrolls the visual viewport: the top slides
-        // out of view above, the bottom goes under the keyboard.
+      /**
+       * The chain overlay's derived figures. Returns null when the overlay is
+       * closed. Kept separate from rendering so snapshots carry the same
+       * numbers the readout shows — otherwise `pan`, the figure the top-sheet
+       * model stands or falls on, would only ever exist on screen.
+       *
+       * getBoundingClientRect is relative to the LAYOUT viewport, and #chain is
+       * position:fixed, so the cell's rect and the visual viewport's
+       * offset/height are in the same coordinate space. A fixed container loses
+       * both ends: the top slides out of view above, the bottom goes under the
+       * keyboard.
+       */
+      function chainMetrics(m) {
+        if (!$('chain').classList.contains('on')) return null
         const wrap = $('chainWrap').getBoundingClientRect()
         const vvTop = m.vvOffsetTop || 0
         const vvBottom = vvTop + (m.vvHeight || 0)
         const above = Math.max(0, Math.round(vvTop - wrap.top))
         const below = Math.max(0, Math.round(wrap.bottom - vvBottom))
-        const visible = Math.max(0, Math.round(wrap.height) - above - below)
+        return {
+          editor: chainEditor,
+          sizeMode: chainSizeMode,
+          overflow: chainOverflow,
+          cellHeight: Math.round(wrap.height),
+          visible: Math.max(0, Math.round(wrap.height) - above - below),
+          hiddenAbove: above,
+          hiddenBelow: below,
+          // The claim under test: with a top-aligned editor iOS should never
+          // need to pan, so this must stay 0.
+          pan: Math.round(vvTop),
+          canvasLeft:
+            chainEditor === 'sheet'
+              ? Math.max(0, Math.round(vvBottom - $('topSheet').getBoundingClientRect().bottom))
+              : null,
+        }
+      }
+
+      function renderChainLive(m) {
+        const c = chainMetrics(m)
+        if (!c) return
+        const { visible, hiddenAbove: above, hiddenBelow: below } = c
+        const vvTop = m.vvOffsetTop || 0
+        const vvBottom = vvTop + (m.vvHeight || 0)
         $('chainLive').innerHTML =
-          `<strong>cell</strong> ${Math.round(wrap.height)}px tall · ` +
+          `<strong>cell</strong> ${c.cellHeight}px tall · ` +
           `<strong>visible</strong> ${visible}px · ` +
           `<span class="hl">${below}px under the keyboard, ${above}px scrolled off the top</span>` +
-          (chainEditor === 'sheet'
-            ? ` · <strong>pan</strong> <span class="hl">${Math.round(vvTop)}px</span>` +
-              ` (must stay 0) · <strong>canvas left</strong> ${Math.max(
-                0,
-                Math.round(vvBottom - $('topSheet').getBoundingClientRect().bottom),
-              )}px`
+          (c.editor === 'sheet'
+            ? ` · <strong>pan</strong> <span class="hl">${c.pan}px</span> (must stay 0)` +
+              ` · <strong>canvas left</strong> ${c.canvasLeft}px`
             : '')
         // Pinned to the BOTTOM of the visible slice, not the top: the top is
         // where the content under test lives — the top-aligned editor sheet in
@@ -926,27 +967,39 @@ top 80% — the blind spot</textarea
       })
 
       // ---- Report ---------------------------------------------------------
-      $('copyBtn').addEventListener('click', async () => {
+      async function copyReport(statusEl) {
+        const m = measure()
+        const chain = chainMetrics(m)
         const report = {
           ticket: 'RSRCH-002',
           capturedAt: new Date().toISOString(),
           environment: environment(),
-          current: measure(),
+          current: { ...m, ...(chain ? { chain } : {}) },
           snapshots: state.snapshots,
           log: state.log,
         }
         const text = JSON.stringify(report, null, 2)
         try {
           await navigator.clipboard.writeText(text)
-          $('copyStatus').textContent = 'Copied.'
+          statusEl.textContent = 'Copied.'
         } catch {
           // Clipboard is gesture- and permission-gated; fall back to selectable text.
           const ta = document.createElement('textarea')
           ta.value = text
           ta.style.height = '300px'
-          $('copyStatus').textContent = 'Clipboard blocked — select and copy manually:'
-          $('copyStatus').after(ta)
+          statusEl.textContent = 'Clipboard blocked — select and copy manually:'
+          statusEl.after(ta)
         }
+      }
+
+      $('copyBtn').addEventListener('click', () => copyReport($('copyStatus')))
+      // The main Copy button sits on the page behind the overlay, so copying
+      // used to mean closing the overlay first — which dismisses the keyboard
+      // and throws away the state being measured.
+      $('chainCopyBtn').addEventListener('click', () => {
+        copyReport($('chainCopyBtn'))
+        $('chainCopyBtn').textContent = 'Copied'
+        setTimeout(() => ($('chainCopyBtn').textContent = 'Copy'), 1500)
       })
 
       $('clearBtn').addEventListener('click', () => {
