@@ -252,6 +252,90 @@ Run on the smallest supported screen (iPhone SE, 375×667) as well as a current
 handset, and in both Safari and installed-standalone mode. On Chromium, repeat
 with `?iw=resizes-content`, `?iw=resizes-visual`, and `?iw=overlays-content`.
 
+## Device evidence — iOS 18.7, Safari, 402×874 (Outcome item 1: ANSWERED)
+
+Two runs, browser mode, portrait. Sections 3 and 4 not yet run.
+
+### Which viewport moves
+
+Neither the layout viewport nor any CSS unit responds to the keyboard.
+`documentElement.clientHeight` read **660 in every sample of both runs**,
+keyboard up or down; `svh` 660 and `lvh` 874 never moved. Only `visualViewport`
+reacts. The desk conclusion is confirmed empirically: `h-svh` cannot see the
+keyboard, and no choice of CSS unit fixes that.
+
+`dvh` deserves its own line, because it does move — 660 ↔ 768 — and it is moving
+for the wrong reason. It tracks the Safari toolbar retracting, and it **sat at
+660 while the keyboard was up and the visible area was 349**. BUG-015 rejected
+`dvh` for causing mid-interaction reflow; it would not have worked here
+regardless.
+
+### Measured geometry
+
+| state                          | `clientHeight` | `vv.height` | keyboard |
+| ------------------------------ | -------------: | ----------: | -------: |
+| toolbar expanded, no keyboard  |            660 |         660 |        0 |
+| toolbar retracted, no keyboard |            660 |         768 |        0 |
+| toolbar expanded, keyboard up  |            660 |     **349** |  **311** |
+| toolbar retracted, keyboard up |            660 |     **365** |  **295** |
+
+The keyboard takes **~47% of the small viewport**. Sizing the canvas to the
+visual viewport would leave ~349px, less the header (~46px) and the focused
+footer overlay (~44px) — roughly **259px of usable canvas, a 58% cut**. That is
+the real cost to weigh in item 3, and it is steep enough that "shrink the
+container" may lose to "scroll the field into view" on merit.
+
+### The detection formula
+
+```js
+keyboardPx = Math.max(
+  0,
+  document.documentElement.clientHeight - visualViewport.height,
+)
+```
+
+Correct in all four states above. The reference must be `clientHeight`, **not**
+`window.innerHeight` — on iOS that is the dynamic viewport and swings 660 ↔ 768
+with the toolbar while the keyboard is doing nothing.
+
+### iOS already scrolls the visual viewport
+
+`vv.offsetTop` reached 159.7 and 403 — non-zero **only** with the keyboard up,
+and zero through every toolbar transition. iOS is already trying to bring the
+focused field into view on its own. Whether it can do so when the ancestor is
+`overflow-hidden` is exactly Cause 1, still to be tested in section 3.
+
+Two consequences for any implementation. A `position: fixed` container loses
+content at _both_ ends when this happens — some scrolled off the top, some under
+the keyboard — so a fix that only subtracts height from the bottom is
+incomplete. And keyboard transitions are distinguishable from toolbar ones in
+the event stream: the keyboard lands in a single discontinuous jump (`768 → 365`
+in one event), where the toolbar ramps over ~500ms of dozens of events.
+
+### Ruled out by demonstration
+
+- **`safe-area-inset-bottom`** — reads 34 or 0, switched by _toolbar state_, not
+  the keyboard. Run 1 held 34 throughout with the keyboard up; run 2 held 0
+  throughout with the keyboard up. Uncorrelated in both directions. The ticket
+  predicted it would report 0 while the keyboard was up; the truth is it is not
+  tracking the keyboard at all. Dead either way.
+- **VirtualKeyboard API** — `navigator.virtualKeyboard` absent, every
+  `env(keyboard-inset-*)` read 0. As expected for iOS.
+
+Note for whoever reads the raw JSON:
+`CSS.supports('padding-bottom', 'env(keyboard-inset-bottom)')` returned **true**
+on iOS 18 despite nothing being implemented — `CSS.supports` accepts any `env()`
+name that merely parses. Do not feature-detect this way.
+
+### Probe corrections this run forced (commit 4b1b98b)
+
+The first build reported `keyboard up: no` with `vv.height` collapsed to 365.
+`occludedPx` was `innerHeight - (vv.height + vv.offsetTop)`, and since iOS
+scrolls the visual viewport, `offsetTop` absorbs exactly what the shrunken
+height gives up — the terms cancel to zero. Replaced with the `clientHeight`
+formula above. The 100px auto-snapshot threshold was also misfiring on the
+toolbar's 108px retract; it now tracks the derived `keyboardUp` edge.
+
 ## Blocked
 
 Not resolvable in this session. The Outcome requires evidence "gathered on real
