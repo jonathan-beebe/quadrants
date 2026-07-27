@@ -886,10 +886,20 @@ top 80% — the blind spot</textarea
       function chainMetrics(m) {
         if (!$('chain').classList.contains('on')) return null
         const wrap = $('chainWrap').getBoundingClientRect()
-        const vvTop = m.vvOffsetTop || 0
-        const vvBottom = vvTop + (m.vvHeight || 0)
-        const above = Math.max(0, Math.round(vvTop - wrap.top))
-        const below = Math.max(0, Math.round(wrap.bottom - vvBottom))
+        const vvHeight = m.vvHeight || 0
+        // Compared against [0, vv.height], NOT [vv.offsetTop, +vv.height]:
+        // once iOS pans, getBoundingClientRect reports relative to the VISUAL
+        // viewport, so the rect has already absorbed the offset. Subtracting it
+        // again double-counted the pan and reported a 563px cell as 669px
+        // hidden and 0px visible, when 277px of it was on screen.
+        //
+        // Evidence, from the inline-vs-sheet run: chainWrap.top read 97 unpanned
+        // and -286 under a 383px pan (97 - 383), and the fixed bottom probe read
+        // 768 unpanned and 385 panned (768 - 383). Both are exactly one pan
+        // apart, and position:fixed stayed anchored to the layout viewport
+        // throughout — only the coordinate space moved.
+        const above = Math.max(0, Math.round(-wrap.top))
+        const below = Math.max(0, Math.round(wrap.bottom - vvHeight))
         return {
           editor: chainEditor,
           sizeMode: chainSizeMode,
@@ -900,10 +910,10 @@ top 80% — the blind spot</textarea
           hiddenBelow: below,
           // The claim under test: with a top-aligned editor iOS should never
           // need to pan, so this must stay 0.
-          pan: Math.round(vvTop),
+          pan: Math.round(m.vvOffsetTop || 0),
           canvasLeft:
             chainEditor === 'sheet'
-              ? Math.max(0, Math.round(vvBottom - $('topSheet').getBoundingClientRect().bottom))
+              ? Math.max(0, Math.round(vvHeight - $('topSheet').getBoundingClientRect().bottom))
               : null,
         }
       }

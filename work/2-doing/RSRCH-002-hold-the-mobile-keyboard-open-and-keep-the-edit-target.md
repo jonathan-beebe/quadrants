@@ -336,6 +336,78 @@ height gives up — the terms cancel to zero. Replaced with the `clientHeight`
 formula above. The 100px auto-snapshot threshold was also misfiring on the
 toolbar's 108px retract; it now tracks the derived `keyboardUp` edge.
 
+## Device evidence — the top-aligned editor (Outcome item 3: ANSWERED)
+
+Mid-research the human proposed dropping inline canvas editing on mobile
+entirely: tapping an item opens a top-aligned editing surface with the text
+field and delete, while press-and-drag keeps working on the canvas. The probe
+grew an `editor: inline | sheet` mode to measure it before committing.
+
+### The A/B
+
+Same card, same session, 13 seconds apart. The sheet takes focus synchronously
+inside the pointerdown; it is pinned to the layout viewport with no JS
+repositioning, so nothing can mask a failure.
+
+| measure                     | inline | top sheet |
+| --------------------------- | -----: | --------: |
+| `pan` (`vv.offsetTop`)      |  383px |     **0** |
+| `pan` at +700ms             |      — |     **0** |
+| keyboard                    |  295px |     295px |
+| cell visible                |  277px |     268px |
+| canvas left below the sheet |      — |     225px |
+
+**iOS never panned with the top-aligned editor**, in either the immediate or the
+settled capture, where inline editing panned 383px. `pan` is raw `vv.offsetTop`
+— a single API value with no derivation — so this is the one number in the run
+that carries no interpretation risk.
+
+The keyboard also rose from a `focus()` called synchronously inside the
+pointerdown, confirming the desk hypothesis in the shape the app would use it:
+focus taken inside the gesture works. `Card.tsx:84`'s passive `useEffect` is the
+wrong tool; a layout effect, or focusing directly in the handler, is right.
+
+### What this buys
+
+The occlusion problem does not get managed, it stops existing. No
+`visualViewport` listener, so no BUG-012 hazard and nothing to disturb
+A11Y-019's inert/pan model. No container resizing, so none of the 58% canvas cut
+that sizing to the visual viewport would have cost. `overflow-hidden` blocking
+the browser's scroll-into-view (Cause 1) stops mattering. And the whole
+Chromium-vs-iOS mechanism split becomes moot — the remaining platform-specific
+question is raising the keyboard reliably, which is focus timing, not viewport
+geometry.
+
+It is also a net deletion. `autoFocusId` (`QuadrantCanvas.tsx:35`) exists only
+to focus a freshly-added inline card; BUG-009 was a stale `autoFocusId` and
+BUG-004 was placeholder cleanup after an inline cancel. All three are artifacts
+of editing in place. Moving delete into the editor also thins each card's
+interactive descendants, which is A11Y-001's complaint.
+
+### Two facts about iOS this run established
+
+**`getBoundingClientRect()` is relative to the visual viewport once iOS pans.**
+`chainWrap.top` read 97 unpanned and −286 under a 383px pan; the fixed bottom
+probe read 768 unpanned and 385 panned. Both are exactly one pan apart. The
+probe's first formula subtracted `vv.offsetTop` from coordinates that had
+already absorbed it, double-counting the pan and reporting a 563px cell as 669px
+hidden and 0px visible when 277px was on screen. Corrected in the table above.
+
+**`position: fixed` stays anchored to the layout viewport.** The fixed probe sat
+at layout 768 throughout; only the coordinate space moved. So bottom-pinned
+controls do not ride above the keyboard — with the sheet open, the focused
+quadrant's footer (ColorPicker / Add) sits 403px below the visible area,
+entirely unreachable. That is acceptable while editing, but it means the
+editor's own controls must live in the sheet, never pinned to the bottom.
+
+### Correcting the ticket's premise
+
+The Problem says "the grid resizes under the user between every item". It does
+not — `clientHeight` was 660 in every sample of every run. What moves under the
+user is iOS panning the visual viewport to rescue a field near the bottom. The
+complaint is real; the mechanism is not what was assumed. Put the field at the
+top and there is nothing to pan.
+
 ## Blocked
 
 Not resolvable in this session. The Outcome requires evidence "gathered on real
