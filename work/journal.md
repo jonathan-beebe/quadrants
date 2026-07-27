@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-27:09:17:14 — RFCTR-006 — done: keyboard-size judgment moved into the
+  core as isKeyboardSized, hook left with observation only
+- 2026-07-27:09:12:26 — RFCTR-006 — started
 - 2026-07-27:09:10:58 — MAINT-008 — done: the open-with-text-selected test now
   types into the modal and asserts the text was replaced, not appended
 - 2026-07-27:09:07:47 — MAINT-008 — started

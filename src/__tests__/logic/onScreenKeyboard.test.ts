@@ -1,5 +1,10 @@
 import { describe, it, expect } from 'vitest'
-import { expectsOnScreenKeyboard, decidingSignal, type OnScreenKeyboardSignals } from '../../logic/onScreenKeyboard'
+import {
+  expectsOnScreenKeyboard,
+  decidingSignal,
+  isKeyboardSized,
+  type OnScreenKeyboardSignals,
+} from '../../logic/onScreenKeyboard'
 
 /** A phone as the readable signals describe it, before anything is observed. */
 const phone: OnScreenKeyboardSignals = {
@@ -70,5 +75,29 @@ describe('expectsOnScreenKeyboard', () => {
 
   it('treats an observed absence on a real tablet with a keyboard case as correct', () => {
     expect(expectsOnScreenKeyboard({ ...iosSafari, observed: false })).toBe(false)
+  })
+})
+
+describe('isKeyboardSized', () => {
+  it('counts a real keyboard, measured on iOS at 295-311px', () => {
+    expect(isKeyboardSized(295)).toBe(true)
+    expect(isKeyboardSized(311)).toBe(true)
+  })
+
+  it('rejects the Safari toolbar retract, the main false positive at 108px', () => {
+    expect(isKeyboardSized(108)).toBe(false)
+  })
+
+  it('rejects an unchanged viewport', () => {
+    expect(isKeyboardSized(0)).toBe(false)
+  })
+
+  it('rejects a viewport taller than the layout, which is not a shrink at all', () => {
+    expect(isKeyboardSized(-40)).toBe(false)
+  })
+
+  it('draws the line at 120px, clear of the toolbar and well under any keyboard', () => {
+    expect(isKeyboardSized(119)).toBe(false)
+    expect(isKeyboardSized(120)).toBe(true)
   })
 })

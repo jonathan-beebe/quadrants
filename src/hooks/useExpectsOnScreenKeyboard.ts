@@ -1,5 +1,5 @@
 import { useSyncExternalStore } from 'react'
-import { expectsOnScreenKeyboard, decidingSignal, type OnScreenKeyboardSignals } from '../logic/onScreenKeyboard'
+import { expectsOnScreenKeyboard, isKeyboardSized, type OnScreenKeyboardSignals } from '../logic/onScreenKeyboard'
 
 /**
  * Devices whose primary pointer is coarse and that cannot hover: phones and
@@ -15,13 +15,6 @@ import { expectsOnScreenKeyboard, decidingSignal, type OnScreenKeyboardSignals }
  */
 const COARSE_POINTER = '(pointer: coarse)'
 const NO_HOVER = '(hover: none)'
-
-/**
- * A keyboard has to take at least this much of the viewport to count. Measured
- * on iOS under RSRCH-002 at 295-311px; the Safari toolbar, the main source of
- * false positives, moves 108px.
- */
-const KEYBOARD_MIN_PX = 120
 
 /** How long to wait after focusing a field before concluding no keyboard came. */
 const SETTLE_MS = 1200
@@ -53,7 +46,8 @@ function record(value: boolean) {
   notify()
 }
 
-function keyboardHeight(viewport: VisualViewport): number {
+/** How much of the layout viewport the visual viewport has given up, in px. */
+function viewportShrink(viewport: VisualViewport): number {
   // clientHeight, not innerHeight: on iOS innerHeight is the dynamic viewport
   // and swings with the browser toolbar while the keyboard does nothing.
   return document.documentElement.clientHeight - viewport.height
@@ -87,7 +81,7 @@ function install() {
   if (!viewport) return
 
   const onResize = () => {
-    if (keyboardHeight(viewport) >= KEYBOARD_MIN_PX) {
+    if (isKeyboardSized(viewportShrink(viewport))) {
       if (pendingTimer) {
         clearTimeout(pendingTimer)
         pendingTimer = null
@@ -98,14 +92,14 @@ function install() {
 
   const onFocusIn = (event: FocusEvent) => {
     if (!isEditable(event.target)) return
-    if (keyboardHeight(viewport) >= KEYBOARD_MIN_PX) {
+    if (isKeyboardSized(viewportShrink(viewport))) {
       record(true)
       return
     }
     if (pendingTimer) clearTimeout(pendingTimer)
     pendingTimer = setTimeout(() => {
       pendingTimer = null
-      record(keyboardHeight(viewport) >= KEYBOARD_MIN_PX)
+      record(isKeyboardSized(viewportShrink(viewport)))
     }, SETTLE_MS)
   }
 
@@ -167,8 +161,6 @@ export function useOnScreenKeyboardSignals(): OnScreenKeyboardSignals {
 export function useExpectsOnScreenKeyboard(): boolean {
   return expectsOnScreenKeyboard(useOnScreenKeyboardSignals())
 }
-
-export { decidingSignal }
 
 /**
  * Test-only. The observation is module state by design — it describes the

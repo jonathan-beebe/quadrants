@@ -47,6 +47,29 @@ export function expectsOnScreenKeyboard(signals: OnScreenKeyboardSignals): boole
   return signals.coarsePointer && signals.noHover
 }
 
+/**
+ * How much the visual viewport has to give up before the shrink counts as a
+ * keyboard rather than browser chrome.
+ *
+ * Measured on iOS under RSRCH-002: real keyboards took 295-311px, while the
+ * Safari toolbar — the main source of false positives — moves 108px. 120px sits
+ * clear of the toolbar with an order of magnitude of headroom below the
+ * smallest keyboard.
+ */
+const KEYBOARD_MIN_PX = 120
+
+/**
+ * Whether a shrink of the visual viewport is an on-screen keyboard.
+ *
+ * Takes the shrink rather than the two heights: which heights to subtract is a
+ * DOM question the shell answers (`clientHeight`, not `innerHeight` — on iOS
+ * `innerHeight` is the dynamic viewport and swings with the browser toolbar
+ * while the keyboard does nothing). How big it has to be is this question.
+ */
+export function isKeyboardSized(shrinkPx: number): boolean {
+  return shrinkPx >= KEYBOARD_MIN_PX
+}
+
 /** Which rule decided the verdict. For display; the design system shows it. */
 export function decidingSignal(signals: OnScreenKeyboardSignals): 'observed' | 'user-agent' | 'media-query' {
   if (signals.observed !== null) return 'observed'
