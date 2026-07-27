@@ -264,7 +264,13 @@ export default function FrameworkBuilder({
   const fullHeight = !editingFramework && !isMobile
 
   return (
-    <div className={`flex justify-center px-6 py-10 ${fullHeight ? 'h-screen' : 'min-h-screen'}`}>
+    // Sized against <main>, not the viewport. These were `h-screen` /
+    // `min-h-screen`, which on iOS is the large viewport — taller than the
+    // shell, so locking the shell would have moved the toolbar-height scroll
+    // into <main> rather than removing it (BUG-017). `min-h-full` keeps the
+    // flow behavior this branch wants: fill <main>, and scroll it only when the
+    // form genuinely outgrows it, as it can on a short phone.
+    <div className={`flex justify-center px-6 py-10 ${fullHeight ? 'h-full' : 'min-h-full'}`}>
       <div className={`w-full max-w-[860px] ${fullHeight ? 'flex flex-col min-h-0' : ''}`}>
         <div className="flex items-center justify-between mb-8 shrink-0">
           <div className="flex items-center gap-2 min-w-0">
@@ -302,7 +308,10 @@ export default function FrameworkBuilder({
                   aria-modal="true"
                   aria-label="Choose a template"
                   onKeyDown={handlePanelKeyDown}
-                  className="absolute left-0 right-0 top-full mt-1 z-[200] max-h-[60vh] flex flex-col p-2 bg-surface border border-border rounded-lg shadow-lg">
+                  // 60svh, not 60vh: this popover is mobile-only, and a cap
+                  // measured against the large viewport lets it run past the
+                  // visible one (BUG-017).
+                  className="absolute left-0 right-0 top-full mt-1 z-[200] max-h-[60svh] flex flex-col p-2 bg-surface border border-border rounded-lg shadow-lg">
                   {list}
                 </div>
               )}

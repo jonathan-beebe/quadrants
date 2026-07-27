@@ -29,7 +29,12 @@ export default class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBo
     if (this.props.fallback) return this.props.fallback
 
     return (
-      <div role="alert" className="flex flex-col items-center justify-center h-screen gap-4 p-8 text-center">
+      // h-svh rather than h-full: this fallback renders in two places — inside
+      // <main>, and at the root wrapping <App> (main.tsx), where #root has no
+      // definite height for a percentage to resolve against. svh is correct in
+      // both, and matches the shell so the in-<main> case adds no scroll
+      // (BUG-017).
+      <div role="alert" className="flex flex-col items-center justify-center h-svh gap-4 p-8 text-center">
         <PageTitle>Something went wrong</PageTitle>
         <p className="text-text-secondary text-sm max-w-md">{this.state.error.message}</p>
         <Button onClick={() => this.setState({ error: null })}>Try again</Button>

@@ -10,10 +10,16 @@
 - MAINT: 9
 - A11Y: 21
 - RFCTR: 8
-- BUG: 17
+- BUG: 18
 
 ## Log
 
+- 2026-07-27:15:27:10 — BUG-017 — started
+- 2026-07-27:15:22:33 — BUG-017 — rescoped to the whole app shell: the shell and
+  canvas lock to the visible viewport, scrolling only where a surface asks for
+  it
+- 2026-07-27:15:19:07 — BUG-017 — defined: mobile canvas page scrolls because
+  the app shell is sized to the large viewport
 - 2026-07-27:11:28:03 — BUG-016 — done: form controls are floored at 16px under
   a coarse pointer, so focus no longer triggers the iOS layout-viewport zoom
 - 2026-07-27:11:16:50 — BUG-016 — started

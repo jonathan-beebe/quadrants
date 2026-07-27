@@ -163,13 +163,17 @@ export default function QuadrantCanvas({
   const Grid = isMobile ? MobileQuadrantGrid : QuadrantGrid
 
   return (
-    // h-svh, not h-screen: `vh` resolves to the large viewport, so the canvas
-    // bottom — and the zoomed cell's footer controls pinned to it — rendered
-    // behind mobile Safari's bottom toolbar (BUG-015). `svh` is the viewport
-    // with browser chrome shown. Deliberately not `dvh`: a unit that changes as
-    // chrome retracts would resize the canvas mid-interaction and reintroduce
-    // the card-position shift 4996ae3 removed.
-    <div className={`flex flex-col h-svh select-none ${isMobile ? 'p-0' : 'p-6'}`}>
+    // h-full: the canvas fills <main> exactly, so there is nothing for <main>
+    // to scroll and the canvas stays fixed under a drag. This was `h-svh`, from
+    // BUG-015 — `vh` had put the canvas bottom, and the zoomed cell's footer
+    // controls pinned to it, behind mobile Safari's toolbar. The shell now
+    // states that height once (App.tsx) and this defers to it; two independent
+    // claims on the viewport is what BUG-017 was.
+    //
+    // Still deliberately not `dvh` anywhere in the chain: a unit that changes
+    // as chrome retracts would resize the canvas mid-interaction and
+    // reintroduce the card-position shift 4996ae3 removed.
+    <div className={`flex flex-col h-full select-none ${isMobile ? 'p-0' : 'p-6'}`}>
       <div
         className={`flex items-center justify-between shrink-0 ${isMobile ? 'px-3 py-2.5 border-b border-border' : 'mb-5'} ${!isMobile && !sidebarOpen ? 'pl-12' : ''}`}>
         <div className="flex items-center gap-2 min-w-0">
