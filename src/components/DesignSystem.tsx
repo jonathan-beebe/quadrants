@@ -386,9 +386,13 @@ function MobileGridDemo() {
   const canvasRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
 
   return (
+    // 375x667 is the iPhone SE, the smallest screen the grid supports — but as
+    // a ceiling, not a floor. Pinned to exactly 375 it overflowed the page on
+    // any phone narrower than 375 + the page gutters, scrolling the whole
+    // design system sideways.
     <div
-      className="border border-border rounded-xl overflow-hidden bg-bg flex flex-col"
-      style={{ width: 375, height: 667 }}>
+      className="border border-border rounded-xl overflow-hidden bg-bg flex flex-col w-full"
+      style={{ maxWidth: 375, height: 667 }}>
       <MobileQuadrantGrid
         framework={framework}
         drag={null}
@@ -454,7 +458,7 @@ export default function DesignSystem() {
 
   return (
     <div className="min-h-screen bg-bg">
-      <header className="sticky top-0 z-10 bg-surface border-b border-border px-8 py-4 flex items-center justify-between">
+      <header className="sticky top-0 z-10 bg-surface border-b border-border px-4 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-x-4 gap-y-2">
         <div className="flex items-center gap-4">
           <PageTitle>Design System</PageTitle>
           <a
@@ -466,7 +470,7 @@ export default function DesignSystem() {
         <ThemeToggleButton mode={mode} isDark={isDark} onCycleTheme={cycleMode} />
       </header>
 
-      <main className="max-w-4xl mx-auto px-8 py-8">
+      <main className="max-w-4xl mx-auto px-4 sm:px-8 py-8">
         {/* ── Atoms ── */}
         <SectionHeading>Atoms</SectionHeading>
 
