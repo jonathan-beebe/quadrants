@@ -292,6 +292,35 @@
         text-align: center;
         font-size: 12px;
       }
+      /* The proposed top-aligned mobile editor. Deliberately pinned to the
+         LAYOUT viewport (top: 0 within #chain), not to the visual viewport —
+         the whole claim under test is that iOS never needs to pan when the
+         field is already up here, so no JS repositioning is allowed to hide a
+         failure. */
+      #topSheet {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 30;
+        display: none;
+        flex-direction: column;
+        gap: 8px;
+        padding: 10px;
+        background: var(--surface);
+        border-bottom: 2px solid var(--accent);
+        box-shadow: 0 4px 16px rgb(0 0 0 / 18%);
+      }
+      #topSheet.on {
+        display: flex;
+      }
+      /* In sheet mode the card is a tap target, not an edit surface. */
+      #chain.sheet .simcard textarea {
+        pointer-events: none;
+      }
+      #chain.sheet .simcard {
+        cursor: pointer;
+      }
       /* Readout pinned to the visual viewport while the chain overlay is up. */
       #chainLive {
         position: fixed;
@@ -427,10 +456,28 @@
           <button type="button" id="chainOverflowBtn" style="min-height: 36px; font-size: 13px">
             overflow: hidden
           </button>
+          <button type="button" id="chainEditorBtn" style="min-height: 36px; font-size: 13px">
+            editor: inline
+          </button>
           <button type="button" id="chainCloseBtn" style="min-height: 36px; font-size: 13px">
             Close
           </button>
         </span>
+      </div>
+      <!-- The proposed mobile editing surface: tapping a card opens a
+           top-aligned sheet instead of editing in place. Focus is taken
+           synchronously inside the tap so the gesture rule is exercised too. -->
+      <div id="topSheet" role="dialog" aria-modal="true" aria-label="Edit item">
+        <label class="sr" for="topSheetInput">Item text</label>
+        <textarea id="topSheetInput" rows="2"></textarea>
+        <div style="display: flex; gap: 8px; justify-content: space-between">
+          <button type="button" id="topSheetDelete" style="min-height: 40px; font-size: 13px">
+            Delete
+          </button>
+          <button type="button" id="topSheetDone" style="min-height: 40px; font-size: 13px">
+            Done
+          </button>
+        </div>
       </div>
       <div id="chainWrap">
         <div id="chainGrid">
@@ -746,6 +793,54 @@ top 80% — the blind spot</textarea
       // ---- Section 3: chain overlay ---------------------------------------
       let chainSizeMode = 'svh'
       let chainOverflow = 'hidden'
+      let chainEditor = 'inline'
+
+      // ---- The proposed mobile editing model ------------------------------
+      // Tapping a card opens a top-aligned sheet rather than editing in place.
+      // Two things are under test at once:
+      //   1. Does iOS still pan the visual viewport? It should not need to —
+      //      the field sits ~50px down a 660px layout viewport and the visible
+      //      slice with the keyboard up measured 365px. `pan` must read 0.
+      //   2. Does focus taken synchronously inside the tap raise the keyboard?
+      //      This is the useLayoutEffect-vs-useEffect question from the desk
+      //      analysis, in the shape the real app would use it.
+      function openTopSheet(card) {
+        const source = card.querySelector('textarea')
+        const sheet = $('topSheet')
+        sheet.classList.add('on')
+        const input = $('topSheetInput')
+        input.value = source ? source.value : ''
+        // Synchronous focus, still inside the pointerdown gesture.
+        input.focus()
+        input.select()
+        log(
+          'TOPSHEET',
+          `opened for "${(source && source.value.trim()) || '?'}" — focus taken in gesture`,
+        )
+      }
+
+      function closeTopSheet(reason) {
+        $('topSheet').classList.remove('on')
+        $('topSheetInput').blur()
+        log('TOPSHEET', `closed (${reason})`)
+      }
+
+      document.querySelectorAll('#chainGrid .simcard').forEach((card) => {
+        card.addEventListener('pointerdown', (e) => {
+          if (chainEditor !== 'sheet') return
+          e.preventDefault()
+          openTopSheet(card)
+        })
+      })
+
+      $('topSheetDone').addEventListener('pointerdown', (e) => {
+        e.preventDefault()
+        closeTopSheet('Done')
+      })
+      $('topSheetDelete').addEventListener('pointerdown', (e) => {
+        e.preventDefault()
+        closeTopSheet('Delete')
+      })
 
       function applyChainSize() {
         const chain = $('chain')
@@ -778,7 +873,14 @@ top 80% — the blind spot</textarea
         $('chainLive').innerHTML =
           `<strong>cell</strong> ${Math.round(wrap.height)}px tall · ` +
           `<strong>visible</strong> ${visible}px · ` +
-          `<span class="hl">${below}px under the keyboard, ${above}px scrolled off the top</span>`
+          `<span class="hl">${below}px under the keyboard, ${above}px scrolled off the top</span>` +
+          (chainEditor === 'sheet'
+            ? ` · <strong>pan</strong> <span class="hl">${Math.round(vvTop)}px</span>` +
+              ` (must stay 0) · <strong>canvas left</strong> ${Math.max(
+                0,
+                Math.round(vvBottom - $('topSheet').getBoundingClientRect().bottom),
+              )}px`
+            : '')
         if (vv) $('chainLive').style.top = `${vv.offsetTop}px`
         if (chainSizeMode === 'vv') applyChainSize()
       }
@@ -806,6 +908,13 @@ top 80% — the blind spot</textarea
         $('chainWrap').style.overflow = chainOverflow
         $('chainOverflowBtn').textContent = `overflow: ${chainOverflow}`
         log('chain', `overflow → ${chainOverflow}`)
+      })
+      $('chainEditorBtn').addEventListener('click', () => {
+        chainEditor = chainEditor === 'inline' ? 'sheet' : 'inline'
+        $('chain').classList.toggle('sheet', chainEditor === 'sheet')
+        if (chainEditor === 'inline') closeTopSheet('mode switch')
+        $('chainEditorBtn').textContent = `editor: ${chainEditor}`
+        log('chain', `editor → ${chainEditor}`)
       })
 
       // ---- Report ---------------------------------------------------------
