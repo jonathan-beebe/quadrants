@@ -10,10 +10,13 @@
 - MAINT: 9
 - A11Y: 21
 - RFCTR: 8
-- BUG: 16
+- BUG: 17
 
 ## Log
 
+- 2026-07-27:11:16:50 — BUG-016 — started
+- 2026-07-27:11:15:39 — BUG-016 — defined: mobile inputs under 16px make iOS
+  auto-zoom and clip the canvas
 - 2026-07-27:09:21:29 — RFCTR-007 — done: EditModal ids come from useId, and the
   module-level counter is gone
 - 2026-07-27:09:18:29 — RFCTR-007 — started

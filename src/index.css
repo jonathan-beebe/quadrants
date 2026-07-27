@@ -121,6 +121,32 @@
   }
 }
 
+/* iOS Safari zooms the layout viewport whenever a text-entry control with a
+   computed font-size under 16px takes focus, and never restores the scale on
+   blur. The scaled layout viewport outgrows the visual one, so the canvas —
+   sized to the full viewport — spills past its edges and stays clipped until
+   the user pinches back out by hand (BUG-016). 16px is the documented
+   threshold, so floor every control there wherever the pointer is coarse.
+
+   Unlayered, like the reduced-motion block below: Tailwind v4 orders utilities
+   last, so a `text-sm` at a callsite would outrank this from inside @layer
+   base. Those callsite sizes are desktop type choices and stay in force there,
+   where no such zoom exists.
+
+   max() rather than a flat 16px so a control already larger keeps its size,
+   and only font-size is set — the paired line-heights from `text-sm` and
+   friends survive, which holds the vertical rhythm the layouts are built on.
+
+   Deliberately not paired with `user-scalable=no`: that violates WCAG SC 1.4.4
+   Resize Text, and iOS has ignored it for pinch since iOS 10 regardless. */
+@media (pointer: coarse) {
+  input,
+  textarea,
+  select {
+    font-size: max(16px, 1em);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   *,
   *::before,
