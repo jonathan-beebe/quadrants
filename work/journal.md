@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-27:15:35:42 — BUG-017 — done: the app shell sizes to `svh` and every
+  surface inside defers to it, so the document no longer scrolls; guarded by
+  viewportLock.test.ts. Device verification still outstanding
 - 2026-07-27:15:27:10 — BUG-017 — started
 - 2026-07-27:15:22:33 — BUG-017 — rescoped to the whole app shell: the shell and
   canvas lock to the visible viewport, scrolling only where a surface asks for
