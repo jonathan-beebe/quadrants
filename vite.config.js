@@ -95,6 +95,11 @@ export default defineConfig({
       },
       workbox: {
         globPatterns: ['**/*.{js,css,html,svg,png,woff2}'],
+        // keyboard-probe.html is a diagnostic instrument, not part of the app
+        // (RSRCH-002). Keeping it out of the precache stops it bloating the
+        // offline bundle and — since registerType is 'prompt' — stops a device
+        // reading a stale copy of the probe after it is edited.
+        globIgnores: ['**/keyboard-probe.html'],
       },
     }),
   ],

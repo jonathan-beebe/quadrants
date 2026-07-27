@@ -1,0 +1,791 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <!-- viewport-fit=cover so env(safe-area-inset-*) reports real values.
+         The app itself does NOT set this today (index.html:5) — the probe does
+         deliberately, to measure what the insets *would* report. -->
+    <meta
+      id="vp"
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#3b82f6" />
+    <title>Keyboard probe — RSRCH-002</title>
+    <script>
+      // interactive-widget is honored at parse time, so it cannot be toggled
+      // from a button. Reload with ?iw=resizes-content | resizes-visual |
+      // overlays-content to test each Chromium mode. Runs immediately after the
+      // meta element above so the value is in place before layout.
+      ;(function () {
+        var iw = new URLSearchParams(location.search).get('iw')
+        if (!iw) return
+        var vp = document.getElementById('vp')
+        vp.setAttribute('content', vp.getAttribute('content') + ', interactive-widget=' + iw)
+      })()
+    </script>
+    <style>
+      :root {
+        --bg: #fafafa;
+        --surface: #fff;
+        --text: #1a1a1a;
+        --muted: #5a5a5a;
+        --border: #d8d8d8;
+        --accent: #1d4ed8;
+        --good: #15803d;
+        --bad: #b91c1c;
+      }
+      @media (prefers-color-scheme: dark) {
+        :root {
+          --bg: #121212;
+          --surface: #1e1e1e;
+          --text: #f0f0f0;
+          --muted: #a8a8a8;
+          --border: #3a3a3a;
+          --accent: #93b4ff;
+          --good: #6ee7a8;
+          --bad: #fca5a5;
+        }
+      }
+      * {
+        box-sizing: border-box;
+      }
+      body {
+        margin: 0;
+        padding: 0 12px 40vh;
+        background: var(--bg);
+        color: var(--text);
+        font:
+          15px/1.45 -apple-system,
+          BlinkMacSystemFont,
+          system-ui,
+          sans-serif;
+        /* Project convention: all numbers are tabular. */
+        font-variant-numeric: tabular-nums;
+      }
+      h1 {
+        font-size: 17px;
+        margin: 12px 0 4px;
+      }
+      h2 {
+        font-size: 15px;
+        margin: 20px 0 6px;
+        padding-bottom: 4px;
+        border-bottom: 1px solid var(--border);
+      }
+      p {
+        margin: 6px 0;
+        color: var(--muted);
+        font-size: 13px;
+      }
+      /* Live metrics stay pinned to the top of the VISUAL viewport, so they
+         remain readable while the keyboard is up and iOS has shifted the
+         visual viewport down. JS keeps `top` in sync with vv.offsetTop. */
+      #live {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 50;
+        background: var(--surface);
+        border-bottom: 2px solid var(--accent);
+        padding: 6px 10px;
+        font-size: 12px;
+        max-height: 46vh;
+        overflow: auto;
+      }
+      #liveSpacer {
+        height: 190px;
+      }
+      table {
+        border-collapse: collapse;
+        width: 100%;
+        font-size: 12px;
+      }
+      td {
+        padding: 1px 4px 1px 0;
+        vertical-align: top;
+      }
+      td.k {
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      td.v {
+        text-align: right;
+        font-variant-numeric: tabular-nums;
+        white-space: nowrap;
+      }
+      .hl {
+        color: var(--accent);
+        font-weight: 600;
+      }
+      button {
+        font: inherit;
+        font-size: 14px;
+        min-height: 44px;
+        padding: 8px 12px;
+        margin: 3px 3px 3px 0;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+        color: var(--text);
+        cursor: pointer;
+      }
+      button:focus-visible,
+      textarea:focus-visible,
+      input:focus-visible {
+        outline: 3px solid var(--accent);
+        outline-offset: 2px;
+      }
+      textarea,
+      input[type='text'] {
+        font: inherit;
+        font-size: 16px; /* < 16px triggers iOS zoom-on-focus; keep it out of the way */
+        padding: 8px;
+        width: 100%;
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        background: var(--surface);
+        color: var(--text);
+      }
+      #log {
+        font:
+          11px/1.35 ui-monospace,
+          SFMono-Regular,
+          Menlo,
+          monospace;
+        font-variant-numeric: tabular-nums;
+        white-space: pre-wrap;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 8px;
+        height: 240px;
+        overflow: auto;
+      }
+      .verdict {
+        font-weight: 600;
+      }
+      .verdict.held {
+        color: var(--good);
+      }
+      .verdict.lost {
+        color: var(--bad);
+      }
+      /* Off-screen measurement probes. Laid out (not display:none) so the
+         viewport units and env() values actually resolve. */
+      .probe {
+        position: fixed;
+        left: -9999px;
+        top: 0;
+        width: 1px;
+        pointer-events: none;
+      }
+      #svhProbe {
+        height: 100svh;
+      }
+      #lvhProbe {
+        height: 100lvh;
+      }
+      #dvhProbe {
+        height: 100dvh;
+      }
+      #vhProbe {
+        height: 100vh;
+      }
+      /* Safe-area insets read back as resolved padding values. */
+      #safeProbe {
+        padding: env(safe-area-inset-top, 0px) env(safe-area-inset-right, 0px)
+          env(safe-area-inset-bottom, 0px) env(safe-area-inset-left, 0px);
+      }
+      /* VirtualKeyboard API insets (Chromium only) read the same way.
+         padding-right carries keyboard-inset-height. */
+      #kbProbe {
+        padding: env(keyboard-inset-top, 0px) env(keyboard-inset-height, 0px)
+          env(keyboard-inset-bottom, 0px) env(keyboard-inset-left, 0px);
+      }
+
+      /* ---- Chain overlay: a faithful copy of the app's sizing chain ----
+         QuadrantCanvas  -> flex flex-col h-svh
+         MobileQuadrantGrid -> flex-1 min-h-0 overflow-hidden
+         grid            -> w-[200%] h-[200%] panned by transform
+         Card            -> absolute, left/top as % of the cell             */
+      #chain {
+        position: fixed;
+        inset: 0;
+        z-index: 100;
+        display: none;
+        flex-direction: column;
+        height: 100svh;
+        background: var(--bg);
+      }
+      #chain.on {
+        display: flex;
+      }
+      #chainHeader {
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 8px;
+        padding: 6px 10px;
+        border-bottom: 1px solid var(--border);
+      }
+      #chainWrap {
+        flex: 1;
+        min-height: 0;
+        overflow: hidden;
+        position: relative;
+      }
+      #chainGrid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr 1fr;
+        width: 200%;
+        height: 200%;
+        transform-origin: top left;
+        transform: translate(0%, 0%);
+      }
+      #chainGrid section {
+        position: relative;
+        border: 1px solid var(--border);
+        overflow: hidden;
+      }
+      #chainGrid section:first-child {
+        background: color-mix(in srgb, var(--accent) 8%, transparent);
+      }
+      .simcard {
+        position: absolute;
+        width: 60%;
+        max-width: 240px;
+        padding: 6px 8px;
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+      }
+      .simcard textarea {
+        font-size: 16px;
+        border: none;
+        padding: 0;
+        background: transparent;
+        resize: none;
+      }
+      #chainFooter {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        z-index: 10;
+        padding: 6px 10px;
+        border-top: 1px solid var(--border);
+        background: var(--surface);
+        text-align: center;
+        font-size: 12px;
+      }
+      /* Readout pinned to the visual viewport while the chain overlay is up. */
+      #chainLive {
+        position: fixed;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: 110;
+        display: none;
+        background: var(--surface);
+        border-bottom: 2px solid var(--accent);
+        padding: 4px 10px;
+        font-size: 12px;
+        font-variant-numeric: tabular-nums;
+      }
+      #chain.on ~ #chainLive {
+        display: block;
+      }
+      .sr {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+        white-space: nowrap;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- Measurement probes -->
+    <div class="probe" id="svhProbe"></div>
+    <div class="probe" id="lvhProbe"></div>
+    <div class="probe" id="dvhProbe"></div>
+    <div class="probe" id="vhProbe"></div>
+    <div class="probe" id="safeProbe"></div>
+    <div class="probe" id="kbProbe"></div>
+
+    <!-- Live metrics, pinned to the visual viewport -->
+    <section id="live" aria-live="off">
+      <table id="liveTable">
+        <tbody></tbody>
+      </table>
+    </section>
+    <div id="liveSpacer" aria-hidden="true"></div>
+
+    <h1>Keyboard probe — RSRCH-002</h1>
+    <p>
+      Diagnostic page. Not linked from the app. Open on a device, run the sections in order, then
+      <strong>Copy report</strong> at the bottom and paste the JSON back into the ticket.
+    </p>
+
+    <h2>1. Environment</h2>
+    <table id="envTable">
+      <tbody></tbody>
+    </table>
+    <p>
+      Chromium <code>interactive-widget</code> is parse-time only. Reload with
+      <code>?iw=resizes-content</code>, <code>?iw=resizes-visual</code>, or
+      <code>?iw=overlays-content</code> to test each mode, capturing a snapshot in each.
+    </p>
+
+    <h2>2. Snapshots</h2>
+    <p>
+      Snapshots are captured automatically when the keyboard opens or closes (visual-viewport height
+      jumps by more than 100px). Capture extra ones by hand as needed — the label is free text.
+    </p>
+    <p>
+      <label for="snapLabel">Snapshot label</label>
+      <input type="text" id="snapLabel" value="manual" />
+    </p>
+    <button type="button" id="snapBtn">Capture snapshot</button>
+    <span id="snapCount" class="hl">0 captured</span>
+
+    <h2>3. The layout chain, with and without the fix</h2>
+    <p>
+      Opens a full-screen copy of the app's real sizing chain — <code>h-svh</code> column,
+      <code>flex-1 min-h-0 overflow-hidden</code> wrapper, 200%×200% grid panned by transform, a
+      card absolutely positioned at <code>top: 80%</code> of the cell. Tap the card's textarea to
+      raise the keyboard and watch the occlusion figure.
+    </p>
+    <button type="button" id="chainBtn">Open chain overlay</button>
+
+    <h2>4. Holding the keyboard open</h2>
+    <p>
+      Each test moves focus between two fields a different way. Focus field A first (the keyboard
+      must already be up), then tap the test button. "Held" means the visual viewport never returned
+      to full height during the swap.
+    </p>
+    <p><label for="fieldA">Field A</label><input type="text" id="fieldA" value="A" /></p>
+    <p><label for="fieldB">Field B</label><input type="text" id="fieldB" value="B" /></p>
+    <input type="text" id="keeper" class="sr" aria-hidden="true" tabindex="-1" />
+    <div>
+      <button type="button" data-test="sync">Sync swap (in gesture)</button>
+      <button type="button" data-test="timeout">Async swap (setTimeout 0)</button>
+      <button type="button" data-test="raf">Async swap (rAF)</button>
+      <button type="button" data-test="remount">Blur → remount → async focus</button>
+      <button type="button" data-test="keeper">Keeper-input hold</button>
+      <button type="button" data-test="preventdefault">preventDefault on next target</button>
+    </div>
+    <p id="holdVerdict" class="verdict" role="status"></p>
+    <p>
+      <code>remount</code> is the one that mirrors this app: <code>Card.tsx</code> unmounts the
+      textarea on commit, and the replacement is focused from a passive <code>useEffect</code>, not
+      from inside the tap.
+    </p>
+
+    <h2>5. What dismisses it</h2>
+    <p>
+      With the keyboard up, try each in turn and read the log: the platform's own Done/collapse key,
+      tapping empty page background, scrolling the page away, and rotating the device. Every focus,
+      blur, and viewport event is timestamped below.
+    </p>
+
+    <h2>6. Log</h2>
+    <div id="log" tabindex="0" role="log" aria-label="Event log"></div>
+    <button type="button" id="copyBtn">Copy report</button>
+    <button type="button" id="clearBtn">Clear log</button>
+    <span id="copyStatus" role="status"></span>
+
+    <!-- Chain overlay -->
+    <div id="chain">
+      <div id="chainHeader">
+        <strong style="font-size: 13px">Chain</strong>
+        <span>
+          <button type="button" id="chainSizeBtn" style="min-height: 36px; font-size: 13px">
+            size: 100svh
+          </button>
+          <button type="button" id="chainOverflowBtn" style="min-height: 36px; font-size: 13px">
+            overflow: hidden
+          </button>
+          <button type="button" id="chainCloseBtn" style="min-height: 36px; font-size: 13px">
+            Close
+          </button>
+        </span>
+      </div>
+      <div id="chainWrap">
+        <div id="chainGrid">
+          <section>
+            <div class="simcard" style="left: 8%; top: 15%">
+              <textarea rows="1" aria-label="Sim card near top">top 15%</textarea>
+            </div>
+            <div class="simcard" style="left: 8%; top: 80%">
+              <textarea rows="1" aria-label="Sim card near bottom">
+top 80% — the blind spot</textarea
+              >
+            </div>
+            <div id="chainFooter">footer controls (ColorPicker / Add)</div>
+          </section>
+          <section></section>
+          <section></section>
+          <section></section>
+        </div>
+      </div>
+    </div>
+    <div id="chainLive"></div>
+
+    <script>
+      const vv = window.visualViewport
+      const $ = (id) => document.getElementById(id)
+      const px = (el, prop) => Math.round(parseFloat(getComputedStyle(el)[prop]) || 0)
+      const round = (n) => (typeof n === 'number' ? Math.round(n * 10) / 10 : n)
+
+      const state = {
+        t0: performance.now(),
+        log: [],
+        snapshots: [],
+        lastVvHeight: vv ? vv.height : null,
+      }
+
+      function stamp() {
+        return ((performance.now() - state.t0) / 1000).toFixed(3).padStart(8, ' ')
+      }
+
+      function log(kind, detail) {
+        const line = `${stamp()}  ${kind.padEnd(14)} ${detail}`
+        state.log.push(line)
+        const el = $('log')
+        el.textContent += line + '\n'
+        el.scrollTop = el.scrollHeight
+      }
+
+      /** Everything measurable about the current viewport state, in one object. */
+      function measure() {
+        const safe = getComputedStyle($('safeProbe'))
+        const kb = getComputedStyle($('kbProbe'))
+        const m = {
+          innerHeight: window.innerHeight,
+          innerWidth: window.innerWidth,
+          clientHeight: document.documentElement.clientHeight,
+          scrollY: window.scrollY,
+          vvHeight: vv ? round(vv.height) : null,
+          vvWidth: vv ? round(vv.width) : null,
+          vvOffsetTop: vv ? round(vv.offsetTop) : null,
+          vvPageTop: vv ? round(vv.pageTop) : null,
+          vvScale: vv ? round(vv.scale) : null,
+          svh: $('svhProbe').offsetHeight,
+          lvh: $('lvhProbe').offsetHeight,
+          dvh: $('dvhProbe').offsetHeight,
+          vh: $('vhProbe').offsetHeight,
+          safeTop: Math.round(parseFloat(safe.paddingTop) || 0),
+          safeRight: Math.round(parseFloat(safe.paddingRight) || 0),
+          safeBottom: Math.round(parseFloat(safe.paddingBottom) || 0),
+          safeLeft: Math.round(parseFloat(safe.paddingLeft) || 0),
+          kbInsetTop: Math.round(parseFloat(kb.paddingTop) || 0),
+          kbInsetHeight: Math.round(parseFloat(kb.paddingRight) || 0),
+          kbInsetBottom: Math.round(parseFloat(kb.paddingBottom) || 0),
+          activeElement: describe(document.activeElement),
+        }
+        // How much of the layout viewport the keyboard (or other UI) is covering.
+        m.occludedPx = vv
+          ? Math.max(0, Math.round(window.innerHeight - (vv.height + vv.offsetTop)))
+          : null
+        m.keyboardUp = m.occludedPx != null && m.occludedPx > 100
+        // Does the LAYOUT viewport shrink (Chromium resizes-content) or only the
+        // VISUAL one (iOS)? This is the single most decisive number on the page.
+        m.layoutViewportShrank = m.svh > 0 ? m.clientHeight < m.svh - 20 : null
+        return m
+      }
+
+      function describe(el) {
+        if (!el || el === document.body) return 'body'
+        return (
+          el.tagName.toLowerCase() +
+          (el.id ? '#' + el.id : '') +
+          (el.getAttribute && el.getAttribute('aria-label')
+            ? `[${el.getAttribute('aria-label')}]`
+            : '')
+        )
+      }
+
+      const LIVE_ROWS = [
+        ['keyboard up', (m) => (m.keyboardUp ? 'YES' : 'no'), true],
+        ['occluded px', (m) => m.occludedPx],
+        [
+          'layout vp shrank',
+          (m) => (m.layoutViewportShrank == null ? '?' : m.layoutViewportShrank ? 'YES' : 'no'),
+          true,
+        ],
+        ['innerHeight', (m) => m.innerHeight],
+        ['docEl.clientHeight', (m) => m.clientHeight],
+        ['vv.height', (m) => m.vvHeight],
+        ['vv.offsetTop', (m) => m.vvOffsetTop],
+        ['vv.pageTop / scale', (m) => `${m.vvPageTop} / ${m.vvScale}`],
+        ['100svh / lvh / dvh', (m) => `${m.svh} / ${m.lvh} / ${m.dvh}`],
+        ['100vh', (m) => m.vh],
+        ['safe-area T/B', (m) => `${m.safeTop} / ${m.safeBottom}`],
+        ['keyboard-inset B/H', (m) => `${m.kbInsetBottom} / ${m.kbInsetHeight}`],
+        ['focus', (m) => m.activeElement],
+      ]
+
+      function renderLive() {
+        const m = measure()
+        $('liveTable').tBodies[0].innerHTML = LIVE_ROWS.map(
+          ([k, f, hl]) =>
+            `<tr><td class="k">${k}</td><td class="v${hl ? ' hl' : ''}">${f(m)}</td></tr>`,
+        ).join('')
+        if (vv) $('live').style.top = `${vv.offsetTop}px`
+        renderChainLive(m)
+        return m
+      }
+
+      // ---- Environment ----------------------------------------------------
+      function environment() {
+        const standalone =
+          window.matchMedia('(display-mode: standalone)').matches ||
+          window.navigator.standalone === true
+        return {
+          ua: navigator.userAgent,
+          standalone,
+          displayMode: standalone ? 'standalone' : 'browser',
+          screen: `${screen.width}x${screen.height}`,
+          dpr: window.devicePixelRatio,
+          orientation: (screen.orientation && screen.orientation.type) || 'unknown',
+          interactiveWidget: new URLSearchParams(location.search).get('iw') || '(not set)',
+          hasVisualViewport: !!vv,
+          hasVirtualKeyboardAPI: 'virtualKeyboard' in navigator,
+          supportsSvh: CSS.supports('height', '100svh'),
+          supportsDvh: CSS.supports('height', '100dvh'),
+          supportsKeyboardInset: CSS.supports('padding-bottom', 'env(keyboard-inset-bottom)'),
+        }
+      }
+
+      function renderEnv() {
+        const e = environment()
+        $('envTable').tBodies[0].innerHTML = Object.entries(e)
+          .map(([k, v]) => `<tr><td class="k">${k}</td><td class="v">${v}</td></tr>`)
+          .join('')
+      }
+
+      // ---- Snapshots ------------------------------------------------------
+      function snapshot(label) {
+        const m = measure()
+        state.snapshots.push({ label, t: round(performance.now() - state.t0), ...m })
+        $('snapCount').textContent = `${state.snapshots.length} captured`
+        log(
+          'SNAPSHOT',
+          `${label} — occluded ${m.occludedPx}px, vv.height ${m.vvHeight}, clientHeight ${m.clientHeight}`,
+        )
+      }
+
+      $('snapBtn').addEventListener('click', () => snapshot($('snapLabel').value || 'manual'))
+
+      // ---- Viewport + focus event tracing ---------------------------------
+      function onViewportEvent(kind) {
+        const m = renderLive()
+        log(
+          kind,
+          `vv.h ${m.vvHeight} vv.top ${m.vvOffsetTop} inner ${m.innerHeight} client ${m.clientHeight}`,
+        )
+        // Auto-snapshot on keyboard transitions.
+        if (vv && state.lastVvHeight != null) {
+          const delta = vv.height - state.lastVvHeight
+          if (delta < -100) snapshot('auto: keyboard opened')
+          else if (delta > 100) snapshot('auto: keyboard closed')
+        }
+        if (vv) state.lastVvHeight = vv.height
+      }
+
+      if (vv) {
+        vv.addEventListener('resize', () => onViewportEvent('vv:resize'))
+        vv.addEventListener('scroll', () => onViewportEvent('vv:scroll'))
+      }
+      window.addEventListener('resize', () => onViewportEvent('win:resize'))
+      window.addEventListener('orientationchange', () =>
+        log('orientation', screen.orientation?.type || '?'),
+      )
+      window.addEventListener('scroll', () => renderLive(), { passive: true })
+      document.addEventListener('focusin', (e) => log('focusin', describe(e.target)))
+      document.addEventListener('focusout', (e) => log('focusout', describe(e.target)))
+
+      // ---- Section 4: focus-hold experiments ------------------------------
+      // A test "holds" the keyboard if the visual viewport never climbs back to
+      // (near) full height during the observation window.
+      const HOLD_WINDOW_MS = 900
+
+      function watchHold(name) {
+        if (!vv) return
+        const start = vv.height
+        const full = $('svhProbe').offsetHeight
+        let restored = false
+        const tick = () => {
+          if (vv.height > full - 100) restored = true
+        }
+        const iv = setInterval(tick, 50)
+        setTimeout(() => {
+          clearInterval(iv)
+          const held = !restored
+          const el = $('holdVerdict')
+          el.textContent = `${name}: keyboard ${held ? 'HELD' : 'LOST (it collapsed)'}`
+          el.className = 'verdict ' + (held ? 'held' : 'lost')
+          log(
+            'HOLD-RESULT',
+            `${name} → ${held ? 'HELD' : 'LOST'} (start vv.h ${round(start)}, full ${full})`,
+          )
+          state.snapshots.push({
+            label: `hold:${name}`,
+            held,
+            t: round(performance.now() - state.t0),
+            ...measure(),
+          })
+          $('snapCount').textContent = `${state.snapshots.length} captured`
+        }, HOLD_WINDOW_MS)
+      }
+
+      const tests = {
+        // Focus moves inside the same user gesture — the documented way to keep
+        // an on-screen keyboard from collapsing.
+        sync: () => $('fieldB').focus(),
+        // A macrotask later: outside the gesture.
+        timeout: () => setTimeout(() => $('fieldB').focus(), 0),
+        raf: () => requestAnimationFrame(() => $('fieldB').focus()),
+        // Mirrors Card.tsx: the field is removed from the DOM, a replacement is
+        // inserted, and focus lands from a passive effect after paint.
+        remount: () => {
+          const b = $('fieldB')
+          const parent = b.parentNode
+          b.remove()
+          setTimeout(() => {
+            const fresh = document.createElement('input')
+            fresh.type = 'text'
+            fresh.id = 'fieldB'
+            fresh.value = 'B (remounted)'
+            parent.appendChild(fresh)
+            fresh.focus()
+          }, 0)
+        },
+        // Park focus on an always-present offscreen input during the gap so the
+        // document never loses an editable focus target.
+        keeper: () => {
+          $('keeper').focus()
+          setTimeout(() => $('fieldB').focus(), 0)
+        },
+        // Suppress the blur entirely by preventing default on the next target.
+        preventdefault: () => {
+          const b = $('fieldB')
+          const stop = (e) => e.preventDefault()
+          b.addEventListener('pointerdown', stop, { once: true })
+          setTimeout(() => b.removeEventListener('pointerdown', stop), 2000)
+          log('note', 'now tap Field B directly — its pointerdown default is suppressed')
+        },
+      }
+
+      document.querySelectorAll('[data-test]').forEach((btn) => {
+        // pointerdown, not click: the swap must happen inside the gesture for
+        // the `sync` case to mean anything.
+        btn.addEventListener('pointerdown', (e) => {
+          const name = btn.dataset.test
+          e.preventDefault() // keep the button itself from stealing focus
+          log('TEST-START', name)
+          watchHold(name)
+          tests[name]()
+        })
+      })
+
+      // ---- Section 3: chain overlay ---------------------------------------
+      let chainSizeMode = 'svh'
+      let chainOverflow = 'hidden'
+
+      function applyChainSize() {
+        const chain = $('chain')
+        if (chainSizeMode === 'svh') {
+          chain.style.height = '100svh'
+        } else {
+          // The candidate fix: size the canvas to the visual viewport so its
+          // bottom edge comes to rest above the keyboard.
+          chain.style.height = vv ? `${vv.height}px` : '100svh'
+          chain.style.transform = vv ? `translateY(${vv.offsetTop}px)` : ''
+        }
+        if (chainSizeMode === 'svh') chain.style.transform = ''
+        $('chainSizeBtn').textContent =
+          chainSizeMode === 'svh' ? 'size: 100svh' : 'size: visualViewport'
+      }
+
+      function renderChainLive(m) {
+        if (!$('chain').classList.contains('on')) return
+        const wrap = $('chainWrap').getBoundingClientRect()
+        const vvBottom = (m.vvOffsetTop || 0) + (m.vvHeight || 0)
+        const hidden = Math.max(0, Math.round(wrap.bottom - vvBottom))
+        $('chainLive').innerHTML =
+          `<strong>cell</strong> ${Math.round(wrap.height)}px tall, bottom at ${Math.round(wrap.bottom)} · ` +
+          `<strong>visible bottom</strong> ${Math.round(vvBottom)} · ` +
+          `<span class="hl">${hidden}px of the cell is under the keyboard</span>`
+        if (vv) $('chainLive').style.top = `${vv.offsetTop}px`
+        if (chainSizeMode === 'vv') applyChainSize()
+      }
+
+      $('chainBtn').addEventListener('click', () => {
+        $('chain').classList.add('on')
+        applyChainSize()
+        log('chain', 'overlay opened')
+        renderLive()
+      })
+      $('chainCloseBtn').addEventListener('click', () => {
+        $('chain').classList.remove('on')
+        $('chainLive').style.display = ''
+        log('chain', 'overlay closed')
+      })
+      $('chainSizeBtn').addEventListener('click', () => {
+        chainSizeMode = chainSizeMode === 'svh' ? 'vv' : 'svh'
+        applyChainSize()
+        log('chain', `size mode → ${chainSizeMode}`)
+      })
+      $('chainOverflowBtn').addEventListener('click', () => {
+        // The app's wrapper is overflow-hidden, which may be what stops the
+        // browser from scrolling the focused field into view by itself.
+        chainOverflow = chainOverflow === 'hidden' ? 'auto' : 'hidden'
+        $('chainWrap').style.overflow = chainOverflow
+        $('chainOverflowBtn').textContent = `overflow: ${chainOverflow}`
+        log('chain', `overflow → ${chainOverflow}`)
+      })
+
+      // ---- Report ---------------------------------------------------------
+      $('copyBtn').addEventListener('click', async () => {
+        const report = {
+          ticket: 'RSRCH-002',
+          capturedAt: new Date().toISOString(),
+          environment: environment(),
+          current: measure(),
+          snapshots: state.snapshots,
+          log: state.log,
+        }
+        const text = JSON.stringify(report, null, 2)
+        try {
+          await navigator.clipboard.writeText(text)
+          $('copyStatus').textContent = 'Copied.'
+        } catch {
+          // Clipboard is gesture- and permission-gated; fall back to selectable text.
+          const ta = document.createElement('textarea')
+          ta.value = text
+          ta.style.height = '300px'
+          $('copyStatus').textContent = 'Clipboard blocked — select and copy manually:'
+          $('copyStatus').after(ta)
+        }
+      })
+
+      $('clearBtn').addEventListener('click', () => {
+        state.log = []
+        state.snapshots = []
+        $('log').textContent = ''
+        $('snapCount').textContent = '0 captured'
+      })
+
+      renderEnv()
+      renderLive()
+      snapshot('baseline: no keyboard')
+      setInterval(renderLive, 500)
+    </script>
+  </body>
+</html>

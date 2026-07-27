@@ -14,6 +14,21 @@
 
 ## Log
 
+- 2026-07-26:19:04:11 — RSRCH-002 — BLOCKED on device access: desk half done and
+  instrument built, but the Outcome demands real-hardware evidence and only the
+  iOS Simulator is available, with no Android at all. Desk findings: the premise
+  holds (BUG-015 moved `QuadrantCanvas` to `h-svh`, a _static_ unit, so the
+  canvas cannot react to a keyboard even in principle) and the occlusion has two
+  independent causes, not one — `MobileQuadrantGrid.tsx:56` is
+  `overflow-hidden`, which disables the browser's own
+  scroll-focused-field-into-view rescue, and `Card.tsx` destroys the focused
+  textarea on every commit, so the per-edit open/close cycle is the component's
+  own lifecycle rather than a platform limit. Narrowed item 2 to one falsifiable
+  hypothesis: `Card.tsx:84` focuses from a passive `useEffect` (after paint,
+  outside the gesture) where `useLayoutEffect` would stay inside it. Built
+  `public/keyboard-probe.html` (`globIgnores`'d out of the SW precache) to make
+  the device session execution rather than investigation. 397/397 green
+- 2026-07-26:18:47:24 — RSRCH-002 — started
 - 2026-07-26:18:46:17 — BUG-015 — done: `QuadrantCanvas` sized with `h-svh`
   instead of `h-screen`, lifting the zoomed cell's footer controls and the
   overview's bottom-row labels clear of mobile Safari's toolbar; `svh` over
