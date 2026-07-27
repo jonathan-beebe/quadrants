@@ -197,7 +197,15 @@ function useMediaQuery(query: string): boolean {
   )
 }
 
-function SignalRow({
+/**
+ * One signal: name, current value, whether emulation can fake it, and why it is
+ * or is not used.
+ *
+ * Not a table row. The notes are full sentences, and four columns — one of them
+ * prose — cannot fit a phone in portrait, which is the width this whole feature
+ * is about. Stacking reflows at every size and keeps the long text readable.
+ */
+function SignalItem({
   signal,
   value,
   spoofable,
@@ -209,20 +217,21 @@ function SignalRow({
   note: string
 }) {
   return (
-    <tr className="border-b border-border last:border-b-0 align-top">
-      <td className="py-1.5 pr-3 font-mono text-[12px] text-text whitespace-nowrap">{signal}</td>
-      <td className={`py-1.5 pr-3 text-[12px] font-semibold ${value ? 'text-accent' : 'text-text-tertiary'}`}>
-        {value === null ? 'unknown' : String(value)}
-      </td>
-      <td className="py-1.5 pr-3 text-[12px] whitespace-nowrap">
-        {spoofable ? (
-          <span className="text-text-tertiary">spoofable</span>
-        ) : (
-          <span className="text-accent font-semibold">ground truth</span>
-        )}
-      </td>
-      <td className="py-1.5 text-[12px] text-text-tertiary">{note}</td>
-    </tr>
+    <li className="py-2 border-b border-border last:border-b-0 last:pb-0 first:pt-0">
+      <div className="flex flex-wrap items-baseline gap-x-2 gap-y-1">
+        <code className="font-mono text-[12px] text-text break-all">{signal}</code>
+        <span className={`text-[12px] font-semibold ${value ? 'text-accent' : 'text-text-tertiary'}`}>
+          {value === null ? 'unknown' : String(value)}
+        </span>
+        <span
+          className={`text-[11px] px-1.5 py-0.5 rounded ${
+            spoofable ? 'text-text-tertiary bg-bg' : 'text-accent bg-accent-light font-semibold'
+          }`}>
+          {spoofable ? 'spoofable' : 'ground truth'}
+        </span>
+      </div>
+      <p className="mt-1 text-[12px] text-text-tertiary">{note}</p>
+    </li>
   )
 }
 
@@ -247,41 +256,39 @@ function EditModalDemo() {
       <div>
         <Caption className="block mb-1.5">Detection — useExpectsOnScreenKeyboard()</Caption>
         <div className="rounded-xl border border-border bg-surface p-3">
-          <table className="w-full border-collapse">
-            <tbody>
-              <SignalRow
-                signal="observed keyboard"
-                value={signals.observed}
-                spoofable={false}
-                note="did the visual viewport actually shrink when a field was focused? Device emulation never raises a keyboard, so it can never fake this. Unknown until the first edit."
-              />
-              <SignalRow
-                signal="userAgentData.mobile"
-                value={signals.uaMobile}
-                spoofable
-                note="trusted only when false, and only where it exists — Safari and Firefox report unknown. Catches DevTools responsive mode, which emulates touch but leaves the user agent on its desktop default."
-              />
-              <SignalRow
-                signal="(pointer: coarse)"
-                value={signals.coarsePointer}
-                spoofable
-                note="primary pointer is touch"
-              />
-              <SignalRow signal="(hover: none)" value={signals.noHover} spoofable note="no hover capability" />
-              <SignalRow
-                signal="(any-pointer: coarse)"
-                value={anyCoarse}
-                spoofable
-                note="not used — true on touchscreen laptops, which have real keyboards"
-              />
-              <SignalRow
-                signal="(max-width: 768px)"
-                value={narrow}
-                spoofable
-                note="not used — useIsMobile's layout question; a landscape tablet exceeds it"
-              />
-            </tbody>
-          </table>
+          <ul className="list-none">
+            <SignalItem
+              signal="observed keyboard"
+              value={signals.observed}
+              spoofable={false}
+              note="did the visual viewport actually shrink when a field was focused? Device emulation never raises a keyboard, so it can never fake this. Unknown until the first edit."
+            />
+            <SignalItem
+              signal="userAgentData.mobile"
+              value={signals.uaMobile}
+              spoofable
+              note="trusted only when false, and only where it exists — Safari and Firefox report unknown. Catches DevTools responsive mode, which emulates touch but leaves the user agent on its desktop default."
+            />
+            <SignalItem
+              signal="(pointer: coarse)"
+              value={signals.coarsePointer}
+              spoofable
+              note="primary pointer is touch"
+            />
+            <SignalItem signal="(hover: none)" value={signals.noHover} spoofable note="no hover capability" />
+            <SignalItem
+              signal="(any-pointer: coarse)"
+              value={anyCoarse}
+              spoofable
+              note="not used — true on touchscreen laptops, which have real keyboards"
+            />
+            <SignalItem
+              signal="(max-width: 768px)"
+              value={narrow}
+              spoofable
+              note="not used — useIsMobile's layout question; a landscape tablet exceeds it"
+            />
+          </ul>
           <p className="mt-3 pt-3 border-t border-border text-sm">
             <span className="text-text-secondary">Verdict: </span>
             <span className={`font-semibold ${expectsKeyboard ? 'text-accent' : 'text-text'}`}>
