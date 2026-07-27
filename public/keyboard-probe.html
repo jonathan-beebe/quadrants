@@ -217,6 +217,17 @@
         flex-direction: column;
         height: 100svh;
         background: var(--bg);
+        /* #chainWrap is overflow:hidden, so a drag inside it finds no
+           scrollable ancestor and scrolls the document behind instead —
+           which churned the Safari toolbar through 645..845 and filled the
+           log with noise during the first attempt. The app's real grid has
+           the same property. */
+        touch-action: none;
+        overscroll-behavior: contain;
+      }
+      /* ...but the fields still need caret placement and selection. */
+      #chain textarea {
+        touch-action: auto;
       }
       #chain.on {
         display: flex;
@@ -316,6 +327,12 @@
     <div class="probe" id="vhProbe"></div>
     <div class="probe" id="safeProbe"></div>
     <div class="probe" id="kbProbe"></div>
+    <!-- Where a bottom-pinned fixed element actually lands. This is the app's
+         focused-quadrant footer controls (ColorPicker / Add), and the thing
+         BUG-015 was about. Measured rather than assumed, because the visual
+         viewport can extend past documentElement.clientHeight when the Safari
+         toolbar retracts. -->
+    <div class="probe" id="fixedBottomProbe" style="bottom: 0; top: auto; height: 1px"></div>
 
     <!-- Live metrics, pinned to the visual viewport -->
     <section id="live" aria-live="off">
@@ -502,12 +519,19 @@ top 80% — the blind spot</textarea
         // "keyboard up: no" with vv.height collapsed 768 -> 365.
         m.keyboardPx = vv ? Math.max(0, Math.round(m.clientHeight - vv.height)) : null
         m.keyboardUp = m.keyboardPx != null && m.keyboardPx > 120
-        // Where the visible slice sits inside the layout viewport. Content can
-        // be lost off the top (iOS scrolled past it) as well as under the
-        // keyboard, and a fixed-position container loses both ends.
+        // Where the visible slice sits, and what a bottom-pinned fixed element
+        // loses to the keyboard. Content can be lost off the TOP too (iOS
+        // scrolls the visual viewport to reveal the field), so a fixed
+        // container loses both ends.
+        //
+        // Measured against fixedBottom, not clientHeight: when the toolbar
+        // retracts the visual viewport extends BELOW clientHeight —
+        // offsetTop 330.6 + height 365 = 695.6 against a clientHeight of 660 —
+        // and measuring against the constant clamped a real occlusion to 0.
+        m.fixedBottom = Math.round($('fixedBottomProbe').getBoundingClientRect().bottom)
         m.hiddenAbove = vv ? Math.round(vv.offsetTop) : null
         m.hiddenBelow = vv
-          ? Math.max(0, Math.round(m.clientHeight - (vv.offsetTop + vv.height)))
+          ? Math.max(0, Math.round(m.fixedBottom - (vv.offsetTop + vv.height)))
           : null
         // Does the LAYOUT viewport shrink (Chromium resizes-content) or only the
         // VISUAL one (iOS)? This is the single most decisive number on the page.
@@ -530,6 +554,7 @@ top 80% — the blind spot</textarea
         ['keyboard up', (m) => (m.keyboardUp ? 'YES' : 'no'), true],
         ['keyboard px', (m) => m.keyboardPx, true],
         ['hidden above / below', (m) => `${m.hiddenAbove} / ${m.hiddenBelow}`],
+        ['fixed bottom lands at', (m) => m.fixedBottom],
         [
           'layout vp shrank',
           (m) => (m.layoutViewportShrank == null ? '?' : m.layoutViewportShrank ? 'YES' : 'no'),
