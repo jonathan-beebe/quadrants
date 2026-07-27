@@ -1,6 +1,7 @@
 import { useState, useRef, useSyncExternalStore } from 'react'
 import { useDarkMode } from '../hooks/useDarkMode'
-import { useExpectsOnScreenKeyboard } from '../hooks/useExpectsOnScreenKeyboard'
+import { useOnScreenKeyboardSignals } from '../hooks/useExpectsOnScreenKeyboard'
+import { expectsOnScreenKeyboard, decidingSignal } from '../logic/onScreenKeyboard'
 import { colorPresets, defaultColors } from '../colors'
 import ThemeToggleButton from './atoms/ThemeToggleButton'
 import Badge from './atoms/Badge'
@@ -196,12 +197,29 @@ function useMediaQuery(query: string): boolean {
   )
 }
 
-function SignalRow({ query, matches, note }: { query: string; matches: boolean; note: string }) {
+function SignalRow({
+  signal,
+  value,
+  spoofable,
+  note,
+}: {
+  signal: string
+  value: boolean | null
+  spoofable: boolean
+  note: string
+}) {
   return (
-    <tr className="border-b border-border last:border-b-0">
-      <td className="py-1.5 pr-3 font-mono text-[12px] text-text whitespace-nowrap">{query}</td>
-      <td className={`py-1.5 pr-3 text-[12px] font-semibold ${matches ? 'text-accent' : 'text-text-tertiary'}`}>
-        {matches ? 'true' : 'false'}
+    <tr className="border-b border-border last:border-b-0 align-top">
+      <td className="py-1.5 pr-3 font-mono text-[12px] text-text whitespace-nowrap">{signal}</td>
+      <td className={`py-1.5 pr-3 text-[12px] font-semibold ${value ? 'text-accent' : 'text-text-tertiary'}`}>
+        {value === null ? 'unknown' : String(value)}
+      </td>
+      <td className="py-1.5 pr-3 text-[12px] whitespace-nowrap">
+        {spoofable ? (
+          <span className="text-text-tertiary">spoofable</span>
+        ) : (
+          <span className="text-accent font-semibold">ground truth</span>
+        )}
       </td>
       <td className="py-1.5 text-[12px] text-text-tertiary">{note}</td>
     </tr>
@@ -213,10 +231,10 @@ function EditModalDemo() {
   const [open, setOpen] = useState(false)
   const [preview, setPreview] = useState(false)
 
-  const expectsKeyboard = useExpectsOnScreenKeyboard()
+  const signals = useOnScreenKeyboardSignals()
+  const expectsKeyboard = expectsOnScreenKeyboard(signals)
+  const deciding = decidingSignal(signals)
   // Shown to explain the verdict, not to compute it.
-  const coarsePointer = useMediaQuery('(pointer: coarse)')
-  const noHover = useMediaQuery('(hover: none)')
   const anyCoarse = useMediaQuery('(any-pointer: coarse)')
   const narrow = useMediaQuery('(max-width: 768px)')
 
@@ -231,16 +249,35 @@ function EditModalDemo() {
         <div className="rounded-xl border border-border bg-surface p-3">
           <table className="w-full border-collapse">
             <tbody>
-              <SignalRow query="(pointer: coarse)" matches={coarsePointer} note="primary pointer is touch" />
-              <SignalRow query="(hover: none)" matches={noHover} note="no hover capability" />
               <SignalRow
-                query="(any-pointer: coarse)"
-                matches={anyCoarse}
+                signal="observed keyboard"
+                value={signals.observed}
+                spoofable={false}
+                note="did the visual viewport actually shrink when a field was focused? Device emulation never raises a keyboard, so it can never fake this. Unknown until the first edit."
+              />
+              <SignalRow
+                signal="userAgentData.mobile"
+                value={signals.uaMobile}
+                spoofable
+                note="trusted only when false, and only where it exists — Safari and Firefox report unknown. Catches DevTools responsive mode, which emulates touch but leaves the user agent on its desktop default."
+              />
+              <SignalRow
+                signal="(pointer: coarse)"
+                value={signals.coarsePointer}
+                spoofable
+                note="primary pointer is touch"
+              />
+              <SignalRow signal="(hover: none)" value={signals.noHover} spoofable note="no hover capability" />
+              <SignalRow
+                signal="(any-pointer: coarse)"
+                value={anyCoarse}
+                spoofable
                 note="not used — true on touchscreen laptops, which have real keyboards"
               />
               <SignalRow
-                query="(max-width: 768px)"
-                matches={narrow}
+                signal="(max-width: 768px)"
+                value={narrow}
+                spoofable
                 note="not used — useIsMobile's layout question; a landscape tablet exceeds it"
               />
             </tbody>
@@ -252,7 +289,14 @@ function EditModalDemo() {
                 ? 'on-screen keyboard expected — edit through the modal'
                 : 'physical keyboard — edit in place'}
             </span>
+            <span className="text-text-tertiary"> — decided by {deciding}</span>
           </p>
+          <Caption className="block mt-2">
+            Signals are weighed in precedence order, top to bottom. Everything a page can read is spoofable, because
+            making pages believe they are mobile is what device emulation is for. Only the first row survives it — so
+            with the device toolbar open, the first edit follows the prediction and every one after it follows the
+            evidence.
+          </Caption>
         </div>
       </div>
 

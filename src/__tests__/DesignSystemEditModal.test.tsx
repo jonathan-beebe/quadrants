@@ -2,11 +2,19 @@ import { describe, it, expect, vi, afterEach } from 'vitest'
 import { render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import DesignSystem from '../components/DesignSystem'
-import { useExpectsOnScreenKeyboard } from '../hooks/useExpectsOnScreenKeyboard'
+import { useOnScreenKeyboardSignals } from '../hooks/useExpectsOnScreenKeyboard'
 
 vi.mock('../hooks/useExpectsOnScreenKeyboard', () => ({
-  useExpectsOnScreenKeyboard: vi.fn(() => false),
+  useOnScreenKeyboardSignals: vi.fn(() => DESKTOP),
 }))
+
+const DESKTOP = { coarsePointer: false, noHover: false, uaMobile: false, observed: null }
+const PHONE = { coarsePointer: true, noHover: true, uaMobile: true, observed: null }
+
+/** Drives the demo through the real precedence rules rather than past them. */
+function simulate(signals: typeof DESKTOP) {
+  vi.mocked(useOnScreenKeyboardSignals).mockReturnValue(signals)
+}
 
 const field = () => screen.getByLabelText(/^Item text/)
 // The design system renders Cancel/Delete buttons in other sections too, so
@@ -14,7 +22,7 @@ const field = () => screen.getByLabelText(/^Item text/)
 const modal = () => within(screen.getByRole('dialog', { name: 'Edit item' }))
 
 afterEach(() => {
-  vi.mocked(useExpectsOnScreenKeyboard).mockReturnValue(false)
+  simulate(DESKTOP)
 })
 
 describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', () => {
@@ -30,7 +38,7 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
   })
 
   it('opens the modal where an on-screen keyboard is expected', async () => {
-    vi.mocked(useExpectsOnScreenKeyboard).mockReturnValue(true)
+    simulate(PHONE)
     const user = userEvent.setup()
     render(<DesignSystem />)
 
@@ -42,7 +50,7 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
   })
 
   it('saves through the modal back into the field', async () => {
-    vi.mocked(useExpectsOnScreenKeyboard).mockReturnValue(true)
+    simulate(PHONE)
     const user = userEvent.setup()
     render(<DesignSystem />)
 
@@ -56,7 +64,7 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
   })
 
   it('leaves the field untouched on cancel', async () => {
-    vi.mocked(useExpectsOnScreenKeyboard).mockReturnValue(true)
+    simulate(PHONE)
     const user = userEvent.setup()
     render(<DesignSystem />)
 
@@ -68,7 +76,7 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
   })
 
   it('reports the delete it would have performed, and closes', async () => {
-    vi.mocked(useExpectsOnScreenKeyboard).mockReturnValue(true)
+    simulate(PHONE)
     const alert = vi.spyOn(window, 'alert').mockImplementation(() => {})
     const user = userEvent.setup()
     render(<DesignSystem />)
