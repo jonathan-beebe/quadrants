@@ -17,11 +17,19 @@ function setup(overrides: Partial<React.ComponentProps<typeof EditModal>> = {}) 
 }
 
 describe('EditModal', () => {
-  it('opens with the current text, focused and selected so typing replaces it', () => {
+  it('opens with the current text, focused and selected so typing replaces it', async () => {
+    const user = userEvent.setup()
     setup()
     const field = screen.getByRole('textbox')
     expect(field).toHaveValue('Ship v2 release')
     expect(field).toHaveFocus()
+
+    // Typing straight into the freshly opened modal, with no clearing first —
+    // the primary mobile flow. Text that survives here is text the user has to
+    // delete by hand on a phone keyboard.
+    await user.keyboard('Ship v3 release')
+
+    expect(field).toHaveValue('Ship v3 release')
   })
 
   it('saves the edited text', async () => {

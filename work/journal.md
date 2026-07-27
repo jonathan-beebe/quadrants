@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-27:09:10:58 — MAINT-008 — done: the open-with-text-selected test now
+  types into the modal and asserts the text was replaced, not appended
+- 2026-07-27:09:07:47 — MAINT-008 — started
 - 2026-07-27:09:07:06 — MAINT-007 — done: reset now detaches the observation
   listeners, so no test inherits another test's viewport stub
 - 2026-07-27:09:04:26 — MAINT-007 — started
