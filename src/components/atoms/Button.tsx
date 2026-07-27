@@ -4,6 +4,7 @@ const variantClasses = {
   primary: 'btn-primary',
   secondary: 'btn-secondary',
   ghost: 'btn-ghost',
+  danger: 'btn-danger',
   icon: 'btn-icon text-text-secondary',
 } as const
 

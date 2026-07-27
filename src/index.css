@@ -103,6 +103,12 @@
       bg-surface text-text border border-border transition-all duration-150 ease-in-out
       hover:border-border-hover hover:bg-bg;
   }
+  /* Fill + foreground are the danger token pair, so the contrast floor
+     a11yContrast.test.ts already guards covers this variant too. */
+  .btn-danger {
+    @apply inline-flex items-center gap-1.5 px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap
+      bg-danger text-on-danger transition-all duration-150 ease-in-out hover:bg-danger-hover;
+  }
   .btn-ghost {
     @apply inline-flex items-center gap-1.5 px-2.5 py-1.5 rounded-lg text-sm font-medium whitespace-nowrap
       text-text-secondary transition-all duration-150 ease-in-out hover:text-text hover:bg-bg;

@@ -8,6 +8,7 @@ import SectionLabel from './atoms/SectionLabel'
 import Caption from './atoms/Caption'
 import Button from './atoms/Button'
 import ColorPicker from './ColorPicker'
+import EditModal from './EditModal'
 import Toast from './Toast'
 import { UpdateToastView } from './UpdateToast'
 import QuadrantGrid from './QuadrantGrid'
@@ -177,6 +178,66 @@ function DesktopGridDemo() {
         onReposition={noop}
         onDragStart={noop}
       />
+    </div>
+  )
+}
+
+function EditModalDemo() {
+  const [text, setText] = useState('Ship v2 release')
+  const [open, setOpen] = useState(false)
+
+  return (
+    <div className="space-y-3">
+      <div>
+        <label htmlFor="edit-modal-demo-input" className="block text-xs font-medium text-text-secondary mb-1.5">
+          Item text — tap to edit
+        </label>
+        <input
+          id="edit-modal-demo-input"
+          type="text"
+          value={text}
+          readOnly
+          // The field never edits in place — it opens the modal. Saying so
+          // explicitly, and saying `dialog` rather than leaving it to be
+          // guessed, is the A11Y-016 lesson.
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          // pointerDown, not click, and preventDefault so the input never takes
+          // focus itself: the modal must open and claim focus inside the same
+          // gesture or iOS will not raise the keyboard (RSRCH-002).
+          onPointerDown={(e) => {
+            e.preventDefault()
+            setOpen(true)
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault()
+              setOpen(true)
+            }
+          }}
+          className="w-full max-w-[440px] rounded-lg px-3 py-2 bg-surface text-text border border-border cursor-pointer"
+        />
+      </div>
+      <Caption>
+        Save applies the edit to the field above. Cancel and the close X discard it. Delete closes and reports the
+        action it would have taken.
+      </Caption>
+      {open && (
+        <EditModal
+          title="Edit item"
+          value={text}
+          fieldLabel="Item text"
+          onSave={(next) => {
+            setText(next)
+            setOpen(false)
+          }}
+          onDelete={() => {
+            setOpen(false)
+            window.alert('Delete: the item would have been deleted here.')
+          }}
+          onCancel={() => setOpen(false)}
+        />
+      )}
     </div>
   )
 }
@@ -365,6 +426,11 @@ export default function DesignSystem() {
         </Subsection>
 
         <Subsection title="Card" />
+
+        <Subsection title="Edit Modal" layout="stack">
+          <EditModalDemo />
+        </Subsection>
+
         <Subsection title="Dialog" />
 
         {/* ── Layouts ── */}
