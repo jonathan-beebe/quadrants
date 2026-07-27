@@ -326,11 +326,11 @@
         position: fixed;
         left: 0;
         right: 0;
-        top: 0;
+        top: 0; /* JS moves this to the bottom of the visible slice */
         z-index: 110;
         display: none;
         background: var(--surface);
-        border-bottom: 2px solid var(--accent);
+        border-top: 2px solid var(--accent);
         padding: 4px 10px;
         font-size: 12px;
         font-variant-numeric: tabular-nums;
@@ -881,7 +881,15 @@ top 80% — the blind spot</textarea
                 Math.round(vvBottom - $('topSheet').getBoundingClientRect().bottom),
               )}px`
             : '')
-        if (vv) $('chainLive').style.top = `${vv.offsetTop}px`
+        // Pinned to the BOTTOM of the visible slice, not the top: the top is
+        // where the content under test lives — the top-aligned editor sheet in
+        // sheet mode, and the cell's own top edge in inline mode — and this
+        // readout was covering it.
+        if (vv) {
+          const live = $('chainLive')
+          const top = vvBottom - live.offsetHeight
+          live.style.top = `${Math.round(Math.max(vvTop, top))}px`
+        }
         if (chainSizeMode === 'vv') applyChainSize()
       }
 
