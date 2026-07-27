@@ -39,6 +39,7 @@ function readUaMobile(): boolean | null {
 
 let observed: boolean | null = null
 let installed = false
+let uninstall: (() => void) | null = null
 let pendingTimer: ReturnType<typeof setTimeout> | null = null
 const subscribers = new Set<() => void>()
 
@@ -110,6 +111,10 @@ function install() {
 
   viewport.addEventListener('resize', onResize)
   document.addEventListener('focusin', onFocusIn)
+  uninstall = () => {
+    viewport.removeEventListener('resize', onResize)
+    document.removeEventListener('focusin', onFocusIn)
+  }
 }
 
 function subscribe(callback: () => void): () => void {
@@ -168,10 +173,18 @@ export { decidingSignal }
 /**
  * Test-only. The observation is module state by design — it describes the
  * device, not any component — so tests must be able to clear it.
+ *
+ * This is the only path that detaches the listeners. Nothing uninstalls at
+ * runtime, where install-once for the life of the document is exactly right;
+ * but a test's listeners close over that test's viewport stub, and left
+ * attached to the shared document they would answer the next test's focus
+ * events from a viewport that no longer exists.
  */
 export function resetOnScreenKeyboardObservation() {
   observed = null
   installed = false
+  uninstall?.()
+  uninstall = null
   if (pendingTimer) clearTimeout(pendingTimer)
   pendingTimer = null
   snapshot = { coarsePointer: false, noHover: false, uaMobile: null, observed: null }

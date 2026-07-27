@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-27:09:07:06 — MAINT-007 — done: reset now detaches the observation
+  listeners, so no test inherits another test's viewport stub
+- 2026-07-27:09:04:26 — MAINT-007 — started
 - 2026-07-27:09:04:11 — MAINT-006 — done: matchMedia fake matches full query
   strings and fails loudly on an undeclared query or an unread declared signal
 - 2026-07-27:08:58:23 — MAINT-006 — started

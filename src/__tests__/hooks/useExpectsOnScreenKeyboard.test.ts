@@ -175,6 +175,22 @@ describe('useExpectsOnScreenKeyboard', () => {
     expect(result.current).toBe(false)
   })
 
+  it('stops observing once reset, so no test inherits another test viewport', () => {
+    vi.useFakeTimers()
+    simulateDevice({ '(pointer: coarse)': false, '(hover: none)': false })
+    stubViewport(660)
+    renderHook(() => useOnScreenKeyboardSignals())
+
+    // Stand where `afterEach` stands: reset, then let the next test's focus
+    // arrive. Only a listener that outlived the reset can answer it, and it
+    // would answer from the viewport stub this test is about to throw away.
+    resetOnScreenKeyboardObservation()
+    focusEditable()
+    act(() => vi.advanceTimersByTime(2000))
+
+    expect(renderHook(() => useOnScreenKeyboardSignals()).result.current.observed).toBeNull()
+  })
+
   it('does not conclude anything from focusing a read-only trigger field', () => {
     vi.useFakeTimers()
     simulateDevice({ '(pointer: coarse)': true, '(hover: none)': true })
