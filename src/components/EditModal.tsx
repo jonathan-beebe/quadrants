@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef, useState } from 'react'
+import { useId, useLayoutEffect, useRef, useState } from 'react'
 import Button from './atoms/Button'
 import { XIcon } from './Icons'
 import { useFocusTrap } from '../hooks/useFocusTrap'
@@ -15,8 +15,6 @@ interface EditModalProps {
   onDelete: () => void
   onCancel: () => void
 }
-
-let nextId = 0
 
 /**
  * A self-contained editing modal, sized never to exceed the height left over
@@ -42,10 +40,8 @@ export default function EditModal({ title, value, fieldLabel = 'Text', onSave, o
   const dialogRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [draft, setDraft] = useState(value)
-  const [ids] = useState(() => {
-    const n = nextId++
-    return { title: `edit-modal-title-${n}`, field: `edit-modal-field-${n}` }
-  })
+  const id = useId()
+  const ids = { title: `${id}-title`, field: `${id}-field` }
 
   useVisualViewportHeight(true)
 

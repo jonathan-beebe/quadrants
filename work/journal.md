@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-27:09:21:29 — RFCTR-007 — done: EditModal ids come from useId, and the
+  module-level counter is gone
+- 2026-07-27:09:18:29 — RFCTR-007 — started
 - 2026-07-27:09:17:14 — RFCTR-006 — done: keyboard-size judgment moved into the
   core as isKeyboardSized, hook left with observation only
 - 2026-07-27:09:12:26 — RFCTR-006 — started

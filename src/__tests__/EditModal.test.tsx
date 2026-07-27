@@ -89,6 +89,11 @@ describe('EditModal', () => {
     expect(screen.getByRole('dialog', { name: 'Edit item' })).toHaveAttribute('aria-modal', 'true')
   })
 
+  it('names the field by its label, so the pairing survives however ids are made', () => {
+    setup({ fieldLabel: 'Item text' })
+    expect(screen.getByLabelText('Item text')).toHaveValue('Ship v2 release')
+  })
+
   it('gives each instance its own label and field ids, so two can coexist', () => {
     const { unmount } = render(
       <EditModal title="First" value="a" onSave={vi.fn()} onDelete={vi.fn()} onCancel={vi.fn()} />,
