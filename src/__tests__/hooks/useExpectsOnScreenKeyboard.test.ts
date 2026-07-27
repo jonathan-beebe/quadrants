@@ -8,18 +8,32 @@ import {
 
 const realMatchMedia = window.matchMedia
 
+let declared: Record<string, boolean> | null = null
+let consulted = new Set<string>()
+
 /**
  * Answers media queries the way a given class of device would, so the hook can
  * be asked about real hardware rather than about a boolean.
+ *
+ * Capabilities are keyed by the full query string and matched exactly, and the
+ * story and the hook are held to each other in both directions: a query the
+ * story does not declare throws here, and a declared signal the hook never
+ * reads fails the test in `afterEach`. Either way a device story cannot quietly
+ * claim a distinction the hook does not draw.
  */
 function simulateDevice(capabilities: Record<string, boolean>) {
+  declared = capabilities
+  consulted = new Set()
   window.matchMedia = ((query: string) => {
-    const known = Object.keys(capabilities).some((feature) => query.includes(feature))
-    const matches = Object.entries(capabilities)
-      .filter(([feature]) => query.includes(feature))
-      .every(([, value]) => value)
+    consulted.add(query)
+    if (!(query in capabilities)) {
+      throw new Error(
+        `The hook asked "${query}", which this device story does not answer. ` +
+          `Declared: ${Object.keys(capabilities).join(', ') || '(none)'}.`,
+      )
+    }
     return {
-      matches: known && matches,
+      matches: capabilities[query],
       media: query,
       onchange: null,
       addListener: () => {},
@@ -29,6 +43,18 @@ function simulateDevice(capabilities: Record<string, boolean>) {
       dispatchEvent: () => false,
     } satisfies MediaQueryList
   }) as typeof window.matchMedia
+}
+
+function expectEveryDeclaredSignalWasRead() {
+  if (!declared) return
+  const inert = Object.keys(declared).filter((query) => !consulted.has(query))
+  declared = null
+  if (inert.length > 0) {
+    throw new Error(
+      `This device story declares ${inert.join(', ')}, which the hook never asked about. ` +
+        `An unread signal cannot distinguish anything — drop it, or the story overstates its coverage.`,
+    )
+  }
 }
 
 function simulateUserAgentData(mobile: boolean | null) {
@@ -71,43 +97,50 @@ afterEach(() => {
   resetOnScreenKeyboardObservation()
   document.body.innerHTML = ''
   vi.useRealTimers()
+  expectEveryDeclaredSignalWasRead()
 })
 
 describe('useExpectsOnScreenKeyboard', () => {
   it('expects a keyboard on a phone — coarse pointer, no hover', () => {
-    simulateDevice({ 'pointer: coarse': true, 'hover: none': true })
+    simulateDevice({ '(pointer: coarse)': true, '(hover: none)': true })
     simulateUserAgentData(true)
     expect(renderHook(() => useExpectsOnScreenKeyboard()).result.current).toBe(true)
   })
 
-  it('expects a keyboard on a tablet, which a width breakpoint would miss', () => {
-    simulateDevice({ 'pointer: coarse': true, 'hover: none': true, 'max-width: 768px': false })
+  it('expects a keyboard on a landscape tablet, wider than a phone breakpoint', () => {
+    // A landscape tablet clears 768px, which is why the hook asks about pointer
+    // and hover instead of width. It issues no width query at all, so the story
+    // answers only the two it does issue.
+    simulateDevice({ '(pointer: coarse)': true, '(hover: none)': true })
     simulateUserAgentData(null)
     expect(renderHook(() => useExpectsOnScreenKeyboard()).result.current).toBe(true)
   })
 
   it('does not expect one on a desktop with a mouse', () => {
-    simulateDevice({ 'pointer: coarse': false, 'hover: none': false })
+    simulateDevice({ '(pointer: coarse)': false, '(hover: none)': false })
     expect(renderHook(() => useExpectsOnScreenKeyboard()).result.current).toBe(false)
   })
 
   it('does not expect one on a touchscreen laptop — it has a real keyboard', () => {
-    // The distinguishing signal: `any-pointer` is coarse, but the *primary*
-    // pointer is the trackpad, so `pointer: coarse` is false.
-    simulateDevice({ 'pointer: coarse': false, 'hover: none': false, 'any-pointer: coarse': true })
+    // Such a laptop is coarse to `any-pointer`, but the hook asks about the
+    // *primary* pointer — the trackpad — so it reads false. That the two differ
+    // here is the hook's choice of query, not something this fake simulates:
+    // `any-pointer` is never asked, so the story cannot answer it, and the
+    // laptop presents to the hook exactly as the desktop above does.
+    simulateDevice({ '(pointer: coarse)': false, '(hover: none)': false })
     expect(renderHook(() => useExpectsOnScreenKeyboard()).result.current).toBe(false)
   })
 
   it('sees through DevTools responsive mode before any interaction', () => {
     // Touch emulation is on, so the media queries lie; the user agent was left
     // on its desktop default, which gives it away.
-    simulateDevice({ 'pointer: coarse': true, 'hover: none': true })
+    simulateDevice({ '(pointer: coarse)': true, '(hover: none)': true })
     simulateUserAgentData(false)
     expect(renderHook(() => useExpectsOnScreenKeyboard()).result.current).toBe(false)
   })
 
   it('reports the keyboard once one is seen shrinking the viewport', () => {
-    simulateDevice({ 'pointer: coarse': false, 'hover: none': false })
+    simulateDevice({ '(pointer: coarse)': false, '(hover: none)': false })
     const viewport = stubViewport(660)
     const { result } = renderHook(() => useExpectsOnScreenKeyboard())
     expect(result.current).toBe(false)
@@ -118,7 +151,7 @@ describe('useExpectsOnScreenKeyboard', () => {
   })
 
   it('ignores a browser-toolbar-sized change, which is not a keyboard', () => {
-    simulateDevice({ 'pointer: coarse': false, 'hover: none': false })
+    simulateDevice({ '(pointer: coarse)': false, '(hover: none)': false })
     const viewport = stubViewport(768)
     const { result } = renderHook(() => useOnScreenKeyboardSignals())
 
@@ -130,7 +163,7 @@ describe('useExpectsOnScreenKeyboard', () => {
   it('concludes there is no keyboard when focusing a field raises nothing', () => {
     vi.useFakeTimers()
     // Every readable signal says phone — a fully emulated device.
-    simulateDevice({ 'pointer: coarse': true, 'hover: none': true })
+    simulateDevice({ '(pointer: coarse)': true, '(hover: none)': true })
     simulateUserAgentData(true)
     stubViewport(660)
     const { result } = renderHook(() => useExpectsOnScreenKeyboard())
@@ -144,7 +177,7 @@ describe('useExpectsOnScreenKeyboard', () => {
 
   it('does not conclude anything from focusing a read-only trigger field', () => {
     vi.useFakeTimers()
-    simulateDevice({ 'pointer: coarse': true, 'hover: none': true })
+    simulateDevice({ '(pointer: coarse)': true, '(hover: none)': true })
     stubViewport(660)
     const { result } = renderHook(() => useOnScreenKeyboardSignals())
 

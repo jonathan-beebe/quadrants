@@ -7,13 +7,26 @@
 - ARCH: 2
 - FEAT: 4
 - IMPRV: 6
-- MAINT: 6
+- MAINT: 9
 - A11Y: 21
-- RFCTR: 6
+- RFCTR: 8
 - BUG: 16
 
 ## Log
 
+- 2026-07-27:09:04:11 — MAINT-006 — done: matchMedia fake matches full query
+  strings and fails loudly on an undeclared query or an unread declared signal
+- 2026-07-27:08:58:23 — MAINT-006 — started
+- 2026-07-27:08:49:47 — MAINT-008 — defined: edit-modal test asserts the
+  open-selection it names
+- 2026-07-27:08:48:01 — MAINT-007 — defined: reset detaches on-screen-keyboard
+  observation listeners in tests
+- 2026-07-27:08:45:50 — RFCTR-007 — defined:
+  edit-modal-ids-from-useid-not-module-counter
+- 2026-07-27:08:44:08 — MAINT-006 — defined: exact-match matchMedia fake so
+  keyboard tests exercise the hook
+- 2026-07-27:08:41:59 — RFCTR-006 — defined: extract keyboard-size judgment into
+  onScreenKeyboard core
 - 2026-07-26:19:04:11 — RSRCH-002 — BLOCKED on device access: desk half done and
   instrument built, but the Outcome demands real-hardware evidence and only the
   iOS Simulator is available, with no Android at all. Desk findings: the premise
