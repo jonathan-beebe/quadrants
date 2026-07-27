@@ -1,5 +1,6 @@
-import { useState, useRef } from 'react'
+import { useState, useRef, useSyncExternalStore } from 'react'
 import { useDarkMode } from '../hooks/useDarkMode'
+import { useExpectsOnScreenKeyboard } from '../hooks/useExpectsOnScreenKeyboard'
 import { colorPresets, defaultColors } from '../colors'
 import ThemeToggleButton from './atoms/ThemeToggleButton'
 import Badge from './atoms/Badge'
@@ -182,47 +183,133 @@ function DesktopGridDemo() {
   )
 }
 
+/** Live matcher, for displaying the signals behind the verdict. */
+function useMediaQuery(query: string): boolean {
+  return useSyncExternalStore(
+    (callback) => {
+      const mql = window.matchMedia(query)
+      mql.addEventListener('change', callback)
+      return () => mql.removeEventListener('change', callback)
+    },
+    () => window.matchMedia(query).matches,
+    () => false,
+  )
+}
+
+function SignalRow({ query, matches, note }: { query: string; matches: boolean; note: string }) {
+  return (
+    <tr className="border-b border-border last:border-b-0">
+      <td className="py-1.5 pr-3 font-mono text-[12px] text-text whitespace-nowrap">{query}</td>
+      <td className={`py-1.5 pr-3 text-[12px] font-semibold ${matches ? 'text-accent' : 'text-text-tertiary'}`}>
+        {matches ? 'true' : 'false'}
+      </td>
+      <td className="py-1.5 text-[12px] text-text-tertiary">{note}</td>
+    </tr>
+  )
+}
+
 function EditModalDemo() {
   const [text, setText] = useState('Ship v2 release')
   const [open, setOpen] = useState(false)
+  const [preview, setPreview] = useState(false)
+
+  const expectsKeyboard = useExpectsOnScreenKeyboard()
+  // Shown to explain the verdict, not to compute it.
+  const coarsePointer = useMediaQuery('(pointer: coarse)')
+  const noHover = useMediaQuery('(hover: none)')
+  const anyCoarse = useMediaQuery('(any-pointer: coarse)')
+  const narrow = useMediaQuery('(max-width: 768px)')
+
+  // Preview is the design system's own escape hatch: without it the modal is
+  // unreviewable on the desktop where it is being designed.
+  const useModal = expectsKeyboard || preview
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
+      <div>
+        <Caption className="block mb-1.5">Detection — useExpectsOnScreenKeyboard()</Caption>
+        <div className="rounded-xl border border-border bg-surface p-3">
+          <table className="w-full border-collapse">
+            <tbody>
+              <SignalRow query="(pointer: coarse)" matches={coarsePointer} note="primary pointer is touch" />
+              <SignalRow query="(hover: none)" matches={noHover} note="no hover capability" />
+              <SignalRow
+                query="(any-pointer: coarse)"
+                matches={anyCoarse}
+                note="not used — true on touchscreen laptops, which have real keyboards"
+              />
+              <SignalRow
+                query="(max-width: 768px)"
+                matches={narrow}
+                note="not used — useIsMobile's layout question; a landscape tablet exceeds it"
+              />
+            </tbody>
+          </table>
+          <p className="mt-3 pt-3 border-t border-border text-sm">
+            <span className="text-text-secondary">Verdict: </span>
+            <span className={`font-semibold ${expectsKeyboard ? 'text-accent' : 'text-text'}`}>
+              {expectsKeyboard
+                ? 'on-screen keyboard expected — edit through the modal'
+                : 'physical keyboard — edit in place'}
+            </span>
+          </p>
+        </div>
+      </div>
+
+      <label className="flex items-center gap-2 text-sm text-text-secondary">
+        <input type="checkbox" checked={preview} onChange={(e) => setPreview(e.target.checked)} className="w-4 h-4" />
+        Preview the modal on this device (overrides the verdict)
+      </label>
+
       <div>
         <label htmlFor="edit-modal-demo-input" className="block text-xs font-medium text-text-secondary mb-1.5">
-          Item text — tap to edit
+          {useModal ? 'Item text — tap to edit' : 'Item text — edit in place'}
         </label>
         <input
           id="edit-modal-demo-input"
           type="text"
           value={text}
-          readOnly
-          // The field never edits in place — it opens the modal. Saying so
-          // explicitly, and saying `dialog` rather than leaving it to be
-          // guessed, is the A11Y-016 lesson.
-          aria-haspopup="dialog"
-          aria-expanded={open}
+          // The branch under demonstration: on a device with an on-screen
+          // keyboard the field is a trigger, everywhere else it is a field.
+          readOnly={useModal}
+          // Popup semantics only when the field actually opens one, and named
+          // as a dialog rather than left to be guessed (A11Y-016).
+          aria-haspopup={useModal ? 'dialog' : undefined}
+          aria-expanded={useModal ? open : undefined}
+          onChange={(e) => setText(e.target.value)}
           // pointerDown, not click, and preventDefault so the input never takes
           // focus itself: the modal must open and claim focus inside the same
           // gesture or iOS will not raise the keyboard (RSRCH-002).
-          onPointerDown={(e) => {
-            e.preventDefault()
-            setOpen(true)
-          }}
-          onKeyDown={(e) => {
-            if (e.key === 'Enter' || e.key === ' ') {
-              e.preventDefault()
-              setOpen(true)
-            }
-          }}
-          className="w-full max-w-[440px] rounded-lg px-3 py-2 bg-surface text-text border border-border cursor-pointer"
+          onPointerDown={
+            useModal
+              ? (e) => {
+                  e.preventDefault()
+                  setOpen(true)
+                }
+              : undefined
+          }
+          onKeyDown={
+            useModal
+              ? (e) => {
+                  if (e.key === 'Enter' || e.key === ' ') {
+                    e.preventDefault()
+                    setOpen(true)
+                  }
+                }
+              : undefined
+          }
+          className={`w-full max-w-[440px] rounded-lg px-3 py-2 bg-surface text-text border border-border ${
+            useModal ? 'cursor-pointer' : ''
+          }`}
         />
       </div>
+
       <Caption>
         Save applies the edit to the field above. Cancel and the close X discard it. Delete closes and reports the
         action it would have taken.
       </Caption>
-      {open && (
+
+      {open && useModal && (
         <EditModal
           title="Edit item"
           value={text}
@@ -427,7 +514,7 @@ export default function DesignSystem() {
 
         <Subsection title="Card" />
 
-        <Subsection title="Edit Modal" layout="stack">
+        <Subsection title="Edit Modal — gated on on-screen-keyboard detection" layout="stack">
           <EditModalDemo />
         </Subsection>
 
