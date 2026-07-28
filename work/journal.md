@@ -9,11 +9,17 @@
 - IMPRV: 6
 - MAINT: 9
 - A11Y: 21
-- RFCTR: 8
+- RFCTR: 9
 - BUG: 18
 
 ## Log
 
+- 2026-07-27:19:43:00 — RFCTR-008 — started
+- 2026-07-27:19:40:07 — RFCTR-008 — defined: consolidate mobile drawer focus and
+  modality under one owner
+- 2026-07-27:16:39:59 — RSRCH-002 — real-device iOS spot-check: top-sheet A/B
+  (pan stays 0) and probe section 3 both look good on hardware; simulator
+  findings hold. No ticket edits or recommendation yet
 - 2026-07-27:15:35:42 — BUG-017 — done: the app shell sizes to `svh` and every
   surface inside defers to it, so the document no longer scrolls; guarded by
   viewportLock.test.ts. Device verification still outstanding

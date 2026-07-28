@@ -269,6 +269,60 @@ describe('App', () => {
     })
   })
 
+  describe('mobile drawer focus on open and on a dismissal that does not navigate (A11Y-005)', () => {
+    // The counterpart to BUG-014's landing above: when the drawer closes
+    // without changing what <main> renders, the opener is still mounted and is
+    // where focus belongs. Both paths are one decision (useDrawerModality), so
+    // they are tested as a pair — the restore half was previously unguarded.
+    beforeEach(() => {
+      vi.mocked(useIsMobile).mockReturnValue(true)
+    })
+
+    it('moves focus into the drawer when it opens', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByRole('button', { name: /open sidebar/i }))
+
+      expect(screen.getByRole('button', { name: /close sidebar/i })).toHaveFocus()
+    })
+
+    it('returns focus to the opener when the drawer is closed with Escape', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByRole('button', { name: /open sidebar/i }))
+      fireEvent.keyDown(screen.getByRole('dialog', { name: /frameworks sidebar/i }), { key: 'Escape' })
+
+      expect(screen.queryByRole('dialog', { name: /frameworks sidebar/i })).not.toBeInTheDocument()
+      expect(screen.getByRole('button', { name: /open sidebar/i })).toHaveFocus()
+    })
+
+    it('returns focus to the opener when the drawer is closed from its own close button', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByRole('button', { name: /open sidebar/i }))
+      await user.click(screen.getByRole('button', { name: /close sidebar/i }))
+
+      expect(screen.getByRole('button', { name: /open sidebar/i })).toHaveFocus()
+    })
+
+    it('returns focus to the opener when the drawer is dismissed by its backdrop', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByRole('button', { name: /open sidebar/i }))
+      // fireEvent, not userEvent: a full click would additionally apply the
+      // browser's own click-target focus default (jsdom: body), which is
+      // pointer behavior rather than anything the dismissal path decides
+      // (A11Y-016 established the same distinction).
+      fireEvent.click(screen.getByTestId('sidebar-backdrop'))
+
+      expect(screen.getByRole('button', { name: /open sidebar/i })).toHaveFocus()
+    })
+  })
+
   it('opens the framework builder when "Create Framework" is clicked from empty state', async () => {
     const user = userEvent.setup()
     render(<App />)

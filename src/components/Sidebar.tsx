@@ -14,6 +14,10 @@ interface SidebarProps {
   frameworks: Framework[]
   activeId: string | null
   open: boolean
+  /** Whether the drawer is currently a modal surface. Owned by `useDrawerModality`. */
+  isModal: boolean
+  /** Focus lands here when the modal drawer opens. Owned by `useDrawerModality`. */
+  closeButtonRef: React.RefObject<HTMLButtonElement | null>
   themeMode: ThemeMode
   isDark: boolean
   onCycleTheme: () => void
@@ -30,6 +34,8 @@ export default function Sidebar({
   frameworks,
   activeId,
   open,
+  isModal,
+  closeButtonRef,
   themeMode,
   isDark,
   onCycleTheme,
@@ -45,27 +51,16 @@ export default function Sidebar({
   const menuRef = useRef<HTMLDivElement>(null)
   const menuTriggerRef = useRef<HTMLButtonElement>(null)
   const asideRef = useRef<HTMLElement>(null)
-  const closeButtonRef = useRef<HTMLButtonElement>(null)
-  const previouslyFocusedRef = useRef<HTMLElement | null>(null)
+  // Only for the floating opener below, which is a desktop layout affordance.
+  // Modality is not derived here — it arrives as `isModal` from the one owner
+  // (`useDrawerModality`), so this component and `App` cannot disagree about it
+  // the way they did in BUG-012.
   const isMobile = useIsMobile()
-  const isModal = isMobile && open
 
   const closeMenu = useCallback(() => setOpenMenuFrameworkId(null), [])
   // menuTriggerRef is excluded so the trigger's own onClick toggle can close
   // the menu instead of racing the mousedown-close (BUG-005).
   useClickOutside(menuRef, closeMenu, !!openMenuFrameworkId, menuTriggerRef)
-
-  // When the drawer becomes modal (mobile + open), move focus into it and
-  // remember where focus came from so we can restore it on close.
-  useEffect(() => {
-    if (!isModal) return
-    previouslyFocusedRef.current = document.activeElement as HTMLElement | null
-    closeButtonRef.current?.focus()
-    return () => {
-      previouslyFocusedRef.current?.focus?.()
-      previouslyFocusedRef.current = null
-    }
-  }, [isModal])
 
   const handleAsideKeyDown = useFocusTrap(asideRef, isModal ? onToggle : undefined)
 
@@ -81,7 +76,7 @@ export default function Sidebar({
 
   return (
     <>
-      {open && isMobile && (
+      {isModal && (
         <div
           data-testid="sidebar-backdrop"
           className="fixed inset-0 bg-black/30 z-[99]"

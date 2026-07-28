@@ -1,3 +1,4 @@
+import { createRef } from 'react'
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -31,6 +32,10 @@ const defaultProps = {
   frameworks: [] as Framework[],
   activeId: null as string | null,
   open: true,
+  // Modality is owned by useDrawerModality and arrives as a prop (RFCTR-008);
+  // the modal cases below opt in explicitly.
+  isModal: false,
+  closeButtonRef: createRef<HTMLButtonElement>(),
   themeMode: 'system' as const,
   isDark: false,
   onCycleTheme: vi.fn(),
@@ -180,7 +185,7 @@ describe('Sidebar', () => {
     const user = userEvent.setup()
     vi.mocked(useIsMobile).mockReturnValue(true)
     const onToggle = vi.fn()
-    render(<Sidebar {...defaultProps} open={true} onToggle={onToggle} />)
+    render(<Sidebar {...defaultProps} open={true} isModal={true} onToggle={onToggle} />)
 
     const backdrop = screen.getByTestId('sidebar-backdrop')
     expect(backdrop).toBeInTheDocument()
@@ -202,15 +207,13 @@ describe('Sidebar', () => {
     expect(screen.queryByTestId('sidebar-backdrop')).not.toBeInTheDocument()
   })
 
-  it('moves focus to the close button when the drawer opens on mobile (A11Y-005)', () => {
-    vi.mocked(useIsMobile).mockReturnValue(true)
-    render(<Sidebar {...defaultProps} open={true} />)
-    expect(screen.getByRole('button', { name: /close sidebar/i })).toHaveFocus()
-  })
+  // Focus-on-open is asserted in App.test.tsx: it is one half of the single
+  // focus decision useDrawerModality owns, and testing it here would only
+  // re-test a ref this component now receives (RFCTR-008).
 
   it('exposes the open mobile drawer as a modal dialog (A11Y-005)', () => {
     vi.mocked(useIsMobile).mockReturnValue(true)
-    render(<Sidebar {...defaultProps} open={true} />)
+    render(<Sidebar {...defaultProps} open={true} isModal={true} />)
     const dialog = screen.getByRole('dialog', { name: /frameworks sidebar/i })
     expect(dialog).toHaveAttribute('aria-modal', 'true')
   })
@@ -218,7 +221,7 @@ describe('Sidebar', () => {
   it('closes the mobile drawer when Escape is pressed (A11Y-005)', () => {
     vi.mocked(useIsMobile).mockReturnValue(true)
     const onToggle = vi.fn()
-    render(<Sidebar {...defaultProps} open={true} onToggle={onToggle} />)
+    render(<Sidebar {...defaultProps} open={true} isModal={true} onToggle={onToggle} />)
     const dialog = screen.getByRole('dialog', { name: /frameworks sidebar/i })
     fireEvent.keyDown(dialog, { key: 'Escape' })
     expect(onToggle).toHaveBeenCalledOnce()

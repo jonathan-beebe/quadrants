@@ -112,7 +112,30 @@ whatever `present` becomes.
 
 ## Accepted decisions
 
-| Decision                                                                                                        | Decided    | Re-open when                                                                                                                                                              |
-| --------------------------------------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Layer-first folders** (`logic/`, `hooks/`, `components/`, adapters at `src/` root) rather than feature-first. | 2026-07-05 | The app grows a second feature domain, or a feature's files stop changing together — then reorganize by feature first, layer second.                                      |
-| **Ambient `Date.now` / `crypto.randomUUID` / `Math.random` in the core** — no injected clock/id (RSRCH-001).    | RSRCH-001  | A real flaky test traced to time/randomness; a need to run the core outside vitest; or sync/CRDT-style features where deterministic replay becomes a product requirement. |
+| Decision                                                                                                        | Decided    | Re-open when                                                                                                                                                                                                               |
+| --------------------------------------------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Layer-first folders** (`logic/`, `hooks/`, `components/`, adapters at `src/` root) rather than feature-first. | 2026-07-05 | The app grows a second feature domain, or a feature's files stop changing together — then reorganize by feature first, layer second.                                                                                       |
+| **Ambient `Date.now` / `crypto.randomUUID` / `Math.random` in the core** — no injected clock/id (RSRCH-001).    | RSRCH-001  | A real flaky test traced to time/randomness; a need to run the core outside vitest; or sync/CRDT-style features where deterministic replay becomes a product requirement.                                                  |
+| **A modal surface's focus is owned by one hook above it**, not split to match the DOM (RFCTR-008).              | RFCTR-008  | A third surface needs to inert something outside itself, or `ConflictDialog` and `EditModal` grow focus restore and all three turn out alike — then extract a shared modal-surface contract instead of repeating this one. |
+
+### Modal surfaces
+
+A modal surface's modality usually spans two DOM regions: the surface itself
+(dialog semantics, focus trap, Escape) and the background it covers (`inert`,
+and the focus target once the surface closes). Those regions belong to different
+components, so splitting ownership to match the DOM leaves no one holding the
+whole behavior — and because both halves write `document.activeElement`,
+correctness ends up resting on React's effect-commit order rather than on
+anything stated.
+
+The rule: **whatever owns the open state owns every focus move that follows from
+it.** Closing resolves to exactly one focus target, chosen from why the surface
+closed. `useDrawerModality` is the worked example — `Sidebar` renders the drawer
+and derives nothing about its own modality.
+
+`useFocusTrap` deliberately stays narrower than this: it is Tab cycling and
+Escape for any container, with no opinion about focus-on-open, restore, or the
+background. The four surfaces using it (`Sidebar`, `ConflictDialog`,
+`EditModal`, `FrameworkBuilder`'s template picker) still hand-roll the rest, and
+two of them do not restore focus at all. That is a known gap, not a pattern to
+copy.
