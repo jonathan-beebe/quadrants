@@ -161,4 +161,4 @@ Advisory — `/work-start` may use or discard.
 - Suite 447/447 green, lint and typecheck clean. The ~15 tests the ticket
   expected to carry through did, unmodified apart from those props.
 - Not done here, as scoped: the missing focus restores in `ConflictDialog` and
-  `EditModal` (WCAG 2.4.3). Still unfiled.
+  `EditModal` (WCAG 2.4.3). Filed as A11Y-021 and A11Y-022.

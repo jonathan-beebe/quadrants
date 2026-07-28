@@ -8,12 +8,16 @@
 - FEAT: 4
 - IMPRV: 6
 - MAINT: 9
-- A11Y: 21
+- A11Y: 23
 - RFCTR: 9
 - BUG: 18
 
 ## Log
 
+- 2026-07-28:08:46:23 — A11Y-022 — defined: edit modal strands focus on body
+  when closed
+- 2026-07-28:08:46:23 — A11Y-021 — defined: conflict dialog strands focus on
+  body when dismissed
 - 2026-07-28:08:15:40 — RFCTR-008 — done: the drawer's open state and both focus
   moves live in useDrawerModality; the effect-ordering contract is gone and the
   restore path is covered

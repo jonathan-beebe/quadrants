@@ -12,11 +12,10 @@ Filed automatically while working BUG-014, per `work-start/types/bug.md`. Not an
 allocated ticket — no id drawn, no journal entry. For the human to promote to
 `1-inbox` (via `/work-scope`) or discard.
 
-> **Promoted 2026-07-27 to RFCTR-008** —
-> `work/1-inbox/RFCTR-008-consolidate-mobile-drawer-focus-and-modality-under-one-owner.md`.
-> The findings and recommendation below are the scope packet it was written
-> from; the two out-of-scope focus-restore defects noted there
-> (`ConflictDialog`, `EditModal`) are not yet filed.
+> **Promoted 2026-07-27 to RFCTR-008**, resolved 2026-07-28 (now in
+> `work/3-done/`). The findings and recommendation below are the scope packet it
+> was written from; the two out-of-scope focus-restore defects noted there
+> (`ConflictDialog`, `EditModal`) are filed as A11Y-021 and A11Y-022.
 
 ## Why this was filed
 
