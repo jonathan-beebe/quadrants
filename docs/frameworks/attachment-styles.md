@@ -1,5 +1,9 @@
 # Attachment Styles
 
+> **Fear of abandonment vs. discomfort with closeness:** see which learned
+> reflex drives your recurring relationship trouble, and what secure functioning
+> would look like from there.
+
 The two-dimensional model of adult attachment is a 2×2 framework from
 relationship psychology. The two axes are **attachment anxiety** (fear of
 abandonment and preoccupation with a partner's availability) and **attachment
@@ -169,6 +173,31 @@ capture conscious self-perception, not the unconscious processes tapped by
 interview methods like the Adult Attachment Interview
 ([Wikipedia: Attachment in adults](https://en.wikipedia.org/wiki/Attachment_in_adults)).
 
+## How do you get into the right mindset?
+
+The framework reads reflexes, not self-image, so arrive with concrete memories
+rather than a theory of yourself. Clinicians prime the work by exploring
+relationship history first — intake questions about relationships, coping
+strategies, and emotional patterns, and early caregiving experiences — before
+any style label appears
+([Blueprint](https://www.blueprint.ai/blog/attachment-styles-applying-theory-in-therapy-to-deepen-clinical-insight)).
+A practitioner worksheet opens the same way: recall a time in a relationship
+when you felt bad, then work through prompts such as "What was the trigger (or
+triggers) that made you feel bad?" and "How has that incident and others like it
+impacted your current relationship?"
+([PositivePsychology](https://positivepsychology.com/attachment-style-in-relationships/)).
+
+With one such moment in mind, orient to each axis before plotting:
+
+- **Anxiety axis:** when a partner went quiet or distant, what story did I start
+  telling myself, and what did I do to get reassurance?
+- **Avoidance axis:** when someone moved closer or asked me to depend on them,
+  what was my first impulse?
+- **Both:** in my worst relational moments, did I reach or retreat — and what
+  was I needing that I did not say?
+
+Answer from what you did, not from what you believe about yourself.
+
 ## How does one use it properly?
 
 1. **Score the anxiety axis.** Ask: _how much do I worry about abandonment, and
@@ -263,5 +292,9 @@ unbranded name
   — the closest Wikipedia coverage; no dedicated article exists for the 2×2
   attachment-styles framework itself
 - [Wikipedia: Attachment theory](https://en.wikipedia.org/wiki/Attachment_theory)
+- [Blueprint: Attachment styles — applying theory in therapy to deepen clinical insight](https://www.blueprint.ai/blog/attachment-styles-applying-theory-in-therapy-to-deepen-clinical-insight)
+  — clinical intake areas and assessment guidance for exploring attachment
+- [PositivePsychology: Attachment styles in relationships — worksheets for adults](https://positivepsychology.com/attachment-style-in-relationships/)
+  — practitioner reflection prompts for recalling difficult relationship moments
 - [Wikipedia: John Bowlby](https://en.wikipedia.org/wiki/John_Bowlby)
 - [Wikipedia: Mary Ainsworth](https://en.wikipedia.org/wiki/Mary_Ainsworth)

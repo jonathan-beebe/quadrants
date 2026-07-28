@@ -1,5 +1,8 @@
 # The OK Corral
 
+> **Your worth vs. theirs:** which of the four stances is driving this
+> encounter, and how to steer back to the only one that resolves anything.
+
 The OK Corral is a 2×2 grid of "life positions" from Transactional Analysis
 (TA). The horizontal axis is your view of yourself — **I'm OK / I'm not OK** —
 and the vertical axis is your view of the other person — **You're OK / You're
@@ -140,6 +143,23 @@ Berne's TA has also been critiqued for lacking a script-reversal technique that
 meets his own criteria of conciseness and theoretical consistency
 ([Wikipedia: Transactional analysis](https://en.wikipedia.org/wiki/Transactional_analysis)).
 
+## How do you get into the right mindset?
+
+The grid diagnoses moments, not characters, so the orienting move is accepting
+before you plot that you visit all four corners — the tool only works when no
+corner is shameful to find. Ernst's own warm-up is the **Corralogram**: draw the
+grid and shade each quadrant in proportion to the time you believe you spend
+there, a self-map of your habitual positions made before any live diagnosis
+([Businessballs](https://www.businessballs.com/emotional-intelligence/transactional-analysis-eric-berne/)).
+Then orient with a few questions:
+
+- Which corner do you retreat to under stress, and what does the slide into it
+  feel like just before it happens?
+- Heading into this encounter, are you already rehearsing blame (get-rid-of) or
+  appeasement (get-away-from)?
+- Are you willing to hold both OKs at once — to state your view without
+  discounting the other person's?
+
 ## How does one use it properly?
 
 Ernst's 1971 article and monograph are the authoritative usage sources but are
@@ -218,6 +238,22 @@ only with permission. The underlying concept (self-perception and
 other-perception as dimensions of interpersonal stance) is not proprietary and
 can be expressed under generic names such as "life positions grid."
 
+## How do you use it generically?
+
+The name needs no substitute — it is not trademarked — but generic labels are
+already in circulation: the TA literature itself calls the model the "OK Grid,"
+and the underlying concept goes by "life position," "existential position," and
+"basic life position"
+([Karve](https://tatheoryandpracticebyajitkarve.blogspot.com/2018/04/transactional-analysis-theory-life.html)).
+"Life positions grid" describes it with no reference to Ernst or TA branding at
+all. The axis wording (I'm OK / I'm not OK, You're OK / You're not OK) and the
+four operations (get-on-with, get-rid-of, get-away-from, get-nowhere-with) are
+published concepts rather than marks; keep them, or restate the axes as
+view-of-self and view-of-other. What to avoid is reproduction, not use: redraw
+the grid yourself rather than copying figures or text from Ernst's 1971 article
+or monograph, which remain under standard academic copyright
+([Ernst, 1971](https://journals.sagepub.com/doi/10.1177/036215377100100409)).
+
 ## Sources
 
 - [Ernst, F.H. Jr. (1971). "The OK Corral: The Grid for Get-on-With." _Transactional Analysis Journal_, 1(4), 33–42](https://journals.sagepub.com/doi/10.1177/036215377100100409)
@@ -240,3 +276,9 @@ can be expressed under generic names such as "life positions grid."
   — scholarly discussion of Berne's positions concept
 - [Life with Kindness — OK Corral origins](https://lifewithkindness.co.uk/okcorralorigins)
   — secondary overview of Ernst's grid and its dynamic-operations reading
+- [Businessballs — Transactional analysis (Eric Berne)](https://www.businessballs.com/emotional-intelligence/transactional-analysis-eric-berne/)
+  — describes Ernst's "Corralogram" self-assessment: shading the quadrants by
+  time spent in each position
+- [Karve, A. — "Transactional Analysis Theory: Life Positions" (TA Theory and Practice blog)](https://tatheoryandpracticebyajitkarve.blogspot.com/2018/04/transactional-analysis-theory-life.html)
+  — documents the alternative names OK Grid, life position, existential
+  position, and basic life position

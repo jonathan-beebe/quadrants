@@ -1,5 +1,8 @@
 # Competence Ladder
 
+> **Competence vs. awareness:** knowing which stage of learning you're in turns
+> the discouraging middle into a sign of progress, not failure.
+
 The Competence Ladder — also known as the **Four Stages of Competence** or "four
 stages of learning any new skill" — is a 2×2 quadrant model of skill
 acquisition. Its axes are **Competence** (can you do the thing?) and
@@ -102,6 +105,25 @@ teaches but is not evidence for the framework itself
 No published scholarly critiques were located either; the model's standing rests
 on face validity and decades of adoption in training practice, not on controlled
 studies.
+
+## How do you get into the right mindset?
+
+The creators published no priming worksheets, but GTI's method begins by sharing
+the model itself: telling learners where they are — and that four stages exist —
+is part of the facilitation, because a learner who expects stage-two discomfort
+can survive it
+([Gordon Training International](https://www.gordontraining.com/free-workplace-articles/learning-a-new-skill-is-easier-said-than-done/)).
+Beyond that, a few orienting questions drawn from the model's own protocol and
+core insight set up the placement:
+
+- **What is the one skill?** Name it in narrow terms — "giving corrective
+  feedback," not "leadership." The ladder is per-skill.
+- **Which reading are you taking?** Competence and awareness are separate axes;
+  a placement needs an answer for each.
+- **Run the effort test.** Can the skill be performed at all, only with
+  deliberate attention, or without thinking about it?
+- **Expect the dip.** If assessment reveals a bigger gap than expected, can you
+  hold that discovery as progress rather than a verdict?
 
 ## How does one use it properly?
 

@@ -1,5 +1,9 @@
 # How–Now–Wow Matrix
 
+> **Original vs. doable:** sorts brainstormed ideas into quick wins,
+> breakthrough bets, and a parked backlog before the group defaults to its
+> safest options.
+
 The How–Now–Wow matrix is a 2×2 idea-selection tool used at the convergent stage
 of brainstorming. Ideas are plotted by **originality** on one axis and **ease of
 implementation** on the other, producing three named categories plus a discard
@@ -111,6 +115,24 @@ faculty at SUNY Buffalo to stay aligned with current creativity research
 ([School of Creative Thinking](https://schoolofcreativethinking.nl/en/school/)),
 but that speaks to the field, not to this tool specifically.
 
+## How do you get into the right mindset?
+
+The matrix exists to counter familiarity bias, so the framing happens before the
+first dot is placed. Name the creadox up front — groups that brainstorm wild
+ideas reflexively pick the most familiar ones at selection time
+([Gamestorming](https://gamestorming.com/how-now-wow-matrix/)) — then align on
+the axes: [Toolshero](https://www.toolshero.com/creativity/cocd-box-method/)
+instructs teams to jointly define what "feasible" and "original" mean in their
+context ("this prevents discussion later on") and to anchor the assessment to
+its two central questions: "How feasible is the idea?" and "How original is the
+idea?" With the definitions set, a few orienting questions put each voter in the
+right frame:
+
+- Am I drawn to this idea because it is good, or because it is familiar?
+- What would have to change — budget, technology, permission — for this idea to
+  become feasible? A concrete answer marks a How, not a discard.
+- Would this idea count as original outside our team, or only to us?
+
 ## How does one use it properly?
 
 Use it as the convergent step immediately after a divergent ideation session,
@@ -186,6 +208,24 @@ _Creativity Today_ (2007) and _Gamestorming_ (2010) are copyrighted works. If
 the trademarked "COCD Box" name is a concern, use "How–Now–Wow matrix" — the
 dominant term in English-language literature — or a generic name such as
 "originality–feasibility matrix" or "2×2 idea-selection matrix".
+
+## How do you use it generically?
+
+Only the "COCD-box®" name is trademarked
+([School of Creative Thinking](https://schoolofcreativethinking.nl/en/school/));
+the working method carries no branded material you need. Call it the
+"How–Now–Wow matrix" — the name under which
+[Gamestorming](https://gamestorming.com/how-now-wow-matrix/) and
+[SessionLab](https://www.sessionlab.com/methods/how-now-wow-matrix) publish the
+full protocol openly — or use a plain descriptor such as
+"originality–feasibility matrix" or "2×2 idea-selection matrix". The parts are
+freely adjustable: relabel the axes ("novelty" for originality, "effort" for
+ease of implementation), rename or translate the quadrants (this app labels the
+discard quadrant "Ciao"), and swap the COCD dot colors for any voting tokens —
+the method is the two questions and the sort, not the branding. Avoid two
+things: using "COCD Box" as a product or course name, and reproducing diagrams
+or text from the copyrighted books _Creativity Today_ (2007) and _Gamestorming_
+(2010) — describe the matrix in your own words instead.
 
 ## Sources
 

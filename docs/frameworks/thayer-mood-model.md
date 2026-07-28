@@ -1,5 +1,8 @@
 # Thayer's Two-Dimensional Mood Model
 
+> **Energy vs. tension:** turn "I feel bad" into "tired and tense" — a reading
+> that points to a specific fix.
+
 Thayer's mood model is a 2×2 framework that describes everyday moods as the
 product of two independent biological arousal systems rather than as a single
 good-to-bad scale. One axis is **energetic arousal** — the energy-to-tiredness
@@ -199,6 +202,25 @@ validated for nudging daily mood, not as a treatment for clinical depression or
 anxiety. Some researchers argue mood is better captured by six to ten dimensions
 than two
 ([Wilhelm & Schoebi, mood-structure review](https://www.researchgate.net/publication/225274249_Assessing_Mood_in_Daily_Life_Structural_Validity_Sensitivity_to_Change_and_Reliability_of_a_Short-Scale_to_Measure_Three_Basic_Dimensions_of_Mood)).
+
+## How do you get into the right mindset?
+
+The shift the model asks for is from judging your life to reading your body.
+Thayer published no warm-up exercise; the closest documented practice is the
+AD-ACL itself, which primes the two-axis reading by having you rate single
+adjectives — energy words such as "active," "vigorous," and "lively" against
+tension words such as "jittery" and "clutched-up" — before any verdict on how
+you feel overall
+([AD-ACL item table](https://www.researchgate.net/figure/The-Activation-Deactivation-Adjective-Check-List-AD-ACL-Thayer-1989-Rating-scale_tbl1_276851160)).
+
+Orienting questions in the same spirit, derived from the model's protocol:
+
+- Am I describing my body or my circumstances? The model reads the body; the
+  circumstances can wait.
+- If I could change one thing right now, would it be more energy or less
+  tension?
+- What time of day is it, and what does this hour tend to feel like for me?
+- When did I last move, eat, and sleep?
 
 ## How does one use it properly?
 

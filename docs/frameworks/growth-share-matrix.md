@@ -1,5 +1,8 @@
 # Growth–Share Matrix
 
+> **Cash today vs. growth tomorrow:** which businesses should fund the
+> portfolio, which deserve the money, and which should be cut.
+
 The Growth–Share Matrix (also called the BCG Matrix or Boston Matrix) is a 2×2
 portfolio-management model that plots a company's products or business units on
 two axes: **relative market share** (a proxy for competitive strength and cash
@@ -103,6 +106,27 @@ The evidence is thin, and what exists is largely negative:
   quadrants) rather than abandonment
   ([BCG Classics Revisited](https://bcghendersoninstitute.com/wp-content/uploads/2014/06/BCG-Classics-Revisited-The-Growth-Share-Matrix.pdf)).
 
+## How do you get into the right mindset?
+
+The matrix is a cash-allocation argument, not a labeling exercise, so arrive
+thinking about the whole portfolio's cash flows rather than any single unit's
+prospects. Before plotting:
+
+- **Scope the portfolio.** Define what you are assessing — business units,
+  product families, or geographies — before gathering data
+  ([Umbrex](https://umbrex.com/resources/frameworks/strategy-frameworks/bcg-growth-share-matrix/)).
+- **Take the cash-flow view.** Ask which units generate net cash today, which
+  consume it, and whether the mature products' profits are funding the growth
+  bets — the question the matrix exists to answer.
+- **Agree the yardsticks out loud.** Fix the growth and share thresholds before
+  placing anything, so quadrant boundaries aren't relitigated item by item
+  ([Workshop Weaver](https://workshopweaver.com/facilitation-methods/bcg-matrix));
+  the conventional 10% growth midpoint is a judgement call, not a rule
+  ([FE Training](https://www.fe.training/free-resources/credit/bcg-matrix/)).
+- **Pre-commit to honesty about weak units.** For each candidate Dog, ask:
+  "Would we start this business today?"
+  ([Workshop Weaver](https://workshopweaver.com/facilitation-methods/bcg-matrix)).
+
 ## How does one use it properly?
 
 Five steps, per the standard implementation protocol
@@ -201,7 +225,7 @@ are public domain; attribution to BCG and Henderson is scholarly best practice.
 - [BCG Growth Share Matrix — ClickUp](https://clickup.com/blog/bcg-growth-share-matrix/)
   (5-step implementation protocol)
 - [BCG Growth-Share Matrix — Umbrex](https://umbrex.com/resources/frameworks/strategy-frameworks/bcg-growth-share-matrix/)
-  (refresh cadence)
+  (refresh cadence; portfolio scoping)
 - [BCG Growth-Share Matrix — Mooncamp](https://mooncamp.com/glossary/bcg-growth-share-matrix)
   (annual + quarterly review cadence)
 - [BCG Matrix vs. GE-McKinsey Matrix — CaseBasix](https://www.casebasix.com/pages/bcg-matrix-vs-ge-mckinsey-matrix)
@@ -211,3 +235,7 @@ are public domain; attribution to BCG and Henderson is scholarly best practice.
   (no matrix-name trademark)
 - [BCG Terms of Use](https://www.bcg.com/about/terms-of-use) (copyright on BCG
   publications)
+- [BCG Matrix facilitation method — Workshop Weaver](https://workshopweaver.com/facilitation-methods/bcg-matrix)
+  (threshold agreement; "Would we start this business today?" prompt)
+- [BCG Matrix — FE Training](https://www.fe.training/free-resources/credit/bcg-matrix/)
+  (judgement in setting the 10% growth midpoint)

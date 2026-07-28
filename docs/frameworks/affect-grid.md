@@ -1,5 +1,8 @@
 # Affect Grid
 
+> **How pleasant vs. how energized:** one mark pins a vague feeling to two
+> scores you can track, repeat, and compare.
+
 The Affect Grid is a single-item self-report instrument for measuring emotion.
 It is a 9×9 grid of squares whose horizontal axis runs from **unpleasant
 feelings** to **pleasant feelings** and whose vertical axis runs from
@@ -126,6 +129,25 @@ grid gives you numbers, the Mood Meter gives you words.
   supports it as a quick, broad-spectrum measure of pleasure and arousal, not as
   a discriminator of specific emotions or a clinical diagnostic.
 
+## How do you get into the right mindset?
+
+The published protocol assumes almost no preparation: the whole instruction is
+to rate how you feel right now, then make one mark
+([ARC instrument page](https://arc.psych.wisc.edu/self-report/affect-grid-agrid/)).
+Practitioner writing on grid-style check-ins adds two habits worth borrowing:
+practice with a daily 60-second check-in in low-stakes moments so the skill is
+there in high-stakes ones, and reach for a feeling word more specific than "bad"
+or "stressed"
+([NeuroLaunch emotion-grid guide](https://neurolaunch.com/emotion-grid/)).
+Beyond that, the grid's own protocol supplies the orienting questions:
+
+- What is true right now — not this morning, not on average?
+- Which side of center is this moment on, pleasant or unpleasant, and how far
+  out?
+- Separately from whether it feels good: how much energy is in your body — could
+  you doze off, or could you sprint?
+- Skip "why" for now; the grid only asks "where."
+
 ## How does one use it properly?
 
 1. Present the blank 9×9 grid with the axes labeled — pleasure–displeasure
@@ -228,5 +250,8 @@ wanted.
 - [Wikipedia: Self-Assessment Manikin](https://en.wikipedia.org/wiki/Self-Assessment_Manikin)
 - [Wikipedia: Positive and Negative Affect Schedule](https://en.wikipedia.org/wiki/Positive_and_Negative_Affect_Schedule)
 - [Wikiversity: Plutchik's wheel of emotions](https://en.wikiversity.org/wiki/Motivation_and_emotion/Book/2014/Plutchik%27s_wheel_of_emotions)
+- [NeuroLaunch guide to emotion grids](https://neurolaunch.com/emotion-grid/) —
+  practitioner advice on daily 60-second check-ins and naming feelings with
+  precision
 - [Mood Meter (sibling doc)](./mood-meter.md) — the popular check-in tool built
   on the same pleasure × arousal space

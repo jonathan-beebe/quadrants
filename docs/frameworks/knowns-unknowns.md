@@ -1,5 +1,8 @@
 # Knowns & Unknowns
 
+> **Knowledge vs. awareness:** shows where confidence is earned, which questions
+> to chase, and which blind spots only contingency can cover.
+
 The Knowns & Unknowns matrix is a 2×2 quadrant model for classifying knowledge
 and risk. Its axes are **Knowledge** (whether something is known or unknown) and
 **Awareness** (whether we are aware of our knowledge state), yielding four
@@ -102,6 +105,28 @@ quite a complex matter"
 2003 Plain English Campaign "Foot in Mouth Award" criticized the phrasing, not
 the substance.
 
+## How do you get into the right mindset?
+
+Arrive ready to demote your own certainties, not to defend them. Before plotting
+anything, prime each quadrant with a question
+([Developing Strategy Under Uncertainty](https://stephen.fm/known-unknown-matrix/)):
+
+- **Known knowns** — is each entry "an actually provable fact," or "an
+  assumption or belief hiding as a fact"?
+- **Known unknowns** — which open questions carry the highest impact on this
+  decision, and where would high-quality information come from?
+- **Unknown knowns** — sleep on the decision; what does your intuition or gut
+  tell you that no one has written down?
+- **Unknown unknowns** — who outside the building — customers, adjacent fields,
+  competitors — sees this differently?
+
+For a group warm-up, brainstorm every question that remains unanswered about the
+problem, then "give each participant three sticky dots and ask them to use these
+to 'vote' for the most important questions that remain by sticking a dot on the
+relevant note"
+([Humanitarian Innovation Guide](https://higuide.elrha.org/methods/known-unknowns/)).
+Voting before plotting anchors the session to the gaps that matter most.
+
 ## How does one use it properly?
 
 1. **Frame a specific decision or domain** — a launch, a project plan, a risk
@@ -183,3 +208,7 @@ exclusive claim
 - [Donald Rumsfeld "Unknown Unknowns" — C-SPAN video clip](https://www.c-span.org/clip/news-conference/user-clip-donald-rumsfeld-unknown-unknowns/5136234)
 - [Johari window — Wikipedia](https://en.wikipedia.org/wiki/Johari_window) — the
   1955 antecedent of the 2×2 awareness grid
+- [Developing Strategy Under Uncertainty — stephen.fm](https://stephen.fm/known-unknown-matrix/)
+  — practitioner guide with per-quadrant priming questions and strategies
+- [Known Unknowns — Humanitarian Innovation Guide (Elrha)](https://higuide.elrha.org/methods/known-unknowns/)
+  — group warm-up and sticky-dot prioritization exercise

@@ -1,5 +1,8 @@
 # Dual Continuum of Mental Health
 
+> **Illness vs. wellbeing:** being free of symptoms is not the same as living
+> well, so treating illness and building wellbeing are two separate jobs.
+
 The dual-continuum model (also called the two-continua model) is a 2×2 mental
 health framework built on a counterintuitive empirical finding: mental illness
 and mental wellbeing are not opposite ends of one scale but two related,
@@ -168,6 +171,32 @@ Evidence that the two-factor structure is real is strong; evidence that any
 specific intervention moves people between quadrants is thinner and rests on the
 broader wellbeing-intervention literature rather than on the model itself.
 
+## How do you get into the right mindset?
+
+The habit the model must loosen is answering one question — "am I ill?" — when
+it asks two. A Canadian participant handout built around the dual continuum
+primes people with discussion prompts before any self-placement
+([Cannabis and Mental Health handout](https://cannabisandmentalhealth.ca/wp-content/uploads/2024/02/18.-Participant_-Mental-health-dual-continuum.-HANDOUT.pdf)):
+
+- Why is it important to know what flourishing looks and feels like? Why is it
+  important to know what languishing looks and feels like?
+- Consider your community: what percentage of people do you think are
+  flourishing? Relatively mentally healthy? Languishing? What makes you say
+  that?
+- Mark an X on the quadrant where you were a year ago and another where you are
+  now, then reflect on how you got there; mark where you would like to be and
+  reflect on ways to get there.
+- What are some things a person can do to lift themselves out of languishing,
+  and why might those things help?
+
+The same handout makes the low end of the wellbeing axis recognizable with
+everyday signs of languishing: lack of motivation, foggy thinking, feelings of
+emptiness, and working toward goals to avoid something negative rather than to
+achieve something positive
+([Cannabis and Mental Health handout](https://cannabisandmentalhealth.ca/wp-content/uploads/2024/02/18.-Participant_-Mental-health-dual-continuum.-HANDOUT.pdf)).
+Scanning that list before plotting keeps "no symptoms" from being mistaken for
+"doing well."
+
 ## How does one use it properly?
 
 1. **Assess the two axes separately.** Screen symptoms with a standard clinical
@@ -293,3 +322,6 @@ Flourishing Scale, Seligman's PERMA-Profiler, or Ryff's scales as alternatives
   — Diener's tripartite model of subjective wellbeing
 - [Wikipedia: Salutogenesis](https://en.wikipedia.org/wiki/Salutogenesis) —
   Antonovsky's sense-of-coherence model as a related framework
+- [Cannabis and Mental Health — Mental Health Dual Continuum participant handout (PDF)](https://cannabisandmentalhealth.ca/wp-content/uploads/2024/02/18.-Participant_-Mental-health-dual-continuum.-HANDOUT.pdf)
+  — Canadian "reflect and discuss" handout with self-placement,
+  community-estimate, and languishing-recognition priming prompts

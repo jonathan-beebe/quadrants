@@ -1,5 +1,8 @@
 # Passion × Proficiency Audit
 
+> **What you love vs. what you're good at:** reveals when competence, not
+> passion, is deciding how you spend your week — and which work to reclaim.
+
 The Passion × Proficiency audit is a 2×2 self-assessment for auditing how you
 spend your working time. One axis is **proficiency** ("Good At It" — how capable
 you are at the activity) and the other is **passion** ("Love It" — how much the
@@ -133,6 +136,29 @@ In short: large survey correlations and plausible logic, but no randomized or
 controlled evidence for the audit itself. State of the evidence: suggestive, not
 proven.
 
+## How do you get into the right mindset?
+
+Prime with recalled moments, not self-image: the audit runs on felt energy, and
+labels like "I'm a builder" hide the drift it exists to catch. Warm-up questions
+from the parent frameworks:
+
+- **Passion axis.** Hendricks' prompts from _The Big Leap_: "What work do you do
+  that doesn't seem like work?" and "In your work, what produces the highest
+  ratio of abundance and satisfaction to the amount of time spent?"
+  ([Forbes](https://www.forbes.com/sites/briannawiest/2018/09/26/how-to-get-into-the-zone-of-genius-and-unlock-your-highest-potential)).
+- **Proficiency axis.** "What are your proficiencies? List your skills, your
+  training, things you've taught yourself. What are you really good at that
+  could add value to someone else?"
+  ([Calibrate360](https://calibrate360.com/how_to_discover_your_purpose/)).
+- **Recency check.** Buckingham asks about last week, not your career: "Was I
+  excited to work every day last week?" — and holds that loved activities need
+  to stay above 20% of your work to prevent burnout
+  ([How to Be Awesome at Your Job, ep. 757](https://awesomeatyourjob.com/757-how-to-find-the-career-you-truly-love-with-marcus-buckingham/)).
+
+Before plotting, name one recurring activity you would volunteer for tomorrow
+and one you would pay to hand off. If both are things you do well, you have seen
+the core insight at work in your own calendar.
+
 ## How does one use it properly?
 
 1. **Run a time audit first (one week).** Log actual activities — time, task,
@@ -240,6 +266,12 @@ carry no IP constraints, as do Ikigai, SWOT, and flow theory.
 - [TimeTackle: How to Do a Time Audit](https://www.timetackle.com/how-to-do-a-time-audit/)
 - [D2L: How to Create a Skills Matrix](https://www.d2l.com/blog/how-to-create-a-skills-matrix/)
 - [Example folk usage: "Make your passion & skills 2x2 matrix" (The Next Step Project)](https://coda.io/@ana-garcia/the-next-step-project/make-your-passion-skills-2x2-matrix-21)
+- [Forbes: How to Get Into the Zone of Genius (Wiest, 2018)](https://www.forbes.com/sites/briannawiest/2018/09/26/how-to-get-into-the-zone-of-genius-and-unlock-your-highest-potential)
+  — Hendricks' reflection questions from _The Big Leap_
+- [Calibrate360: How to Discover Your Purpose](https://calibrate360.com/how_to_discover_your_purpose/)
+  — passion, proficiency, and need priming questions
+- [How to Be Awesome at Your Job #757: Marcus Buckingham](https://awesomeatyourjob.com/757-how-to-find-the-career-you-truly-love-with-marcus-buckingham/)
+  — _Love + Work_ interview; the 20% "red threads" threshold
 - No Wikipedia article exists for this matrix itself; the article titled
   ["The Big Leap"](https://en.wikipedia.org/wiki/The_Big_Leap) covers an
   unrelated TV series and should not be cited for the book.

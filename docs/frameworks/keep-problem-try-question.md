@@ -1,5 +1,8 @@
 # Keep / Problem / Try / Question
 
+> **Reflection vs. follow-through:** turn what went well and what hurt into a
+> few named experiments the next session must judge.
+
 KPT (Keep / Problem / Try) is a lightweight retrospective format, dominant in
 Japan, that sorts a team's reflection into three lists: **Keep** — things that
 went well and should continue; **Problem** — difficulties, friction, and
@@ -139,6 +142,30 @@ evidence about the practice KPT structures — the recurring team retrospective:
   (with KPT among its templates) improves meeting efficiency — self- reported
   vendor data, not independent research
   ([Parabol](https://www.parabol.co/templates/sprint-retrospectives/keep-problem-try/)).
+
+## How do you get into the right mindset?
+
+Arrive ready to examine the process, not the people: the session works only if
+anything can be said without blame, and if successes are recorded before
+complaints
+([Atlassian](https://www.atlassian.com/team-playbook/plays/retrospective)).
+Parabol suggests warming up with an off-work version of Try — ask teammates what
+new hobby or skill they'd like to try in their personal lives — before turning
+to the work itself
+([Parabol](https://www.parabol.co/templates/sprint-retrospectives/keep-problem-try/)).
+Its per-quadrant prompts then orient the writing:
+
+- **Keep:** "What made this past sprint or project exceptional? What do you want
+  to keep doing, or do even more of?"
+  ([Parabol](https://www.parabol.co/templates/sprint-retrospectives/keep-problem-try/))
+- **Problem:** share "the problems and tough situations" you ran into, phrased
+  as observations rather than solutions
+  ([Parabol](https://www.parabol.co/templates/sprint-retrospectives/keep-problem-try/),
+  [Nulab](https://nulab.com/learn/project-management/run-keep-problem-try-retrospective/))
+- **Try:** "What do you want to try out in the future?"
+  ([Parabol](https://www.parabol.co/templates/sprint-retrospectives/keep-problem-try/))
+- **Question:** what do we not yet understand well enough to sort into Keep,
+  Problem, or Try?
 
 ## How does one use it properly?
 

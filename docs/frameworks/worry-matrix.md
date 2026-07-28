@@ -1,5 +1,8 @@
 # Worry Matrix
 
+> **What you can change vs. what deserves your energy:** every looping worry
+> resolves into one move — act, adapt, deprioritize, or release.
+
 The Worry Matrix is a 2×2 triage tool for worries. One axis is **control** (can
 I actually influence this?) and the other is **importance** (does this genuinely
 matter to me?). The four quadrants each prescribe a response: **Take Action**
@@ -127,6 +130,33 @@ omission. Every empirical claim attaches to its ancestor traditions:
 In short: the two questions the matrix asks are each well-evidenced in clinical
 form; the specific 2×2 packaging of them is not studied.
 
+## How do you get into the right mindset?
+
+The matrix needs one specific worry and two honest answers, so the priming work
+is separating the worry from the anxiety around it. CBT worry practice opens
+with exactly this move:
+
+- **Name the worry before judging it.** "What am I reacting to? What is it that
+  I think is going to happen here?" — the opening questions of the
+  [Get Self Help anxiety guide](https://www.getselfhelp.co.uk/anxiety.html); the
+  [Worry Tree](https://www.getselfhelp.co.uk/worrytree.html) starts the same way
+  with "What am I worrying about?" before any routing.
+- **Prime the control axis.** The Worry Tree's fork — "Is this a hypothetical
+  situation or a current problem?" and "Can I do something about this?" —
+  rehearses the control judgment the matrix asks for
+  ([Get Self Help](https://www.getselfhelp.co.uk/worrytree.html)).
+- **Prime the importance axis.** "How important is this really? Am I getting
+  things out of proportion?"
+  ([Get Self Help](https://www.getselfhelp.co.uk/anxiety.html)).
+- **Check for distortion before sorting.** "Is this fact or opinion? Am I
+  overestimating the danger? Am I underestimating my ability to cope? What
+  advice would I give someone else in this situation?" — a mis-scored worry
+  lands in the wrong quadrant
+  ([Get Self Help](https://www.getselfhelp.co.uk/anxiety.html)).
+
+A minute on these is enough; the goal is one worry stated as a sentence, seen as
+it is rather than as the anxiety paints it.
+
 ## How does one use it properly?
 
 1. **Capture the worry in one sentence.** One worry per pass — "my job" is a
@@ -227,6 +257,10 @@ grid."
   the first formal cognitive behavioral therapy, influenced by Epictetus
 - [Wikipedia: Acceptance and commitment therapy](https://en.wikipedia.org/wiki/Acceptance_and_commitment_therapy)
   — 1,300+ RCTs, 2015 and 2020 reviews, WHO and VA endorsements
+- [Anxiety self-help guide — Get Self Help](https://www.getselfhelp.co.uk/anxiety.html)
+  — priming and distortion-check questions for anxious thoughts
+- [The Worry Tree — Get Self Help](https://www.getselfhelp.co.uk/worrytree.html)
+  — the Worry Tree's capture and routing questions (HTML version)
 - No Wikipedia article exists for the Worry Matrix itself, and
   en.wikipedia.org/wiki/Dichotomy_of_control does not resolve (verified
   2026-07); the concept is covered within the Epictetus and Stoicism articles.

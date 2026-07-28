@@ -1,5 +1,8 @@
 # Power × Interest Grid
 
+> **Who can affect the outcome vs. who cares about it:** where to spend scarce
+> engagement effort so no powerful, quiet stakeholder blindsides the work.
+
 The Power × Interest grid is a 2×2 stakeholder-mapping model that classifies
 stakeholders by their **power** to affect an organization or project (vertical
 axis) and their level of **interest** in it (horizontal axis). Each quadrant
@@ -120,6 +123,29 @@ and interest are subjective, that the grid does not capture stakeholder attitude
 project's life, requiring reassessment
 ([toolshero](https://www.toolshero.com/strategy/mendelow-matrix/)).
 
+## How do you get into the right mindset?
+
+Plotting is the least of the work: "most of the value is in the conversation a
+team has while deciding where someone belongs," and sketching an empathy map of
+what a stakeholder thinks and needs before deciding where they sit keeps that
+conversation honest
+([Mutomorro](https://mutomorro.com/tools/mendelow-power-interest-matrix)). One
+framing question orients each axis
+([Mutomorro](https://mutomorro.com/tools/mendelow-power-interest-matrix)):
+
+- **Power:** how much can this person or group affect what happens? Weigh
+  position, budget control, authority, influence, and expertise.
+- **Interest:** how much does this person or group care about the result? Weigh
+  their stakes — a job that changes, a service they rely on, a position on the
+  issue.
+
+For a group workshop, short warm-ups put participants in a stakeholder frame of
+mind before mapping starts: **Stakeholder Bingo** (mark off traits such as "has
+a financial interest" or "can veto decisions" as others introduce themselves)
+and an **Expectation Wall** of sticky-note expectations that shows how varied
+interests are inside the room itself
+([Big Bang Partnership](https://bigbangpartnership.co.uk/how-to-facilitate-a-stakeholder-mapping-workshop/)).
+
 ## How does one use it properly?
 
 1. **Identify stakeholders.** Brainstorm a comprehensive list of internal and
@@ -227,3 +253,7 @@ Wikipedia article; it is covered within
 - [POWER MATRIX trademark record (surge protectors) — Justia](https://trademark.justia.com/868/97/power-86897191.html)
 - [Mendelow's Matrix — Oxford College of Marketing](https://blog.oxfordcollegeofmarketing.com/2018/04/23/what-is-mendelows-matrix-and-how-is-it-useful/)
   (secondary; documents the Johnson & Scholes popularization)
+- [Mendelow Power–Interest Matrix — Mutomorro](https://mutomorro.com/tools/mendelow-power-interest-matrix)
+  (per-axis framing questions; empathy map before placement)
+- [How to facilitate a stakeholder mapping workshop — Big Bang Partnership](https://bigbangpartnership.co.uk/how-to-facilitate-a-stakeholder-mapping-workshop/)
+  (workshop warm-ups: Stakeholder Bingo, Expectation Wall)

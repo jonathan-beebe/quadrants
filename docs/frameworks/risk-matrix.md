@@ -1,5 +1,8 @@
 # Risk Matrix
 
+> **How likely vs. how bad:** which risks deserve action now, which need a
+> backup plan, and which you can safely accept.
+
 The Risk Matrix (also consequence/probability matrix or hazard risk assessment
 matrix) is a grid model for assessing risks along two axes: **likelihood** (how
 probable is the event?) and **impact** (how severe if it happens?). Professional
@@ -129,6 +132,31 @@ and recent controlled studies of when the tool helps:
 Net: the evidence supports the matrix as a communication and triage device when
 designed per the Sutherland findings, and confirms it misranks high-consequence
 risks relative to quantitative expected-loss analysis.
+
+## How do you get into the right mindset?
+
+Scoring goes better when the risks are already on the table, so prime the hunt
+before you plot. Facilitation guidance says to open with prompts tied to
+concrete operations rather than a vague "what are our risks?" — "What could go
+wrong during procurement or vendor selection?", "Where have we experienced
+delays or cost overruns in the past?" — to sweep categories (financial,
+operational, compliance, reputational, strategic) so nothing is missed, and to
+establish up front that the session is "a safe space for honest discussion — not
+blame or finger-pointing"
+([V-Comply](https://www.v-comply.com/blog/facilitating-productive-risk-workshops-a-practical-guide-for-risk-leaders/)).
+
+Then orient each axis before placing a risk:
+
+- **Likelihood:** "Has this risk occurred before and, if so, how often?" "Are
+  there risks similar to this one that have occurred?"
+  ([Asana](https://asana.com/resources/risk-matrix-template))
+- **Impact:** "What is the most negative outcome that could come from this
+  risk?" "How hard will it be to recover from this risk?"
+  ([Asana](https://asana.com/resources/risk-matrix-template))
+
+One habit to carry in: judge the two axes independently — a frightening outcome
+is not evidence that it is likely, and a frequent nuisance is not evidence that
+it is severe.
 
 ## How does one use it properly?
 
@@ -287,3 +315,8 @@ building or using a generic likelihood × impact matrix.
   (free-use status of the tool)
 - [Open Risk Management — open-source risk models](https://www.openriskmanagement.com/open-source-risk-models/)
   (matrix functionality in unrestricted open-source tools)
+- [V-Comply — facilitating productive risk workshops](https://www.v-comply.com/blog/facilitating-productive-risk-workshops-a-practical-guide-for-risk-leaders/)
+  (operation-specific priming prompts, risk categories, and psychological-safety
+  framing)
+- [Asana — risk matrix template](https://asana.com/resources/risk-matrix-template)
+  (per-axis assessment questions for likelihood and impact)

@@ -1,5 +1,8 @@
 # Energy Quadrants (Full-Engagement Model)
 
+> **Spending vs. renewing energy:** locating your current zone tells you whether
+> to keep pushing, calm down, or stop and refill.
+
 The energy quadrants — the "dynamics of energy" model from Jim Loehr and Tony
 Schwartz's book _The Power of Full Engagement_ (Free Press, 2003) — is a 2×2 map
 of how you are running at any given moment. The vertical axis is **energy
@@ -145,6 +148,23 @@ State of the evidence: a genuine athletic-observation pedigree and two decades
 of consulting practice, with no controlled or peer-reviewed outcome research
 ([fs.blog](https://fs.blog/the-power-of-full-engagement/)).
 
+## How do you get into the right mindset?
+
+The grid rewards observation before management: the check-in only works if you
+report the state you are in, negative zones included, without treating the
+answer as a verdict. Practitioners orient with "why" versions of the two axis
+questions — _Am I feeling high or low energy right now? Why? Am I feeling more
+negative energy or more positive energy right now? Why?_ — sitting with the
+_why_ before plotting anything
+([IMD](https://www.imd.org/ibyimd/brain-circuits/how-to-manage-energy-for-yourself-and-your-team/)).
+A second practitioner set frames the check-in as movement rather than diagnosis:
+_Which energy zone are you in now? Which energy zone would you like to be in?
+What could you do to get into that energy zone naturally?_
+([Stronger Habits](https://strongerhabits.com/energy-quadrant/)). For a team
+check-in, the leader's mindset is listening: let people say how they are feeling
+and be heard without judgment or offered solutions
+([IMD](https://www.imd.org/ibyimd/brain-circuits/how-to-manage-energy-for-yourself-and-your-team/)).
+
 ## How does one use it properly?
 
 1. **Check in with the two axis questions.** Ask _how much energy do I have?_
@@ -250,6 +270,34 @@ Drawing your own 2×2 with the axis questions and generic labels — or using
 generic names such as "stress-recovery cycle," "oscillation model," or "energy
 management" — carries no restriction.
 
+## How do you use it generically?
+
+Everything the tool needs survives with the branded material stripped out:
+
+- **Draw your own grid.** Sketch a fresh 2×2 from the two axis questions rather
+  than reproducing the book's diagram, which is copyrighted
+  ([Simon & Schuster](https://www.simonandschuster.com/books/The-Power-of-Full-Engagement/Jim-Loehr/9780743226752)).
+- **Use generic labels.** "Energy level" and "emotional valence" — or "energy"
+  and "tension," following the [Thayer Mood Model](./thayer-mood-model.md) — are
+  plain descriptive axis names, and the quadrants can carry position labels
+  instead of the book's zone names: high positive, high negative, low negative,
+  low positive, as practitioners write them
+  ([Stronger Habits](https://strongerhabits.com/energy-quadrant/)).
+- **Name the practice generically.** "Energy management," "stress-recovery
+  cycle," and "oscillation model" are descriptive phrases in circulation;
+  reserve "The Energy Project" (Schwartz's consultancy) and the Human
+  Performance Institute's "energy management training system" for the branded
+  offerings they name
+  ([Wikipedia: Tony Schwartz](<https://en.wikipedia.org/wiki/Tony_Schwartz_(author)>),
+  [jim-loehr.com](https://www.jim-loehr.com/about)).
+- **Ground it in the public record.** The Yerkes–Dodson law (1908) and ultradian
+  rhythm research supply unencumbered scientific framing for the same
+  oscillation thesis
+  ([Wikipedia: Yerkes–Dodson law](https://en.wikipedia.org/wiki/Yerkes%E2%80%93Dodson_law),
+  [Wikipedia: Ultradian rhythm](https://en.wikipedia.org/wiki/Ultradian_rhythm)),
+  and the [Affect Grid](./affect-grid.md) is a validated, freely published
+  instrument for the same two-dimensional space.
+
 ## Sources
 
 - [Loehr, J. & Schwartz, T. (2001). "The Making of a Corporate Athlete." Harvard Business Review, January 2001](https://hbr.org/2001/01/the-making-of-a-corporate-athlete)
@@ -272,3 +320,9 @@ management" — carries no restriction.
   — predecessor arousal-performance principle
 - [Wikipedia: Ultradian rhythm](https://en.wikipedia.org/wiki/Ultradian_rhythm)
   — physiological activity/rest cycles aligned with the oscillation thesis
+- [Stronger Habits — "The Energy Quadrant"](https://strongerhabits.com/energy-quadrant/)
+  — practitioner check-in questions (which zone now, which zone desired, how to
+  get there) and position-based quadrant labels
+- [IMD — "How to manage energy for yourself and your team"](https://www.imd.org/ibyimd/brain-circuits/how-to-manage-energy-for-yourself-and-your-team/)
+  — "why"-extended axis questions and team check-ins built on listening without
+  judgment

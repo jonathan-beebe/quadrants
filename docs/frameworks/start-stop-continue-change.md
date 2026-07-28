@@ -1,5 +1,9 @@
 # Start / Stop / Continue / Change
 
+> **Protect vs. rethink:** every practice on the board gets an imperative —
+> start, stop, continue, or adjust — so feedback ends in commitments, not
+> complaints.
+
 Start / Stop / Continue is a feedback and retrospective format built on three
 plain-language questions: what should we **Start** doing (new practices worth
 adopting), what should we **Stop** doing (practices that are not paying off),
@@ -113,6 +117,25 @@ practitioner sources without supporting data
 critiques, failure analyses, or comparative-effectiveness studies of
 retrospective formats were found either; the case for the framework rests on
 decades of practitioner adoption, not measurement.
+
+## How do you get into the right mindset?
+
+The literature documents preparation rather than priming: name the session's
+purpose and limit it to a single topic or iteration
+([Tempo](https://www.tempo.io/blog/start-stop-continue)), and establish safety
+before anyone writes — open, blameless sharing, with anonymous submission or the
+Chatham House Rule when candor is at risk
+([Atlassian](https://www.atlassian.com/team-playbook/plays/retrospective)). No
+source offers warm-up questions beyond that, so the orienting questions below
+are derived from the format's own categories and core insight:
+
+- What did we do this cycle — not what we planned, but the habits we ran?
+- Which of those practices would I defend if someone tried to take them away?
+- What am I tolerating that I would not choose again?
+- Is my complaint with a practice itself, or with how we run it? The first is a
+  Stop; the second is a Change.
+
+Answers should stay behavioral — name practices, not people.
 
 ## How does one use it properly?
 

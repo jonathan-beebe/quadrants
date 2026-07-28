@@ -1,5 +1,9 @@
 # Positive & Negative Affect (Watson–Tellegen Two-Factor Model)
 
+> **Engagement vs. distress:** the two move independently, so a flat, low-energy
+> mood and an anxious, distressed one are different problems with different
+> fixes.
+
 The two-factor structure of affect — often called the **PANA model** (Positive
 Activation – Negative Activation) — maps mood onto two independent axes:
 **Positive Affect** (from high-PA states like _excited, enthusiastic, active_
@@ -161,6 +165,29 @@ with a psychometric instrument that has been tested for four decades.
   alternative and shows incremental validity beyond the PANAS
   ([Beyond the PANAS](https://www.sciencedirect.com/science/article/abs/pii/S0191886915004596)).
 
+## How do you get into the right mindset?
+
+No formal facilitation guide exists for the model, so the orienting moves below
+come from how the PANAS is administered and from the model's core insight.
+Before rating anything, fix the timeframe — "right now, at the present moment"
+for state affect, "in general" for trait affect — because the window determines
+what you are measuring
+([PhenX protocol](https://www.phenxtoolkit.org/protocols/view/180501)).
+Practitioners of the related Mood Meter add a pause first: stop and assess how
+you feel in real time before plotting
+([Applied Coaching Academy](https://www.appliedcoaching.org/post/the-mood-meter-for-self-awareness)).
+Then orient with one question per axis and two guards against the model's common
+misreadings:
+
+- How much energized engagement do I feel — enthusiastic, alert, active — from
+  none to a lot?
+- How much aversive distress do I feel — nervous, irritable, upset — from none
+  to a lot?
+- Am I forcing the two answers to be opposites? Keyed-up-and-anxious and
+  calm-but-flat are both real positions.
+- Am I rating the feeling itself, or my explanation of it? Report the feeling;
+  interpretation comes after scoring.
+
 ## How does one use it properly?
 
 1. **Pick a timeframe.** The PANAS uses flexible temporal instructions — "right
@@ -252,6 +279,33 @@ If licensing is a concern, generic descriptions such as "two-factor affect
 model" or "dimensional mood assessment" are usable, and the model's structure
 can be applied without administering the copyrighted item set.
 
+## How do you use it generically?
+
+The restriction sits in the PANAS item set, not in the model: the two-axis
+structure is published theory, so you can draw the quadrants, rename the axes,
+and write your own rating words without permission.
+
+- **Adjust the axis labels.** Affect researchers themselves recommend renaming
+  the rotated axes "Positive Activation" and "Negative Activation," reserving
+  "positive/negative valence" for pleasure–displeasure
+  ([Frontiers in Psychology, 2024](https://www.frontiersin.org/journals/psychology/articles/10.3389/fpsyg.2024.1301428/full)).
+  The unrotated labels — valence × arousal — name the same space in Russell's
+  terms
+  ([circumplex overview](https://psu.pb.unizin.org/psych425/chapter/circumplex-models/)).
+- **Use generic phrases already in circulation.** "Two-factor affect model,"
+  "dimensional mood assessment," and "positive/negative activation" substitute
+  for the PANAS name when describing the method.
+- **Swap the instrument, not the theory.** For items you can administer without
+  permission, the short forms (PANAS-SF, I-PANAS-SF) are freely accessible
+  through the PhenX Toolkit
+  ([PhenX protocol](https://www.phenxtoolkit.org/protocols/view/180501)), and
+  the SPANE was built as an independent alternative
+  ([Beyond the PANAS](https://www.sciencedirect.com/science/article/abs/pii/S0191886915004596)).
+- **What to avoid.** Do not reproduce or modify the 20-item PANAS word list and
+  its scoring key in commercial work without written permission from the
+  copyright holders
+  ([resref licensing guide](https://resref.com/positive-and-negative-affect-schedule-pnas-a-full-guide-for-researchers-and-clinicians/)).
+
 ## Sources
 
 - [Watson, D., & Tellegen, A. (1985). Toward a consensual structure of mood. _Psychological Bulletin_, 98(2), 219–235 (PubMed)](https://pubmed.ncbi.nlm.nih.gov/3901060/)
@@ -292,3 +346,6 @@ can be applied without administering the copyrighted item set.
 - [Wikipedia: Tripartite Model of Anxiety and Depression](https://en.wikipedia.org/wiki/Tripartite_Model_of_Anxiety_and_Depression)
 - [Wikipedia: James A. Russell](https://en.wikipedia.org/wiki/James_A._Russell)
   — creator of the circumplex the model rotates
+- [Applied Coaching Academy: The Mood Meter for self-awareness](https://www.appliedcoaching.org/post/the-mood-meter-for-self-awareness)
+  — practitioner check-in practice of pausing to assess how you feel before
+  plotting

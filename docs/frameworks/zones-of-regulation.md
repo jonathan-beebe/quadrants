@@ -1,5 +1,8 @@
 # The Zones of Regulation
 
+> **How you feel vs. what the moment needs:** no zone is good or bad — the
+> teachable skill is naming your state and shifting it to match the situation.
+
 The Zones of Regulation is a self-regulation curriculum that sorts states of
 arousal and emotional control into four color-coded zones: the **Blue Zone**
 (low arousal — sad, tired, sick, bored), the **Green Zone** (calm, focused,
@@ -144,6 +147,28 @@ disappear after the curriculum ends
 By contrast, RULER — the program behind the [Mood Meter](./mood-meter.md) — has
 a substantially stronger research base.
 
+## How do you get into the right mindset?
+
+The Zones asks for a noticing stance, not a judging one, and it is practiced
+during calm — before the skills are needed, not mid-crisis
+([Beacon podcast](https://beaconschoolsupport.co.uk/podcast/the-zones-of-regulation-how-to-help-kids-manage-strong-emotions-with-leah-kuypers)).
+Practitioners open with the direct check-in question — "What zone are you in
+right now?" — asked daily to normalize talking about internal states
+([Kids at Play Therapy](https://www.kidsatplaytherapy.com/understanding-the-zones-of-regulation/)).
+Before plotting, orient with:
+
+- What does my body feel like right now — energy, muscles, breathing? The
+  curriculum grounds each zone in how the body feels while in it
+  ([We Are Teachers](https://www.weareteachers.com/zones-of-regulation-activities/)).
+- Am I judging this state, or just observing it? There are no bad zones.
+- What does the current situation call for — and does my state match it?
+
+To keep the check-in routine and low-stakes, teachers use quick physical
+rituals: dropping a colored pom-pom into the bin matching how you feel, stacking
+a LEGO tower with your zone's color on top, or filling in a "Today I Feel..."
+card during morning meeting
+([We Are Teachers](https://www.weareteachers.com/zones-of-regulation-activities/)).
+
 ## How does one use it properly?
 
 1. **Teach proactively, during calm.** Deliver the lessons when learners are
@@ -231,6 +256,32 @@ established alternatives, the Alert Program's engine metaphor and the Incredible
 5-Point Scale ([alertprogram.com](https://alertprogram.com/),
 [5pointscale.com](https://www.5pointscale.com/)).
 
+## How do you use it generically?
+
+The unownable core is an arousal continuum cut into named bands, each paired
+with regulation strategies. To teach that without the branded material:
+
+- **Rename the bands in plain language.** Describe states as energy levels or
+  alertness states — for example low energy / ready / revved-up / overwhelmed —
+  rather than reusing the trademarked zone framing.
+- **Borrow established generic vocabulary.** Dan Siegel's Window of Tolerance —
+  the band of arousal a person can tolerate while staying regulated, with
+  hyperarousal above and hypoarousal below — circulates freely in clinical
+  writing and covers the same continuum
+  ([mi-psych.com.au](https://mi-psych.com.au/understanding-your-window-of-tolerance/)).
+- **Or adopt a published alternative** instead of a homemade scheme: the Alert
+  Program's engine-speed metaphor (low, high, just right) and the Incredible
+  5-Point Scale teach the same skill domain — though both are proprietary
+  programs in their own right, not generic language
+  ([alertprogram.com](https://alertprogram.com/),
+  [5pointscale.com](https://www.5pointscale.com/)).
+- **Avoid reproducing** the registered name "The Zones of Regulation®" and the
+  copyrighted lesson book, posters, reproducibles, and four-zone visuals. If you
+  want the branded materials, the official site offers free downloads — an
+  implementation guide, the four-zones visual, and a Zones language guide —
+  under its licensing and permissions policy
+  ([zonesofregulation.com free downloads](https://zonesofregulation.com/free-downloads/)).
+
 ## Sources
 
 - [CHADD Attention magazine (Oct 2012) — "The Zones of Regulation" by Mark Katz](https://chadd.org/wp-content/uploads/2018/06/ATTN_10_12_Zones.pdf)
@@ -257,6 +308,16 @@ established alternatives, the Alert Program's engine metaphor and the Incredible
   Buron's complementary scale
 - [Social Thinking](https://www.socialthinking.com/) — Michelle Garcia Winner's
   methodology; publisher's broader framework
+- [Kids at Play Therapy — Understanding the Zones of Regulation](https://www.kidsatplaytherapy.com/understanding-the-zones-of-regulation/)
+  — practitioner facilitation guidance; daily check-in question
+- [We Are Teachers — Zones of Regulation activities](https://www.weareteachers.com/zones-of-regulation-activities/)
+  — classroom check-in rituals (pom-pom bins, LEGO stacks, "Today I Feel..."
+  cards) and body-feel grounding
+- [zonesofregulation.com — Free Downloads](https://zonesofregulation.com/free-downloads/)
+  — official free resources (implementation guide, four-zones visual, language
+  guide) under the licensing policy
+- [MI Psychology — Understanding your Window of Tolerance](https://mi-psych.com.au/understanding-your-window-of-tolerance/)
+  — Dan Siegel's generic arousal-band vocabulary covering the same continuum
 - Wikipedia — no article exists for the Zones of Regulation or Leah Kuypers;
   both appear only as citations inside other articles (e.g. Occupational
   therapist, History of autism)

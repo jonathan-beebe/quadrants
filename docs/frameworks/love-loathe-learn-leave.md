@@ -1,5 +1,8 @@
 # Love / Loathe / Learn / Leave
 
+> **Energizes you vs. drains you:** a week of logged work shows what to do more
+> of, where to grow, and what to shed.
+
 Love / Loathe / Learn / Leave is a personal-reflection quadrant for auditing
 your work by how it affects you. Its axes are **emotional charge** (does the
 activity energize you or drain you?) and **disposition** (should you invest in
@@ -126,6 +129,25 @@ exist:
   Management Review_, 26(2), 2001;
   [overview](https://en.wikipedia.org/wiki/Job_crafting)). That literature
   supports job crafting generally; it does not test this instrument.
+
+## How do you get into the right mindset?
+
+No published priming questions exist for this format; the orientation it needs
+is the mindset shift behind Buckingham's exercise — judge activities by how they
+make you feel, not by how well you perform them: "strengths are not activities
+you're good at, they're activities that strengthen you"
+([Awesome Office](http://awesomeoffice.org/blog/marcus-buckingham/)). Set that
+lens with a few questions before drawing the board:
+
+- Which task did you put off this week, and which did you start before you meant
+  to? Dread and anticipation are the signals you will be logging.
+- Where are you competent but flat? Name one competence trap up front so "good
+  at it" does not leak into Love.
+- What would you drop tomorrow if no one objected? If nothing comes to mind,
+  expect resistance at the Leave quadrant and plan for it.
+- Can you log in the moment for a full week? The protocol's value is
+  observation, not recollection — entries reconstructed at day's end defeat it
+  ([wellfesto](https://wellfesto.com/2013/04/08/loved-itloathed-it/)).
 
 ## How does one use it properly?
 

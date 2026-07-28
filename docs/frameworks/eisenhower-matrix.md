@@ -1,5 +1,8 @@
 # Eisenhower Matrix
 
+> **Urgent vs. important:** untangles what presses for attention now from what
+> advances long-term goals, so busyness stops passing for progress.
+
 The Eisenhower Matrix is a 2×2 quadrant model for prioritizing tasks along two
 axes: **urgency** (does this demand attention now?) and **importance** (does
 this contribute to long-term goals?). Crossing the axes yields four quadrants
@@ -119,6 +122,32 @@ large randomized trials.
   tasks arrive continuously
   ([Voigt](https://stephan-voigt.com/blog/the-eisenhower-matrix-is-misleading-why-prioritization-is-broken)).
 
+## How do you get into the right mindset?
+
+The sort only works if urgency and importance are judged as separate properties,
+against criteria fixed before anything gets plotted. Practitioners open with
+questions that pull the two judgments apart:
+
+- "Are your tasks really moving you forward or just keeping you busy?" — the
+  opening question that frames the exercise as busyness versus progress
+  ([Situational](https://situational.com/blog/the-eisenhower-matrix-explained/)).
+- For urgency: "Does it have a real, near-term deadline or consequence?" Be
+  strict — "I'd like this done soon" is not urgent
+  ([Any.do](https://www.any.do/blog/the-eisenhower-matrix-how-to-prioritize-what-actually-matters/)).
+- For importance: "Does this task genuinely contribute to an outcome you care
+  about?"
+  ([Any.do](https://www.any.do/blog/the-eisenhower-matrix-how-to-prioritize-what-actually-matters/)).
+- Two coaching probes for after a first pass: "Which of these are genuinely
+  time-sensitive, in the sense that something breaks if they don't happen this
+  week?" and, pointing at Quadrant II, "What belongs here that isn't scheduled?"
+  ([Tandem Coach](https://tandemcoach.co/coaching-tools/planning-eisenhower-priority-matrix/)).
+
+A warm-up for groups: each participant lists their top 10 activities from the
+past week, plots them, and totals the time per quadrant. Groups discover 60–80%
+of their time sits in Quadrants I and III — a concrete view of why they feel
+busy but not productive, and motivation for the sort that follows
+([Kithindin](https://kithindin.com/eisenhower-matrix/)).
+
 ## How does one use it properly?
 
 1. **List every task.** Inventory everything competing for your time —
@@ -202,6 +231,26 @@ but the underlying quadrant concept is not exclusively protected. Generic names
 such as "urgency–importance matrix" or "four-quadrant prioritization" are safe
 in any context.
 
+## How do you use it generically?
+
+Nothing branded is needed. The axes are plain words — urgency and importance —
+and the quadrant actions (do, schedule, delegate, eliminate) are generic
+descriptions, so labels can be renamed or reworded at will. Names free of the
+Eisenhower attribution are in wide circulation: "Urgent Important Matrix"
+([GroupMap](https://www.groupmap.com/templates/urgent-important-matrix/);
+[Open Practice Library](https://openpracticelibrary.com/practice/eisenhower-box-or-urgent-important-matrix/)),
+"Time Management Matrix"
+([Todoist](https://www.todoist.com/productivity-methods/eisenhower-matrix)), and
+"urgency–importance matrix" or "four-quadrant prioritization"
+([legal analysis](https://www.justanswer.com/business-law/a8xwe-use-chart-called-eisenhower-matrix-product.html)).
+Three things to avoid reproducing: another author's fixed illustration of the
+grid — draw your own
+([legal analysis](https://www.justanswer.com/business-law/a8xwe-use-chart-called-eisenhower-matrix-product.html));
+Covey's book text and FranklinCovey's licensed "7 Habits" training materials
+([FranklinCovey](https://www.franklincovey.com/courses/the-7-habits/habit-3/));
+and commercial use of the "Eisenhower" name in ways implying endorsement by the
+estate.
+
 ## Sources
 
 - [Dwight D. Eisenhower, "Address at the Second Assembly of the World Council of Churches," August 19, 1954 — The American Presidency Project](https://www.presidency.ucsb.edu/documents/address-the-second-assembly-the-world-council-churches-evanston-illinois)
@@ -250,3 +299,17 @@ in any context.
   (Action Priority Matrix, ABCDE, POSEC)
 - [JustAnswer — legal analysis of Eisenhower Matrix IP status](https://www.justanswer.com/business-law/a8xwe-use-chart-called-eisenhower-matrix-product.html)
   (copyright, trademark, and patent considerations)
+- [Situational — The Eisenhower Matrix explained](https://situational.com/blog/the-eisenhower-matrix-explained/)
+  (opening busyness-versus-progress framing question)
+- [Any.do — The Eisenhower Matrix: how to prioritize what actually matters](https://www.any.do/blog/the-eisenhower-matrix-how-to-prioritize-what-actually-matters/)
+  (strict per-task urgency and importance criteria)
+- [Tandem Coach — Planning: Eisenhower Priority Matrix](https://tandemcoach.co/coaching-tools/planning-eisenhower-priority-matrix/)
+  (coaching questions for the sort and its debrief)
+- [Kithindin — Eisenhower Matrix](https://kithindin.com/eisenhower-matrix/)
+  (group warm-up exercise and time-allocation finding)
+- [GroupMap — Urgent Important Matrix template](https://www.groupmap.com/templates/urgent-important-matrix/)
+  (the framework under its generic "Urgent Important Matrix" name)
+- [Open Practice Library — Eisenhower Box or Urgent-Important Matrix](https://openpracticelibrary.com/practice/eisenhower-box-or-urgent-important-matrix/)
+  (alternative names in open-practice circulation)
+- [Todoist — Eisenhower Matrix](https://www.todoist.com/productivity-methods/eisenhower-matrix)
+  (lists alternative names including "Time Management Matrix")

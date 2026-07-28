@@ -1,5 +1,9 @@
 # Certainty × Agreement
 
+> **Certainty vs. agreement:** diagnose whether the work calls for a plan, an
+> experiment, a negotiation, or stabilizing first — instead of planning by
+> default.
+
 The Certainty × Agreement matrix — widely known as the **Stacey Matrix** — is a
 2×2 quadrant model for choosing how to approach a piece of work based on its
 context. Its axes are **Certainty** (how close the situation is to
@@ -103,6 +107,25 @@ interaction" and cannot be captured by any static categorization
 Anyone adopting the matrix should treat it as a discussion aid with face
 validity, not a validated method.
 
+## How do you get into the right mindset?
+
+No published warm-up exercise from Stacey or his interpreters was located; the
+questions below are derived from the framework's own protocol and core insight.
+The matrix pays off only when a team is honest about ignorance and conflict, so
+the priming work is making both safe to admit. Before plotting anything, sit
+with these:
+
+- **Would I bet on the outcome?** If we did the obvious thing, could past
+  experience or data predict what happens next — or am I hoping?
+- **Whose agreement matters, and have we heard from them?** "Everyone agrees"
+  often means nobody who disagrees is in the room.
+- **Am I mistaking confidence for certainty, or silence for agreement?** These
+  are the two mis-ratings the matrix exists to catch.
+- **Am I diagnosing or labelling?** Ask what evidence would move the placement;
+  Stacey warned the diagram "is easily interpreted in a way that collapses the
+  paradox of certainty and uncertainty"
+  ([Wikipedia](https://en.wikipedia.org/wiki/Ralph_Douglas_Stacey)).
+
 ## How does one use it properly?
 
 1. **Name the situation.** Pick one concrete decision or piece of work, not a
@@ -175,6 +198,27 @@ not licensed products. Generic reframings — axes named "Clarity" and
 attribution burden, though attribution to Stacey is customary. Note the
 provenance wrinkle: Stacey disavowed the adaptations that bear his name
 ([The Cynefin Co](https://thecynefin.co/stacey-unresolved/)).
+
+## How do you use it generically?
+
+The idea is free to use; only the artifacts need care. Three adjustments keep
+clear of the copyrighted and disavowed material:
+
+- **Redraw rather than reproduce.** The original continuum diagram and its
+  supporting text are copyright Pearson Education (Stacey, _Strategic Management
+  and Organisational Dynamics_); quote or reproduce them only with citation. The
+  2×2 quadrant renderings are third-party adaptations
+  ([Praxis Framework](https://www.praxisframework.org/en/library/stacey-matrix)),
+  so draw your own grid instead of copying a consultancy's styled graphic.
+- **Relabel the axes at will.** The generic reframings noted above — "Clarity" ×
+  "Consensus," or "Predictability" × "Alignment" — carry the same logic with no
+  attribution burden. The mode names Plan, Experiment, Negotiate, and Stabilize
+  are descriptive words, not branded terms.
+- **Drop the eponym when in doubt.** "Certainty–Agreement matrix" is an
+  unbranded name that describes the tool; since Stacey disavowed the adaptations
+  bearing his name ([The Cynefin Co](https://thecynefin.co/stacey-unresolved/)),
+  calling a quadrant version a "Stacey Matrix" adds provenance risk, not
+  authority. Crediting Stacey for the underlying idea remains customary.
 
 ## Sources
 

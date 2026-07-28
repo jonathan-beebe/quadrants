@@ -1,5 +1,9 @@
 # Johari Window
 
+> **What you know of yourself vs. what others see:** self-awareness grows
+> through two concrete acts — disclose what you hide, invite feedback on what
+> you cannot see.
+
 The Johari Window is a 2×2 quadrant model of interpersonal awareness. Its axes
 are **Known to Self** and **Known to Others**, producing four quadrants (panes):
 the **Open** area or Arena (behavior, feelings, and motivation known to self and
@@ -86,6 +90,26 @@ risk of intrusive, bullying group behavior
 Window should be treated as an established practice tool with face validity, not
 a validated instrument.
 
+## How do you get into the right mindset?
+
+The exercise asks for two uncomfortable acts — revealing something you hold
+back, and hearing something you cannot see — so orient on both before plotting.
+These questions follow from the model's own mechanics:
+
+- **Open:** What do I assume everyone here already knows about how I work — and
+  would they agree?
+- **Hidden:** What am I withholding that this group would need to understand me?
+- **Blind Spot:** When did feedback last surprise me, and did I defend or
+  explore?
+- **Trust check:** How much am I prepared to say — and to hear — in this room
+  today?
+
+A documented low-stakes warm-up is the adjective sort: pick the five or six
+words that best describe you from a fixed list of 56, while peers pick from the
+same list; the overlaps and differences seed the panes with concrete material
+before anyone has to improvise a disclosure
+([Kevan Davis's interactive Johari Window](https://kevan.org/johari)).
+
 ## How does one use it properly?
 
 The creators published no formal step-by-step protocol; the practice below
@@ -168,3 +192,6 @@ No generic alternative name is needed.
 - [Group dynamics — Wikipedia](https://en.wikipedia.org/wiki/Group_dynamics) —
   the research field, founded by Kurt Lewin, in which the model emerged
 - [Johari's Window (1955) — NHS Health Education England summary (PDF)](https://www.hee.nhs.uk/sites/default/files/documents/Johari%20window.pdf)
+- [Interactive Johari Window — Kevan Davis](https://kevan.org/johari) — online
+  adjective-sort implementation (pick five or six of 56 adjectives; peers pick
+  from the same list)

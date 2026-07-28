@@ -1,5 +1,8 @@
 # Vision × Execution Quadrant (Gartner Magic Quadrant)
 
+> **Delivering today vs. steering tomorrow:** know which strength each vendor is
+> selling you before you commit to a multi-year relationship.
+
 The Vision × Execution quadrant is best known as the **Gartner Magic Quadrant**,
 a 2×2 market-analysis model that positions technology vendors on two composite
 axes: **Completeness of Vision** (horizontal — does the vendor understand where
@@ -103,6 +106,29 @@ evidence is practice-based: continuous publication across 100+ market segments,
 sustained vendor participation in the evaluation process, and wide enterprise
 use in vendor selection — adoption data, not effectiveness data.
 
+## How do you get into the right mindset?
+
+Name the job before you look at the dots. Practitioners reach for the Quadrant
+for four distinct tasks — shortlisting a crowded market, comparing why two
+platforms sit in different quadrants, reading which capabilities the market is
+moving toward, and de-risking a mission-critical bet
+([Tyk](https://tyk.io/blog/understanding-gartner-magic-quadrant-what-is-it-really/))
+— and each task reads the chart differently. Then pull the two axes apart in
+your own head before trusting anyone's placement:
+
+- If we signed this vendor today, could it deliver at our scale — product,
+  finances, support, sales channel?
+- Where do we believe this market is going, and would this vendor drive that
+  direction or follow it?
+- Which quadrant profile fits our risk appetite: the safe broad choice, the
+  solid operator, the early bet, or the niche fit?
+- Am I crediting a vendor with one strength because it shows the other?
+
+One practitioner exercise pairs with the chart: talk to the vendors themselves
+and "get to know them — their history, vision for the future, and what makes
+them tick"
+([John Galt](https://johngalt.com/learn/blog/tips-to-interpret-vendor-comparisons)).
+
 ## How does one use it properly?
 
 For a buyer evaluating a market:
@@ -173,6 +199,28 @@ are proprietary, not the method
 and publish a "vision × execution quadrant," "vendor positioning matrix," or
 "Completeness of Vision vs. Ability to Execute" chart under those generic names.
 
+## How do you use it generically?
+
+The method is free to copy; the brand and Gartner's data are not. To run a
+vision × execution evaluation without the branded material:
+
+- **Rename the chart.** "Vision × execution quadrant," "vendor positioning
+  matrix," and "Completeness of Vision vs. Ability to Execute" are established
+  generic names ([Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant));
+  only "Magic Quadrant" itself is off-limits as Gartner's product name.
+- **Rename the axes.** Rival analyst firms publish the same two-axis logic under
+  their own labels: the Forrester Wave scores current offering vs. strategy, IDC
+  MarketScape scores capabilities vs. strategies, and the Frost Radar scores
+  growth momentum vs. innovation
+  ([StarSight](https://www.starsight.biz/2024/09/30/is-there-magic-beyond-the-quadrant-the-top-alternative-methodologies-to-the-gartner-magic-quadrant/));
+  Nucleus Research's Value Matrix swaps in usability vs. functionality
+  ([John Galt](https://johngalt.com/learn/blog/tips-to-interpret-vendor-comparisons)).
+- **Bring your own scores.** The 2009 ruling protects Gartner's analyst
+  judgments as opinion, and copyright plus subscription terms protect its
+  reports ([Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)) — so plot
+  vendors from your own criteria and evaluation, and do not reproduce a Gartner
+  chart, its dot placements, or its report text in your material.
+
 ## Sources
 
 - [Magic Quadrant — Wikipedia](https://en.wikipedia.org/wiki/Magic_Quadrant)
@@ -187,3 +235,12 @@ and publish a "vision × execution quadrant," "vendor positioning matrix," or
 - [Gartner Magic Quadrant — CIO Wiki](https://cio-wiki.org/wiki/Gartner_Magic_Quadrant)
   (secondary; axis and quadrant definitions, RFI and customer-survey protocol,
   vision and execution criteria counts)
+- [Understanding Gartner Magic Quadrant: what is it really? — Tyk](https://tyk.io/blog/understanding-gartner-magic-quadrant-what-is-it-really/)
+  (the four buyer tasks the Quadrant serves: shortlisting, platform comparison,
+  trend analysis, risk evaluation)
+- [Tips to interpret vendor comparisons — John Galt Solutions](https://johngalt.com/learn/blog/tips-to-interpret-vendor-comparisons)
+  (practitioner advice on reading vendor reports, the talk-to-the-vendors
+  exercise, and Nucleus Value Matrix axes)
+- [Is there magic beyond the Quadrant? — StarSight](https://www.starsight.biz/2024/09/30/is-there-magic-beyond-the-quadrant-the-top-alternative-methodologies-to-the-gartner-magic-quadrant/)
+  (survey of 20+ alternative vendor-evaluation methodologies and the axis labels
+  each uses)

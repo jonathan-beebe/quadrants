@@ -1,5 +1,8 @@
 # Ansoff Matrix
 
+> **What you know vs. what you don't:** turns vague growth ambition into a
+> deliberate choice among four paths with escalating risk.
+
 The Ansoff Matrix (also called the Product–Market Growth Matrix) is a 2×2 model
 of growth strategy whose axes are **products** (existing vs. new) and
 **markets** (existing vs. new). The four resulting strategies carry escalating
@@ -97,6 +100,29 @@ What does exist:
 Treat it as a validated taxonomy of growth moves and a useful conversation
 structure, not as an empirically proven decision procedure.
 
+## How do you get into the right mindset?
+
+Every quadrant is defined against what the firm already knows, so the priming
+work is fixing that baseline — and the appetite for leaving it:
+
+- **Name the growth target.** "Before starting, define your company's growth
+  target with the group. Usually, the CEO can provide this number"
+  ([Kalungi](https://www.kalungi.com/blog/how-to-use-ansoffs-growth-matrix-go-to-market-strategy-guide));
+  the plotted moves must add up to it.
+- **Write down "existing."** What products or services do you offer? Who are
+  your current customers?
+  ([ClearPoint](https://www.clearpointstrategy.com/blog/ansoff-matrix-guide)).
+  The grid cannot place a move until "existing" is on paper for both axes.
+- **State the risk appetite.** Which opportunities are within reach given
+  current resources and risk tolerance
+  ([ClearPoint](https://www.clearpointstrategy.com/blog/ansoff-matrix-guide))?
+  Penetration and diversification answer different appetites.
+- **Check people before ambition.** "Do we have the people for this — or do we
+  need to find and develop them first?"
+  ([SI Labs](https://www.si-labs.com/en/articles/ansoff-matrix/)) — the same
+  guide caps the exercise at two to three simultaneous strategies on a 70/20/10
+  split across core, adjacent, and transformative bets.
+
 ## How does one use it properly?
 
 1. **Map the current portfolio.** List every active and proposed growth
@@ -172,3 +198,9 @@ unencumbered. The names "Ansoff Matrix," "Product–Market Growth Matrix," and
   (related BCG framework)
 - [Reference listing for Ansoff (1957) — SCIRP](https://www.scirp.org/reference/referencespapers?referenceid=989821)
   (confirms bibliographic details)
+- [How to use Ansoff's Growth Matrix — Kalungi](https://www.kalungi.com/blog/how-to-use-ansoffs-growth-matrix-go-to-market-strategy-guide)
+  (facilitation guide; priming the exercise with a growth target)
+- [Ansoff Matrix guide — ClearPoint Strategy](https://www.clearpointstrategy.com/blog/ansoff-matrix-guide)
+  (current-state and risk-tolerance questions)
+- [Ansoff Matrix — SI Labs](https://www.si-labs.com/en/articles/ansoff-matrix/)
+  (capacity questions and the 70/20/10 portfolio split)

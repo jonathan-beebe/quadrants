@@ -1,5 +1,8 @@
 # CRR — Cooperative Reciprocal Relationships
 
+> **Drifting vs. choosing:** which relationships to keep, renegotiate, end, or
+> add so your needs get met on purpose, not by chance.
+
 Cooperative Reciprocal Relationships (CRR) is a relationship-inventory practice
 created and taught by Dr. Robert A. Glover, author of _No More Mr. Nice Guy_.
 Its unit of analysis is the full set of relationships and resources a person
@@ -96,6 +99,26 @@ relationship review as a category has adjacent support in the couples-therapy
 literature (Gottman Method, EFT, IBCT effectiveness data), but that evidence
 does not test this practice
 ([Couples therapy — Wikipedia](https://en.wikipedia.org/wiki/Couples_therapy)).
+
+## How do you get into the right mindset?
+
+Glover publishes no warm-up questions; the exercise's own opening move is the
+orientation — before mapping anyone else, draw yourself in the middle of the
+page holding a bucket, the needs you are trying to fill
+([Glover, 2022](https://www.youtube.com/watch?v=HXETLDSDxTQ)). His two criteria
+double as per-relationship judging questions: _does everyone involved want to be
+here?_ (cooperative) and _do both sides get something of value?_ (reciprocal)
+([Glover, 2022](https://www.youtube.com/watch?v=HXETLDSDxTQ)). Before plotting,
+sit with:
+
+- What needs are in your bucket right now, and which are you trying to meet
+  entirely on your own?
+- Which of your relationships did you consciously choose, and which did you
+  drift into or inherit?
+- Where does "relationship" stop for you — and what changes if professionals,
+  groups, and daily practices count too?
+- What are you tolerating in a relationship because renegotiating or ending it
+  feels harder than staying?
 
 ## How does one use it properly?
 

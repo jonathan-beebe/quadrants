@@ -1,5 +1,8 @@
 # SWOT Analysis
 
+> **What you control vs. what you don't:** a shared, honest picture of how your
+> capabilities match outside conditions before you commit to a strategy.
+
 SWOT Analysis is a strategic-planning 2×2 that assesses a person, product,
 project, or organization along two axes: **internal vs. external** origin and
 **helpful vs. harmful** effect. The four resulting quadrants are **Strengths**
@@ -122,6 +125,26 @@ and external information
 SRI findings — that SWOT fails in isolation but works when embedded in the full
 planning process — were never formally published, deemed "too controversial" at
 the time ([RapidBI](https://rapidbi.com/history-of-the-swot-analysis/)).
+
+## How do you get into the right mindset?
+
+The grid rewards candor and a fixed vantage point. Its documented value comes
+from assembling people who see the subject from different angles and surfacing
+their collective knowledge — not from one planner's private view — and it
+captures only a single point in time, so anchor yourself in the present
+situation, not last year's
+([StatPearls/NCBI](https://www.ncbi.nlm.nih.gov/books/NBK537302/)). No
+creator-authored warm-up survives in the literature; these orienting questions
+follow from the framework's own protocol:
+
+- Compared to what? A strength only counts against a named competitor, standard,
+  or goal — fix the benchmark before judging anything.
+- Which of the factors on your mind can you actually change? Sorting what you
+  control from what you must face is the analysis in miniature.
+- What would a candid outsider — a customer, a rival, an auditor — put in your
+  Weaknesses and Threats boxes?
+- What decision is waiting on this? If no choice will consume the output, the
+  grid becomes an inventory instead of an input to strategy.
 
 ## How does one use it properly?
 

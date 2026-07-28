@@ -1,5 +1,8 @@
 # Mood Meter
 
+> **Pleasantness vs. energy:** two questions anyone can answer turn a vague
+> "fine" or "stressed" into a word specific enough to act on.
+
 The Mood Meter is a 2×2 emotional-awareness tool. The horizontal axis is
 **pleasantness** (how pleasant or unpleasant you feel) and the vertical axis is
 **energy** (how activated or depleted your body feels). The four quadrants —
@@ -124,6 +127,26 @@ under-studied, and that mood-tracking tools show lower usability among
 low-income and minoritized populations
 ([PMC8387890](https://pmc.ncbi.nlm.nih.gov/articles/PMC8387890/)).
 
+## How do you get into the right mindset?
+
+The tool asks where you are, not where you should be — so the first move is to
+drop the judgment. RULER's own workshop guide opens with the framing that there
+is a space for all emotions and all emotions are okay; it is what we do with
+them that matters
+([RULER Take 20 workshop guide](https://www.rulerapproach.org/wp-content/uploads/2021/08/TAKE_20_The_Mood_Meter_Sample-copy.pdf)).
+From there, read the energy axis from the body before reaching for words:
+
+- How fast is your heart beating? How quickly are your thoughts moving through
+  your head? Does your body feel cold or warm, tense or relaxed?
+  ([RULER Take 20 workshop guide](https://www.rulerapproach.org/wp-content/uploads/2021/08/TAKE_20_The_Mood_Meter_Sample-copy.pdf))
+- What specific word best describes your current feeling?
+  ([The Windward School](https://www.thewindwardschool.org/school-blogs/unpacking-the-ruler-tools-part-one-the-mood-meter/))
+
+For groups, RULER's warm-up is a vocabulary sprint: assign each group one
+quadrant, then give five minutes to write as many emotion words as possible on
+sticky notes and place each within the quadrant by pleasantness and energy
+([RULER Take 20 workshop guide](https://www.rulerapproach.org/wp-content/uploads/2021/08/TAKE_20_The_Mood_Meter_Sample-copy.pdf)).
+
 ## How does one use it properly?
 
 1. **Pause.** Stop the current activity and check in with mind and body in the
@@ -221,6 +244,26 @@ valence × arousal dimensions without infringing
 Usable generic names include valence–arousal grid, circumplex model of affect,
 dimensional emotion model, and two-dimensional emotion space.
 
+## How do you use it generically?
+
+Everything that makes the tool work — the two axes and the two check-in
+questions — is public science, so a generic version loses nothing. Any of the
+generic names above works; "emotion grid" is also in circulation, described as
+"a more neutral scientific construct, useful across therapy, self-monitoring,
+consumer research, and user experience design"
+([Neurolaunch](https://neurolaunch.com/emotion-grid/)). The check-in questions
+carry over unchanged because they restate Russell's published dimensions: how
+pleasant or unpleasant do you feel, and how energized or depleted is your body
+([Russell 1980](https://www.scirp.org/reference/referencespapers?referenceid=1051239)).
+
+Name the quadrants by their dimensions — high-energy pleasant, high-energy
+unpleasant, low-energy pleasant, low-energy unpleasant — instead of RULER's
+red/yellow/green/blue color language. Do not reproduce the branded material: the
+names "Mood Meter" and "RULER" are Yale trademarks requiring prior written
+consent, and the RULER curriculum's posters, worksheets, and workshop guides are
+copyrighted, with rights administered by the Yale Center for Emotional
+Intelligence ([RULER terms of use](https://rulerapproach.org/terms-of-use/)).
+
 ## Sources
 
 - [Marc Brackett — "How We Feel" app page, including the Mood Meter's history](https://marcbrackett.com/how-we-feel-app-3/)
@@ -248,3 +291,6 @@ dimensional emotion model, and two-dimensional emotion space.
 - [Wikipedia: Emotion classification (covers the circumplex model)](https://en.wikipedia.org/wiki/Emotion_classification)
 - [Russell, J.A. (1980). A Circumplex Model of Affect. _JPSP_, 39(6), 1161–1178 (citation record)](https://www.scirp.org/reference/referencespapers?referenceid=1051239)
 - [Russell's circumplex model — Psychology of Human Emotion open-access textbook](https://psu.pb.unizin.org/psych425/chapter/circumplex-models/)
+- [RULER Take 20 — official Mood Meter workshop guide (sample PDF)](https://www.rulerapproach.org/wp-content/uploads/2021/08/TAKE_20_The_Mood_Meter_Sample-copy.pdf)
+- [The Windward School — Mood Meter facilitation and reflection questions](https://www.thewindwardschool.org/school-blogs/unpacking-the-ruler-tools-part-one-the-mood-meter/)
+- [Neurolaunch — the generic emotion grid (brand-neutral valence–arousal tool)](https://neurolaunch.com/emotion-grid/)

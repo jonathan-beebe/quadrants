@@ -1,5 +1,8 @@
 # One-Way/Two-Way Doors
 
+> **Speed vs. caution:** decide fast on choices you can undo, and reserve slow
+> deliberation for the few you cannot.
+
 One-Way/Two-Way Doors is Jeff Bezos's decision-classification framework, built
 on two properties of a decision: **reversibility** (can you back out?) and
 **consequence** (how much is at stake?). Decisions that are consequential and
@@ -111,6 +114,29 @@ make nominally reversible decisions hard to fully undo
 ([GovLoop](https://www.govloop.com/community/blog/deciding-who-decides-and-doors-the-decision-maker-conundrum/)),
 and misclassification produces either reckless haste or needless delay
 ([LogRocket](https://blog.logrocket.com/product-management/type-1-vs-type-2-decisions-overview-examples/)).
+
+## How do you get into the right mindset?
+
+The shift the framework asks for is to judge the decision's properties before
+its merits: hold off on "which option is best?" and first answer "what kind of
+decision is this?" Practitioners prime that classification with a few diagnostic
+questions:
+
+- If this goes wrong, what breaks, who is impacted, and how fast could we
+  restore the previous state?
+  ([Cleverence](https://www.cleverence.com/articles/business-blogs/how-to-design-decisions-for-reversibility-6382/))
+- What would reversal cost? Ask for a t-shirt-sized estimate, in
+  engineering-months, of the work to revert; reversal that would consume more
+  than ~10% of the annual product budget signals a one-way door
+  ([Aakash Gupta](https://www.aakashg.com/one-way-doors/)).
+- Are we making a public commitment to customers, partners, or the market?
+  ([Aakash Gupta](https://www.aakashg.com/one-way-doors/))
+- Is it cheaper to keep analyzing the decision or to test it?
+  ([LogRocket](https://blog.logrocket.com/product-management/type-1-vs-type-2-decisions-overview-examples/))
+
+For a candidate one-way door, one small exercise sharpens the stakes — a
+pre-mortem: imagine the recommended path has failed spectacularly; what went
+wrong? ([Aakash Gupta](https://www.aakashg.com/one-way-doors/))
 
 ## How does one use it properly?
 
@@ -236,3 +262,8 @@ Framework."
   (critique: cascading consequences limit true reversibility)
 - [USPTO](https://www.uspto.gov/) (no trademark registration of the framework
   terms as a decision method)
+- [Aakash Gupta: One-Way Door Decisions](https://www.aakashg.com/one-way-doors/)
+  (diagnostic toolkit: reversal-cost estimate, ~10%-of-budget threshold,
+  public-commitment flag, pre-mortem exercise)
+- [Cleverence: Designing Reversible Decisions](https://www.cleverence.com/articles/business-blogs/how-to-design-decisions-for-reversibility-6382/)
+  (blast-radius triage question and technical reversibility checklist)

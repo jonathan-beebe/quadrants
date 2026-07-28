@@ -1,5 +1,8 @@
 # Impact/Effort Matrix
 
+> **Value vs. cost:** when everything looks worth doing, weighing both at once
+> reveals which few items deserve the next unit of effort.
+
 The Impact/Effort Matrix (also called the Action Priority Matrix or
 Impact/Effort Chart) is a 2×2 quadrant model for prioritizing candidate work
 along two axes: **impact** (the value delivered if done) and **effort** (the
@@ -114,6 +117,33 @@ The honest summary: the matrix's ordering logic (value up, cost down) is
 uncontroversial, its group-alignment benefit is widely reported, and its
 predictive accuracy is only as good as the estimates fed into it — for which the
 best available data is unflattering.
+
+## How do you get into the right mindset?
+
+Facilitation guides document no warm-up exercises for this tool; what they
+prescribe instead is alignment on scope and definitions before anything is
+plotted, because the placements are only as good as the shared frame. Before
+drawing the grid, work through:
+
+- **Frame the goal as a "What to do" question.**
+  [Gamestorming](https://gamestorming.com/impact-effort-matrix-2/) opens the
+  exercise with a "What to do" or "What we need" question; the
+  [Project Design Toolkit](https://projectdesigntoolkit.org/en_GB/tool/?id=27)
+  offers the sentence-completion "What we need to do to reach the project
+  objective at this stage is…" — and warns that a challenge scoped too wide
+  yields ideas too imprecise to prioritize.
+- **Ask what the axes mean here.** What does impact mean for us in this context
+  — revenue, retention, risk reduction, internal efficiency? What does effort
+  mean — hours, people, cost, coordination? Both "should mean the same thing to
+  everyone in the room" ([Vibe](https://vibe.us/blog/impact-vs-effort-matrix/)).
+- **Score silently before speaking.** Have each participant rate every item on
+  both dimensions before any group discussion begins; silent individual scoring
+  prevents the first speaker from anchoring the whole conversation
+  ([Vibe](https://vibe.us/blog/impact-vs-effort-matrix/)).
+- **Say "low," not "negative."** Clarify up front that the lower ends of both
+  axes mean low impact and low effort, not negative values — a facilitator note
+  on [Gamestorming](https://gamestorming.com/impact-effort-matrix-2/) observes
+  that groups otherwise read the bottom half as "less than 0."
 
 ## How does one use it properly?
 
@@ -245,6 +275,12 @@ requires no license.
   (two-pass Kano-then-sequencing workflow)
 - [Facilitator School — Impact Effort Matrix template](https://www.facilitator.school/template/impact-effort-matrix)
   (CC BY-SA 4.0 template licensing example)
+- [Gamestorming — Impact & Effort Matrix](https://gamestorming.com/impact-effort-matrix-2/)
+  ("What to do" framing question; low-not-negative facilitator note)
+- [Project Design Toolkit — Impact/Effort Matrix](https://projectdesigntoolkit.org/en_GB/tool/?id=27)
+  (framing sentence-completion; warning against overly wide scope)
+- [Vibe — Impact vs. Effort Matrix](https://vibe.us/blog/impact-vs-effort-matrix/)
+  (axis-definition alignment; silent individual scoring against anchoring)
 
 No Wikipedia article exists for the Impact/Effort Matrix itself; origin claims
 in this document are correspondingly conservative.

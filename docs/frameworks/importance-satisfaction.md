@@ -1,5 +1,8 @@
 # Importance × Satisfaction Matrix
 
+> **What customers care about vs. how well it's served:** pinpoints the
+> important, poorly met needs where investment creates the most value.
+
 The Importance × Satisfaction matrix is a 2×2 quadrant model for prioritizing
 customer needs. Each need is rated on two dimensions — how **important** it is
 to customers (vertical axis) and how **satisfied** customers are with existing
@@ -124,6 +127,24 @@ of the importance-satisfaction matrix was located in the sources consulted; the
 framework's standing rests on its 1977 peer-reviewed origin, decades of use in
 marketing research, and practitioner adoption in product management.
 
+## How do you get into the right mindset?
+
+The frame the tool needs is Ulwick's: think about what customers want the
+product to do for them, not how it should do it — outcomes, not solutions
+([HBR, 2002](https://hbr.org/2002/01/turn-customer-input-into-innovation);
+[Outcome-Driven Innovation](https://en.wikipedia.org/wiki/Outcome-Driven_Innovation)).
+A few orienting questions before plotting:
+
+- **The list.** Is each item a need a customer could rate, or a feature someone
+  proposed? Rewrite any solution as the outcome it serves before scoring it.
+- **The importance axis.** Whose importance is this — the customer's, from
+  survey data, or the team's guess? Which segment is being scored?
+- **The satisfaction axis.** Satisfaction means satisfaction with existing
+  solutions from any provider, not just your product. Would customers say this
+  need is already handled?
+- **The verdict.** Are you prepared to act on all four quadrants — including
+  pulling back on things you do well that land in Overkill?
+
 ## How does one use it properly?
 
 The basic protocol, consistent across the three lineages
@@ -209,6 +230,28 @@ and _The Lean Product Playbook_ is a copyrighted book (Wiley, 2015) whose
 techniques are presented as educational material. Drawing your own
 importance-satisfaction matrix and using the published formulas requires no
 license.
+
+## How do you use it generically?
+
+Everything needed for generic use is published and unbranded. Draw the 2×2
+yourself, label the axes importance and satisfaction, and use either published
+quadrant label set — the 1977 originals (Concentrate Here, Keep Up the Good
+Work, Possible Overkill, Low Priority) or the modern product phrasing (Focus
+Here, Keep It Up, Overkill, Low Priority)
+([Martilla & James, 1977](https://journals.sagepub.com/doi/abs/10.1177/002224297704100112)).
+Generic names in circulation cover the branded ground: "importance-performance
+analysis," "importance-satisfaction matrix," and "opportunity scoring"
+([Scrum.org](https://www.scrum.org/resources/opportunity-scoring)). Both
+published formulas are unrestricted: opportunity = importance + max(importance −
+satisfaction, 0)
+([Outcome-Driven Innovation](https://en.wikipedia.org/wiki/Outcome-Driven_Innovation))
+and opportunity to add value = importance × (1 − satisfaction). What to avoid:
+marketing your process as "Outcome-Driven Innovation" — the name is Strategyn's
+trademark, and the full ODI process is covered by patents, the first granted in
+1999
+([Outcome-Driven Innovation](https://en.wikipedia.org/wiki/Outcome-Driven_Innovation))
+— and reproducing diagrams or text from _The Lean Product Playbook_, a
+copyrighted book (Wiley, 2015), rather than applying its technique.
 
 ## Sources
 

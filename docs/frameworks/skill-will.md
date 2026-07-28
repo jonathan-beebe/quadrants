@@ -1,5 +1,8 @@
 # Skill × Will Matrix
 
+> **Can't vs. won't:** the two look identical from the outside but demand
+> opposite responses, and plotting skill against will shows which one you face.
+
 The Skill/Will Matrix is a 2×2 coaching model that helps a manager choose an
 interaction style for a specific person on a specific task. The horizontal axis
 is **skill** (the person's capability at the task — experience, training,
@@ -108,6 +111,29 @@ plausible and coaching works, but the 2×2 itself is a practitioner heuristic,
 not a validated instrument
 ([PerformYard](https://www.performyard.com/articles/skill-will-matrix)).
 
+## How do you get into the right mindset?
+
+Narrow the frame before you plot: one person, one task. The matrix diagnoses a
+situation, not a personality, and the same person lands in different quadrants
+for different tasks ([AIHR](https://www.aihr.com/blog/skill-will-matrix/)).
+Facilitators open with one orienting question per axis
+([WorkshopBank](https://workshopbank.com/skill-will-matrix)):
+
+- **Skill:** what level of relevant skill does this person have, measured
+  against what this task expects of them?
+- **Will:** what level of motivation do they have for securing this outcome and
+  for working with the team?
+
+To sharpen both reads, rate each axis 1–10 — training, competency, and
+experience for the task on one; how energized they are to take it on for the
+other
+([The Right Questions](https://therightquestions.co/how-to-use-the-skill-will-matrix-to-pick-the-right-leadership-style/)).
+Then require evidence for the placement: what observation, work sample, or
+conversation backs it up
+([WorkshopBank](https://workshopbank.com/skill-will-matrix))? Before you choose
+a style, name your own default one and ask whether you were about to apply it
+here regardless of the diagnosis.
+
 ## How does one use it properly?
 
 1. **Pick one person and one task.** Assess skill (capability, experience,
@@ -205,3 +231,7 @@ labels are freely reproducible.
 - [CLS press release: IP settlement with Ken Blanchard Companies (2018)](https://situational.com/press-releases/the-center-for-leadership-studies-and-the-ken-blanchard-companies-resolve-intellectual-property-litigation/)
 - [Trademarkia: "SKILL AND WILL" registration](https://www.trademarkia.com/skill-and-will-87454956)
   — unrelated third-party mark.
+- [WorkshopBank: Skill Will Matrix](https://workshopbank.com/skill-will-matrix)
+  — per-axis assessment questions and the evidence rule for placements.
+- [The Right Questions: How to Use the Skill-Will Matrix](https://therightquestions.co/how-to-use-the-skill-will-matrix-to-pick-the-right-leadership-style/)
+  — 1–10 rating exercise for skill and will.
