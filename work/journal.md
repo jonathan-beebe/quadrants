@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-28:18:18:18 — DSGN-002 — reverted: owner kept the original icon set
+  after reviewing the gradient identity and two merge explorations (reference
+  copies in **local**/images/icons/001 and 002)
 - 2026-07-28:16:32:26 — IMPRV-007 — done: card delete X renders only during
   inline editing, modal-routed devices delete via EditModal; pointerdown
   preventDefault guards the blur-commit race; suite green at 465 tests
