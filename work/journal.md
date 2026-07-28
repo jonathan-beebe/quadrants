@@ -6,7 +6,7 @@
 - DSGN: 3
 - ARCH: 2
 - FEAT: 4
-- IMPRV: 8
+- IMPRV: 11
 - MAINT: 9
 - A11Y: 23
 - RFCTR: 9
@@ -14,6 +14,16 @@
 
 ## Log
 
+- 2026-07-28:18:37:20 — IMPRV-008 — done: FrameworkBuilderContent extracted —
+  authoring UI is self-contained (data in, callbacks out), FrameworkBuilder is
+  chrome only; existing builder tests passed unedited, suite green at 470
+- 2026-07-28:18:32:47 — IMPRV-008 — started
+- 2026-07-28:18:30:12 — IMPRV-010 — defined: present the framework builder in
+  the shared modal
+- 2026-07-28:18:30:12 — IMPRV-009 — defined: reusable modal component with fixed
+  title bar in the design system
+- 2026-07-28:18:30:12 — IMPRV-008 — defined: extract framework builder content
+  from its screen chrome
 - 2026-07-28:18:18:18 — DSGN-002 — reverted: owner kept the original icon set
   after reviewing the gradient identity and two merge explorations (reference
   copies in **local**/images/icons/001 and 002)
