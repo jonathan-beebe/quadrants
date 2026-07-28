@@ -3,10 +3,10 @@
 ## Next ticket numbers
 
 - RSRCH: 3
-- DSGN: 2
+- DSGN: 3
 - ARCH: 2
 - FEAT: 4
-- IMPRV: 7
+- IMPRV: 8
 - MAINT: 9
 - A11Y: 23
 - RFCTR: 9
@@ -14,6 +14,11 @@
 
 ## Log
 
+- 2026-07-28:16:08:41 — DSGN-002 — started
+- 2026-07-28:15:57:14 — IMPRV-007 — defined: show card delete X only during
+  inline editing
+- 2026-07-28:15:56:40 — DSGN-002 — defined: gradient quadrant app icon across
+  all icon assets
 - 2026-07-28:15:11:45 — IMPRV-006 — done: card taps and Add open the top-aligned
   EditModal wherever an on-screen keyboard is expected, items persist only on
   Save, and inline editing survives on physical-keyboard devices; covered by ten
