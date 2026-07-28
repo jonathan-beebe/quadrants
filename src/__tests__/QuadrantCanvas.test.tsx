@@ -364,7 +364,9 @@ describe('QuadrantCanvas', () => {
     const user = userEvent.setup()
     render(<QuadrantCanvas {...defaultProps} />)
 
-    // Delete the existing item "Task A" via its delete button
+    // The delete button only appears while editing (IMPRV-007): enter edit
+    // mode on "Task A" first, then delete via its button.
+    await user.click(screen.getByRole('button', { name: /edit item: task a/i }))
     const deleteBtn = screen.getByRole('button', { name: /delete item: task a/i })
     await user.click(deleteBtn)
 

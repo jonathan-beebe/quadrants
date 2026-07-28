@@ -554,12 +554,19 @@ describe('App', () => {
       expect(screen.getByRole('heading', { name: 'Undo Framework' })).toBeInTheDocument()
     }
 
+    // The delete button only appears while editing (IMPRV-007), so deleting
+    // an item means entering its edit mode first.
+    async function deleteItem(user: ReturnType<typeof userEvent.setup>, name: string) {
+      await user.click(screen.getByRole('button', { name: new RegExp(`edit item: ${name}`, 'i') }))
+      await user.click(screen.getByRole('button', { name: new RegExp(`delete item: ${name}`, 'i') }))
+    }
+
     it('undoes an item deletion with Ctrl+Z and redoes it with Ctrl+Y', async () => {
       const user = userEvent.setup()
       render(<App />)
       await openFramework(user)
 
-      await user.click(screen.getByRole('button', { name: /delete item: task a/i }))
+      await deleteItem(user, 'task a')
       expect(screen.queryByText('Task A')).not.toBeInTheDocument()
 
       fireEvent.keyDown(document.body, { key: 'z', ctrlKey: true })
@@ -574,7 +581,7 @@ describe('App', () => {
       render(<App />)
       await openFramework(user)
 
-      await user.click(screen.getByRole('button', { name: /delete item: task a/i }))
+      await deleteItem(user, 'task a')
       fireEvent.keyDown(document.body, { key: 'z', metaKey: true })
       expect(screen.getByText('Task A')).toBeInTheDocument()
 
@@ -587,12 +594,12 @@ describe('App', () => {
       render(<App />)
       await openFramework(user)
 
-      await user.click(screen.getByRole('button', { name: /delete item: task a/i }))
+      await deleteItem(user, 'task a')
       fireEvent.keyDown(document.body, { key: 'z', ctrlKey: true })
       expect(screen.getByText('Task A')).toBeInTheDocument()
 
       // A new action after undo: the re-delete of Task A is no longer redoable.
-      await user.click(screen.getByRole('button', { name: /delete item: task b/i }))
+      await deleteItem(user, 'task b')
 
       fireEvent.keyDown(document.body, { key: 'y', ctrlKey: true })
       expect(screen.getByText('Task A')).toBeInTheDocument()
@@ -604,7 +611,7 @@ describe('App', () => {
       render(<App />)
       await openFramework(user)
 
-      await user.click(screen.getByRole('button', { name: /delete item: task a/i }))
+      await deleteItem(user, 'task a')
       fireEvent.keyDown(document.body, { key: 'z', ctrlKey: true })
 
       await waitFor(() => {
@@ -631,7 +638,7 @@ describe('App', () => {
       render(<App />)
       await openFramework(user)
 
-      await user.click(screen.getByRole('button', { name: /delete item: task b/i }))
+      await deleteItem(user, 'task b')
       expect(screen.queryByText('Task B')).not.toBeInTheDocument()
 
       // Open the item editor; Cmd/Ctrl+Z must stay native text undo here.
@@ -648,7 +655,7 @@ describe('App', () => {
       const { rerender } = render(<App />)
       await openFramework(user)
 
-      await user.click(screen.getByRole('button', { name: /delete item: task a/i }))
+      await deleteItem(user, 'task a')
       expect(screen.queryByText('Task A')).not.toBeInTheDocument()
 
       vi.mocked(useIsMobile).mockReturnValue(true)

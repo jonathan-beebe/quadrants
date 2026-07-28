@@ -66,8 +66,15 @@ describe('Card', () => {
       expect(card.style.top).toBe('10%')
     })
 
-    it('shows a delete button', () => {
+    it('does not show a delete button in display mode (IMPRV-007)', () => {
       renderCard()
+      expect(screen.queryByTitle('Delete')).not.toBeInTheDocument()
+    })
+
+    it('shows the delete button while editing inline (IMPRV-007)', async () => {
+      const user = userEvent.setup()
+      renderCard()
+      await user.click(screen.getByRole('button', { name: /edit item/i }))
       expect(screen.getByTitle('Delete')).toBeInTheDocument()
     })
   })
@@ -117,8 +124,10 @@ describe('Card', () => {
       )
     })
 
-    it('delete button has an aria-label', () => {
+    it('delete button has an aria-label while editing', async () => {
+      const user = userEvent.setup()
       renderCard()
+      await user.click(screen.getByRole('button', { name: /edit item/i }))
       const btn = screen.getByRole('button', { name: /delete item: test card/i })
       expect(btn).toBeInTheDocument()
     })
@@ -363,11 +372,32 @@ describe('Card', () => {
   })
 
   describe('deletion', () => {
-    it('calls onDelete when delete button is clicked', async () => {
+    it('calls onDelete when the delete button is clicked while editing (IMPRV-007)', async () => {
       const user = userEvent.setup()
       const { props } = renderCard()
+      await user.click(screen.getByRole('button', { name: /edit item/i }))
       await user.click(screen.getByTitle('Delete'))
       expect(props.onDelete).toHaveBeenCalledOnce()
+    })
+
+    it('deleting mid-edit does not also commit typed text via blur (IMPRV-007)', async () => {
+      const user = userEvent.setup()
+      const { props } = renderCard()
+      await user.click(screen.getByRole('button', { name: /edit item/i }))
+      const textarea = screen.getByRole('textbox')
+      await user.clear(textarea)
+      await user.type(textarea, 'Doomed text')
+      await user.click(screen.getByTitle('Delete'))
+      expect(props.onDelete).toHaveBeenCalledOnce()
+      expect(props.onChange).not.toHaveBeenCalled()
+    })
+
+    it('never renders a delete button when editing routes to the modal (IMPRV-007)', async () => {
+      const user = userEvent.setup()
+      renderCard({ onRequestEdit: vi.fn() })
+      expect(screen.queryByTitle('Delete')).not.toBeInTheDocument()
+      await user.click(screen.getByRole('button', { name: /edit item/i }))
+      expect(screen.queryByTitle('Delete')).not.toBeInTheDocument()
     })
 
     it('calls onDelete when text is cleared and committed', async () => {

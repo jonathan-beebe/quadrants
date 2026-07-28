@@ -14,6 +14,10 @@
 
 ## Log
 
+- 2026-07-28:16:22:31 — IMPRV-007 — started
+- 2026-07-28:16:21:40 — DSGN-002 — done: gradient-quadrant identity on
+  favicon.svg, both PWA icons, and apple-touch-icon; bilinear 4-corner gradient
+  with centered translucent cross, maskable-safe, verified at 512/192/96/48
 - 2026-07-28:16:08:41 — DSGN-002 — started
 - 2026-07-28:15:57:14 — IMPRV-007 — defined: show card delete X only during
   inline editing
