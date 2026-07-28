@@ -1,7 +1,7 @@
 ---
 id: A11Y-021
 type: a11y
-status: open
+status: resolved
 created: 2026-07-28
 ---
 
