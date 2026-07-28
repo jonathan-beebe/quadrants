@@ -1,8 +1,9 @@
 ---
 id: RFCTR-008
 type: refactor
-status: open
+status: resolved
 created: 2026-07-27
+resolved: 2026-07-28
 ---
 
 # RFCTR-008: consolidate mobile drawer focus and modality under one owner

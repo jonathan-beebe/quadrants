@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-28:08:15:40 — RFCTR-008 — done: the drawer's open state and both focus
+  moves live in useDrawerModality; the effect-ordering contract is gone and the
+  restore path is covered
 - 2026-07-27:19:43:00 — RFCTR-008 — started
 - 2026-07-27:19:40:07 — RFCTR-008 — defined: consolidate mobile drawer focus and
   modality under one owner
