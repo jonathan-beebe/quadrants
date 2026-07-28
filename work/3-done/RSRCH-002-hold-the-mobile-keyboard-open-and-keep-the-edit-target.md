@@ -1,7 +1,7 @@
 ---
 id: RSRCH-002
 type: research
-status: open
+status: resolved
 created: 2026-07-26
 ---
 
@@ -445,3 +445,31 @@ Ticket stays in `2-doing` pending a device session.
 - No tests written: the probe is a throwaway instrument with no app logic, and
   the research deliverable is the decision, not code (same call as RSRCH-001).
   Full suite re-run regardless — 397/397 green, lint/typecheck/format clean.
+
+## Recommendation (research deliverable)
+
+Adopt the top-aligned editor. Drop in-place inline editing on mobile and route
+item editing and adding through `EditModal` — measured under this ticket as the
+surface iOS never pans for (0px in both immediate and settled captures, against
+383px for inline), and since built into the design system
+(`src/components/EditModal.tsx`) encoding every device-verified constraint: top
+alignment, focus taken inside the gesture via layout effect, height clamped to
+`--visual-viewport-height`, controls in-surface rather than bottom-pinned, and
+the A11Y-022 focus-return contract. A real-device iOS spot-check (2026-07-27,
+journal) confirmed the top-sheet A/B and probe section 3 on hardware; simulator
+findings hold.
+
+Implementation follow-up filed as **IMPRV-006** (route mobile item editing
+through the top-aligned EditModal), satisfying Outcome item 4.
+
+Disposition of the remaining Outcome items: item 1 answered by device evidence
+above; item 3 answered by the top-sheet A/B — the 58% canvas cut of
+container-resizing is recorded and rejected. Item 2 is dissolved rather than
+answered: with editing moved off the canvas there is no gap between edits to
+hold a keyboard across, and the one mechanism question that survived — raising
+the keyboard reliably — is settled (gesture-synchronous focus,
+device-confirmed). The Blocked section's Android/Chromium gap no longer gates
+anything: the modal path uses no Chromium-only API, so the per-platform
+mechanism recommendation the original Outcome asked for is moot.
+`public/keyboard-probe.html` stays available should a viewport question
+resurface.

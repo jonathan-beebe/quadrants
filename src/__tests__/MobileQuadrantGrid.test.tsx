@@ -113,7 +113,9 @@ describe('MobileQuadrantGrid', () => {
     zoomInto(grid, 50, 50)
 
     await user.click(screen.getByRole('button', { name: /add item to do first/i }))
-    expect(onAddItem).toHaveBeenCalledWith(0)
+    // The Add button passes itself as the opener so the canvas can return
+    // focus to it when the edit modal path is active (IMPRV-006).
+    expect(onAddItem).toHaveBeenCalledWith(0, expect.any(HTMLElement))
   })
 
   it('shows item count badge in focused mode', () => {

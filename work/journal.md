@@ -6,7 +6,7 @@
 - DSGN: 2
 - ARCH: 2
 - FEAT: 4
-- IMPRV: 6
+- IMPRV: 7
 - MAINT: 9
 - A11Y: 23
 - RFCTR: 9
@@ -14,6 +14,12 @@
 
 ## Log
 
+- 2026-07-28:15:01:21 — IMPRV-006 — started
+- 2026-07-28:14:40:55 — RSRCH-002 — done: closed as answered — top-aligned
+  editor recommendation adopted, remaining device items dissolved by the pivot;
+  implementation filed as IMPRV-006
+- 2026-07-28:14:38:10 — IMPRV-006 — defined: route mobile item editing through
+  the top-aligned EditModal
 - 2026-07-28:12:26:34 — A11Y-022 — done: EditModal restores focus to a required
   openerRef on unmount; all exits covered by unit and demo-integration tests
 - 2026-07-28:12:15:14 — A11Y-022 — started

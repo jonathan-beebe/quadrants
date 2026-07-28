@@ -32,6 +32,12 @@ interface CardProps {
   onMove: (targetIdx: number) => void
   onReposition: (x: number, y: number) => void
   onDragStart: (info: DragStartInfo) => void
+  /**
+   * When present, activating the card requests an external editing surface
+   * (the edit modal) instead of the inline textarea. Receives the display
+   * button so the modal can return focus to it (A11Y-022).
+   */
+  onRequestEdit?: (opener: HTMLElement) => void
 }
 
 // Keyboard reposition step sizes in percent of the canvas. Shift = larger jumps.
@@ -48,6 +54,7 @@ export default function Card({
   onMove,
   onReposition,
   onDragStart,
+  onRequestEdit,
 }: CardProps) {
   const cardRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
@@ -99,6 +106,8 @@ export default function Card({
   onDeleteRef.current = onDelete
   const onChangeRef = useRef(onChange)
   onChangeRef.current = onChange
+  const onRequestEditRef = useRef(onRequestEdit)
+  onRequestEditRef.current = onRequestEdit
 
   const fireDragStart = useCallback((clientX: number, clientY: number) => {
     const cardEl = cardRef.current
@@ -116,6 +125,10 @@ export default function Card({
 
   const enterEditMode = useCallback(() => {
     const displayButton = displayButtonRef.current
+    if (onRequestEditRef.current && displayButton) {
+      onRequestEditRef.current(displayButton)
+      return
+    }
     if (displayButton) {
       setMinSize({ width: displayButton.offsetWidth, height: displayButton.offsetHeight })
     }
@@ -286,8 +299,9 @@ export default function Card({
           aria-label={`Edit item: ${item.text}. Press M to move to another quadrant, or arrow keys to reposition.`}
           aria-keyshortcuts="m ArrowLeft ArrowRight ArrowUp ArrowDown"
           // Popup semantics only when M actually opens the menu — claiming
-          // them with zero move targets would be false (A11Y-015).
-          aria-haspopup={moveTargets.length > 0 ? 'menu' : undefined}
+          // them with zero move targets would be false (A11Y-015). When the
+          // edit modal is the primary activation, that dialog wins the claim.
+          aria-haspopup={onRequestEdit ? 'dialog' : moveTargets.length > 0 ? 'menu' : undefined}
           aria-expanded={moveTargets.length > 0 ? showMoveMenu : undefined}
           aria-controls={moveTargets.length > 0 && showMoveMenu ? moveMenuId : undefined}
           onPointerDown={handleTextPointerDown}

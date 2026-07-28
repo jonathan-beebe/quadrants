@@ -33,6 +33,7 @@ export default function MobileQuadrantGrid({
   onMoveItem,
   onReposition,
   onDragStart,
+  onRequestEditItem,
 }: QuadrantGridProps) {
   const [zoomedIdx, setZoomedIdx] = useState<number | null>(null)
   const isZoomed = zoomedIdx !== null
@@ -138,6 +139,7 @@ export default function MobileQuadrantGrid({
                     onMove={(targetIdx) => onMoveItem(idx, item.id, targetIdx)}
                     onReposition={(x, y) => onReposition(idx, item.id, x, y)}
                     onDragStart={(info) => onDragStart(idx, item, info)}
+                    onRequestEdit={onRequestEditItem ? (opener) => onRequestEditItem(idx, item.id, opener) : undefined}
                   />
                 ))}
               </div>
@@ -173,7 +175,7 @@ export default function MobileQuadrantGrid({
                     <Button
                       variant="secondary"
                       size="sm"
-                      onClick={() => onAddItem(idx)}
+                      onClick={(e) => onAddItem(idx, e.currentTarget)}
                       aria-label={`Add item to ${quadrant.label}`}>
                       Add <PlusIcon size={14} />
                     </Button>

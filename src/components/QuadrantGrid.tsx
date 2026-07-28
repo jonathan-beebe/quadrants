@@ -13,9 +13,15 @@ export interface QuadrantGridProps {
   autoFocusId: string | null
   quadrantRefs: React.RefObject<(HTMLElement | null)[]>
   canvasRefs: React.RefObject<(HTMLElement | null)[]>
-  onAddItem: (quadrantIdx: number) => void
+  onAddItem: (quadrantIdx: number, opener?: HTMLElement) => void
   onDeleteItem: (quadrantIdx: number, itemId: string) => void
   onEditItem: (quadrantIdx: number, itemId: string, text: string) => void
+  /**
+   * When present, cards request the edit modal instead of editing inline.
+   * Passed through to Card so the canvas can mount the modal with the
+   * card's display button as the focus-return target (A11Y-022).
+   */
+  onRequestEditItem?: (quadrantIdx: number, itemId: string, opener: HTMLElement) => void
   onColorChange: (quadrantIdx: number, color: string) => void
   onMoveItem: (sourceIdx: number, itemId: string, targetIdx: number) => void
   onReposition: (quadrantIdx: number, itemId: string, x: number, y: number) => void
@@ -35,6 +41,7 @@ export default function QuadrantGrid({
   onMoveItem,
   onReposition,
   onDragStart,
+  onRequestEditItem,
 }: QuadrantGridProps) {
   return (
     <div
@@ -117,7 +124,7 @@ export default function QuadrantGrid({
                 <div className="flex items-center gap-1.5">
                   <button
                     className="w-6 h-6 grid place-items-center rounded text-text-tertiary transition-all duration-150 hover:text-text-secondary hover:bg-black/6 dark:hover:bg-white/10"
-                    onClick={() => onAddItem(idx)}
+                    onClick={(e) => onAddItem(idx, e.currentTarget)}
                     aria-label={`Add item to ${quadrant.label}`}>
                     <PlusIcon size={14} />
                   </button>
@@ -156,6 +163,9 @@ export default function QuadrantGrid({
                       onMove={(targetIdx) => onMoveItem(idx, item.id, targetIdx)}
                       onReposition={(x, y) => onReposition(idx, item.id, x, y)}
                       onDragStart={(info) => onDragStart(idx, item, info)}
+                      onRequestEdit={
+                        onRequestEditItem ? (opener) => onRequestEditItem(idx, item.id, opener) : undefined
+                      }
                     />
                   ))}
                 </div>

@@ -1,9 +1,12 @@
 import { useState, useRef, useCallback, useEffect } from 'react'
+import { flushSync } from 'react-dom'
 import { createItem, addItem, removeItem, updateItemText, setQuadrantColor, moveItem } from '../logic/items'
 import { useIsMobile } from '../hooks/useIsMobile'
+import { useExpectsOnScreenKeyboard } from '../hooks/useExpectsOnScreenKeyboard'
 import useDragAndDrop from '../hooks/useDragAndDrop'
 import type { DropResult } from '../hooks/useDragAndDrop'
 import { GhostCard, PLACEHOLDER } from './Card'
+import EditModal from './EditModal'
 import { EditIcon, ShareIcon } from './Icons'
 import PageTitle from './atoms/PageTitle'
 import Button from './atoms/Button'
@@ -31,8 +34,14 @@ export default function QuadrantCanvas({
   onShare,
 }: QuadrantCanvasProps) {
   const isMobile = useIsMobile()
+  const expectsKeyboard = useExpectsOnScreenKeyboard()
   const [shareStatus, setShareStatus] = useState<'copied' | 'error' | null>(null)
   const [autoFocusId, setAutoFocusId] = useState<string | null>(null)
+  // itemId null = adding a new item to the quadrant; the item exists only
+  // once the modal saves, so cancelling never leaves a placeholder (BUG-004's
+  // whole failure mode has nothing to attach to on this path).
+  const [itemModal, setItemModal] = useState<{ quadrantIdx: number; itemId: string | null } | null>(null)
+  const modalOpenerRef = useRef<HTMLElement | null>(null)
   const [liveMessage, setLiveMessage] = useState('')
   const quadrantRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
   const canvasRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
@@ -73,14 +82,32 @@ export default function QuadrantCanvas({
     requestAnimationFrame(() => setLiveMessage(message))
   }, [])
 
+  // The modal must mount — and take focus via its layout effect — inside the
+  // gesture that requested it, or iOS will not raise the keyboard (RSRCH-002).
+  // Card resolves a tap in a native window pointerup listener, where React
+  // defers state updates past the gesture; flushSync commits the mount now.
+  const openItemModal = useCallback((quadrantIdx: number, itemId: string | null, opener: HTMLElement) => {
+    modalOpenerRef.current = opener
+    flushSync(() => setItemModal({ quadrantIdx, itemId }))
+  }, [])
+
+  const handleRequestEditItem = useCallback(
+    (quadrantIdx: number, itemId: string, opener: HTMLElement) => openItemModal(quadrantIdx, itemId, opener),
+    [openItemModal],
+  )
+
   const handleAddItem = useCallback(
-    (quadrantIdx: number) => {
+    (quadrantIdx: number, opener?: HTMLElement) => {
+      if (expectsKeyboard && opener) {
+        openItemModal(quadrantIdx, null, opener)
+        return
+      }
       const newItem = createItem(PLACEHOLDER)
       setAutoFocusId(newItem.id)
       updateFramework((fw) => addItem(fw, quadrantIdx, newItem))
       announce(`New item added to ${frameworkRef.current.quadrants[quadrantIdx].label}`)
     },
-    [updateFramework, announce],
+    [expectsKeyboard, openItemModal, updateFramework, announce],
   )
 
   // autoFocusId is one-shot: once the freshly added item's edit session ends
@@ -109,6 +136,34 @@ export default function QuadrantCanvas({
     },
     [updateFramework, consumeAutoFocus],
   )
+
+  const closeItemModal = useCallback(() => setItemModal(null), [])
+
+  const handleModalSave = useCallback(
+    (text: string) => {
+      if (!itemModal) return
+      const { quadrantIdx, itemId } = itemModal
+      const trimmed = text.trim()
+      if (itemId === null) {
+        if (trimmed) {
+          updateFramework((fw) => addItem(fw, quadrantIdx, createItem(trimmed)))
+          announce(`New item added to ${frameworkRef.current.quadrants[quadrantIdx].label}`)
+        }
+      } else if (trimmed) {
+        handleEditItem(quadrantIdx, itemId, trimmed)
+      } else {
+        // Saving an item empty deletes it, mirroring the inline commit.
+        handleDeleteItem(quadrantIdx, itemId)
+      }
+      setItemModal(null)
+    },
+    [itemModal, updateFramework, announce, handleEditItem, handleDeleteItem],
+  )
+
+  const handleModalDelete = useCallback(() => {
+    if (itemModal?.itemId != null) handleDeleteItem(itemModal.quadrantIdx, itemModal.itemId)
+    setItemModal(null)
+  }, [itemModal, handleDeleteItem])
 
   const handleColorChange = useCallback(
     (quadrantIdx: number, color: string) => {
@@ -141,6 +196,10 @@ export default function QuadrantCanvas({
     const q = framework.quadrants[drag.sourceIdx]
     draggedItem = q?.items.find((it) => it.id === drag.itemId) ?? null
   }
+
+  const modalItem = itemModal?.itemId
+    ? (framework.quadrants[itemModal.quadrantIdx]?.items.find((it) => it.id === itemModal.itemId) ?? null)
+    : null
 
   const handleShare = useCallback(async () => {
     if (shareTimerRef.current) clearTimeout(shareTimerRef.current)
@@ -209,7 +268,19 @@ export default function QuadrantCanvas({
         onMoveItem={handleMoveItem}
         onReposition={handleRepositionItem}
         onDragStart={handleDragStart}
+        onRequestEditItem={expectsKeyboard ? handleRequestEditItem : undefined}
       />
+
+      {itemModal && (itemModal.itemId === null || modalItem) && (
+        <EditModal
+          title={itemModal.itemId === null ? 'Add item' : 'Edit item'}
+          value={modalItem?.text ?? ''}
+          openerRef={modalOpenerRef}
+          onSave={handleModalSave}
+          onDelete={handleModalDelete}
+          onCancel={closeItemModal}
+        />
+      )}
 
       {drag && draggedItem && <GhostCard drag={drag} text={draggedItem.text} />}
       <div className="sr-only" aria-live="polite" role="status">
