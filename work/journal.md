@@ -14,6 +14,10 @@
 
 ## Log
 
+- 2026-07-28:15:11:45 — IMPRV-006 — done: card taps and Add open the top-aligned
+  EditModal wherever an on-screen keyboard is expected, items persist only on
+  Save, and inline editing survives on physical-keyboard devices; covered by ten
+  integration tests
 - 2026-07-28:15:01:21 — IMPRV-006 — started
 - 2026-07-28:14:40:55 — RSRCH-002 — done: closed as answered — top-aligned
   editor recommendation adopted, remaining device items dissolved by the pivot;

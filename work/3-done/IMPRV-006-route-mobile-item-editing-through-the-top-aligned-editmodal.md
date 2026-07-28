@@ -1,7 +1,7 @@
 ---
 id: IMPRV-006
 type: improvement
-status: open
+status: resolved
 created: 2026-07-28
 ---
 
@@ -129,3 +129,13 @@ optional follow-up, not required here.
   tap-from-drag until the drag threshold resolves. Pointerup is still inside the
   user gesture; the probe's sync rung and the demo differ only in which pointer
   event hosts the focus.
+- Done (9169019): `Card` routes `enterEditMode` to an optional
+  `onRequestEdit(opener)`; both grids thread it plus the Add button's opener;
+  `QuadrantCanvas` gates on the hook, owns the modal state, and opens through
+  `flushSync` so the focus lands in-gesture. Ten integration tests in
+  `QuadrantCanvasEditModal.test.tsx` cover tap/save/cancel/delete/empty-save,
+  modal add with persist-on-Save-only, the desktop-grid-with-keyboard (tablet)
+  routing, and the inline fallback. `autoFocusId`/PLACEHOLDER are unreachable on
+  the modal path (add never persists a placeholder), satisfying the BUG-009
+  guard note. Device verification of the raised keyboard on hardware remains
+  worthwhile at the next opportunity.
