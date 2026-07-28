@@ -61,6 +61,8 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(field()).toHaveValue('Ship v3 release')
+    // A11Y-022: focus returns to the trigger, not <body>.
+    expect(field()).toHaveFocus()
   })
 
   it('leaves the field untouched on cancel', async () => {
@@ -73,6 +75,20 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
     await user.click(modal().getByRole('button', { name: 'Cancel' }))
 
     expect(field()).toHaveValue('Ship v2 release')
+    expect(field()).toHaveFocus() // A11Y-022
+  })
+
+  it('closes via the X, discarding the edit', async () => {
+    simulate(PHONE)
+    const user = userEvent.setup()
+    render(<DesignSystem />)
+
+    await user.click(field())
+    await user.click(modal().getByRole('button', { name: 'Close Edit item' }))
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(field()).toHaveValue('Ship v2 release')
+    expect(field()).toHaveFocus() // A11Y-022
   })
 
   it('reports the delete it would have performed, and closes', async () => {
@@ -86,6 +102,7 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
 
     expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
     expect(alert).toHaveBeenCalledWith(expect.stringMatching(/delete/i))
+    expect(field()).toHaveFocus() // A11Y-022
     alert.mockRestore()
   })
 

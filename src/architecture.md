@@ -136,8 +136,14 @@ and derives nothing about its own modality.
 `useFocusTrap` deliberately stays narrower than this: it is Tab cycling and
 Escape for any container, with no opinion about focus-on-open, restore, or the
 background. The four surfaces using it (`Sidebar`, `ConflictDialog`,
-`EditModal`, `FrameworkBuilder`'s template picker) still hand-roll the rest, and
-one of them — `EditModal` — does not restore focus at all. That is a known gap
-(A11Y-022), not a pattern to copy. `ConflictDialog`'s dismissal focus is owned
-by `useFrameworkSharing`, which owns its open state: every exit navigates and
-there is no opener control, so all three resolve to `<main>` (A11Y-021).
+`EditModal`, `FrameworkBuilder`'s template picker) hand-roll the rest, each
+resolving close-focus per the rule above:
+
+- `ConflictDialog` — dismissal focus is owned by `useFrameworkSharing`, which
+  owns its open state: every exit navigates and there is no opener control, so
+  all three exits resolve to `<main>` (A11Y-021).
+- `EditModal` — the parent owning `open` declares the return target via the
+  required `openerRef` prop; the modal focuses it on unmount, covering every
+  exit through one mechanism. The target must be declared, not captured from
+  `document.activeElement`, because the touch path opens the modal without ever
+  focusing the trigger (pointerDown + preventDefault, RSRCH-002) (A11Y-022).

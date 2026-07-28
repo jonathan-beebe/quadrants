@@ -1,4 +1,4 @@
-import { useId, useLayoutEffect, useRef, useState } from 'react'
+import { useEffect, useId, useLayoutEffect, useRef, useState, type RefObject } from 'react'
 import Button from './atoms/Button'
 import { XIcon } from './Icons'
 import { useFocusTrap } from '../hooks/useFocusTrap'
@@ -11,6 +11,13 @@ interface EditModalProps {
   value: string
   /** Label above the field. Also the field's accessible name. */
   fieldLabel?: string
+  /**
+   * The control that opened the modal — focus returns to it when the modal
+   * unmounts (A11Y-022). Declared by ref rather than captured from
+   * document.activeElement because the touch path opens the modal from
+   * pointerDown with preventDefault, so the opener never holds focus.
+   */
+  openerRef: RefObject<HTMLElement | null>
   onSave: (text: string) => void
   onDelete: () => void
   onCancel: () => void
@@ -36,7 +43,15 @@ interface EditModalProps {
  * bottom-pinned controls are buried by the keyboard, not lifted above it —
  * measured at 403px below the visible area.
  */
-export default function EditModal({ title, value, fieldLabel = 'Text', onSave, onDelete, onCancel }: EditModalProps) {
+export default function EditModal({
+  title,
+  value,
+  fieldLabel = 'Text',
+  openerRef,
+  onSave,
+  onDelete,
+  onCancel,
+}: EditModalProps) {
   const dialogRef = useRef<HTMLDivElement>(null)
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const [draft, setDraft] = useState(value)
@@ -54,6 +69,18 @@ export default function EditModal({ title, value, fieldLabel = 'Text', onSave, o
     textareaRef.current?.focus()
     textareaRef.current?.select()
   }, [])
+
+  // Every exit — Save, Delete, Cancel, the close X, Escape — unmounts the
+  // modal, so the unmount cleanup is the one place that covers them all. Read
+  // at cleanup time, not captured on mount, so a parent that re-points the ref
+  // while the modal is open (e.g. a list re-render) still gets focus back on
+  // its current notion of the opener (A11Y-022). The lint rule below assumes
+  // the ref names a node this component rendered; it names the parent's
+  // opener, which outlives the modal.
+  useEffect(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    return () => openerRef.current?.focus()
+  }, [openerRef])
 
   const handleKeyDown = useFocusTrap(dialogRef, onCancel)
 

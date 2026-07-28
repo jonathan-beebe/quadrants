@@ -239,6 +239,10 @@ function EditModalDemo() {
   const [text, setText] = useState('Ship v2 release')
   const [open, setOpen] = useState(false)
   const [preview, setPreview] = useState(false)
+  // The trigger field never holds focus when the modal opens (pointerDown +
+  // preventDefault below), so the modal is told where focus returns by ref
+  // rather than left to read document.activeElement (A11Y-022).
+  const inputRef = useRef<HTMLInputElement>(null)
 
   const signals = useOnScreenKeyboardSignals()
   const expectsKeyboard = expectsOnScreenKeyboard(signals)
@@ -317,6 +321,7 @@ function EditModalDemo() {
           {useModal ? 'Item text — tap to edit' : 'Item text — edit in place'}
         </label>
         <input
+          ref={inputRef}
           id="edit-modal-demo-input"
           type="text"
           value={text}
@@ -365,6 +370,7 @@ function EditModalDemo() {
           title="Edit item"
           value={text}
           fieldLabel="Item text"
+          openerRef={inputRef}
           onSave={(next) => {
             setText(next)
             setOpen(false)

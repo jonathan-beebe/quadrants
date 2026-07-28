@@ -14,6 +14,7 @@
 
 ## Log
 
+- 2026-07-28:12:15:14 — A11Y-022 — started
 - 2026-07-28:12:13:45 — A11Y-021 — done: dismissing the conflict dialog focuses
   `<main>`; the move is owned by useFrameworkSharing and all three exits are
   covered by tests

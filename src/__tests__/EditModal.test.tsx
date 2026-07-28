@@ -1,3 +1,4 @@
+import { useRef, useState } from 'react'
 import { describe, it, expect, vi } from 'vitest'
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
@@ -7,6 +8,7 @@ function setup(overrides: Partial<React.ComponentProps<typeof EditModal>> = {}) 
   const props = {
     title: 'Edit item',
     value: 'Ship v2 release',
+    openerRef: { current: null },
     onSave: vi.fn(),
     onDelete: vi.fn(),
     onCancel: vi.fn(),
@@ -84,6 +86,41 @@ describe('EditModal', () => {
     expect(onCancel).toHaveBeenCalled()
   })
 
+  // A11Y-022: closing the modal returns focus to the control that opened it.
+  // The opener is declared by ref rather than captured from
+  // document.activeElement, because the touch path opens the modal without
+  // ever focusing the trigger (pointerDown + preventDefault, RSRCH-002). Any
+  // exit unmounts the modal, so one harness path stands in for all of them.
+  it('returns focus to the opener when it unmounts (A11Y-022)', async () => {
+    function Harness() {
+      const openerRef = useRef<HTMLButtonElement>(null)
+      const [open, setOpen] = useState(true)
+      const close = () => setOpen(false)
+      return (
+        <>
+          <button ref={openerRef}>Open editor</button>
+          {open && (
+            <EditModal
+              title="Edit item"
+              value="Ship v2 release"
+              openerRef={openerRef}
+              onSave={close}
+              onDelete={close}
+              onCancel={close}
+            />
+          )}
+        </>
+      )
+    }
+    const user = userEvent.setup()
+    render(<Harness />)
+
+    await user.click(screen.getByRole('button', { name: 'Save' }))
+
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'Open editor' })).toHaveFocus()
+  })
+
   it('is a labelled modal dialog', () => {
     setup()
     expect(screen.getByRole('dialog', { name: 'Edit item' })).toHaveAttribute('aria-modal', 'true')
@@ -96,12 +133,28 @@ describe('EditModal', () => {
 
   it('gives each instance its own label and field ids, so two can coexist', () => {
     const { unmount } = render(
-      <EditModal title="First" value="a" onSave={vi.fn()} onDelete={vi.fn()} onCancel={vi.fn()} />,
+      <EditModal
+        title="First"
+        value="a"
+        openerRef={{ current: null }}
+        onSave={vi.fn()}
+        onDelete={vi.fn()}
+        onCancel={vi.fn()}
+      />,
     )
     const first = screen.getByRole('dialog').getAttribute('aria-labelledby')
     unmount()
 
-    render(<EditModal title="Second" value="b" onSave={vi.fn()} onDelete={vi.fn()} onCancel={vi.fn()} />)
+    render(
+      <EditModal
+        title="Second"
+        value="b"
+        openerRef={{ current: null }}
+        onSave={vi.fn()}
+        onDelete={vi.fn()}
+        onCancel={vi.fn()}
+      />,
+    )
     expect(screen.getByRole('dialog').getAttribute('aria-labelledby')).not.toBe(first)
   })
 })

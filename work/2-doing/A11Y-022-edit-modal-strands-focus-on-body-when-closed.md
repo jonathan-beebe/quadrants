@@ -73,3 +73,26 @@ Advisory — `/work-start` may use or discard.
   restore-to-opener
 - `work/0-research/mobile-drawer-focus-ownership-split-across-app-and-sidebar.md`
   — where this gap was found
+
+## Working
+
+- Re-validated 2026-07-28: still real. Every exit unmounts the modal with focus
+  inside it; nothing restores. Only consumer is still the design-system demo.
+- Contract decision: `EditModal` takes a required `openerRef` prop and focuses
+  it in an unmount cleanup. The parent — owner of `open` — keeps the decision of
+  where focus goes (it passes the ref); the modal owns only the timing (after
+  the unmount commit). This keeps both focus writes (claim on mount, return on
+  unmount) in one component with no effect-ordering dependence, and makes every
+  exit path — including Escape and any future one — restore through a single
+  mechanism RSRCH-002 cannot forget to wire per-handler.
+- Why not capture `document.activeElement` on mount: the touch path opens the
+  modal from `pointerDown` with `preventDefault` so the opener deliberately
+  never takes focus (RSRCH-002); at mount time activeElement is not the opener
+  on the primary path. The ref must be explicit.
+- The focus-on-open `useLayoutEffect` is untouched, per the device constraint
+  noted in the ticket.
+- Prop is required, not optional: an EditModal without a restore target
+  recreates this defect silently.
+- Tests: unit contract in `EditModal.test.tsx` (unmount returns focus to
+  `openerRef`); integration in `DesignSystemEditModal.test.tsx` — focus
+  assertions on Save/Cancel/Delete plus a new close-X test.
