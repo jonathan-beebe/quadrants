@@ -70,6 +70,7 @@ export default function App() {
     addRaw,
     replace,
     addImport,
+    mainRef,
   })
 
   // Undo/redo is keyboard-only and large-screen-only for now (FEAT-003).

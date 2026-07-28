@@ -33,6 +33,7 @@ function makeOptions() {
     addRaw: vi.fn(),
     replace: vi.fn(),
     addImport: vi.fn(),
+    mainRef: { current: null },
   }
 }
 

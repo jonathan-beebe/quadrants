@@ -71,3 +71,26 @@ Advisory — `/work-start` may use or discard.
 - A11Y-005 — the drawer's focus contract, the closest existing precedent
 - `work/0-research/mobile-drawer-focus-ownership-split-across-app-and-sidebar.md`
   — where this gap was found
+
+## Working
+
+- Re-validated 2026-07-28: still real. `ConflictDialog.tsx:19-21` focuses the
+  first button on mount; all three handlers in `useFrameworkSharing` clear
+  `conflict` with no focus move; nothing else touches focus on that path.
+  `QuadrantCanvas`/`EmptyState` claim no focus on mount, so whatever we set
+  sticks.
+- Ownership decision: the open state lives in `useFrameworkSharing` (not `App`
+  as the ticket assumed — `App` only wires it), so per the modal-surfaces rule
+  the hook owns the focus move. `App` passes `mainRef` in as an option.
+- Target decision: reuse `<main>` (BUG-014's post-navigation landing spot,
+  `tabIndex={-1}`). All three exits navigate; there is no opener to restore to.
+  The revealed screen does not claim focus itself, so `<main>` announcing as the
+  landmark is the announcement the outcome asks for — same contract as the
+  drawer's `dismissForNavigation`.
+- Shape: transition effect in the hook (conflict → null ⇒ focus main), mirroring
+  `useDrawerModality`'s open/close transition effect, so every dismissal path —
+  including future ones — funnels through one focus owner.
+- Tests: three tests in `App.test.tsx` beside the FEAT-001 trio, one per exit,
+  asserting `<main>` has focus once the dialog is gone.
+- Also updates the "Modal surfaces" note in `src/architecture.md`: the
+  no-restore gap now names only `EditModal` (A11Y-022).

@@ -72,7 +72,11 @@ describe('useFrameworkSharing conflict replace freshness (BUG-027)', () => {
     const addRaw = vi.fn()
     const addImport = vi.fn()
 
-    const { result } = renderHook(() => useFrameworkSharing({ getFramework, navigate, addRaw, replace, addImport }))
+    const mainRef = { current: null }
+
+    const { result } = renderHook(() =>
+      useFrameworkSharing({ getFramework, navigate, addRaw, replace, addImport, mainRef }),
+    )
 
     // Wait for decodeSharedPayload promise and the queued setTimeout(0) that
     // surfaces the conflict to flush.

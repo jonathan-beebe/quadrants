@@ -137,5 +137,7 @@ and derives nothing about its own modality.
 Escape for any container, with no opinion about focus-on-open, restore, or the
 background. The four surfaces using it (`Sidebar`, `ConflictDialog`,
 `EditModal`, `FrameworkBuilder`'s template picker) still hand-roll the rest, and
-two of them do not restore focus at all. That is a known gap, not a pattern to
-copy.
+one of them — `EditModal` — does not restore focus at all. That is a known gap
+(A11Y-022), not a pattern to copy. `ConflictDialog`'s dismissal focus is owned
+by `useFrameworkSharing`, which owns its open state: every exit navigates and
+there is no opener control, so all three resolve to `<main>` (A11Y-021).

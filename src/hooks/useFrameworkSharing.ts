@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, useCallback } from 'react'
+import { useEffect, useRef, useState, useCallback, type RefObject } from 'react'
 import { encodeFramework, decodeSharedPayload } from '../sharing'
 import { repairImportedFramework } from '../logic/framework'
 import { resolveImportAction } from '../logic/shareImport'
@@ -24,6 +24,8 @@ interface UseFrameworkSharingOptions {
   addRaw: (fw: Framework) => void
   replace: (fw: Framework) => void
   addImport: (fw: Framework) => Framework
+  /** Where focus lands when the conflict dialog is dismissed (A11Y-021). */
+  mainRef: RefObject<HTMLElement | null>
 }
 
 export function useFrameworkSharing({
@@ -32,6 +34,7 @@ export function useFrameworkSharing({
   addRaw,
   replace,
   addImport,
+  mainRef,
 }: UseFrameworkSharingOptions) {
   const [conflict, setConflict] = useState<Conflict | null>(null)
   const [error, setError] = useState<string | null>(null)
@@ -108,6 +111,20 @@ export function useFrameworkSharing({
         setImporting(false)
       })
   }, [getFramework, addRaw, navigate, showError])
+
+  // This hook owns `conflict`, so it owns the focus move that follows
+  // dismissing the dialog (the modal-surfaces rule, src/architecture.md).
+  // Every exit navigates to the screen the choice produced, and the dialog is
+  // raised by the URL rather than an opener control, so all three resolve to
+  // one target: <main>, the post-navigation landing spot (BUG-014). Written as
+  // a transition effect so it runs after the commit that unmounted the dialog,
+  // and so any future dismissal path inherits it (A11Y-021).
+  const hadConflictRef = useRef(false)
+  useEffect(() => {
+    const dismissed = !conflict && hadConflictRef.current
+    hadConflictRef.current = !!conflict
+    if (dismissed) mainRef.current?.focus()
+  }, [conflict, mainRef])
 
   // Clear pending error auto-dismiss timer on unmount
   useEffect(() => {

@@ -796,6 +796,46 @@ describe('App', () => {
       expect(screen.getByRole('heading', { name: 'My Local Version' })).toBeInTheDocument()
     })
 
+    // A11Y-021: dismissing the conflict dialog must not strand focus on
+    // <body>. All three exits navigate to the screen the choice produced and
+    // the dialog has no opener control to restore to (it is raised by the URL),
+    // so focus lands on <main> — the post-navigation landing spot (BUG-014).
+    it('Replace local moves focus to main when the dialog closes (A11Y-021)', async () => {
+      await setupConflict()
+      const user = userEvent.setup()
+      render(<App />)
+
+      await waitFor(() => expect(screen.getByText('Framework already exists')).toBeInTheDocument())
+      await user.click(screen.getByRole('button', { name: 'Replace local' }))
+
+      await waitFor(() => expect(screen.queryByText('Framework already exists')).not.toBeInTheDocument())
+      expect(screen.getByRole('main')).toHaveFocus()
+    })
+
+    it('Keep both moves focus to main when the dialog closes (A11Y-021)', async () => {
+      await setupConflict()
+      const user = userEvent.setup()
+      render(<App />)
+
+      await waitFor(() => expect(screen.getByText('Framework already exists')).toBeInTheDocument())
+      await user.click(screen.getByRole('button', { name: 'Keep both' }))
+
+      await waitFor(() => expect(screen.queryByText('Framework already exists')).not.toBeInTheDocument())
+      expect(screen.getByRole('main')).toHaveFocus()
+    })
+
+    it('Cancel moves focus to main when the dialog closes (A11Y-021)', async () => {
+      await setupConflict()
+      const user = userEvent.setup()
+      render(<App />)
+
+      await waitFor(() => expect(screen.getByText('Framework already exists')).toBeInTheDocument())
+      await user.click(screen.getByRole('button', { name: 'Cancel' }))
+
+      await waitFor(() => expect(screen.queryByText('Framework already exists')).not.toBeInTheDocument())
+      expect(screen.getByRole('main')).toHaveFocus()
+    })
+
     it('marks the skip-to-content link as inert while the conflict dialog is active', async () => {
       // BUG-016: when the ConflictDialog is shown, the skip-to-content link
       // must be inside an inert subtree so keyboard users cannot Tab to it.
