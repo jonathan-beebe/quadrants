@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-28:16:32:26 — IMPRV-007 — done: card delete X renders only during
+  inline editing, modal-routed devices delete via EditModal; pointerdown
+  preventDefault guards the blur-commit race; suite green at 465 tests
 - 2026-07-28:16:22:31 — IMPRV-007 — started
 - 2026-07-28:16:21:40 — DSGN-002 — done: gradient-quadrant identity on
   favicon.svg, both PWA icons, and apple-touch-icon; bilinear 4-corner gradient
