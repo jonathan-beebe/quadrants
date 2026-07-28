@@ -14,6 +14,11 @@
 
 ## Log
 
+- 2026-07-28:18:45:20 — IMPRV-009 — done: shared Modal component generalized
+  from EditModal's shell — fixed title bar with labeled close, content-owned
+  scrolling, full-screen mobile / centered wide, A11Y-022 focus return; demoed
+  in the design system; suite green at 482
+- 2026-07-28:18:39:37 — IMPRV-009 — started
 - 2026-07-28:18:37:20 — IMPRV-008 — done: FrameworkBuilderContent extracted —
   authoring UI is self-contained (data in, callbacks out), FrameworkBuilder is
   chrome only; existing builder tests passed unedited, suite green at 470

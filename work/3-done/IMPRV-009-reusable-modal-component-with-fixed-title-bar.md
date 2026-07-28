@@ -1,7 +1,7 @@
 ---
 id: IMPRV-009
 type: improvement
-status: open
+status: resolved
 created: 2026-07-28
 ---
 
@@ -70,3 +70,25 @@ so children can own scrolling. Demo belongs in `DesignSystem.tsx` alongside
 - IMPRV-006 — EditModal wired into the canvas edit flow
 - aa4e4c9 — EditModal added to the design system
 - 65acd74 — EditModal gated on on-screen-keyboard detection
+
+## Working
+
+- Re-validated: three hand-rolled modal chromes confirmed (EditModal,
+  ConflictDialog, the builder's template popover); no shared component existed.
+- Tests first: `Modal.test.tsx` (10 tests) asserts the outcome — dialog named by
+  its title, labeled close button, Escape, focus moves into the dialog on open
+  with autofocusing children winning, focus returns to the opener on close
+  (A11Y-022), content area carries no `overflow-y-auto` with the title bar a
+  `shrink-0` sibling outside it, centered-with-rounded-panel on wide screens vs
+  `w-full h-full` on mobile. `DesignSystemModal.test.tsx` covers the demo: opens
+  with 12 scrolling content blocks whose child owns the scroll, closes back to
+  the trigger.
+- Built `Modal.tsx` by generalizing EditModal's shell as the discovery notes
+  suggested: same title-bar markup, `useFocusTrap`, cleanup-time `openerRef`
+  focus return; presentation split on `useIsMobile`. Content area is a
+  `flex-1 min-h-0 flex` region with no scrolling of its own. EditModal left
+  untouched — its visual-viewport keyboard clamp stays specialized (maker's-call
+  note exercised).
+- Demoed in `DesignSystem.tsx` as "Modal — shared chrome with a fixed title
+  bar", placed with the other modal demos; ref-forwarded trigger Button is the
+  opener. Full suite green at 482; tsc and lint clean via pre-commit CI.

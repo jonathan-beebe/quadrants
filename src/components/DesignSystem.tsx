@@ -11,6 +11,7 @@ import Caption from './atoms/Caption'
 import Button from './atoms/Button'
 import ColorPicker from './ColorPicker'
 import EditModal from './EditModal'
+import Modal from './Modal'
 import Toast from './Toast'
 import { UpdateToastView } from './UpdateToast'
 import QuadrantGrid from './QuadrantGrid'
@@ -232,6 +233,34 @@ function SignalItem({
       </div>
       <p className="mt-1 text-[12px] text-text-tertiary">{note}</p>
     </li>
+  )
+}
+
+function ModalDemo() {
+  const [open, setOpen] = useState(false)
+  const openerRef = useRef<HTMLButtonElement>(null)
+
+  return (
+    <div className={layouts.inline}>
+      <Button ref={openerRef} variant="secondary" size="sm" onClick={() => setOpen(true)}>
+        Open Modal
+      </Button>
+      <Caption>
+        Full screen on mobile, centered on wide screens. The title bar stays put — the content area never scrolls
+        itself, so a child that outgrows the modal owns its own scrolling.
+      </Caption>
+      {open && (
+        <Modal title="Modal demo" openerRef={openerRef} onClose={() => setOpen(false)}>
+          <div className="flex-1 min-h-0 overflow-y-auto space-y-3 pr-1">
+            {Array.from({ length: 12 }, (_, i) => (
+              <p key={i} className="text-sm text-text-secondary">
+                Scrolling content block {i + 1} — this list owns the scroll; the title bar above it does not move.
+              </p>
+            ))}
+          </div>
+        </Modal>
+      )}
+    </div>
   )
 }
 
@@ -574,6 +603,10 @@ export default function DesignSystem() {
         </Subsection>
 
         <Subsection title="Card" />
+
+        <Subsection title="Modal — shared chrome with a fixed title bar" layout="stack">
+          <ModalDemo />
+        </Subsection>
 
         <Subsection title="Edit Modal — gated on on-screen-keyboard detection" layout="stack">
           <EditModalDemo />
