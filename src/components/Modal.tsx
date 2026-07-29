@@ -1,17 +1,16 @@
 import { useEffect, useId, useRef, type RefObject } from 'react'
-import Button from './atoms/Button'
-import { XIcon } from './Icons'
+import ModalTitleBar from './ModalTitleBar'
 import { useFocusTrap } from '../hooks/useFocusTrap'
 import { useIsMobile } from '../hooks/useIsMobile'
+import { useRestoreFocusOnUnmount } from '../hooks/useRestoreFocusOnUnmount'
 
 interface ModalProps {
   /** Shown in the title bar and used as the dialog's accessible name. */
   title: string
   /**
    * The control that opened the modal — focus returns to it when the modal
-   * unmounts (A11Y-022). Declared by ref, read at cleanup time, so a host
-   * that re-points it while the modal is open still gets focus back on its
-   * current notion of the opener.
+   * unmounts (A11Y-022). See `useRestoreFocusOnUnmount` for why the target is
+   * declared by ref and read at cleanup time.
    */
   openerRef?: RefObject<HTMLElement | null>
   onClose: () => void
@@ -40,12 +39,7 @@ export default function Modal({ title, openerRef, onClose, maxWidthClassName = '
     if (dialog && !dialog.contains(document.activeElement)) dialog.focus()
   }, [])
 
-  // Every exit path unmounts the modal, so the unmount cleanup is the one
-  // place that covers them all (A11Y-022).
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    return () => openerRef?.current?.focus()
-  }, [openerRef])
+  useRestoreFocusOnUnmount(openerRef)
 
   const handleKeyDown = useFocusTrap(dialogRef, onClose)
 
@@ -66,14 +60,7 @@ export default function Modal({ title, openerRef, onClose, maxWidthClassName = '
             ? 'w-full h-full'
             : `w-full ${maxWidthClassName} max-h-full rounded-2xl border border-border shadow-[0_8px_32px_rgb(0_0_0/0.18)]`
         }`}>
-        <div className="shrink-0 flex items-center justify-between gap-2 px-4 py-3 border-b border-border">
-          <h2 id={titleId} className="text-base font-semibold text-text truncate">
-            {title}
-          </h2>
-          <Button variant="icon" onClick={onClose} aria-label={`Close ${title}`}>
-            <XIcon size={18} />
-          </Button>
-        </div>
+        <ModalTitleBar title={title} titleId={titleId} onClose={onClose} />
 
         {/* Content — hosts arbitrary children and never scrolls itself; a
             child that can outgrow the modal owns its own scrolling. */}

@@ -12,6 +12,7 @@ import Caption from './atoms/Caption'
 import Button from './atoms/Button'
 import ColorPicker from './ColorPicker'
 import PopupMenu, { popupMenuTriggerProps } from './PopupMenu'
+import ModalTitleBar from './ModalTitleBar'
 import EditModal from './EditModal'
 import Modal from './Modal'
 import Toast from './Toast'
@@ -685,6 +686,23 @@ export default function DesignSystem({ themeMode, isDark, onCycleTheme }: Design
 
         <Subsection title="Popup Menu — shared by the card's move menu and the sidebar's actions menu">
           <PopupMenuDemo />
+        </Subsection>
+
+        <Subsection title="Modal Title Bar — the chrome Modal and EditModal both wear" layout="stack">
+          <DemoRow label="Ordinary title">
+            <div className="w-full max-w-md rounded-xl border border-border bg-surface overflow-hidden">
+              <ModalTitleBar title="Edit item" titleId="ds-title-bar" onClose={noop} />
+            </div>
+          </DemoRow>
+          <DemoRow label="Long title — truncates rather than pushing the close button out of reach">
+            <div className="w-full max-w-md rounded-xl border border-border bg-surface overflow-hidden">
+              <ModalTitleBar
+                title="A title long enough to run past the width of any modal this app renders"
+                titleId="ds-title-bar-long"
+                onClose={noop}
+              />
+            </div>
+          </DemoRow>
         </Subsection>
 
         <Subsection title="Modal — shared chrome with a fixed title bar" layout="stack">

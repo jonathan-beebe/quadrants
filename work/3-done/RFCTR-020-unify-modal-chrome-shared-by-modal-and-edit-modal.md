@@ -1,7 +1,7 @@
 ---
 id: RFCTR-020
 type: refactor
-status: open
+status: resolved
 created: 2026-07-29
 ---
 
@@ -59,3 +59,37 @@ Modal is not required to close this and may fight the RSRCH-002 constraints.
 - IMPRV-009 — introduced Modal as the shared chrome
 - A11Y-022 — the focus-restore contract both copies implement
 - RFCTR-008 — the modality decision this ticket deliberately does not reopen
+
+## Working
+
+Re-validated: both copies were still character-identical, eslint-disable line
+included.
+
+Two extractions, matching the discovery note's shape — a small shared header
+piece plus a shared restore mechanism, with no composition of EditModal on
+Modal:
+
+- `src/components/ModalTitleBar.tsx` — the title bar. A separate module rather
+  than an export from `Modal.tsx`, so neither modal depends on the other and the
+  piece can be demoed on its own.
+- `src/hooks/useRestoreFocusOnUnmount.ts` — the focus restore, including the
+  eslint-disable and the reason it is there. A view-ring hook per ARCH-002:
+  per-instance, holds nothing another component could want.
+
+The scope guard held: this touched chrome only. RFCTR-008's re-open trigger
+still has not fired — `ConflictDialog` still delegates its dismissal focus to
+`useFrameworkSharing` (A11Y-021) and was not touched.
+
+EditModal's divergences are all intact: top-aligned presentation, the
+`--visual-viewport-height` clamp, glass styling, and the layout-effect focus.
+Its header comment is unchanged.
+
+One consolidation beyond the two blocks: both `openerRef` prop docs restated the
+mechanism the new hook now documents, so each was trimmed to what its own caller
+needs — EditModal's notes why the prop is required there and Modal's is not.
+
+Tests: `ModalTitleBar` (4) and `useRestoreFocusOnUnmount` (3), written failing
+first. The hook test pins the subtle part — the ref is read at cleanup time, so
+a host that re-points it mid-life is honoured. The A11Y-022 focus-restore tests
+and the edit-modal flow tests passed unmodified, as the ticket required. Both
+title-bar modes demoed in the design system. 574 passed; tsc and eslint clean.

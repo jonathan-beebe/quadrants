@@ -1,7 +1,8 @@
-import { useEffect, useId, useLayoutEffect, useRef, useState, type RefObject } from 'react'
+import { useId, useLayoutEffect, useRef, useState, type RefObject } from 'react'
 import Button from './atoms/Button'
-import { XIcon } from './Icons'
+import ModalTitleBar from './ModalTitleBar'
 import { useFocusTrap } from '../hooks/useFocusTrap'
+import { useRestoreFocusOnUnmount } from '../hooks/useRestoreFocusOnUnmount'
 import { useVisualViewportHeight } from '../hooks/useVisualViewportHeight'
 
 interface EditModalProps {
@@ -13,9 +14,9 @@ interface EditModalProps {
   fieldLabel?: string
   /**
    * The control that opened the modal — focus returns to it when the modal
-   * unmounts (A11Y-022). Declared by ref rather than captured from
-   * document.activeElement because the touch path opens the modal from
-   * pointerDown with preventDefault, so the opener never holds focus.
+   * unmounts (A11Y-022). Required here, unlike Modal: the touch path opens
+   * this modal without ever focusing the trigger, so there is nothing to fall
+   * back on. See `useRestoreFocusOnUnmount`.
    */
   openerRef: RefObject<HTMLElement | null>
   onSave: (text: string) => void
@@ -70,17 +71,7 @@ export default function EditModal({
     textareaRef.current?.select()
   }, [])
 
-  // Every exit — Save, Delete, Cancel, the close X, Escape — unmounts the
-  // modal, so the unmount cleanup is the one place that covers them all. Read
-  // at cleanup time, not captured on mount, so a parent that re-points the ref
-  // while the modal is open (e.g. a list re-render) still gets focus back on
-  // its current notion of the opener (A11Y-022). The lint rule below assumes
-  // the ref names a node this component rendered; it names the parent's
-  // opener, which outlives the modal.
-  useEffect(() => {
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    return () => openerRef.current?.focus()
-  }, [openerRef])
+  useRestoreFocusOnUnmount(openerRef)
 
   const handleKeyDown = useFocusTrap(dialogRef, onCancel)
 
@@ -102,15 +93,7 @@ export default function EditModal({
           border border-white/40 dark:border-white/10
           bg-white/85 dark:bg-gray-900/75 backdrop-blur-xl
           shadow-[0_8px_32px_rgb(0_0_0/0.18)]">
-        {/* Top bar */}
-        <div className="shrink-0 flex items-center justify-between gap-2 px-4 py-3 border-b border-border">
-          <h2 id={ids.title} className="text-base font-semibold text-text truncate">
-            {title}
-          </h2>
-          <Button variant="icon" onClick={onCancel} aria-label={`Close ${title}`}>
-            <XIcon size={18} />
-          </Button>
-        </div>
+        <ModalTitleBar title={title} titleId={ids.title} onClose={onCancel} />
 
         {/* Content — the only part that scrolls, so the bars stay reachable */}
         <div className="flex-1 min-h-0 overflow-y-auto px-4 py-3">

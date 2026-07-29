@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-29:06:52:28 — RFCTR-020 — done: ModalTitleBar and
+  useRestoreFocusOnUnmount now hold the chrome Modal and EditModal duplicated
+- 2026-07-29:06:46:05 — RFCTR-020 — started
 - 2026-07-29:06:44:57 — RFCTR-019 — done: PopupMenu owns menu behavior and ARIA
   for Card and Sidebar; Sidebar gained the aria-controls link it lacked
 - 2026-07-29:06:34:30 — RFCTR-019 — started
