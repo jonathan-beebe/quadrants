@@ -26,8 +26,14 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 @layer base {
+  /* Every number in the app renders with tabular figures, so digits share an
+     advance width and any column of numbers aligns. Declared once here and
+     inherited (form controls included — preflight's `font: inherit` carries it
+     through) rather than per-site, where the convention held only as long as
+     someone remembered the utility class (IMPRV-012). */
   body {
     @apply bg-bg text-text antialiased;
+    font-variant-numeric: tabular-nums;
   }
 
   .dark body,

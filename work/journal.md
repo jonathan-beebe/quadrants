@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-29:06:21:10 — IMPRV-012 — done: tabular figures declared once on body
+  in index.css; Badge's per-site class removed
+- 2026-07-29:06:15:44 — IMPRV-012 — started
 - 2026-07-29:06:10:42 — ARCH-002 — done: architecture.md records the two-kind
   hook rule, placement test, and unmemoized-render convention
 - 2026-07-29:06:04:43 — ARCH-002 — started

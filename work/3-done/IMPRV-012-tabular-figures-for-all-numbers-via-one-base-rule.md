@@ -1,7 +1,7 @@
 ---
 id: IMPRV-012
 type: improvement
-status: open
+status: resolved
 created: 2026-07-29
 ---
 
@@ -46,3 +46,23 @@ global rule lands, `Badge`'s per-site class becomes redundant and can go.
 ## Related work
 
 - CLAUDE.md — records the tabular-numbers convention
+
+## Working
+
+Re-validated: the gap was real. `Badge` was the only `tabular-nums` call site in
+`src/`; the sidebar item counts and version line rendered proportional.
+
+Mechanism: `font-variant-numeric: tabular-nums` on `body` in the `@layer base`
+block of `src/index.css`. The property inherits, so every descendant — form
+controls included, since Tailwind preflight gives them `font: inherit` — gets
+tabular figures with no per-site class. Verified in the built stylesheet:
+`body{…;font-variant-numeric:tabular-nums}`. `Badge`'s now-redundant class was
+removed.
+
+Tests (`src/__tests__/tabularFigures.test.ts`, following the CSS-source
+precedent set by `a11yContrast.test.ts`, since Tailwind output is not loaded in
+jsdom): one asserts the document-wide declaration exists, the other asserts no
+source file carries a per-site `tabular-nums` class — that second one is what
+keeps the convention from decaying back into per-site opt-in.
+
+Suite 538 passed; tsc and eslint clean.
