@@ -4,15 +4,39 @@
 
 - RSRCH: 3
 - DSGN: 3
-- ARCH: 2
+- ARCH: 3
 - FEAT: 4
-- IMPRV: 12
+- IMPRV: 13
 - MAINT: 10
 - A11Y: 23
-- RFCTR: 14
+- RFCTR: 22
 - BUG: 19
 
 ## Log
+
+- 2026-07-29:05:53:28 — RFCTR-018 — done: moved clientToContainerPoint into
+  logic/items and named the useDragAndDrop export
+- 2026-07-29:05:50:48 — RFCTR-018 — started
+- 2026-07-29:05:29:55 — ARCH-002 — defined: record the real view/hook and
+  memoization rules
+- 2026-07-29:05:29:55 — IMPRV-012 — defined: tabular figures for all numbers via
+  one base rule
+- 2026-07-29:05:29:55 — RFCTR-021 — defined: remove speculative memoization from
+  view components
+- 2026-07-29:05:29:55 — RFCTR-020 — defined: unify modal chrome shared by Modal
+  and EditModal
+- 2026-07-29:05:29:55 — RFCTR-019 — defined: extract shared popup menu from Card
+  and Sidebar
+- 2026-07-29:05:29:55 — RFCTR-018 — defined: move pure drag geometry into the
+  core and name the export
+- 2026-07-29:05:29:55 — RFCTR-017 — defined: consolidate quadrant color
+  derivation in colors.ts
+- 2026-07-29:05:29:55 — RFCTR-016 — defined: views restate core-owned domain
+  rules
+- 2026-07-29:05:29:55 — RFCTR-015 — defined: extract item-edit commit decision
+  into the core
+- 2026-07-29:05:29:55 — RFCTR-014 — defined: move share-delivery side effects
+  into the sharing adapter
 
 - 2026-07-28:21:24:51 — RFCTR-013 — done: editStructure delegates to
   replaceFramework; structuredClone unified in logic/framework

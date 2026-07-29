@@ -1,28 +1,8 @@
 import { describe, it, expect, vi } from 'vitest'
 import { StrictMode } from 'react'
 import { renderHook, act } from '@testing-library/react'
-import useDragAndDrop, { clientToContainerPoint } from '../../hooks/useDragAndDrop'
+import { useDragAndDrop } from '../../hooks/useDragAndDrop'
 import type { Item } from '../../types'
-
-// --- Pure function tests (the drop-geometry rules moved to logic/items — RFCTR-009) ---
-
-describe('clientToContainerPoint', () => {
-  it('maps a client point into container-local coordinates', () => {
-    // A container whose client rect starts at (40, 60) — e.g. panned into view
-    // under pinch zoom, where rects and pointer coords share the offset.
-    expect(clientToContainerPoint(100, 200, { left: 40, top: 60 })).toEqual({ x: 60, y: 140 })
-  })
-
-  it('is the identity for a container at the client origin', () => {
-    expect(clientToContainerPoint(90, 190, { left: 0, top: 0 })).toEqual({ x: 90, y: 190 })
-  })
-
-  it('yields negative coordinates for points above/left of the container', () => {
-    expect(clientToContainerPoint(10, 20, { left: 40, top: 60 })).toEqual({ x: -30, y: -40 })
-  })
-})
-
-// --- Hook integration tests ---
 
 describe('useDragAndDrop hook', () => {
   const mockItem: Item = { id: 'item-1', text: 'Test', x: 10, y: 20, createdAt: 1000 }

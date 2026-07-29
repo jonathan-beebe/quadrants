@@ -17,27 +17,7 @@ export interface UseDragAndDropOptions {
   onDrop: (result: DropResult) => void
 }
 
-/**
- * Given client (viewport-relative) coordinates and the client rect of a
- * positioned container, returns the point in that container's local
- * coordinate space.
- *
- * Event clientX/clientY and getBoundingClientRect() report in the same client
- * space within any one browser — layout-viewport-based in Chrome/Firefox,
- * visual-viewport-based in iOS Safari under pinch zoom — so this difference
- * holds at any pinch-zoom level. `position: fixed` at raw client coordinates
- * does not: fixed anchors to the layout viewport and drifts from the pointer
- * by the pinch pan on Safari (BUG-018).
- */
-export function clientToContainerPoint(
-  clientX: number,
-  clientY: number,
-  containerRect: { left: number; top: number },
-): { x: number; y: number } {
-  return { x: clientX - containerRect.left, y: clientY - containerRect.top }
-}
-
-export default function useDragAndDrop({ quadrantRefs, canvasRefs, onDrop }: UseDragAndDropOptions) {
+export function useDragAndDrop({ quadrantRefs, canvasRefs, onDrop }: UseDragAndDropOptions) {
   const [drag, setDrag] = useState<DragState | null>(null)
   const onDropRef = useRef(onDrop)
   onDropRef.current = onDrop

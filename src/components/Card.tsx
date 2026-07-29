@@ -2,8 +2,7 @@ import { useRef, useCallback, useEffect, useState } from 'react'
 import { XIcon } from './Icons'
 import { useClickOutside } from '../hooks/useClickOutside'
 import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
-import { clientToContainerPoint } from '../hooks/useDragAndDrop'
-import { clampPosition } from '../logic/items'
+import { clampPosition, clientToContainerPoint } from '../logic/items'
 import type { Item } from '../types'
 
 const DRAG_THRESHOLD = 4

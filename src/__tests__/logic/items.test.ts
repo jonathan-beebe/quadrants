@@ -6,6 +6,7 @@ import {
   updateItemText,
   moveItem,
   setQuadrantColor,
+  clientToContainerPoint,
   clientToQuadrantPercent,
   getQuadrantAtPoint,
 } from '../../logic/items'
@@ -148,6 +149,22 @@ describe('createItem', () => {
 function rect(left: number, top: number, width: number, height: number): DOMRect {
   return { left, top, right: left + width, bottom: top + height, width, height } as DOMRect
 }
+
+describe('clientToContainerPoint', () => {
+  it('maps a client point into container-local coordinates', () => {
+    // A container whose client rect starts at (40, 60) — e.g. panned into view
+    // under pinch zoom, where rects and pointer coords share the offset.
+    expect(clientToContainerPoint(100, 200, { left: 40, top: 60 })).toEqual({ x: 60, y: 140 })
+  })
+
+  it('is the identity for a container at the client origin', () => {
+    expect(clientToContainerPoint(90, 190, { left: 0, top: 0 })).toEqual({ x: 90, y: 190 })
+  })
+
+  it('yields negative coordinates for points above/left of the container', () => {
+    expect(clientToContainerPoint(10, 20, { left: 40, top: 60 })).toEqual({ x: -30, y: -40 })
+  })
+})
 
 describe('clientToQuadrantPercent', () => {
   const bounds = rect(100, 200, 400, 300)
