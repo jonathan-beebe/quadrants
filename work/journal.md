@@ -14,6 +14,8 @@
 
 ## Log
 
+- 2026-07-29:06:10:42 — ARCH-002 — done: architecture.md records the two-kind
+  hook rule, placement test, and unmemoized-render convention
 - 2026-07-29:06:04:43 — ARCH-002 — started
 - 2026-07-29:06:04:13 — RFCTR-014 — done: share delivery cascade moved to
   sharing.ts, share URL to routing.ts; hook only orchestrates
