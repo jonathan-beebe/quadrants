@@ -1,15 +1,16 @@
-import { useState, useRef, useEffect, useCallback } from 'react'
+import { useState, useRef, useCallback } from 'react'
 import { QuadrantGridIcon, SidebarIcon, PlusIcon, ImportIcon, MoreVerticalIcon } from './Icons'
 import ThemeToggleButton from './atoms/ThemeToggleButton'
 import Caption from './atoms/Caption'
 import Button from './atoms/Button'
-import { useClickOutside } from '../hooks/useClickOutside'
-import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
+import PopupMenu, { popupMenuTriggerProps } from './PopupMenu'
 import { useIsMobile } from '../hooks/useIsMobile'
 import { useFocusTrap } from '../hooks/useFocusTrap'
 import { itemCount } from '../logic/framework'
 import type { Framework } from '../types'
 import type { ThemeMode } from '../logic/theme'
+
+const actionsMenuId = (frameworkId: string) => `actions-menu-${frameworkId}`
 
 interface SidebarProps {
   frameworks: Framework[]
@@ -49,7 +50,6 @@ export default function Sidebar({
   onImport,
 }: SidebarProps) {
   const [openMenuFrameworkId, setOpenMenuFrameworkId] = useState<string | null>(null)
-  const menuRef = useRef<HTMLDivElement>(null)
   const menuTriggerRef = useRef<HTMLButtonElement>(null)
   const asideRef = useRef<HTMLElement>(null)
   // Only for the floating opener below, which is a desktop layout affordance.
@@ -58,22 +58,10 @@ export default function Sidebar({
   // the way they did in BUG-012.
   const isMobile = useIsMobile()
 
+  // Stable identity: PopupMenu subscribes this through useClickOutside.
   const closeMenu = useCallback(() => setOpenMenuFrameworkId(null), [])
-  // menuTriggerRef is excluded so the trigger's own onClick toggle can close
-  // the menu instead of racing the mousedown-close (BUG-005).
-  useClickOutside(menuRef, closeMenu, !!openMenuFrameworkId, menuTriggerRef)
 
   const handleAsideKeyDown = useFocusTrap(asideRef, isModal ? onToggle : undefined)
-
-  // Focus first menu item when menu opens
-  useEffect(() => {
-    if (openMenuFrameworkId && menuRef.current) {
-      const first = menuRef.current.querySelector<HTMLElement>('[role="menuitem"]')
-      first?.focus()
-    }
-  }, [openMenuFrameworkId])
-
-  const handleMenuKeyDown = useMenuKeyboardNav(menuRef, closeMenu, menuTriggerRef)
 
   return (
     <>
@@ -148,47 +136,26 @@ export default function Sidebar({
                   ref={openMenuFrameworkId === fw.id ? menuTriggerRef : undefined}
                   className="opacity-0 group-hover:opacity-100 focus:opacity-100 [@media(pointer:coarse)]:opacity-100 p-1 rounded text-text-secondary transition-opacity duration-150 hover:bg-border mr-1"
                   aria-label={`Actions for ${fw.name}`}
-                  aria-haspopup="true"
-                  aria-expanded={openMenuFrameworkId === fw.id}
+                  {...popupMenuTriggerProps(actionsMenuId(fw.id), openMenuFrameworkId === fw.id)}
                   onClick={() => setOpenMenuFrameworkId(openMenuFrameworkId === fw.id ? null : fw.id)}>
                   <MoreVerticalIcon />
                 </button>
-                {openMenuFrameworkId === fw.id && (
-                  <div
-                    className="absolute right-2 top-full bg-surface border border-border rounded-lg shadow-lg z-[200] min-w-[140px] p-1"
-                    ref={menuRef}
-                    role="menu"
-                    aria-label={`Actions for ${fw.name}`}
-                    onKeyDown={handleMenuKeyDown}>
-                    <button
-                      className="block w-full text-left px-3 py-2 text-[13px] rounded text-text hover:bg-bg"
-                      role="menuitem"
-                      onClick={() => {
-                        onDuplicate(fw)
-                        setOpenMenuFrameworkId(null)
-                      }}>
-                      Duplicate
-                    </button>
-                    <button
-                      className="block w-full text-left px-3 py-2 text-[13px] rounded text-text hover:bg-bg"
-                      role="menuitem"
-                      onClick={() => {
-                        onExport(fw)
-                        setOpenMenuFrameworkId(null)
-                      }}>
-                      Export JSON
-                    </button>
-                    <button
-                      className="block w-full text-left px-3 py-2 text-[13px] rounded text-danger hover:bg-red-50 dark:hover:bg-red-950"
-                      role="menuitem"
-                      onClick={() => {
-                        onDelete(fw.id)
-                        setOpenMenuFrameworkId(null)
-                      }}>
-                      Delete
-                    </button>
-                  </div>
-                )}
+                {/* triggerToggles: the button above toggles on click, so the
+                    outside-click handler must leave it alone (BUG-005). */}
+                <PopupMenu
+                  id={actionsMenuId(fw.id)}
+                  open={openMenuFrameworkId === fw.id}
+                  onClose={closeMenu}
+                  triggerRef={menuTriggerRef}
+                  triggerToggles
+                  label={`Actions for ${fw.name}`}
+                  items={[
+                    { label: 'Duplicate', onSelect: () => onDuplicate(fw) },
+                    { label: 'Export JSON', onSelect: () => onExport(fw) },
+                    { label: 'Delete', onSelect: () => onDelete(fw.id), variant: 'danger' },
+                  ]}
+                  className="right-2"
+                />
               </li>
             ))}
           </ul>

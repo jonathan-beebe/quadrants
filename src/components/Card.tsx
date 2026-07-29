@@ -1,7 +1,6 @@
 import { useRef, useCallback, useEffect, useState } from 'react'
 import { XIcon } from './Icons'
-import { useClickOutside } from '../hooks/useClickOutside'
-import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
+import PopupMenu, { popupMenuTriggerProps } from './PopupMenu'
 import { clampPosition, clientToContainerPoint } from '../logic/items'
 import type { Item, MoveTarget } from '../types'
 
@@ -55,7 +54,6 @@ export default function Card({
   const textareaRef = useRef<HTMLTextAreaElement>(null)
   const displayButtonRef = useRef<HTMLButtonElement>(null)
   const pendingRef = useRef<{ startX: number; startY: number } | null>(null)
-  const moveMenuRef = useRef<HTMLDivElement>(null)
   const cancelledRef = useRef(false)
   const moveMenuId = `move-menu-${item.id}`
   const [editing, setEditing] = useState(autoFocus)
@@ -63,18 +61,8 @@ export default function Card({
   const [minSize, setMinSize] = useState<{ width: number; height: number } | null>(null)
   const [showMoveMenu, setShowMoveMenu] = useState(false)
 
+  // Stable identity: PopupMenu subscribes this through useClickOutside.
   const closeMoveMenu = useCallback(() => setShowMoveMenu(false), [])
-  useClickOutside(moveMenuRef, closeMoveMenu, showMoveMenu)
-
-  // Focus first menu item when move menu opens
-  useEffect(() => {
-    if (showMoveMenu && moveMenuRef.current) {
-      const first = moveMenuRef.current.querySelector<HTMLElement>('[role="menuitem"]')
-      first?.focus()
-    }
-  }, [showMoveMenu])
-
-  const handleMoveMenuKeyDown = useMenuKeyboardNav(moveMenuRef, closeMoveMenu, displayButtonRef)
 
   const resizeTextarea = useCallback(() => {
     const ta = textareaRef.current
@@ -295,10 +283,10 @@ export default function Card({
           aria-keyshortcuts="m ArrowLeft ArrowRight ArrowUp ArrowDown"
           // Popup semantics only when M actually opens the menu — claiming
           // them with zero move targets would be false (A11Y-015). When the
-          // edit modal is the primary activation, that dialog wins the claim.
-          aria-haspopup={onRequestEdit ? 'dialog' : moveTargets.length > 0 ? 'menu' : undefined}
-          aria-expanded={moveTargets.length > 0 ? showMoveMenu : undefined}
-          aria-controls={moveTargets.length > 0 && showMoveMenu ? moveMenuId : undefined}
+          // edit modal is the primary activation, that dialog wins the claim,
+          // so it overrides the menu's haspopup after the spread.
+          {...(moveTargets.length > 0 ? popupMenuTriggerProps(moveMenuId, showMoveMenu) : {})}
+          {...(onRequestEdit ? { 'aria-haspopup': 'dialog' as const } : {})}
           onPointerDown={handleTextPointerDown}
           onKeyDown={handleDisplayKeyDown}>
           {item.text}
@@ -322,29 +310,20 @@ export default function Card({
           <XIcon size={11} />
         </button>
       )}
-      {showMoveMenu && moveTargets.length > 0 && (
-        <div
-          ref={moveMenuRef}
-          id={moveMenuId}
-          role="menu"
-          aria-label={`Move "${item.text}" to quadrant`}
-          className="absolute left-0 top-full mt-1 bg-surface border border-border rounded-lg shadow-lg z-[200] min-w-[140px] p-1"
-          onKeyDown={handleMoveMenuKeyDown}>
-          {moveTargets.map((target) => (
-            <button
-              key={target.index}
-              role="menuitem"
-              className="block w-full text-left px-3 py-2 text-[13px] rounded text-text hover:bg-bg"
-              onClick={(e) => {
-                e.stopPropagation()
-                onMove(target.index)
-                setShowMoveMenu(false)
-              }}>
-              Move to {target.label}
-            </button>
-          ))}
-        </div>
-      )}
+      {/* No triggerToggles: the display button opens this on M, never on
+          click, so a press on it is an ordinary outside click (BUG-005). */}
+      <PopupMenu
+        id={moveMenuId}
+        open={showMoveMenu}
+        onClose={closeMoveMenu}
+        triggerRef={displayButtonRef}
+        label={`Move "${item.text}" to quadrant`}
+        items={moveTargets.map((target) => ({
+          label: `Move to ${target.label}`,
+          onSelect: () => onMove(target.index),
+        }))}
+        className="left-0 mt-1"
+      />
     </div>
   )
 }

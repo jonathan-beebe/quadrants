@@ -244,4 +244,17 @@ describe('Sidebar', () => {
     await user.click(menuButton)
     expect(menuButton).toHaveAttribute('aria-expanded', 'true')
   })
+
+  it('points the context menu trigger at the menu it opens (RFCTR-019)', async () => {
+    const user = userEvent.setup()
+    const fw = makeFramework()
+    render(<Sidebar {...defaultProps} frameworks={[fw]} />)
+
+    const menuButton = screen.getByRole('button', { name: /actions for test framework/i })
+    expect(menuButton).toHaveAttribute('aria-haspopup', 'menu')
+    expect(menuButton).not.toHaveAttribute('aria-controls')
+
+    await user.click(menuButton)
+    expect(menuButton).toHaveAttribute('aria-controls', screen.getByRole('menu').id)
+  })
 })

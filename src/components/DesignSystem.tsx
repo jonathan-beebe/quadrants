@@ -1,4 +1,4 @@
-import { useState, useRef, useSyncExternalStore } from 'react'
+import { useState, useRef, useCallback, useSyncExternalStore } from 'react'
 import type { ThemeMode } from '../logic/theme'
 import { useOnScreenKeyboardSignals } from '../hooks/useExpectsOnScreenKeyboard'
 import { expectsOnScreenKeyboard, decidingSignal } from '../logic/onScreenKeyboard'
@@ -11,6 +11,7 @@ import SectionLabel from './atoms/SectionLabel'
 import Caption from './atoms/Caption'
 import Button from './atoms/Button'
 import ColorPicker from './ColorPicker'
+import PopupMenu, { popupMenuTriggerProps } from './PopupMenu'
 import EditModal from './EditModal'
 import Modal from './Modal'
 import Toast from './Toast'
@@ -229,6 +230,86 @@ function SignalItem({
       </div>
       <p className="mt-1 text-[12px] text-text-tertiary">{note}</p>
     </li>
+  )
+}
+
+/**
+ * Both PopupMenu modes side by side: a trigger that toggles on click (the
+ * Sidebar's actions menu, with a danger item), and one opened from the
+ * keyboard (the Card's move menu), whose trigger a press must dismiss.
+ */
+function PopupMenuDemo() {
+  const [openMenu, setOpenMenu] = useState<'actions' | 'move' | null>(null)
+  const [lastAction, setLastAction] = useState('nothing yet')
+  const actionsTriggerRef = useRef<HTMLButtonElement>(null)
+  const moveTriggerRef = useRef<HTMLButtonElement>(null)
+  const close = useCallback(() => setOpenMenu(null), [])
+
+  return (
+    <div className={layouts.stack}>
+      <DemoRow label="Toggling trigger — click to open and click again to dismiss (BUG-005)">
+        <div className="relative">
+          <Button
+            ref={actionsTriggerRef}
+            variant="secondary"
+            size="sm"
+            {...popupMenuTriggerProps('ds-actions-menu', openMenu === 'actions')}
+            onClick={() => setOpenMenu(openMenu === 'actions' ? null : 'actions')}>
+            Actions
+          </Button>
+          <PopupMenu
+            id="ds-actions-menu"
+            open={openMenu === 'actions'}
+            onClose={close}
+            triggerRef={actionsTriggerRef}
+            triggerToggles
+            label="Actions for the demo framework"
+            items={[
+              { label: 'Duplicate', onSelect: () => setLastAction('Duplicate') },
+              { label: 'Export JSON', onSelect: () => setLastAction('Export JSON') },
+              { label: 'Delete', onSelect: () => setLastAction('Delete'), variant: 'danger' },
+            ]}
+            className="right-0 mt-1"
+          />
+        </div>
+      </DemoRow>
+
+      <DemoRow label="Keyboard-opened trigger — focus it and press M; a press on it dismisses">
+        <div className="relative">
+          <Button
+            ref={moveTriggerRef}
+            variant="secondary"
+            size="sm"
+            {...popupMenuTriggerProps('ds-move-menu', openMenu === 'move')}
+            onKeyDown={(e) => {
+              if (e.key === 'm' || e.key === 'M') {
+                e.preventDefault()
+                setOpenMenu('move')
+              }
+            }}>
+            Item text (press M)
+          </Button>
+          <PopupMenu
+            id="ds-move-menu"
+            open={openMenu === 'move'}
+            onClose={close}
+            triggerRef={moveTriggerRef}
+            label="Move item to quadrant"
+            items={['Urgent', 'Later', 'Delegate'].map((label) => ({
+              label: `Move to ${label}`,
+              onSelect: () => setLastAction(`Move to ${label}`),
+            }))}
+            className="left-0 mt-1"
+          />
+        </div>
+      </DemoRow>
+
+      <Caption>
+        Last action: <code className="bg-bg px-1.5 py-0.5 rounded border border-border">{lastAction}</code>. Both menus
+        share focus-on-open, arrow cycling, Escape/Tab dismissal with focus returned to the trigger, and the
+        aria-haspopup/expanded/controls wiring.
+      </Caption>
+    </div>
   )
 }
 
@@ -601,6 +682,10 @@ export default function DesignSystem({ themeMode, isDark, onCycleTheme }: Design
         </Subsection>
 
         <Subsection title="Card" />
+
+        <Subsection title="Popup Menu — shared by the card's move menu and the sidebar's actions menu">
+          <PopupMenuDemo />
+        </Subsection>
 
         <Subsection title="Modal — shared chrome with a fixed title bar" layout="stack">
           <ModalDemo />

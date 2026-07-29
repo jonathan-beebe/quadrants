@@ -1,7 +1,7 @@
 ---
 id: RFCTR-019
 type: refactor
-status: open
+status: resolved
 created: 2026-07-29
 ---
 
@@ -53,3 +53,37 @@ Sidebar's one-menu-across-many-rows ref pattern.
 
 - BUG-005 — the trigger/outside-click race the shared component must preserve
 - A11Y-015 — popup semantics contract for the trigger
+
+## Working
+
+Re-validated: both hand-rolled copies were still there, and the ARIA drift was
+still real — Card wired `aria-controls`/id, Sidebar did not.
+
+`src/components/PopupMenu.tsx` now owns the container, the items, and the
+behavior: outside-click dismissal, arrow/Escape/Tab handling, focus-on-open, and
+the menu's own ARIA. It composes `useClickOutside` and `useMenuKeyboardNav`
+rather than replacing them, as the ticket asked.
+
+Two design decisions worth recording:
+
+- **Items are data, not children.** The menuitem classes and `role="menuitem"`
+  were part of what had been copied, so the component owns them. A
+  `variant: 'danger'` covers Sidebar's Delete.
+- **`triggerToggles` is opt-in, and had to be.** BUG-005's `excludeRef` is
+  correct only when the trigger's own click toggles the menu. Sidebar's does;
+  Card's does not — its display button opens the menu on `M` and starts a drag
+  on press, so a press on it is an ordinary outside click that must dismiss.
+  Excluding it unconditionally would have left Card's menu open behind the
+  inline editor. Both directions are tested.
+
+The trigger half of the contract is `popupMenuTriggerProps(menuId, open)`,
+spread onto the trigger. Card spreads it only when it has move targets and then
+overrides `aria-haspopup` to `dialog` when the edit modal is the primary
+activation, preserving A11Y-015 exactly. Sidebar gained the `aria-controls` link
+it was missing; that gain has its own test.
+
+14 tests for the component (written before it existed) plus the new Sidebar
+assertion. Every pre-existing menu test — BUG-005 dismissal, A11Y-015 semantics,
+keyboard navigation — passes unmodified. Demoed in the design system in both
+modes, with the danger variant and both placements. 567 passed; tsc and eslint
+clean.
