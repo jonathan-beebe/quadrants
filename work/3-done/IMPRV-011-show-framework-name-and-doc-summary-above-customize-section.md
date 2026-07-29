@@ -1,7 +1,7 @@
 ---
 id: IMPRV-011
 type: improvement
-status: open
+status: resolved
 created: 2026-07-28
 ---
 
@@ -52,6 +52,24 @@ template names and all 31 map 1:1. The summary format includes a bold hook
 emphasis or flatten to plain text. Scope is the create flow only: edited
 frameworks (`editingFramework`) don't record their source template, so the edit
 flow (SectionLabel "Framework") has nothing to show and is out of scope.
+
+## Working
+
+- Re-validated: the form's first SectionLabel is still "Customize" (create mode)
+  and the picker Caption still shows only the terse `description`; the doc
+  blockquote summaries appear nowhere in `src/`.
+- Route taken: `summary?: string` on FrameworkTemplate, mirrored from the docs.
+  Maker decision on the bold hook: flattened to plain text — the hook still
+  reads naturally with its colon, and no markdown rendering enters the data
+  path.
+- Drift guard: `templates.test.ts` reads each `docs/frameworks/<slug>.md` (slug
+  = kebab-case of template name; the mapping test proves all 31 map 1:1) and
+  asserts `summary` equals the doc's first blockquote flattened (strip `> `,
+  join wrapped lines, drop `**`, collapse spaces).
+- UI: summary block lives inside the shared `form`, so mobile and desktop both
+  get it; wrapped in a persistent `aria-live="polite"` region so selection
+  changes are announced; hidden entirely in edit mode (edited frameworks don't
+  record a source template — out of scope, per ticket).
 
 ## Related work
 

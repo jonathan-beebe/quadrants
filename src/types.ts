@@ -41,6 +41,8 @@ export interface FrameworkTemplate {
   quadrants: string[]
   colors?: string[]
   description?: string
+  /** One-sentence summary mirrored from docs/frameworks/<slug>.md (IMPRV-011). */
+  summary?: string
   category?: TemplateCategory
 }
 

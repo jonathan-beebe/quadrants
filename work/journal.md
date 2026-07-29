@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-28:20:57:52 — IMPRV-011 — done: template name + doc summary shown
+  above Customize, drift-guarded against docs/frameworks
+- 2026-07-28:20:46:50 — IMPRV-011 — started
 - 2026-07-28:20:41:41 — BUG-018 — done: drag preview anchored in client space
   via container-relative positioning; drop path verified self-consistent under
   pinch zoom

@@ -124,6 +124,7 @@ export default function FrameworkBuilderContent({
   }, [q])
 
   const selectedLabel = selected === CUSTOM_KEY ? 'Blank / Custom' : selected
+  const selectedTemplate = selected === CUSTOM_KEY ? null : (templates.find((t) => t.name === selected) ?? null)
 
   const list = (
     <div className="flex flex-col gap-2 min-h-0 flex-1" onKeyDown={handleEntriesKeyDown}>
@@ -179,6 +180,19 @@ export default function FrameworkBuilderContent({
   const form = (
     <form className="flex flex-col gap-6" onSubmit={handleSubmit}>
       <div>
+        {/* The builder teaches at the moment of choice (IMPRV-011): the chosen
+            framework's name and its doc summary sit above Customize. The live
+            region stays mounted so screen readers announce each selection. */}
+        {!editingFramework && (
+          <div aria-live="polite">
+            {selectedTemplate && (
+              <div className="mb-4">
+                <h3 className="text-sm font-semibold text-text">{selectedTemplate.name}</h3>
+                <p className="mt-1 text-[13px] text-text-secondary">{selectedTemplate.summary}</p>
+              </div>
+            )}
+          </div>
+        )}
         <SectionLabel>{editingFramework ? 'Framework' : 'Customize'}</SectionLabel>
         <label className="flex flex-col gap-1.5">
           <span className="text-[13px] font-medium text-text-secondary">Framework Name</span>

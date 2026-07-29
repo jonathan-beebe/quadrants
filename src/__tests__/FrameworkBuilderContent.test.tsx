@@ -76,4 +76,44 @@ describe('FrameworkBuilderContent', () => {
     expect(screen.getByDisplayValue('My Framework')).toBeInTheDocument()
     expect(screen.queryByRole('button', { name: /Eisenhower Matrix/ })).not.toBeInTheDocument()
   })
+
+  // IMPRV-011: the builder teaches at the moment of choice — picking a
+  // template surfaces the framework's name and its doc summary above the
+  // Customize section.
+  describe('template summary', () => {
+    it('shows the selected template’s name and summary above Customize', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilderContent {...defaultProps} />)
+
+      await user.click(screen.getByRole('button', { name: /Eisenhower Matrix/ }))
+
+      expect(screen.getByRole('heading', { name: 'Eisenhower Matrix' })).toBeInTheDocument()
+      const summary = screen.getByText(/untangles what presses for attention now/)
+      const customize = screen.getByRole('heading', { name: 'Customize' })
+      expect(summary.compareDocumentPosition(customize) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    })
+
+    it('shows no summary with Blank / Custom selected', async () => {
+      const user = userEvent.setup()
+      render(<FrameworkBuilderContent {...defaultProps} />)
+
+      await user.click(screen.getByRole('button', { name: /Eisenhower Matrix/ }))
+      await user.click(screen.getByRole('button', { name: /Blank \/ Custom/ }))
+
+      expect(screen.queryByRole('heading', { name: 'Eisenhower Matrix' })).not.toBeInTheDocument()
+      expect(screen.queryByText(/untangles what presses/)).not.toBeInTheDocument()
+    })
+
+    it('shows the summary in the mobile layout too', async () => {
+      vi.mocked(useIsMobile).mockReturnValue(true)
+      const user = userEvent.setup()
+      render(<FrameworkBuilderContent {...defaultProps} />)
+
+      await user.click(screen.getByRole('button', { name: /Choose a template/ }))
+      await user.click(screen.getByRole('button', { name: /Eisenhower Matrix/ }))
+
+      expect(screen.getByRole('heading', { name: 'Eisenhower Matrix' })).toBeInTheDocument()
+      expect(screen.getByText(/untangles what presses for attention now/)).toBeInTheDocument()
+    })
+  })
 })
