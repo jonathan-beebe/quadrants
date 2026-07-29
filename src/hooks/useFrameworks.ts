@@ -72,8 +72,10 @@ export function useFrameworks() {
 
   const editStructure = useCallback(
     (fw: Framework, template: FrameworkTemplate) => {
+      // replaceFramework, not updateFramework: applyTemplateEdit already
+      // stamped updatedAt, and updateFramework would stamp it again.
       const updated = applyTemplateEdit(fw, template)
-      apply((prev) => prev.map((f) => (f.id === updated.id ? updated : f)))
+      apply((prev) => replaceFramework(prev, updated))
     },
     [apply],
   )

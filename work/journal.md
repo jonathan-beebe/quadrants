@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-28:21:24:51 — RFCTR-013 — done: editStructure delegates to
+  replaceFramework; structuredClone unified in logic/framework
+- 2026-07-28:21:23:36 — RFCTR-013 — started
 - 2026-07-28:21:22:33 — RFCTR-012 — done: share-url and export-filename rules
   extracted to the core; illegal-character filenames fixed
 - 2026-07-28:21:18:55 — RFCTR-012 — started

@@ -80,7 +80,7 @@ export function deleteFramework(frameworks: Framework[], id: string): Framework[
 
 export function duplicateFramework(fw: Framework): Framework {
   return {
-    ...JSON.parse(JSON.stringify(fw)),
+    ...structuredClone(fw),
     id: crypto.randomUUID(),
     name: `${fw.name} (copy)`,
     createdAt: Date.now(),

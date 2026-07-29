@@ -1,7 +1,7 @@
 ---
 id: RFCTR-013
 type: refactor
-status: open
+status: resolved
 created: 2026-07-28
 ---
 
@@ -56,6 +56,17 @@ the modern idiom already in use in the same file, and the `Framework` shape is
 plain JSON data, so the swap is behavior-equivalent. Both changes are
 behavior-preserving; the existing tests already pin these behaviors and no new
 tests should be needed — verification is the suite staying green.
+
+## Working
+
+- `editStructure` now delegates to `replaceFramework` (with a comment pinning
+  why `updateFramework` is wrong: it would double-stamp `updatedAt` after
+  `applyTemplateEdit`).
+- `duplicateFramework` switched to `structuredClone`, matching
+  `duplicateAsImport`; `git grep 'JSON.parse(JSON.stringify' src/logic/` is
+  empty.
+- Behavior-preserving: suite passes unmodified (531), tsc clean — no new tests,
+  per the ticket.
 
 ## Related work
 
