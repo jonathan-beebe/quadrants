@@ -1,6 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { useRegisterSW } from 'virtual:pwa-register/react'
 import { XIcon } from './Icons'
+import { TOAST_ANCHOR_CLASSES } from './Toast'
 
 interface UpdateToastViewProps {
   className?: string
@@ -56,7 +57,7 @@ export default function UpdateToast() {
 
   return (
     <UpdateToastView
-      className="fixed bottom-5 left-1/2 -translate-x-1/2 z-[9999]"
+      className={TOAST_ANCHOR_CLASSES}
       onReload={() => updateServiceWorker(true)}
       onDismiss={() => setNeedRefresh(false)}
     />
