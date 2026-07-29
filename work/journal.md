@@ -14,6 +14,10 @@
 
 ## Log
 
+- 2026-07-29:07:10:29 — RFCTR-021 — abandoned: findings re-validated and still
+  hold, but a blanket five-file sweep was the wrong shape; replaced by
+  `__local__/prompts/react-hooks-audit.md`, which classifies every hook site
+  KEEP/REMOVE/REPLACE/BUG and re-files the work
 - 2026-07-29:06:52:28 — RFCTR-020 — done: ModalTitleBar and
   useRestoreFocusOnUnmount now hold the chrome Modal and EditModal duplicated
 - 2026-07-29:06:46:05 — RFCTR-020 — started
