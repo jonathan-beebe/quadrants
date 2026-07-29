@@ -74,6 +74,11 @@ export function updateFramework(frameworks: Framework[], updated: Framework): Fr
   return frameworks.map((f) => (f.id === updated.id ? { ...updated, updatedAt: Date.now() } : f))
 }
 
+/** How many items a framework holds, across all four quadrants. */
+export function itemCount(framework: Framework): number {
+  return framework.quadrants.reduce((sum, q) => sum + q.items.length, 0)
+}
+
 export function deleteFramework(frameworks: Framework[], id: string): Framework[] {
   return frameworks.filter((f) => f.id !== id)
 }

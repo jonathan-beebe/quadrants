@@ -12,6 +12,12 @@ export interface Quadrant {
   items: Item[]
 }
 
+/** A quadrant an item may be moved to, as offered by the card's move menu. */
+export interface MoveTarget {
+  label: string
+  index: number
+}
+
 export interface Framework {
   id: string
   name: string

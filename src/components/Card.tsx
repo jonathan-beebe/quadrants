@@ -3,7 +3,7 @@ import { XIcon } from './Icons'
 import { useClickOutside } from '../hooks/useClickOutside'
 import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
 import { clampPosition, clientToContainerPoint } from '../logic/items'
-import type { Item } from '../types'
+import type { Item, MoveTarget } from '../types'
 
 const DRAG_THRESHOLD = 4
 export const PLACEHOLDER = 'New item...'
@@ -15,11 +15,6 @@ export interface DragStartInfo {
   grabY: number
   width: number
   height: number
-}
-
-export interface MoveTarget {
-  label: string
-  index: number
 }
 
 interface CardProps {

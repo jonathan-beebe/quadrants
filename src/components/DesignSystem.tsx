@@ -3,6 +3,7 @@ import type { ThemeMode } from '../logic/theme'
 import { useOnScreenKeyboardSignals } from '../hooks/useExpectsOnScreenKeyboard'
 import { expectsOnScreenKeyboard, decidingSignal } from '../logic/onScreenKeyboard'
 import { colorPresets, defaultColors } from '../colors'
+import { setQuadrantColor } from '../logic/items'
 import ThemeToggleButton from './atoms/ThemeToggleButton'
 import Badge from './atoms/Badge'
 import PageTitle from './atoms/PageTitle'
@@ -171,12 +172,7 @@ function DesktopGridDemo() {
         onAddItem={noop}
         onDeleteItem={noop}
         onEditItem={noop}
-        onColorChange={(idx, color) => {
-          setFramework((fw) => ({
-            ...fw,
-            quadrants: fw.quadrants.map((q, i) => (i === idx ? { ...q, color } : q)),
-          }))
-        }}
+        onColorChange={(idx, color) => setFramework((fw) => setQuadrantColor(fw, idx, color))}
         onMoveItem={noop}
         onReposition={noop}
         onDragStart={noop}
@@ -437,12 +433,7 @@ function MobileGridDemo() {
         onAddItem={noop}
         onDeleteItem={noop}
         onEditItem={noop}
-        onColorChange={(idx, color) => {
-          setFramework((fw) => ({
-            ...fw,
-            quadrants: fw.quadrants.map((q, i) => (i === idx ? { ...q, color } : q)),
-          }))
-        }}
+        onColorChange={(idx, color) => setFramework((fw) => setQuadrantColor(fw, idx, color))}
         onMoveItem={noop}
         onReposition={noop}
         onDragStart={noop}

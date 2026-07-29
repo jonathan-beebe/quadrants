@@ -9,6 +9,7 @@ import {
   clientToContainerPoint,
   clientToQuadrantPercent,
   getQuadrantAtPoint,
+  moveTargetsFrom,
 } from '../../logic/items'
 import type { Framework, Item } from '../../types'
 
@@ -247,5 +248,21 @@ describe('getQuadrantAtPoint', () => {
     expect(result).not.toBeNull()
     expect(result!.rect.top).toBe(0)
     expect(result!.rect.height).toBe(200)
+  })
+})
+
+describe('moveTargetsFrom', () => {
+  it('offers every other quadrant as a target, carrying its label and index', () => {
+    const fw = makeFramework()
+    expect(moveTargetsFrom(fw.quadrants, 0)).toEqual([
+      { label: 'B', index: 1 },
+      { label: 'C', index: 2 },
+      { label: 'D', index: 3 },
+    ])
+  })
+
+  it('never offers the quadrant the item is already in', () => {
+    const fw = makeFramework()
+    expect(moveTargetsFrom(fw.quadrants, 2).map((t) => t.index)).toEqual([0, 1, 3])
   })
 })

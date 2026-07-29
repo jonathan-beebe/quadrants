@@ -7,6 +7,7 @@ import { useClickOutside } from '../hooks/useClickOutside'
 import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
 import { useIsMobile } from '../hooks/useIsMobile'
 import { useFocusTrap } from '../hooks/useFocusTrap'
+import { itemCount } from '../logic/framework'
 import type { Framework } from '../types'
 import type { ThemeMode } from '../logic/theme'
 
@@ -141,7 +142,7 @@ export default function Sidebar({
                   aria-current={activeId === fw.id ? 'page' : undefined}
                   onClick={() => onSelect(fw.id)}>
                   <span className="block text-sm font-medium truncate">{fw.name}</span>
-                  <Caption>{fw.quadrants.reduce((sum, q) => sum + q.items.length, 0)} items</Caption>
+                  <Caption>{itemCount(fw)} items</Caption>
                 </button>
                 <button
                   ref={openMenuFrameworkId === fw.id ? menuTriggerRef : undefined}

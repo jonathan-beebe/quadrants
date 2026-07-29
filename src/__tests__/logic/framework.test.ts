@@ -12,6 +12,7 @@ import {
   repairImportedFramework,
   filterValidFrameworks,
   createFramework,
+  itemCount,
 } from '../../logic/framework'
 import type { Framework, FrameworkTemplate, SharedPayload } from '../../types'
 
@@ -573,5 +574,22 @@ describe('exportFilename', () => {
 
   it('keeps unicode names', () => {
     expect(exportFilename('Über Matrix')).toBe('über-matrix.json')
+  })
+})
+
+describe('itemCount', () => {
+  it('totals the items across every quadrant', () => {
+    const fw = makeFramework()
+    fw.quadrants[2].items = [
+      { id: 'i2', text: 'Item 2', x: 0, y: 0, createdAt: 1000 },
+      { id: 'i3', text: 'Item 3', x: 0, y: 0, createdAt: 1000 },
+    ]
+    expect(itemCount(fw)).toBe(3)
+  })
+
+  it('is zero for an empty framework', () => {
+    const fw = makeFramework()
+    fw.quadrants.forEach((q) => (q.items = []))
+    expect(itemCount(fw)).toBe(0)
   })
 })

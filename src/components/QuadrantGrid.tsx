@@ -1,4 +1,5 @@
 import { deriveColors, defaultColors } from '../colors'
+import { moveTargetsFrom } from '../logic/items'
 import ColorPicker from './ColorPicker'
 import Card from './Card'
 import CornerGradient from './CornerGradient'
@@ -155,9 +156,7 @@ export default function QuadrantGrid({
                       item={item}
                       isDragging={drag?.itemId === item.id}
                       autoFocus={autoFocusId === item.id}
-                      moveTargets={framework.quadrants
-                        .map((q, i) => ({ label: q.label, index: i }))
-                        .filter((t) => t.index !== idx)}
+                      moveTargets={moveTargetsFrom(framework.quadrants, idx)}
                       onChange={(text) => onEditItem(idx, item.id, text)}
                       onDelete={() => onDeleteItem(idx, item.id)}
                       onMove={(targetIdx) => onMoveItem(idx, item.id, targetIdx)}

@@ -1,4 +1,4 @@
-import type { Framework, Item } from '../types'
+import type { Framework, Item, MoveTarget, Quadrant } from '../types'
 
 // Canonical envelope for persisted/imported item coordinates, matching the
 // widest range the app's own controls can produce (keyboard repositioning).
@@ -137,6 +137,15 @@ export function moveItem(
       return q
     }),
   }
+}
+
+/**
+ * The quadrants an item sitting in `sourceIndex` may be moved to — every
+ * other quadrant, labelled. One home for the rule, so both grids offer the
+ * same targets.
+ */
+export function moveTargetsFrom(quadrants: Quadrant[], sourceIndex: number): MoveTarget[] {
+  return quadrants.map((q, index) => ({ label: q.label, index })).filter((target) => target.index !== sourceIndex)
 }
 
 export function setQuadrantColor(framework: Framework, quadrantIndex: number, color: string): Framework {

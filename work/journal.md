@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-29:06:26:44 — RFCTR-016 — done: move-target and item-count rules moved
+  into logic/, view double-stamp deleted, design-system demos call the core
+- 2026-07-29:06:21:24 — RFCTR-016 — started
 - 2026-07-29:06:21:10 — IMPRV-012 — done: tabular figures declared once on body
   in index.css; Badge's per-site class removed
 - 2026-07-29:06:15:44 — IMPRV-012 — started

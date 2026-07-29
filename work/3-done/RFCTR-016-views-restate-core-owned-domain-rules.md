@@ -1,7 +1,7 @@
 ---
 id: RFCTR-016
 type: refactor
-status: open
+status: resolved
 created: 2026-07-29
 ---
 
@@ -58,3 +58,25 @@ and 3 are small pure functions next to their data (`logic/items` /
 
 - RFCTR-013 — same species: a hook restating `replaceFramework`
 - RFCTR-009 — established `logic/items` as the home for grid/item rules
+
+## Working
+
+Re-validated all four sites; all still present.
+
+1. **Double stamp — deleted.** Confirmed the path: `App` passes
+   `onUpdate={update}` → `useFrameworks.update` → core `updateFramework`, which
+   stamps `updatedAt` (covered by `framework.test.ts:123`). `QuadrantCanvas`'s
+   wrapper now just raises the transformed framework, with a comment naming the
+   owner so the stamp does not grow back.
+2. **Move targets — one home.** New `moveTargetsFrom(quadrants, sourceIndex)` in
+   `logic/items`. `MoveTarget` moved from `Card.tsx` to `types.ts` (a pure
+   shared module) so the core can return it without importing a view — Card had
+   no other importers.
+3. **Item count — one home.** New `itemCount(framework)` in `logic/framework`;
+   `Sidebar` delegates.
+4. **Design-system demos — import swap.** Both grid demos now call the core
+   `setQuadrantColor` instead of hand-rolling its body.
+
+Tests: unit tests for the two new core rules (written failing first). The rest
+is behavior-preserving, so the existing suite stands as the characterization net
+— it passed unmodified. 542 passed; tsc and eslint clean.

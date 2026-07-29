@@ -59,8 +59,9 @@ export default function QuadrantCanvas({
 
   const updateFramework = useCallback(
     (updater: (fw: Framework) => Framework) => {
-      const updated = updater(frameworkRef.current)
-      onUpdate({ ...updated, updatedAt: Date.now() })
+      // No updatedAt stamp here: the core's updateFramework owns that rule
+      // and every onUpdate path routes through it (RFCTR-016).
+      onUpdate(updater(frameworkRef.current))
     },
     [onUpdate],
   )
