@@ -14,6 +14,7 @@
 
 ## Log
 
+- 2026-07-29:05:57:31 — RFCTR-014 — started
 - 2026-07-29:05:53:28 — RFCTR-018 — done: moved clientToContainerPoint into
   logic/items and named the useDragAndDrop export
 - 2026-07-29:05:50:48 — RFCTR-018 — started

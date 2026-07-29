@@ -1,9 +1,8 @@
 import { useEffect, useRef, useState, useCallback, type RefObject } from 'react'
-import { encodeFramework, decodeSharedPayload } from '../sharing'
+import { encodeFramework, decodeSharedPayload, deliverShareUrl, type ShareOutcome } from '../sharing'
 import { repairImportedFramework, exportFilename } from '../logic/framework'
 import { resolveImportAction } from '../logic/shareImport'
-import { composeShareUrl } from '../logic/sharePayload'
-import { getHashFromUrl, replacePath } from '../routing'
+import { getHashFromUrl, getShareUrl, replacePath } from '../routing'
 import { downloadJson, pickJsonFile } from '../io'
 import type { Framework } from '../types'
 
@@ -11,8 +10,6 @@ export interface Conflict {
   existing: Framework
   incoming: Framework
 }
-
-export type ShareOutcome = 'copied' | 'shared' | 'cancelled' | 'failed'
 
 export interface ShareResult {
   url: string
@@ -177,34 +174,8 @@ export function useFrameworkSharing({
   }, [conflict, navigate])
 
   const share = useCallback(async (fw: Framework): Promise<ShareResult> => {
-    const hash = await encodeFramework(fw)
-    const url = composeShareUrl(window.location.origin, import.meta.env.BASE_URL ?? '/', hash)
-
-    // Try clipboard first — quiet, in-place, lets us show "Link copied!".
-    if (navigator.clipboard?.writeText) {
-      try {
-        await navigator.clipboard.writeText(url)
-        return { url, outcome: 'copied' }
-      } catch {
-        // fall through to navigator.share
-      }
-    }
-
-    // Native share sheet — covers mobile-web Safari, insecure contexts, and
-    // tabs where clipboard.writeText is blocked by permission policy (BUG-002).
-    if (navigator.share) {
-      try {
-        await navigator.share({ url })
-        return { url, outcome: 'shared' }
-      } catch (err) {
-        if (err instanceof DOMException && err.name === 'AbortError') {
-          return { url, outcome: 'cancelled' }
-        }
-        // other errors fall through to 'failed'
-      }
-    }
-
-    return { url, outcome: 'failed' }
+    const url = getShareUrl(await encodeFramework(fw))
+    return { url, outcome: await deliverShareUrl(url) }
   }, [])
 
   const exportJson = useCallback((fw: Framework) => {

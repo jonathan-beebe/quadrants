@@ -37,6 +37,9 @@ glass styling, layout-effect focus (all documented in its header comment) —
 remain intact. The A11Y-022 focus-restore tests and the edit-modal flow tests
 pass unmodified.
 
+The new shared component is well tested, and its various modes and options are
+demoed in the design system.
+
 ## Why it matters
 
 Verbatim chrome copies drift — close-button labeling, heading semantics, and the

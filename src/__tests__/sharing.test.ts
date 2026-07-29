@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, afterEach } from 'vitest'
-import { encodeFramework, decodeSharedPayload } from '../sharing'
+import { encodeFramework, decodeSharedPayload, deliverShareUrl } from '../sharing'
 import type { Framework } from '../types'
 
 afterEach(() => {
@@ -182,5 +182,84 @@ describe('encodeFramework / decodeSharedPayload', () => {
     vi.stubGlobal('DecompressionStream', undefined)
     await expect(decodeSharedPayload(encoded)).rejects.toThrow(/browser|support/i)
     await expect(decodeSharedPayload(encoded)).rejects.toBeInstanceOf(Error)
+  })
+})
+
+// The delivery cascade moved here from useFrameworkSharing (RFCTR-014); these
+// tests carry the BUG-002 outcome semantics with it. Stubbing the raw
+// navigator globals is right at this boundary — the adapter is the one module
+// allowed to touch them.
+describe('deliverShareUrl (RFCTR-014)', () => {
+  const originalClipboard = Object.getOwnPropertyDescriptor(navigator, 'clipboard')
+  const originalShare = Object.getOwnPropertyDescriptor(navigator, 'share')
+
+  afterEach(() => {
+    if (originalClipboard) {
+      Object.defineProperty(navigator, 'clipboard', originalClipboard)
+    } else {
+      // jsdom may not define it -- delete to restore "absent" state
+      // @ts-expect-error -- test-only cleanup
+      delete (navigator as Navigator).clipboard
+    }
+    if (originalShare) {
+      Object.defineProperty(navigator, 'share', originalShare)
+    } else {
+      // @ts-expect-error -- test-only cleanup
+      delete (navigator as Navigator).share
+    }
+  })
+
+  it('reports copied and writes to the clipboard when available', async () => {
+    const writeText = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'clipboard', {
+      configurable: true,
+      value: { writeText },
+    })
+
+    expect(await deliverShareUrl('https://app.example/#hash')).toBe('copied')
+    expect(writeText).toHaveBeenCalledWith('https://app.example/#hash')
+  })
+
+  // BUG-002: clipboard absent (insecure context, sandbox) must NOT report copied.
+  it('falls back to navigator.share when clipboard is undefined (BUG-002)', async () => {
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
+    const share = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'share', { configurable: true, value: share })
+
+    expect(await deliverShareUrl('https://app.example/#hash')).toBe('shared')
+    expect(share).toHaveBeenCalledWith({ url: 'https://app.example/#hash' })
+  })
+
+  // BUG-002: clipboard rejection must NOT report copied; navigator.share is tried.
+  it('falls back to navigator.share when clipboard.writeText rejects (BUG-002)', async () => {
+    const writeText = vi.fn().mockRejectedValue(new Error('NotAllowedError'))
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } })
+    const share = vi.fn().mockResolvedValue(undefined)
+    Object.defineProperty(navigator, 'share', { configurable: true, value: share })
+
+    expect(await deliverShareUrl('https://app.example/#hash')).toBe('shared')
+    expect(writeText).toHaveBeenCalledTimes(1)
+    expect(share).toHaveBeenCalledTimes(1)
+  })
+
+  // BUG-002: user cancelling the native share sheet is not an error.
+  it('reports cancelled when the user aborts navigator.share', async () => {
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
+    const abort = new DOMException('aborted', 'AbortError')
+    Object.defineProperty(navigator, 'share', {
+      configurable: true,
+      value: vi.fn().mockRejectedValue(abort),
+    })
+
+    expect(await deliverShareUrl('https://app.example/#hash')).toBe('cancelled')
+  })
+
+  // BUG-002: when nothing can deliver the URL, the outcome is 'failed'.
+  it('reports failed when both clipboard and share are unavailable', async () => {
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
+    // @ts-expect-error -- test-only cleanup
+    delete (navigator as Navigator).share
+
+    expect(await deliverShareUrl('https://app.example/#hash')).toBe('failed')
   })
 })

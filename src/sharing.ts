@@ -1,6 +1,8 @@
 import { isValidPayload, toSharedPayload } from './logic/sharePayload'
 import type { Framework, SharedPayload } from './types'
 
+export type ShareOutcome = 'copied' | 'shared' | 'cancelled' | 'failed'
+
 function assertCompressionSupport(): void {
   if (
     typeof (globalThis as { CompressionStream?: unknown }).CompressionStream === 'undefined' ||
@@ -55,4 +57,36 @@ export async function decodeSharedPayload(hash: string): Promise<SharedPayload |
   if (!isValidPayload(payload)) return null
 
   return payload as SharedPayload
+}
+
+/**
+ * Put a share URL in the user's hands. The cascade is delivery policy
+ * (RFCTR-014): clipboard first — quiet, in-place, lets the caller show
+ * "Link copied!" — then the native share sheet, which covers mobile-web
+ * Safari, insecure contexts, and tabs where clipboard.writeText is blocked
+ * by permission policy (BUG-002).
+ */
+export async function deliverShareUrl(url: string): Promise<ShareOutcome> {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(url)
+      return 'copied'
+    } catch {
+      // fall through to navigator.share
+    }
+  }
+
+  if (navigator.share) {
+    try {
+      await navigator.share({ url })
+      return 'shared'
+    } catch (err) {
+      if (err instanceof DOMException && err.name === 'AbortError') {
+        return 'cancelled'
+      }
+      // other errors fall through to 'failed'
+    }
+  }
+
+  return 'failed'
 }

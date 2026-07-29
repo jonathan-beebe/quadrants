@@ -1,14 +1,18 @@
-import { describe, it, expect, vi, afterEach } from 'vitest'
+import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { renderHook } from '@testing-library/react'
 
-// Stub modules that useFrameworkSharing depends on so `share` runs in isolation.
+// RFCTR-014: share delivery lives in the sharing adapter and the URL in the
+// routing adapter, so every dependency of `share` mocks as a module — the
+// hook under test is pure orchestration.
 vi.mock('../../sharing', () => ({
   encodeFramework: vi.fn().mockResolvedValue('encoded-hash-payload'),
   decodeSharedPayload: vi.fn().mockResolvedValue(null),
+  deliverShareUrl: vi.fn().mockResolvedValue('copied'),
 }))
 
 vi.mock('../../routing', () => ({
   getHashFromUrl: vi.fn().mockReturnValue(null),
+  getShareUrl: vi.fn((hash: string) => `https://app.example/base/#${hash}`),
   replacePath: vi.fn(),
 }))
 
@@ -18,7 +22,8 @@ vi.mock('../../io', () => ({
 }))
 
 import { useFrameworkSharing } from '../../hooks/useFrameworkSharing'
-import { composeShareUrl } from '../../logic/sharePayload'
+import { encodeFramework, deliverShareUrl, type ShareOutcome } from '../../sharing'
+import { getShareUrl } from '../../routing'
 import type { Framework } from '../../types'
 
 function makeOptions() {
@@ -49,112 +54,34 @@ function makeFramework(): Framework {
   }
 }
 
-describe('useFrameworkSharing share clipboard feature detection (BUG-025)', () => {
-  const originalClipboard = Object.getOwnPropertyDescriptor(navigator, 'clipboard')
-  const originalShare = Object.getOwnPropertyDescriptor(navigator, 'share')
-
-  afterEach(() => {
-    if (originalClipboard) {
-      Object.defineProperty(navigator, 'clipboard', originalClipboard)
-    } else {
-      // jsdom may not define it -- delete to restore "absent" state
-      // @ts-expect-error -- test-only cleanup
-      delete (navigator as Navigator).clipboard
-    }
-    if (originalShare) {
-      Object.defineProperty(navigator, 'share', originalShare)
-    } else {
-      // @ts-expect-error -- test-only cleanup
-      delete (navigator as Navigator).share
-    }
+describe('useFrameworkSharing share orchestration (RFCTR-014)', () => {
+  beforeEach(() => {
+    vi.mocked(deliverShareUrl).mockResolvedValue('copied')
   })
 
-  it('reports outcome=copied and writes to the clipboard when available', async () => {
-    const writeText = vi.fn().mockResolvedValue(undefined)
-    Object.defineProperty(navigator, 'clipboard', {
-      configurable: true,
-      value: { writeText },
-    })
-
+  it('encodes the framework, composes the URL via routing, and delivers it via sharing', async () => {
+    const fw = makeFramework()
     const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
 
-    const out = await result.current.share(makeFramework())
+    const out = await result.current.share(fw)
 
-    expect(out.outcome).toBe('copied')
-    expect(out.url).toContain('#encoded-hash-payload')
-    expect(writeText).toHaveBeenCalledWith(out.url)
+    expect(encodeFramework).toHaveBeenCalledWith(fw)
+    expect(getShareUrl).toHaveBeenCalledWith('encoded-hash-payload')
+    expect(deliverShareUrl).toHaveBeenCalledWith('https://app.example/base/#encoded-hash-payload')
+    expect(out.url).toBe('https://app.example/base/#encoded-hash-payload')
   })
 
-  // BUG-002: clipboard absent (insecure context, sandbox) must NOT report copied.
-  it('falls back to navigator.share when clipboard is undefined (BUG-002)', async () => {
-    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
-    const share = vi.fn().mockResolvedValue(undefined)
-    Object.defineProperty(navigator, 'share', { configurable: true, value: share })
+  // BUG-002 semantics: whatever the adapter resolves is the outcome the hook
+  // reports — copied, shared, cancelled, and failed pass through unchanged.
+  it.each(['copied', 'shared', 'cancelled', 'failed'] as ShareOutcome[])(
+    'reports outcome=%s as the adapter resolves it',
+    async (outcome) => {
+      vi.mocked(deliverShareUrl).mockResolvedValue(outcome)
+      const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
 
-    const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
+      const out = await result.current.share(makeFramework())
 
-    const out = await result.current.share(makeFramework())
-
-    expect(out.outcome).toBe('shared')
-    expect(share).toHaveBeenCalledWith({ url: out.url })
-  })
-
-  // BUG-002: clipboard rejection must NOT report copied; navigator.share is tried.
-  it('falls back to navigator.share when clipboard.writeText rejects (BUG-002)', async () => {
-    const writeText = vi.fn().mockRejectedValue(new Error('NotAllowedError'))
-    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: { writeText } })
-    const share = vi.fn().mockResolvedValue(undefined)
-    Object.defineProperty(navigator, 'share', { configurable: true, value: share })
-
-    const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
-
-    const out = await result.current.share(makeFramework())
-
-    expect(out.outcome).toBe('shared')
-    expect(writeText).toHaveBeenCalledTimes(1)
-    expect(share).toHaveBeenCalledTimes(1)
-  })
-
-  // BUG-002: user cancelling the native share sheet is not an error.
-  it('reports outcome=cancelled when the user aborts navigator.share', async () => {
-    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
-    const abort = new DOMException('aborted', 'AbortError')
-    Object.defineProperty(navigator, 'share', {
-      configurable: true,
-      value: vi.fn().mockRejectedValue(abort),
-    })
-
-    const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
-
-    const out = await result.current.share(makeFramework())
-
-    expect(out.outcome).toBe('cancelled')
-  })
-
-  // BUG-002: when nothing can deliver the URL, the outcome is 'failed'.
-  it('reports outcome=failed when both clipboard and share are unavailable', async () => {
-    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
-    // @ts-expect-error -- test-only cleanup
-    delete (navigator as Navigator).share
-
-    const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
-
-    const out = await result.current.share(makeFramework())
-
-    expect(out.outcome).toBe('failed')
-    expect(out.url).toContain('#encoded-hash-payload')
-  })
-  // RFCTR-012: the hook emits exactly the core rule's URL — origin and base
-  // are the only inputs it supplies.
-  it('produces the url the core share-url rule composes', async () => {
-    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
-    // @ts-expect-error -- test-only cleanup
-    delete (navigator as Navigator).share
-
-    const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
-
-    const out = await result.current.share(makeFramework())
-
-    expect(out.url).toBe(composeShareUrl(window.location.origin, '/', 'encoded-hash-payload'))
-  })
+      expect(out.outcome).toBe(outcome)
+    },
+  )
 })

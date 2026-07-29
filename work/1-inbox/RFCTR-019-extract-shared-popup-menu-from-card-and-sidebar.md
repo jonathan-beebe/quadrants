@@ -33,6 +33,9 @@ the `aria-controls` link Sidebar is missing today). Existing menu flows pass:
 BUG-005's trigger-toggle dismissal, A11Y-015's popup semantics, keyboard
 navigation tests.
 
+The new shared component is well tested, and its various modes and options are
+demoed in the design system.
+
 ## Why it matters
 
 Two real call sites with observed drift is exactly the extraction bar this

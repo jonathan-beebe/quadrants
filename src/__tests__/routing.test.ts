@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { describe, it, expect, beforeEach } from 'vitest'
-import { getIdFromPath, getHashFromUrl, pushPath, replacePath } from '../routing'
+import { getIdFromPath, getHashFromUrl, getShareUrl, pushPath, replacePath } from '../routing'
 
 const BASE = import.meta.env.BASE_URL ?? '/'
 
@@ -29,6 +29,14 @@ describe('getHashFromUrl', () => {
   it('returns the hash without the # prefix', () => {
     window.location.hash = '#abc123'
     expect(getHashFromUrl()).toBe('abc123')
+  })
+})
+
+// RFCTR-014: the routing adapter supplies the app URL half of a share link —
+// origin and deploy base — around the encoded payload fragment.
+describe('getShareUrl', () => {
+  it('composes origin + base + fragment around the hash', () => {
+    expect(getShareUrl('abc123')).toBe(`${window.location.origin}${BASE}#abc123`)
   })
 })
 

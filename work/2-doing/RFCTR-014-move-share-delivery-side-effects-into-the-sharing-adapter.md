@@ -1,7 +1,7 @@
 ---
 id: RFCTR-014
 type: refactor
-status: open
+status: resolved
 created: 2026-07-29
 ---
 
@@ -59,3 +59,25 @@ already core (RFCTR-012) and stays put. `ShareResult` is imported as a type by
 - BUG-002 — defined the copied/shared/cancelled/failed outcome semantics this
   must preserve
 - ARCH-001 — recorded the adapter table cited here
+
+## Working
+
+- Re-validated: `share()` still read `navigator.clipboard` / `navigator.share` /
+  `window.location.origin` directly, and the share test still stubbed globals
+  via `Object.defineProperty`.
+- Took the advisory shape: `deliverShareUrl(url): Promise<ShareOutcome>` in
+  `sharing.ts` owns the clipboard→share-sheet cascade and the `AbortError` →
+  cancelled mapping; `ShareOutcome` moved with it.
+- The origin + base read went through the routing adapter as `getShareUrl(hash)`
+  — routing already owns `window.location` and the deploy base (RFCTR-011), and
+  the doc's system-context note says a share link is the routing adapter's URL
+  plus the sharing adapter's payload codec. It delegates to core
+  `composeShareUrl` (RFCTR-012), which stayed put.
+- `ShareResult` kept its one home in the hook (its return contract);
+  `QuadrantCanvas`'s type import is unchanged.
+- Tests first: BUG-002 cascade tests moved to `sharing.test.ts` (global stubbing
+  is legitimate at the adapter boundary), a `getShareUrl` wiring test joined
+  `routing.test.ts`, and the hook share test became pure orchestration with all
+  three dependencies mocked as modules.
+- Verified: grep for `navigator.` under `src/hooks/` — no hits; tsc clean;
+  536/536 tests green.
