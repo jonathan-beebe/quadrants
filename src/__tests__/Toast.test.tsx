@@ -12,9 +12,17 @@ describe('Toast', () => {
       render(<Toast message="Something went wrong." onDismiss={vi.fn()} />)
       const toast = screen.getByRole('alert')
 
-      expect(toast).toHaveClass('fixed', 'bottom-5', 'inset-x-3', 'mx-auto', 'z-[9999]', 'max-w-md')
+      expect(toast).toHaveClass('fixed', 'mx-auto', 'z-[9999]', 'max-w-md')
+      expect(toast.className).toContain('left-[calc(0.75rem')
+      expect(toast.className).toContain('right-[calc(0.75rem')
       expect(toast).not.toHaveClass('left-1/2')
       expect(toast).not.toHaveClass('-translate-x-1/2')
+    })
+
+    it('clears the home indicator (IMPRV-013)', () => {
+      render(<Toast message="Something went wrong." onDismiss={vi.fn()} />)
+
+      expect(screen.getByRole('alert').className).toContain('env(safe-area-inset-bottom)')
     })
 
     it('keeps message and Dismiss on a single row', () => {

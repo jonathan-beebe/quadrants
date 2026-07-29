@@ -168,11 +168,18 @@ export default function App() {
     // a canvas drag (BUG-017). Everything below sizes against this rather than
     // restating a viewport of its own; <main> stays the one place a screen
     // taller than the shell is allowed to scroll.
-    <div className="flex h-svh overflow-hidden">
+    //
+    // The shell also states the safe-area inset once, for the same reason it
+    // states the height once: an installed PWA owns the whole display, so every
+    // surface in flow below here would otherwise rediscover the corner radius
+    // and the home indicator for itself (IMPRV-013). `position: fixed` surfaces
+    // are the exception the physics forces — they escape this padding box and
+    // restate the inset themselves (see safeArea.test.ts).
+    <div className="flex h-svh overflow-hidden pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]">
       <div inert={conflict ? true : undefined}>
         <a
           href="#main-content"
-          className="sr-only focus:not-sr-only focus:fixed focus:top-4 focus:left-1/2 focus:-translate-x-1/2 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-accent focus:text-on-accent focus:rounded-lg focus:text-sm focus:font-medium">
+          className="sr-only focus:not-sr-only focus:fixed focus:top-[calc(1rem_+_env(safe-area-inset-top))] focus:left-1/2 focus:-translate-x-1/2 focus:z-[9999] focus:px-4 focus:py-2 focus:bg-accent focus:text-on-accent focus:rounded-lg focus:text-sm focus:font-medium">
           Skip to main content
         </a>
         {/* On mobile the drawer is modal and covers the screen its own actions

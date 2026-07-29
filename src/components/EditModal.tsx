@@ -78,6 +78,7 @@ export default function EditModal({
   return (
     <div
       className="fixed inset-0 z-[200] flex items-start justify-center p-3
+        pt-[calc(0.75rem_+_env(safe-area-inset-top))] pb-[calc(0.75rem_+_env(safe-area-inset-bottom))]
         bg-black/25 dark:bg-black/50 backdrop-blur-sm">
       <div
         ref={dialogRef}
@@ -87,9 +88,11 @@ export default function EditModal({
         onKeyDown={handleKeyDown}
         // The clamp is the contract: whatever the keyboard leaves visible, the
         // modal fits inside it. Falls back to svh where visualViewport is
-        // absent, which is the no-keyboard case anyway.
+        // absent, which is the no-keyboard case anyway — and svh spans the whole
+        // display once the viewport opts into it, so the insets come off too
+        // (IMPRV-013).
         className="w-full max-w-[440px] flex flex-col min-h-0 rounded-2xl overflow-hidden
-          max-h-[calc(var(--visual-viewport-height,100svh)-1.5rem)]
+          max-h-[calc(var(--visual-viewport-height,100svh)-1.5rem-env(safe-area-inset-top)-env(safe-area-inset-bottom))]
           border border-white/40 dark:border-white/10
           bg-white/85 dark:bg-gray-900/75 backdrop-blur-xl
           shadow-[0_8px_32px_rgb(0_0_0/0.18)]">

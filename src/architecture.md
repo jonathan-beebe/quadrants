@@ -140,12 +140,13 @@ whatever `present` becomes.
 
 ## Accepted decisions
 
-| Decision                                                                                                                                     | Decided    | Re-open when                                                                                                                                                                                                               |
-| -------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Layer-first folders** (`logic/`, `hooks/`, `components/`, adapters at `src/` root) rather than feature-first.                              | 2026-07-05 | The app grows a second feature domain, or a feature's files stop changing together — then reorganize by feature first, layer second.                                                                                       |
-| **Ambient `Date.now` / `crypto.randomUUID` / `Math.random` in the core** — no injected clock/id (RSRCH-001).                                 | RSRCH-001  | A real flaky test traced to time/randomness; a need to run the core outside vitest; or sync/CRDT-style features where deterministic replay becomes a product requirement.                                                  |
-| **A modal surface's focus is owned by one hook above it**, not split to match the DOM (RFCTR-008).                                           | RFCTR-008  | A third surface needs to inert something outside itself, or `ConflictDialog` and `EditModal` grow focus restore and all three turn out alike — then extract a shared modal-surface contract instead of repeating this one. |
-| **Render unmemoized** — no `React.memo`; `useCallback` / `useMemo` only where a consumer structurally requires a stable identity (ARCH-002). | 2026-07-29 | Profiling on a real device traces jank to re-renders — then memoize that measured path, not broadly.                                                                                                                       |
+| Decision                                                                                                                                     | Decided    | Re-open when                                                                                                                                                                                                                                                 |
+| -------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Layer-first folders** (`logic/`, `hooks/`, `components/`, adapters at `src/` root) rather than feature-first.                              | 2026-07-05 | The app grows a second feature domain, or a feature's files stop changing together — then reorganize by feature first, layer second.                                                                                                                         |
+| **Ambient `Date.now` / `crypto.randomUUID` / `Math.random` in the core** — no injected clock/id (RSRCH-001).                                 | RSRCH-001  | A real flaky test traced to time/randomness; a need to run the core outside vitest; or sync/CRDT-style features where deterministic replay becomes a product requirement.                                                                                    |
+| **A modal surface's focus is owned by one hook above it**, not split to match the DOM (RFCTR-008).                                           | RFCTR-008  | A third surface needs to inert something outside itself, or `ConflictDialog` and `EditModal` grow focus restore and all three turn out alike — then extract a shared modal-surface contract instead of repeating this one.                                   |
+| **Render unmemoized** — no `React.memo`; `useCallback` / `useMemo` only where a consumer structurally requires a stable identity (ARCH-002). | 2026-07-29 | Profiling on a real device traces jank to re-renders — then memoize that measured path, not broadly.                                                                                                                                                         |
+| **The shell states the safe-area inset**; `position: fixed` surfaces restate it themselves (IMPRV-013).                                      | IMPRV-013  | The fixed-surface list outgrows what `safeArea.test.ts` can keep honest — then give the shell a containing block so fixed descendants inherit its padding box, and weigh that against what a containing block does to the canvas coordinate space (BUG-018). |
 
 ### Modal surfaces
 
@@ -176,6 +177,36 @@ resolving close-focus per the rule above:
   exit through one mechanism. The target must be declared, not captured from
   `document.activeElement`, because the touch path opens the modal without ever
   focusing the trigger (pointerDown + preventDefault, RSRCH-002) (A11Y-022).
+
+### Safe-area insets
+
+The app ships as a `standalone` PWA, so a home-screen launch hands the web view
+the entire display — rounded corners and home-indicator strip included. Two
+halves make the safe area readable and only work together: `index.html` opts the
+layout viewport in with `viewport-fit=cover`, and surfaces pad by
+`env(safe-area-inset-*)`. The meta alone pushes content further into the unsafe
+region; the padding alone is a no-op, because `env()` resolves to 0 without it.
+
+The shell (`App.tsx`) states the inset, the same way it states the viewport
+height — one owner, and every surface in flow below inherits it. That is why the
+mobile canvas is no longer edge-to-edge: the inset bands are shell background,
+and the alternative was naming the inset again at every surface pinned to an
+edge.
+
+`position: fixed` is the exception the physics forces, not a lapse. A fixed box
+is positioned against the viewport, so it escapes the shell's padding box no
+matter what the shell declares, and has to take the inset on its own offsets:
+the toasts, the drawer and its opener, the skip link, and the fullscreen mobile
+dialog. `safeArea.test.ts` enumerates them — it fails on any edge-pinned fixed
+surface that declares no inset, so a new one cannot quietly forget. Full-bleed
+backdrops are exempt by design: a scrim that stopped at the safe area would
+leave a live strip of app showing through it.
+
+`index.html`'s viewport line is the risky edit, and not only for this. BUG-016
+holds the standing decision against `user-scalable=no` / `maximum-scale=1` there
+on WCAG 1.4.4 grounds, so the same test asserts their absence alongside
+`viewport-fit=cover` — the two changes touch one line and the guard keeps them
+from trading off against each other.
 
 ### Memoization
 

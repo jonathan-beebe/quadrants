@@ -84,7 +84,10 @@ export default function Sidebar({
         // document's scroll height, but a large-viewport height still runs its
         // bottom edge behind mobile Safari's toolbar and takes the last entry
         // of the scrolling nav below with it (BUG-017).
-        className={`fixed top-0 left-0 w-[280px] h-svh bg-surface border-r border-border flex flex-col z-[100] transition-transform duration-150 ease-in-out ${open ? 'translate-x-0' : '-translate-x-full'}`}>
+        // Padded, not offset: the drawer's own surface should still reach the
+        // physical edge, so the inset moves its contents in rather than the box
+        // (IMPRV-013). It is `fixed`, so the shell's padding cannot reach it.
+        className={`fixed top-0 left-0 w-[280px] h-svh pt-[env(safe-area-inset-top)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)] bg-surface border-r border-border flex flex-col z-[100] transition-transform duration-150 ease-in-out ${open ? 'translate-x-0' : '-translate-x-full'}`}>
         <div className="flex items-center justify-between p-4 border-b border-border">
           <div className="flex items-center gap-2 font-semibold text-[15px]">
             <QuadrantGridIcon size={20} />
@@ -170,7 +173,7 @@ export default function Sidebar({
           title row, so a floating copy would stack on top of it (BUG-013). */}
       {!open && !isMobile && (
         <button
-          className="fixed top-4 left-4 z-50 p-2 bg-surface border border-border rounded-lg shadow text-text-secondary transition-all duration-150 hover:text-text hover:border-border-hover"
+          className="fixed top-[calc(1rem_+_env(safe-area-inset-top))] left-[calc(1rem_+_env(safe-area-inset-left))] z-50 p-2 bg-surface border border-border rounded-lg shadow text-text-secondary transition-all duration-150 hover:text-text hover:border-border-hover"
           onClick={onToggle}
           aria-label="Open sidebar"
           aria-expanded={false}>

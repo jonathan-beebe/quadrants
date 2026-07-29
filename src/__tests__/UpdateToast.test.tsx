@@ -76,12 +76,25 @@ describe('UpdateToast', () => {
 
       // Anchored to both edges with a gutter, so the box has a real width to lay
       // out in at any viewport.
-      expect(banner).toHaveClass('fixed', 'bottom-5', 'inset-x-3', 'mx-auto', 'z-[9999]')
+      expect(banner).toHaveClass('fixed', 'mx-auto', 'z-[9999]')
+      expect(banner.className).toContain('left-[calc(0.75rem')
+      expect(banner.className).toContain('right-[calc(0.75rem')
 
       // The defect: a shrink-to-fit fixed box at left:50% can only ever draw on
       // the half of the viewport to its right.
       expect(banner).not.toHaveClass('left-1/2')
       expect(banner).not.toHaveClass('-translate-x-1/2')
+    })
+
+    it('clears the home indicator and the display corners (IMPRV-013)', () => {
+      render(<UpdateToast />)
+      const banner = screen.getByRole('status')
+
+      // A fixed box escapes the shell's padding box, so it takes the insets on
+      // its own offsets.
+      expect(banner.className).toContain('env(safe-area-inset-bottom)')
+      expect(banner.className).toContain('env(safe-area-inset-left)')
+      expect(banner.className).toContain('env(safe-area-inset-right)')
     })
 
     it('caps its reading measure on wide viewports', () => {

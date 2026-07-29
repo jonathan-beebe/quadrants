@@ -3,10 +3,10 @@
 ## Next ticket numbers
 
 - RSRCH: 3
-- DSGN: 3
+- DSGN: 4
 - ARCH: 3
 - FEAT: 4
-- IMPRV: 13
+- IMPRV: 14
 - MAINT: 10
 - A11Y: 23
 - RFCTR: 22
@@ -14,6 +14,14 @@
 
 ## Log
 
+- 2026-07-29:09:51:24 — IMPRV-013 — started
+- 2026-07-29:09:14:01 — DSGN-003 — done: anchored both toasts with inset-x-3 +
+  mx-auto so the update banner fills the small-screen width instead of half the
+  viewport
+- 2026-07-29:09:01:37 — IMPRV-013 — defined: mobile surfaces ignore device
+  safe-area insets and clip at the edges
+- 2026-07-29:08:58:24 — DSGN-003 — defined: update banner renders at half width
+  and wraps on small screens
 - 2026-07-29:07:10:29 — RFCTR-021 — abandoned: findings re-validated and still
   hold, but a blanket five-file sweep was the wrong shape; replaced by
   `__local__/prompts/react-hooks-audit.md`, which classifies every hook site

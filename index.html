@@ -2,7 +2,12 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <!-- viewport-fit=cover: without it env(safe-area-inset-*) resolves to 0 and
+         every inset below is a no-op. It must not acquire user-scalable=no or
+         maximum-scale — BUG-016 ruled those out on WCAG 1.4.4 grounds and fixed
+         iOS auto-zoom with a font-size floor instead. Guarded by
+         safeArea.test.ts and touchZoom.test.ts. -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <meta name="description" content="Visual frameworks for thinking in quadrants" />
     <meta name="theme-color" content="#3b82f6" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />

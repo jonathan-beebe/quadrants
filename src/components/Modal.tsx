@@ -51,8 +51,11 @@ export default function Modal({ title, openerRef, onClose, maxWidthClassName = '
         tabIndex={-1}
         onKeyDown={handleKeyDown}
         className={`flex flex-col min-h-0 bg-surface outline-none ${
+          // The fullscreen mobile dialog fills a `fixed` backdrop, so it escapes
+          // the shell's padding box too. Padded rather than inset so its surface
+          // still reaches the physical edge (IMPRV-013).
           isMobile
-            ? 'w-full h-full'
+            ? 'w-full h-full pt-[env(safe-area-inset-top)] pr-[env(safe-area-inset-right)] pb-[env(safe-area-inset-bottom)] pl-[env(safe-area-inset-left)]'
             : `w-full ${maxWidthClassName} max-h-full rounded-2xl border border-border shadow-[0_8px_32px_rgb(0_0_0/0.18)]`
         }`}>
         <ModalTitleBar title={title} titleId={titleId} onClose={onClose} />

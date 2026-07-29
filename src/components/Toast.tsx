@@ -5,7 +5,12 @@ import { XIcon } from './Icons'
 // viewport to its right, so at phone width it never reaches its cap (DSGN-003).
 // Both toasts anchor by this rule — they are one component class wearing
 // different colors.
-export const TOAST_ANCHOR_CLASSES = 'fixed bottom-5 inset-x-3 mx-auto z-[9999]'
+//
+// The insets fold into the offsets rather than into padding or margin: a fixed
+// box escapes the shell's padding box (IMPRV-013), and the x margins are already
+// spoken for by the `auto` centering above.
+export const TOAST_ANCHOR_CLASSES =
+  'fixed bottom-[calc(1.25rem_+_env(safe-area-inset-bottom))] left-[calc(0.75rem_+_env(safe-area-inset-left))] right-[calc(0.75rem_+_env(safe-area-inset-right))] mx-auto z-[9999]'
 
 interface ToastProps {
   message: string
