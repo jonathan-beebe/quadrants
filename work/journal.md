@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-29:10:03:23 — IMPRV-013 — done: shell states the safe-area inset once
+  and every edge-pinned `fixed` surface restates it, since fixed boxes escape
+  the shell's padding box; index.html opts in with viewport-fit=cover
 - 2026-07-29:09:51:24 — IMPRV-013 — started
 - 2026-07-29:09:14:01 — DSGN-003 — done: anchored both toasts with inset-x-3 +
   mx-auto so the update banner fills the small-screen width instead of half the
