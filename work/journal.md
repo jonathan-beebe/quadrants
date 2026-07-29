@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-29:06:33:27 — RFCTR-017 — done: colors.ts owns innerEdge, the quadrant
+  color fallback, and the hex/gamma math CornerGradient held
+- 2026-07-29:06:28:29 — RFCTR-017 — started
 - 2026-07-29:06:26:44 — RFCTR-016 — done: move-target and item-count rules moved
   into logic/, view double-stamp deleted, design-system demos call the core
 - 2026-07-29:06:21:24 — RFCTR-016 — started

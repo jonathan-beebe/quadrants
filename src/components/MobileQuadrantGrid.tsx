@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react'
-import { deriveColors, defaultColors } from '../colors'
+import { deriveColors, quadrantColor, quadrantColors } from '../colors'
 import { moveTargetsFrom } from '../logic/items'
 import ColorPicker from './ColorPicker'
 import Card from './Card'
@@ -64,16 +64,11 @@ export default function MobileQuadrantGrid({
         role="group"
         aria-label="Quadrant grid">
         <CornerGradient
-          colors={[
-            framework.quadrants[0]?.color || defaultColors[0],
-            framework.quadrants[1]?.color || defaultColors[1],
-            framework.quadrants[2]?.color || defaultColors[2],
-            framework.quadrants[3]?.color || defaultColors[3],
-          ]}
+          colors={quadrantColors(framework.quadrants)}
           className="absolute inset-0 pointer-events-none opacity-20 dark:opacity-30"
         />
         {framework.quadrants.map((quadrant, idx) => {
-          const qColor = quadrant.color || defaultColors[idx]
+          const qColor = quadrantColor(quadrant, idx)
           const { bg, border } = deriveColors(qColor)
           const isFocused = zoomedIdx === idx
           const isRight = idx === 1 || idx === 3

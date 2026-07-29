@@ -1,4 +1,4 @@
-import { deriveColors, defaultColors } from '../colors'
+import { deriveColors, quadrantColor, quadrantColors } from '../colors'
 import { moveTargetsFrom } from '../logic/items'
 import ColorPicker from './ColorPicker'
 import Card from './Card'
@@ -89,24 +89,14 @@ export default function QuadrantGrid({
         )}
         <div className="grid grid-cols-2 grid-rows-2 flex-1 min-h-0 relative">
           <CornerGradient
-            colors={[
-              framework.quadrants[0]?.color || defaultColors[0],
-              framework.quadrants[1]?.color || defaultColors[1],
-              framework.quadrants[2]?.color || defaultColors[2],
-              framework.quadrants[3]?.color || defaultColors[3],
-            ]}
+            colors={quadrantColors(framework.quadrants)}
             className="absolute inset-0 pointer-events-none rounded-xl opacity-20 dark:opacity-30"
           />
           {framework.quadrants.map((quadrant, idx) => {
-            const qColor = quadrant.color || defaultColors[idx]
-            // accent is always a validated #rrggbb, even when qColor is garbage
-            const { border, accent } = deriveColors(qColor)
+            const qColor = quadrantColor(quadrant, idx)
+            const { border, innerEdge } = deriveColors(qColor)
             const isRight = idx === 1 || idx === 3
             const isBottom = idx === 2 || idx === 3
-            const r = parseInt(accent.slice(1, 3), 16)
-            const g = parseInt(accent.slice(3, 5), 16)
-            const b = parseInt(accent.slice(5, 7), 16)
-            const innerEdge = `rgba(${r}, ${g}, ${b}, 0.15)`
             const edgeStyle = {
               borderTopColor: !isBottom ? border : innerEdge,
               borderBottomColor: isBottom ? border : innerEdge,

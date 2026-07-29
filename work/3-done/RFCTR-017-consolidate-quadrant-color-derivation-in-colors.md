@@ -1,7 +1,7 @@
 ---
 id: RFCTR-017
 type: refactor
-status: open
+status: resolved
 created: 2026-07-29
 ---
 
@@ -55,3 +55,35 @@ type to grow.
 - BUG-006 — established validated `#rrggbb` as the contract `deriveColors`
   enforces
 - ARCH-001 — records `colors.ts` as a pure shared module on the core ring
+
+## Working
+
+Re-validated all three sites; all still present.
+
+1. **innerEdge — a derived variant, not a re-parse.** `DerivedColors` grew an
+   `innerEdge` field (alpha 0.15) alongside `bg` (0.08) and `border` (0.4);
+   `QuadrantGrid` destructures it. This also restores the validated-hex
+   guarantee the deleted comment leaned on — the re-parse read `accent`, which
+   is validated, but did its own `parseInt` to get there.
+2. **Corner-gradient array — `quadrantColors(quadrants)`**, returning the
+   `[string, string, string, string]` tuple `CornerGradient` takes. Written as
+   four explicit positions so it still yields four colors when the framework
+   holds fewer, exactly as the duplicated literal did.
+3. **Per-quadrant fallback — `quadrantColor(quadrant, index)`**, which
+   `quadrantColors` is built from. Both grids delegate; neither imports
+   `defaultColors` any more.
+
+Beyond the three enumerated sites, to make the stated outcome ("no hex parsing
+or color math remains in `src/components/`") literally true: `CornerGradient`'s
+`parseHex`, `toLin`, and `toSrgb` moved to `colors.ts` as `hexToRgb`,
+`srgbToLinear`, and `linearToSrgb`. That also removed a third copy of the slate
+fallback — `#94a3b8` was written out in `deriveColors` and again as the literal
+`[148, 163, 184]` in `CornerGradient`, under a comment claiming they were the
+same. It is now the exported `FALLBACK_COLOR`. `CornerGradient` is left doing
+only canvas painting.
+
+Tests: written failing first — `innerEdge` (including that it derives from the
+validated hex, not the caller's string), `quadrantColor`/`quadrantColors`,
+`hexToRgb` (3-digit, hash-less, fallback), and a linear/sRGB round-trip. The one
+existing exact-shape assertion on `deriveColors` was updated for the new field.
+552 passed; tsc and eslint clean.

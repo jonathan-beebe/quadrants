@@ -1,5 +1,17 @@
 import { describe, it, expect } from 'vitest'
-import { defaultColors, colorPresets, deriveColors, isValidHexColor } from '../colors'
+import {
+  defaultColors,
+  colorPresets,
+  deriveColors,
+  isValidHexColor,
+  quadrantColor,
+  quadrantColors,
+  hexToRgb,
+  srgbToLinear,
+  linearToSrgb,
+  FALLBACK_COLOR,
+} from '../colors'
+import type { Quadrant } from '../types'
 
 describe('defaultColors', () => {
   it('provides exactly 4 default colors', () => {
@@ -34,13 +46,21 @@ describe('colorPresets', () => {
 })
 
 describe('deriveColors', () => {
-  it('returns bg, border, and accent from a hex color', () => {
+  it('returns every derived variant from a hex color', () => {
     const result = deriveColors('#ff0000')
     expect(result).toEqual({
       bg: 'rgba(255, 0, 0, 0.08)',
+      innerEdge: 'rgba(255, 0, 0, 0.15)',
       border: 'rgba(255, 0, 0, 0.4)',
       accent: '#ff0000',
     })
+  })
+
+  it('derives innerEdge from the same validated hex as the other variants (RFCTR-017)', () => {
+    // 'red' is not a valid #rrggbb, so every variant must come from the
+    // slate fallback rather than a NaN parse of the caller's string.
+    const result = deriveColors('red')
+    expect(result.innerEdge).toBe('rgba(148, 163, 184, 0.15)')
   })
 
   it('handles mixed-case hex values', () => {
@@ -100,5 +120,58 @@ describe('isValidHexColor', () => {
     expect(isValidHexColor('')).toBe(false)
     expect(isValidHexColor(42)).toBe(false)
     expect(isValidHexColor(undefined)).toBe(false)
+  })
+})
+
+describe('quadrantColor', () => {
+  const quadrant = (color: string): Quadrant => ({ label: 'Q', color, items: [] })
+
+  it('uses the quadrant’s own color when it has one', () => {
+    expect(quadrantColor(quadrant('#ff0000'), 2)).toBe('#ff0000')
+  })
+
+  it('falls back to the default for the quadrant’s position', () => {
+    expect(quadrantColor(quadrant(''), 2)).toBe(defaultColors[2])
+    expect(quadrantColor(undefined, 3)).toBe(defaultColors[3])
+  })
+})
+
+describe('quadrantColors', () => {
+  it('resolves all four positions, in order', () => {
+    const quadrants: Quadrant[] = ['#111111', '', '#333333', ''].map((color) => ({ label: 'Q', color, items: [] }))
+    expect(quadrantColors(quadrants)).toEqual(['#111111', defaultColors[1], '#333333', defaultColors[3]])
+  })
+
+  it('always yields four colors, even when quadrants are missing', () => {
+    expect(quadrantColors([])).toEqual(defaultColors)
+  })
+})
+
+describe('hexToRgb', () => {
+  it('parses 6-digit hex, with or without the leading hash', () => {
+    expect(hexToRgb('#ff8000')).toEqual([255, 128, 0])
+    expect(hexToRgb('ff8000')).toEqual([255, 128, 0])
+  })
+
+  it('parses 3-digit shorthand by doubling each digit', () => {
+    expect(hexToRgb('#f80')).toEqual([255, 136, 0])
+  })
+
+  it('falls back to the shared fallback color rather than parsing NaN', () => {
+    expect(hexToRgb('red')).toEqual(hexToRgb(FALLBACK_COLOR))
+    expect(hexToRgb('')).toEqual(hexToRgb(FALLBACK_COLOR))
+  })
+})
+
+describe('srgbToLinear / linearToSrgb', () => {
+  it('round-trips a channel back to where it started', () => {
+    for (const channel of [0, 12, 128, 200, 255]) {
+      expect(linearToSrgb(srgbToLinear(channel))).toBeCloseTo(channel, 6)
+    }
+  })
+
+  it('maps the endpoints exactly', () => {
+    expect(srgbToLinear(0)).toBe(0)
+    expect(srgbToLinear(255)).toBeCloseTo(1, 6)
   })
 })

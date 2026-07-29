@@ -1,4 +1,5 @@
 import { useEffect, useRef } from 'react'
+import { hexToRgb, srgbToLinear, linearToSrgb } from '../colors'
 
 export interface CornerGradientProps {
   /** Four hex colors: top-left, top-right, bottom-left, bottom-right. */
@@ -8,25 +9,6 @@ export interface CornerGradientProps {
 }
 
 const RENDER_SIZE = 256
-
-function parseHex(hex: string): [number, number, number] {
-  const h = hex.startsWith('#') ? hex.slice(1) : hex
-  if (/^[0-9a-fA-F]{3}$/.test(h)) {
-    return [parseInt(h[0] + h[0], 16), parseInt(h[1] + h[1], 16), parseInt(h[2] + h[2], 16)]
-  }
-  if (/^[0-9a-fA-F]{6}$/.test(h)) {
-    return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)]
-  }
-  // Garbage in (e.g. "red" from a hand-edited import) must not paint NaN
-  // black; fall back to the same slate deriveColors uses.
-  return [148, 163, 184]
-}
-
-const toLin = (c: number) => {
-  const v = c / 255
-  return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
-}
-const toSrgb = (c: number) => 255 * (c <= 0.0031308 ? 12.92 * c : 1.055 * Math.pow(c, 1 / 2.4) - 0.055)
 
 export default function CornerGradient({ colors, className, style }: CornerGradientProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null)
@@ -38,10 +20,10 @@ export default function CornerGradient({ colors, className, style }: CornerGradi
     const ctx = canvas.getContext('2d')
     if (!ctx) return
 
-    const lTL = parseHex(tlHex).map(toLin)
-    const lTR = parseHex(trHex).map(toLin)
-    const lBL = parseHex(blHex).map(toLin)
-    const lBR = parseHex(brHex).map(toLin)
+    const lTL = hexToRgb(tlHex).map(srgbToLinear)
+    const lTR = hexToRgb(trHex).map(srgbToLinear)
+    const lBL = hexToRgb(blHex).map(srgbToLinear)
+    const lBR = hexToRgb(brHex).map(srgbToLinear)
 
     const N = RENDER_SIZE
     const img = ctx.createImageData(N, N)
@@ -59,7 +41,7 @@ export default function CornerGradient({ colors, className, style }: CornerGradi
         for (let c = 0; c < 3; c++) {
           const top = (1 - eu) * lTL[c] + eu * lTR[c]
           const bot = (1 - eu) * lBL[c] + eu * lBR[c]
-          d[i + c] = toSrgb((1 - ev) * top + ev * bot)
+          d[i + c] = linearToSrgb((1 - ev) * top + ev * bot)
         }
         d[i + 3] = 255
       }

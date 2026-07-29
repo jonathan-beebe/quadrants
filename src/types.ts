@@ -66,6 +66,8 @@ export interface SharedPayload {
 
 export interface DerivedColors {
   bg: string
+  /** The edge a quadrant shares with its neighbours — fainter than `border`. */
+  innerEdge: string
   border: string
   accent: string
 }
