@@ -6,14 +6,34 @@
 - DSGN: 3
 - ARCH: 2
 - FEAT: 4
-- IMPRV: 11
-- MAINT: 9
+- IMPRV: 12
+- MAINT: 10
 - A11Y: 23
-- RFCTR: 9
-- BUG: 18
+- RFCTR: 14
+- BUG: 19
 
 ## Log
 
+- 2026-07-28:20:41:41 — BUG-018 — done: drag preview anchored in client space
+  via container-relative positioning; drop path verified self-consistent under
+  pinch zoom
+- 2026-07-28:20:30:15 — BUG-018 — started
+- 2026-07-28:20:27:58 — BUG-018 — defined: drag preview and drop ignore pinch
+  zoom in zoomed cell view
+- 2026-07-28:20:18:35 — IMPRV-011 — defined: show framework name and doc summary
+  above the builder's Customize section
+- 2026-07-28:20:14:02 — RFCTR-013 — defined: delegate editStructure to
+  replaceFramework and unify deep-clone idiom
+- 2026-07-28:20:10:03 — MAINT-009 — defined: test-cover error boundary crash
+  recovery and reset flows
+- 2026-07-28:20:08:08 — RFCTR-012 — defined: extract pure share-url and
+  export-filename rules from useFrameworkSharing
+- 2026-07-28:20:05:29 — RFCTR-011 — defined: parameterize core path-id rules by
+  base and test non-root base
+- 2026-07-28:20:03:09 — RFCTR-010 — defined: single-owner theme state with core
+  rules and a storage adapter
+- 2026-07-28:20:00:07 — RFCTR-009 — defined: extract drop-geometry rules from
+  useDragAndDrop into the core
 - 2026-07-28:19:01:45 — IMPRV-010 — done: builder presented in the shared Modal
   overlaying the screen — fixed title bar, full-screen mobile / centered 860px
   desktop, opener focus restore; nested-Escape bug fixed in useFocusTrap; old

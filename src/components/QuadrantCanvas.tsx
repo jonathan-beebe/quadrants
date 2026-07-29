@@ -45,6 +45,7 @@ export default function QuadrantCanvas({
   const [liveMessage, setLiveMessage] = useState('')
   const quadrantRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
   const canvasRefs = useRef<(HTMLElement | null)[]>([null, null, null, null])
+  const rootRef = useRef<HTMLDivElement>(null)
   const shareTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   useEffect(() => {
@@ -232,7 +233,9 @@ export default function QuadrantCanvas({
     // Still deliberately not `dvh` anywhere in the chain: a unit that changes
     // as chrome retracts would resize the canvas mid-interaction and
     // reintroduce the card-position shift 4996ae3 removed.
-    <div className={`flex flex-col h-full select-none ${isMobile ? 'p-0' : 'p-6'}`}>
+    // `relative`: this root is the positioned container GhostCard anchors to
+    // (see GhostCard for the pinch-zoom coordinate-space reasoning, BUG-018).
+    <div ref={rootRef} className={`relative flex flex-col h-full select-none ${isMobile ? 'p-0' : 'p-6'}`}>
       <div
         className={`flex items-center justify-between shrink-0 ${isMobile ? 'px-3 py-2.5 border-b border-border' : 'mb-5'} ${!isMobile && !sidebarOpen ? 'pl-12' : ''}`}>
         <div className="flex items-center gap-2 min-w-0">
@@ -282,7 +285,7 @@ export default function QuadrantCanvas({
         />
       )}
 
-      {drag && draggedItem && <GhostCard drag={drag} text={draggedItem.text} />}
+      {drag && draggedItem && <GhostCard drag={drag} text={draggedItem.text} containerRef={rootRef} />}
       <div className="sr-only" aria-live="polite" role="status">
         {liveMessage}
       </div>

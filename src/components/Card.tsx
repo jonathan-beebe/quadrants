@@ -2,6 +2,7 @@ import { useRef, useCallback, useEffect, useState } from 'react'
 import { XIcon } from './Icons'
 import { useClickOutside } from '../hooks/useClickOutside'
 import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
+import { clientToContainerPoint } from '../hooks/useDragAndDrop'
 import { clampPosition } from '../logic/items'
 import type { Item } from '../types'
 
@@ -368,18 +369,27 @@ export interface DragState {
 interface GhostCardProps {
   drag: DragState
   text: string
+  /** The positioned, untransformed ancestor the ghost is absolute within. */
+  containerRef: React.RefObject<HTMLElement | null>
 }
 
-export function GhostCard({ drag, text }: GhostCardProps) {
+export function GhostCard({ drag, text, containerRef }: GhostCardProps) {
+  // Positioned absolutely inside a measured container, not fixed at raw
+  // client coordinates: pointer coords and client rects share one coordinate
+  // space per browser (visual-viewport-based on iOS Safari under pinch zoom),
+  // while fixed anchors to the layout viewport and drifts from the finger by
+  // the pinch pan (BUG-018). Re-measured every render, never held in state
+  // (the BUG-012 lesson).
+  const containerRect = containerRef.current?.getBoundingClientRect() ?? { left: 0, top: 0 }
+  const { x, y } = clientToContainerPoint(drag.x - drag.grabX, drag.y - drag.grabY, containerRect)
   return (
     <div
       aria-hidden="true"
       className="absolute w-max max-w-[180px] min-w-[60px] py-[7px] px-2.5 bg-white dark:bg-gray-700 border border-black/8 dark:border-white/10 rounded-lg shadow-lg text-[13px] leading-[1.4] flex items-start gap-1 cursor-grabbing opacity-92"
       style={{
-        left: drag.x - drag.grabX,
-        top: drag.y - drag.grabY,
+        left: x,
+        top: y,
         width: drag.width,
-        position: 'fixed',
         pointerEvents: 'none',
         zIndex: 9999,
       }}>

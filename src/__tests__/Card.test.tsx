@@ -475,18 +475,37 @@ describe('Card', () => {
 })
 
 describe('GhostCard', () => {
+  const drag = { itemId: 'i1', sourceIdx: 0, x: 100, y: 200, grabX: 10, grabY: 10, width: 150, height: 40 }
+
+  function containerRefWithRect(left: number, top: number): React.RefObject<HTMLElement | null> {
+    return {
+      current: {
+        getBoundingClientRect: () => ({ left, top }) as DOMRect,
+      } as HTMLElement,
+    }
+  }
+
   it('renders the text content', () => {
-    const drag = { itemId: 'i1', sourceIdx: 0, x: 100, y: 200, grabX: 10, grabY: 10, width: 150, height: 40 }
-    render(<GhostCard drag={drag} text="Dragging item" />)
+    render(<GhostCard drag={drag} text="Dragging item" containerRef={{ current: null }} />)
     expect(screen.getByText('Dragging item')).toBeInTheDocument()
   })
 
-  it('positions itself based on drag state', () => {
-    const drag = { itemId: 'i1', sourceIdx: 0, x: 100, y: 200, grabX: 10, grabY: 10, width: 150, height: 40 }
-    const { container } = render(<GhostCard drag={drag} text="Test" />)
+  it('positions itself at pointer minus grab offset for a container at the origin', () => {
+    const { container } = render(<GhostCard drag={drag} text="Test" containerRef={containerRefWithRect(0, 0)} />)
     const ghost = container.firstElementChild as HTMLElement
     expect(ghost.style.left).toBe('90px') // x - grabX
     expect(ghost.style.top).toBe('190px') // y - grabY
-    expect(ghost.style.position).toBe('fixed')
+  })
+
+  it('subtracts the container client-rect origin so pinch-zoom pan cannot offset it (BUG-018)', () => {
+    // Under iOS Safari pinch zoom, pointer coordinates and client rects share
+    // one (visual-viewport) space while position:fixed anchors to the layout
+    // viewport. Positioning within a measured container stays in the shared
+    // space; simulated here by a container whose rect starts at (40, 60).
+    const { container } = render(<GhostCard drag={drag} text="Test" containerRef={containerRefWithRect(40, 60)} />)
+    const ghost = container.firstElementChild as HTMLElement
+    expect(ghost.style.left).toBe('50px') // x - grabX - container left
+    expect(ghost.style.top).toBe('130px') // y - grabY - container top
+    expect(ghost.style.position).not.toBe('fixed')
   })
 })

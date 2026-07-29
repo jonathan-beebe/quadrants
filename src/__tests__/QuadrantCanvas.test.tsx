@@ -292,6 +292,37 @@ describe('QuadrantCanvas', () => {
       expect(updated.quadrants[0].items[0].id).toBe('i1')
     })
 
+    it('positions the drag preview relative to the canvas root, compensating its client-rect origin (BUG-018)', () => {
+      const { container } = render(<QuadrantCanvas {...defaultProps} />)
+      stubLayout(container)
+      // Simulate a pinch-zoom pan: every client rect — the canvas root
+      // included — shifts in client space along with pointer coordinates.
+      const root = container.firstElementChild as HTMLElement
+      stubRect(root, { left: 7, top: 11 })
+      const card = findCardOuter('Task A')
+      stubRect(card, { left: 20, top: 20, right: 100, bottom: 50, width: 80, height: 30 })
+
+      // Grab at (30, 30) — offset (10, 10) into the card — cross the drag
+      // threshold, then move to (60, 60).
+      card.dispatchEvent(pointerEvent('pointerdown', 30, 30))
+      act(() => {
+        window.dispatchEvent(pointerEvent('pointermove', 50, 50))
+      })
+      act(() => {
+        window.dispatchEvent(pointerEvent('pointermove', 60, 60))
+      })
+
+      const ghost = container.querySelector('.cursor-grabbing') as HTMLElement
+      expect(ghost).not.toBeNull()
+      // Pointer (60, 60) minus grab offset (10, 10) minus root origin (7, 11).
+      expect(ghost.style.left).toBe('43px')
+      expect(ghost.style.top).toBe('39px')
+
+      act(() => {
+        window.dispatchEvent(pointerEvent('pointerup', 1000, 1000))
+      })
+    })
+
     it('dropping outside all quadrant rects leaves the framework unchanged', () => {
       const onUpdate = vi.fn()
       const { container } = render(<QuadrantCanvas {...defaultProps} onUpdate={onUpdate} />)

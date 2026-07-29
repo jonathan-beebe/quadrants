@@ -1,7 +1,11 @@
 import { describe, it, expect, vi } from 'vitest'
 import { StrictMode } from 'react'
 import { renderHook, act } from '@testing-library/react'
-import useDragAndDrop, { clientToQuadrantPercent, getQuadrantAtPoint } from '../../hooks/useDragAndDrop'
+import useDragAndDrop, {
+  clientToContainerPoint,
+  clientToQuadrantPercent,
+  getQuadrantAtPoint,
+} from '../../hooks/useDragAndDrop'
 import type { Item } from '../../types'
 
 // --- Pure function tests ---
@@ -43,6 +47,22 @@ describe('clientToQuadrantPercent', () => {
     const result = clientToQuadrantPercent(108, 206, rect)
     expect(result.x).toBe(2)
     expect(result.y).toBe(2)
+  })
+})
+
+describe('clientToContainerPoint', () => {
+  it('maps a client point into container-local coordinates', () => {
+    // A container whose client rect starts at (40, 60) — e.g. panned into view
+    // under pinch zoom, where rects and pointer coords share the offset.
+    expect(clientToContainerPoint(100, 200, { left: 40, top: 60 })).toEqual({ x: 60, y: 140 })
+  })
+
+  it('is the identity for a container at the client origin', () => {
+    expect(clientToContainerPoint(90, 190, { left: 0, top: 0 })).toEqual({ x: 90, y: 190 })
+  })
+
+  it('yields negative coordinates for points above/left of the container', () => {
+    expect(clientToContainerPoint(10, 20, { left: 40, top: 60 })).toEqual({ x: -30, y: -40 })
   })
 })
 
