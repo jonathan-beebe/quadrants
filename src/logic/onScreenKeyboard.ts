@@ -36,10 +36,6 @@ export interface OnScreenKeyboardSignals {
  *    leaving the user agent on its desktop default. Only trusted in the
  *    negative, and only where the API exists.
  * 3. The media-query pair — the best guess available before any interaction.
- *
- * Rule 3 alone is what shipped first, and it is wrong in exactly one common
- * case: a developer with the device toolbar open. Rule 2 fixes that case up
- * front; rule 1 fixes every case, one interaction late.
  */
 export function expectsOnScreenKeyboard(signals: OnScreenKeyboardSignals): boolean {
   if (signals.observed !== null) return signals.observed

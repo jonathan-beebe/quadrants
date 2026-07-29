@@ -124,14 +124,12 @@ export function useFrameworkSharing({
     if (dismissed) mainRef.current?.focus()
   }, [conflict, mainRef])
 
-  // Clear pending error auto-dismiss timer on unmount
   useEffect(() => {
     return () => {
       if (errorTimer.current) clearTimeout(errorTimer.current)
     }
   }, [])
 
-  // Load framework from URL hash on mount and on hash change
   useEffect(() => {
     importFromHash()
     window.addEventListener('hashchange', importFromHash)
@@ -140,15 +138,10 @@ export function useFrameworkSharing({
 
   const handleConflictReplace = useCallback(() => {
     if (!conflict) return
-    // Defensive freshness check (BUG-027): re-read the latest framework from
-    // state before applying the replace. BUG-020's synchronous hash-clear
-    // makes the original repro (refresh re-triggers the dialog with a stale
-    // `existing`) unreachable in practice, and the conflict dialog blocks
-    // the canvas so the user cannot normally edit while it is open. Even so,
-    // looking up `getFramework(conflict.incoming.id)` here guards against the
-    // local framework having been deleted out from under us (e.g. from a
-    // future multi-tab/storage-event sync) — `replace` is a no-op on a
-    // missing id, so we just navigate and dismiss in that case.
+    // Re-read rather than trusting `conflict.existing`, which was captured when
+    // the dialog opened: the local framework may have been deleted since (a
+    // future multi-tab/storage-event sync would do it), and `replace` is a
+    // silent no-op on a missing id (BUG-027).
     const currentExisting = getFramework(conflict.incoming.id)
     if (currentExisting) {
       replace(conflict.incoming)

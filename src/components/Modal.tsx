@@ -7,11 +7,6 @@ import { useRestoreFocusOnUnmount } from '../hooks/useRestoreFocusOnUnmount'
 interface ModalProps {
   /** Shown in the title bar and used as the dialog's accessible name. */
   title: string
-  /**
-   * The control that opened the modal — focus returns to it when the modal
-   * unmounts (A11Y-022). See `useRestoreFocusOnUnmount` for why the target is
-   * declared by ref and read at cleanup time.
-   */
   openerRef?: RefObject<HTMLElement | null>
   onClose: () => void
   /** Tailwind max-width utility for the centered presentation. */

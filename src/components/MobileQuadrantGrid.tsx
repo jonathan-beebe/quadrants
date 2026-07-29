@@ -11,12 +11,11 @@ import type { QuadrantGridProps } from './QuadrantGrid'
 
 const TRANSITION = 'transform 300ms cubic-bezier(0.4, 0, 0.2, 1)'
 
-/** Translate values to pan each quadrant into view at scale(1). */
 const CELL_TRANSFORMS: Record<number, string> = {
-  0: 'translate(0%, 0%)', // top-left
-  1: 'translate(-50%, 0%)', // top-right
-  2: 'translate(0%, -50%)', // bottom-left
-  3: 'translate(-50%, -50%)', // bottom-right
+  0: 'translate(0%, 0%)',
+  1: 'translate(-50%, 0%)',
+  2: 'translate(0%, -50%)',
+  3: 'translate(-50%, -50%)',
 }
 
 const OVERVIEW_TRANSFORM = 'scale(0.5)'

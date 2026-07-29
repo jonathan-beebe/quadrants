@@ -97,7 +97,6 @@ export default function FrameworkBuilderContent({
   const handlePanelKeyDown = useFocusTrap(panelRef, closeList)
   const handleEntriesKeyDown = useListArrowNav(entriesRef)
 
-  // Focus the filter input when the mobile dropdown opens.
   useEffect(() => {
     if (listOpen) searchRef.current?.focus()
   }, [listOpen])

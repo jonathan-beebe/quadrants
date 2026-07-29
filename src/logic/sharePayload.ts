@@ -1,6 +1,5 @@
 import type { Framework, SharedPayload } from '../types'
 
-/** Project a Framework into the wire shape: ids/timestamps stripped from items. */
 export function toSharedPayload(framework: Framework): SharedPayload {
   return {
     id: framework.id,

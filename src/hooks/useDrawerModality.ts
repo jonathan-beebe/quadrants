@@ -7,17 +7,14 @@ import { useIsMobile } from './useIsMobile'
  * The drawer's modality spans two DOM regions — the drawer itself and the
  * `<main>` it covers — so no one component can own it: `<main>` carries the
  * `inert` and is the focus target after a drawer action navigates, while the
- * drawer carries the dialog semantics. Splitting the ownership to match the DOM
- * is what this hook replaces. Previously `Sidebar` restored focus to the opener
- * on close while `App` focused `<main>`, and the arrangement was correct only
- * because parent effects commit after child effects, so `App`'s write landed
- * second (BUG-014). That ordering was load-bearing, invisible, and guarded on
- * one side only.
+ * drawer carries the dialog semantics. Ownership split to match the DOM leaves
+ * two components writing focus, and which write survives comes down to effect
+ * commit order — load-bearing and invisible (BUG-014).
  *
- * Here there is no second writer. Closing the drawer resolves to exactly one
- * focus target, chosen from why it closed rather than from who runs last:
- * `<main>` when a drawer action navigated (the opener it would otherwise
- * restore has been unmounted by that navigation), the opener otherwise.
+ * So there is exactly one writer here. Closing the drawer resolves to one focus
+ * target, chosen from why it closed rather than from who runs last: `<main>`
+ * when a drawer action navigated (the opener it would otherwise restore has
+ * been unmounted by that navigation), the opener otherwise.
  */
 export function useDrawerModality() {
   const isMobile = useIsMobile()
@@ -55,10 +52,6 @@ export function useDrawerModality() {
     setOpen(!open)
   }, [open])
 
-  /**
-   * Close the drawer because one of its own actions changed what `<main>`
-   * renders. No-op on desktop, where the sidebar is permanent.
-   */
   const dismissForNavigation = useCallback(() => {
     if (!isMobile) return
     closedByNavigationRef.current = true

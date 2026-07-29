@@ -68,12 +68,11 @@ export async function decodeSharedPayload(hash: string): Promise<SharedPayload |
  */
 export async function deliverShareUrl(url: string): Promise<ShareOutcome> {
   if (navigator.clipboard?.writeText) {
-    try {
-      await navigator.clipboard.writeText(url)
-      return 'copied'
-    } catch {
-      // fall through to navigator.share
-    }
+    const copied = await navigator.clipboard.writeText(url).then(
+      () => true,
+      () => false,
+    )
+    if (copied) return 'copied'
   }
 
   if (navigator.share) {
@@ -84,7 +83,6 @@ export async function deliverShareUrl(url: string): Promise<ShareOutcome> {
       if (err instanceof DOMException && err.name === 'AbortError') {
         return 'cancelled'
       }
-      // other errors fall through to 'failed'
     }
   }
 

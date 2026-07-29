@@ -52,7 +52,6 @@ export function srgbToLinear(channel: number): number {
   return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4)
 }
 
-/** Linear light (0–1) back to an sRGB channel (0–255). */
 export function linearToSrgb(value: number): number {
   return 255 * (value <= 0.0031308 ? 12.92 * value : 1.055 * Math.pow(value, 1 / 2.4) - 0.055)
 }

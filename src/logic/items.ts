@@ -43,12 +43,6 @@ export function clientToContainerPoint(
   return { x: clientX - containerRect.left, y: clientY - containerRect.top }
 }
 
-/**
- * Given client (viewport-relative) coordinates and a bounding rect, returns
- * clamped percentage coordinates within that rect.
- *
- * Uses clientX/clientY space to match getBoundingClientRect().
- */
 export function clientToQuadrantPercent(clientX: number, clientY: number, rect: DOMRect): { x: number; y: number } {
   const x = ((clientX - rect.left) / rect.width) * 100
   const y = ((clientY - rect.top) / rect.height) * 100

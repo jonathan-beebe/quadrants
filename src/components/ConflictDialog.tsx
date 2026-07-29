@@ -15,7 +15,6 @@ export default function ConflictDialog({ existing, onReplace, onDuplicate, onCan
   const dialogRef = useRef<HTMLDivElement>(null)
   const firstButtonRef = useRef<HTMLButtonElement>(null)
 
-  // Focus first action on mount
   useEffect(() => {
     firstButtonRef.current?.focus()
   }, [])

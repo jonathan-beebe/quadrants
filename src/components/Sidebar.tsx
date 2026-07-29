@@ -55,7 +55,7 @@ export default function Sidebar({
   // Only for the floating opener below, which is a desktop layout affordance.
   // Modality is not derived here — it arrives as `isModal` from the one owner
   // (`useDrawerModality`), so this component and `App` cannot disagree about it
-  // the way they did in BUG-012.
+  // (BUG-012).
   const isMobile = useIsMobile()
 
   // Stable identity: PopupMenu subscribes this through useClickOutside.

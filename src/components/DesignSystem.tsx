@@ -500,9 +500,8 @@ function MobileGridDemo() {
 
   return (
     // 375x667 is the iPhone SE, the smallest screen the grid supports — but as
-    // a ceiling, not a floor. Pinned to exactly 375 it overflowed the page on
-    // any phone narrower than 375 + the page gutters, scrolling the whole
-    // design system sideways.
+    // a ceiling, not a floor: a fixed 375 outgrows the page gutters on any
+    // narrower phone and scrolls the whole design system sideways.
     <div
       className="border border-border rounded-xl overflow-hidden bg-bg flex flex-col w-full"
       style={{ maxWidth: 375, height: 667 }}>

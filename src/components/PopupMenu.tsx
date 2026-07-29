@@ -76,7 +76,6 @@ export default function PopupMenu({
   useClickOutside(menuRef, onClose, isOpen, triggerToggles ? triggerRef : undefined)
   const handleKeyDown = useMenuKeyboardNav(menuRef, onClose, triggerRef)
 
-  // Focus the first item when the menu opens, so the keyboard lands inside it.
   useEffect(() => {
     if (!isOpen) return
     menuRef.current?.querySelector<HTMLElement>('[role="menuitem"]')?.focus()

@@ -16,7 +16,12 @@ import { expectsOnScreenKeyboard, isKeyboardSized, type OnScreenKeyboardSignals 
 const COARSE_POINTER = '(pointer: coarse)'
 const NO_HOVER = '(hover: none)'
 
-/** How long to wait after focusing a field before concluding no keyboard came. */
+/**
+ * Long enough that no keyboard animation loses the race. Only a negative
+ * verdict ever waits this out — the resize listener records a real keyboard the
+ * moment it arrives — and a wrong negative is the costly one, sending a touch
+ * device down the inline-edit path the keyboard then covers.
+ */
 const SETTLE_MS = 1200
 
 interface UserAgentData {
@@ -46,7 +51,6 @@ function record(value: boolean) {
   notify()
 }
 
-/** How much of the layout viewport the visual viewport has given up, in px. */
 function viewportShrink(viewport: VisualViewport): number {
   // clientHeight, not innerHeight: on iOS innerHeight is the dynamic viewport
   // and swings with the browser toolbar while the keyboard does nothing.

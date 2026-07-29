@@ -65,7 +65,7 @@ export default function EditModal({
   // synchronously, so a layout effect still runs inside the tap that opened the
   // modal. A passive effect runs after paint, outside the gesture, and WebKit
   // raises the keyboard only for a focus() taken during gesture processing.
-  // Confirmed on device under RSRCH-002 — Card.tsx:84 has the passive version.
+  // Confirmed on device under RSRCH-002.
   useLayoutEffect(() => {
     textareaRef.current?.focus()
     textareaRef.current?.select()

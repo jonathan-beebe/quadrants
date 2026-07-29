@@ -74,7 +74,6 @@ export function updateFramework(frameworks: Framework[], updated: Framework): Fr
   return frameworks.map((f) => (f.id === updated.id ? { ...updated, updatedAt: Date.now() } : f))
 }
 
-/** How many items a framework holds, across all four quadrants. */
 export function itemCount(framework: Framework): number {
   return framework.quadrants.reduce((sum, q) => sum + q.items.length, 0)
 }
@@ -144,11 +143,6 @@ export function replaceFramework(frameworks: Framework[], incoming: Framework): 
   return frameworks.map((f) => (f.id === incoming.id ? incoming : f))
 }
 
-/**
- * Repair a parsed JSON object into a valid Framework, filling in missing
- * or invalid fields with safe defaults. Returns null if the input is not
- * salvageable (missing name or not exactly 4 quadrants).
- */
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function repairImportedFramework(raw: any): Framework | null {
   if (!raw || typeof raw !== 'object') return null

@@ -12,7 +12,6 @@ export function resolveIsDark(mode: ThemeMode, isSystemDark: boolean): boolean {
   return mode === 'dark'
 }
 
-// The three-way cycle behind every theme toggle: system → light → dark → system.
 export function nextThemeMode(mode: ThemeMode): ThemeMode {
   if (mode === 'system') return 'light'
   if (mode === 'light') return 'dark'

@@ -78,7 +78,6 @@ export default function App() {
 
   const activeFramework = getFramework(activeId)
 
-  // Redirect to home if the URL points to a framework that doesn't exist
   useEffect(() => {
     if (importing) return
     if (activeId && !activeFramework && !isNamedRoute(activeId)) {
@@ -165,11 +164,10 @@ export default function App() {
   return (
     // h-svh, not h-screen: `vh` is the large viewport (chrome retracted), so a
     // `h-screen` shell is taller than the scrollport and the document itself
-    // scrolls by the height of mobile Safari's toolbar — dragging the canvas
-    // slid the page and walked the canvas bottom back under the chrome BUG-015
-    // had just cleared it from (BUG-017). Everything below sizes against this
-    // rather than restating a viewport of its own; <main> stays the one place
-    // a screen taller than the shell is allowed to scroll.
+    // scrolls by the height of mobile Safari's toolbar, sliding the page under
+    // a canvas drag (BUG-017). Everything below sizes against this rather than
+    // restating a viewport of its own; <main> stays the one place a screen
+    // taller than the shell is allowed to scroll.
     <div className="flex h-svh overflow-hidden">
       <div inert={conflict ? true : undefined}>
         <a

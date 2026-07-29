@@ -154,7 +154,6 @@ export default function QuadrantCanvas({
       } else if (trimmed) {
         handleEditItem(quadrantIdx, itemId, trimmed)
       } else {
-        // Saving an item empty deletes it, mirroring the inline commit.
         handleDeleteItem(quadrantIdx, itemId)
       }
       setItemModal(null)
@@ -225,15 +224,13 @@ export default function QuadrantCanvas({
 
   return (
     // h-full: the canvas fills <main> exactly, so there is nothing for <main>
-    // to scroll and the canvas stays fixed under a drag. This was `h-svh`, from
-    // BUG-015 — `vh` had put the canvas bottom, and the zoomed cell's footer
-    // controls pinned to it, behind mobile Safari's toolbar. The shell now
-    // states that height once (App.tsx) and this defers to it; two independent
+    // to scroll and the canvas stays fixed under a drag. The shell states the
+    // viewport height once (App.tsx) and this defers to it; two independent
     // claims on the viewport is what BUG-017 was.
     //
-    // Still deliberately not `dvh` anywhere in the chain: a unit that changes
-    // as chrome retracts would resize the canvas mid-interaction and
-    // reintroduce the card-position shift 4996ae3 removed.
+    // Deliberately not `dvh` anywhere in the chain: a unit that changes as
+    // chrome retracts would resize the canvas mid-interaction and shift every
+    // card's rendered position under the user.
     // `relative`: this root is the positioned container GhostCard anchors to
     // (see GhostCard for the pinch-zoom coordinate-space reasoning, BUG-018).
     <div ref={rootRef} className={`relative flex flex-col h-full select-none ${isMobile ? 'p-0' : 'p-6'}`}>

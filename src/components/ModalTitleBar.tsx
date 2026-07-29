@@ -10,11 +10,8 @@ interface ModalTitleBarProps {
 }
 
 /**
- * The title bar every modal surface wears: the title, and a close button
- * labelled with what it closes. `shrink-0` is load-bearing — it is what keeps
- * the bar in place however tall the content beside it grows. Modal and
- * EditModal each carried a copy of this until RFCTR-020; the surfaces differ
- * in their frame (position, size, styling), not in their chrome.
+ * The title bar every modal surface wears. `shrink-0` is load-bearing — it is
+ * what keeps the bar in place however tall the content beside it grows.
  */
 export default function ModalTitleBar({ title, titleId, onClose }: ModalTitleBarProps) {
   return (
