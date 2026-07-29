@@ -17,6 +17,7 @@ import EditModal from './EditModal'
 import Modal from './Modal'
 import Toast from './Toast'
 import { UpdateToastView } from './UpdateToast'
+import CanvasPreview from './CanvasPreview'
 import QuadrantGrid from './QuadrantGrid'
 import MobileQuadrantGrid from './MobileQuadrantGrid'
 import type { Framework } from '../types'
@@ -154,6 +155,11 @@ const demoFramework: Framework = {
   ],
   createdAt: 0,
   updatedAt: 0,
+}
+
+const emptyDemoFramework: Framework = {
+  ...demoFramework,
+  quadrants: demoFramework.quadrants.map((quadrant) => ({ ...quadrant, items: [] })),
 }
 
 const noop = () => {}
@@ -682,6 +688,17 @@ export default function DesignSystem({ themeMode, isDark, onCycleTheme }: Design
         </Subsection>
 
         <Subsection title="Card" />
+
+        <Subsection title="Canvas Preview — how the sidebar illustrates a framework" layout="stack">
+          <DemoRow label="One 128px bitmap, at sidebar size and enlarged: quadrant colors, quadrant lines, a pill per item">
+            <CanvasPreview framework={demoFramework} className="w-11 h-11" />
+            <CanvasPreview framework={demoFramework} className="w-32 h-32" />
+          </DemoRow>
+          <DemoRow label="A framework with no items — gradient and quadrant lines alone">
+            <CanvasPreview framework={emptyDemoFramework} className="w-11 h-11" />
+            <CanvasPreview framework={emptyDemoFramework} className="w-32 h-32" />
+          </DemoRow>
+        </Subsection>
 
         <Subsection title="Popup Menu — shared by the card's move menu and the sidebar's actions menu">
           <PopupMenuDemo />

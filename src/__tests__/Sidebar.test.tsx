@@ -70,6 +70,33 @@ describe('Sidebar', () => {
     expect(screen.getByText('1 items')).toBeInTheDocument()
   })
 
+  it('previews each framework’s canvas in its row (FEAT-004)', () => {
+    const { container } = render(
+      <Sidebar
+        {...defaultProps}
+        frameworks={[makeFramework(), makeFramework({ id: 'fw-2', name: 'Second Framework' })]}
+      />,
+    )
+    expect(container.querySelectorAll('canvas')).toHaveLength(2)
+  })
+
+  it('keeps the preview out of the accessibility tree (FEAT-004)', () => {
+    const { container } = render(<Sidebar {...defaultProps} frameworks={[makeFramework()]} />)
+    // The row already names the framework and counts its items; the preview
+    // restates that visually and must announce nothing.
+    expect(container.querySelector('canvas')).toHaveAttribute('aria-hidden', 'true')
+    // Anchored: "Actions for Test Framework" is the row's other button.
+    expect(screen.getByRole('button', { name: /^test framework/i })).toBeInTheDocument()
+  })
+
+  it('selects the framework when its preview is clicked (FEAT-004)', async () => {
+    const user = userEvent.setup()
+    const onSelect = vi.fn()
+    const { container } = render(<Sidebar {...defaultProps} frameworks={[makeFramework()]} onSelect={onSelect} />)
+    await user.click(container.querySelector('canvas')!)
+    expect(onSelect).toHaveBeenCalledWith('fw-1')
+  })
+
   it('calls onSelect when a framework is clicked', async () => {
     const user = userEvent.setup()
     const onSelect = vi.fn()

@@ -5,7 +5,7 @@
 - RSRCH: 3
 - DSGN: 4
 - ARCH: 3
-- FEAT: 4
+- FEAT: 5
 - IMPRV: 14
 - MAINT: 10
 - A11Y: 23
@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-29:15:26:27 — FEAT-004 — started
+- 2026-07-29:15:25:16 — FEAT-004 — defined: canvas preview thumbnail in the
+  document list
 - 2026-07-29:10:03:23 — IMPRV-013 — done: shell states the safe-area inset once
   and every edge-pinned `fixed` surface restates it, since fixed boxes escape
   the shell's padding box; index.html opts in with viewport-fit=cover

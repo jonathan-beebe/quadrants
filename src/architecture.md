@@ -103,7 +103,7 @@ flowchart TD
     routing["routing.ts → window.location + history"]
   end
   subgraph core ["Core — logic/, pure"]
-    logic["framework · items · history · shareImport · sharePayload · routing"]
+    logic["framework · items · history · shareImport · sharePayload · routing<br/>canvasPreview · cornerGradient · theme · onScreenKeyboard"]
   end
   App -- "state + callbacks as props" --> views
   App --> coordination

@@ -4,6 +4,7 @@ import ThemeToggleButton from './atoms/ThemeToggleButton'
 import Caption from './atoms/Caption'
 import Button from './atoms/Button'
 import PopupMenu, { popupMenuTriggerProps } from './PopupMenu'
+import CanvasPreview from './CanvasPreview'
 import { useIsMobile } from '../hooks/useIsMobile'
 import { useFocusTrap } from '../hooks/useFocusTrap'
 import { itemCount } from '../logic/framework'
@@ -129,11 +130,16 @@ export default function Sidebar({
                 key={fw.id}
                 className={`relative flex items-center rounded-lg transition-colors duration-150 group ${activeId === fw.id ? 'bg-accent-light' : 'hover:bg-bg'}`}>
                 <button
-                  className="flex-1 min-w-0 text-left py-2.5 px-3 bg-transparent"
+                  className="flex-1 min-w-0 flex items-center gap-2.5 text-left py-2.5 px-3 bg-transparent"
                   aria-current={activeId === fw.id ? 'page' : undefined}
                   onClick={() => onSelect(fw.id)}>
-                  <span className="block text-sm font-medium truncate">{fw.name}</span>
-                  <Caption>{itemCount(fw)} items</Caption>
+                  {/* 44px: the row is already this tall from its two lines of
+                      text, so the preview costs no vertical space. */}
+                  <CanvasPreview framework={fw} className="shrink-0 w-11 h-11" />
+                  <span className="min-w-0">
+                    <span className="block text-sm font-medium truncate">{fw.name}</span>
+                    <Caption>{itemCount(fw)} items</Caption>
+                  </span>
                 </button>
                 <button
                   ref={openMenuFrameworkId === fw.id ? menuTriggerRef : undefined}
