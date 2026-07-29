@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-29:15:42:48 — FEAT-004 — done: sidebar rows carry a 128px bitmap of
+  their framework's canvas; geometry and the corner blend moved into the pure
+  core, the blend lifted out of CornerGradient so both painters share it
 - 2026-07-29:15:26:27 — FEAT-004 — started
 - 2026-07-29:15:25:16 — FEAT-004 — defined: canvas preview thumbnail in the
   document list

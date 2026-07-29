@@ -1,8 +1,9 @@
 ---
 id: FEAT-004
 type: feature
-status: open
+status: resolved
 created: 2026-07-29
+resolved: 2026-07-29
 ---
 
 # FEAT-004: canvas preview thumbnail in the document list
@@ -122,3 +123,24 @@ the product.
   weighs against.
 - `ctx.roundRect` needs Safari 16.4+, which is already this app's floor —
   `sharing.ts` requires `CompressionStream` (same release).
+- Component owns its frame (rounded border), caller passes only a size class:
+  the frame stops a pale gradient corner bleeding into the row, and every call
+  site would otherwise repeat it. Sidebar passes `w-11 h-11` (44px).
+- Visual validation was out-of-band, as in DSGN-002: jsdom paints nothing, so
+  the pure modules were compiled and run under node, the bitmap written as PPM
+  and converted with ImageMagick, then reviewed at 128px and at the real 44px.
+  Confirmed the four quadrant colors read as a signature, the cross survives the
+  downscale, and an item at the far corner of the position envelope (95, 95)
+  lands flush inside its own quadrant rather than across the line.
+- One optical adjustment came out of that review, and it is the same lesson
+  DSGN-002 recorded: at first pass (pill 0.11 of a quadrant tall, fill 0.78) the
+  pills nearly vanished at 44px, because downscaling averages thin translucent
+  marks into the background. Taller and near-opaque (0.13, 0.9) reads correctly
+  at 44px without dominating at 128.
+- Gallery entry added to `DesignSystem.tsx` under Components, showing sidebar
+  size and enlarged, populated and empty.
+- `architecture.md`'s core-module node listed six of the ten `logic/` modules;
+  brought it current rather than leaving the diagram wrong about a layer this
+  ticket added to.
+- Suite green: 52 files / 605 tests, plus typecheck, lint, and format via
+  `scripts/ci.sh` on commit.
