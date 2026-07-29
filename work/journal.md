@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-29:06:04:43 — ARCH-002 — started
+- 2026-07-29:06:04:13 — RFCTR-014 — done: share delivery cascade moved to
+  sharing.ts, share URL to routing.ts; hook only orchestrates
 - 2026-07-29:05:57:31 — RFCTR-014 — started
 - 2026-07-29:05:53:28 — RFCTR-018 — done: moved clientToContainerPoint into
   logic/items and named the useDragAndDrop export

@@ -40,17 +40,40 @@ plus the sharing adapter's payload codec).
 Four layers, from inside out. Dependencies point inward, only inward: a module
 may import from its own layer or any layer further in, never further out.
 
-| Layer            | Where                                                             | May contain                                                                                                                                             | May import from |
-| ---------------- | ----------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
-| **Core**         | `src/logic/`                                                      | Pure functions and types only — domain logic, state transitions. No `window`, no DOM, no storage, no network.                                           | core            |
-| **Adapters**     | `src/storage.ts`, `src/io.ts`, `src/sharing.ts`, `src/routing.ts` | Side effects, one module per external thing (localStorage, file download/pick, CompressionStream + clipboard payload codec, window.location + history). | core            |
-| **Coordination** | `src/hooks/`                                                      | Thin orchestration: wire React state to core transitions and adapter effects. Delegates only — an `if` about the domain belongs in the core.            | adapters, core  |
-| **Entry**        | `src/main.tsx`, `src/App.tsx`                                     | The composition root: constructs everything, wires it together.                                                                                         | everything      |
+| Layer            | Where                                                             | May contain                                                                                                                                                                                                          | May import from |
+| ---------------- | ----------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------- |
+| **Core**         | `src/logic/`                                                      | Pure functions and types only — domain logic, state transitions. No `window`, no DOM, no storage, no network.                                                                                                        | core            |
+| **Adapters**     | `src/storage.ts`, `src/io.ts`, `src/sharing.ts`, `src/routing.ts` | Side effects, one module per external thing (localStorage, file download/pick, CompressionStream + clipboard payload codec, window.location + history).                                                              | core            |
+| **Coordination** | `src/hooks/`                                                      | Thin orchestration: wire React state to core transitions and adapter effects. Delegates only — an `if` about the domain belongs in the core. `hooks/` also houses the view-ring interaction hooks — see Views below. | adapters, core  |
+| **Entry**        | `src/main.tsx`, `src/App.tsx`                                     | The composition root: constructs everything, wires it together.                                                                                                                                                      | everything      |
 
 Views (`src/components/`) render from state and raise events through callbacks —
 rendering is I/O, so they sit at the shell alongside the adapters. They may
-import the pure core (e.g. `createItem` from `logic/items`) but never an adapter
-or a hook that owns state; state and effects reach them as props.
+import the pure core (e.g. `createItem` from `logic/items`) but never an
+adapter. Which hooks a view may call follows from what the hook holds
+(ARCH-002):
+
+- **Domain state and adapter effects** — `useFrameworks`, `useFrameworkSharing`,
+  `useRouting`, `useDarkMode` — are called once, by `App`, and reach views as
+  props. Each owns state with exactly one owner or wires an adapter, so a second
+  call site would fork live state — the trap the `DesignSystem.tsx` comment
+  records for `useDarkMode`.
+- **Ephemeral interaction and browser signals** — gesture, focus, keyboard,
+  viewport, and media-query hooks (`useIsMobile`, `useDragAndDrop`,
+  `useFocusTrap`, `useClickOutside`, `useMenuKeyboardNav`, `useListArrowNav`,
+  `useExpectsOnScreenKeyboard`, `useVisualViewportHeight`) — views call these
+  directly. They hold nothing another component could want: state is
+  per-instance and dies with the caller, refs live in the calling view's subtree
+  (`useDragAndDrop`'s quadrant refs only exist inside `QuadrantCanvas`), and a
+  browser signal reads the same for every caller.
+
+The placement test for a new hook: if two call sites could ever disagree — it
+holds domain data, writes through an adapter, or its state must be
+single-instance — `App` owns it and views receive props. If every caller
+correctly sees the same thing (a browser signal) or deliberately its own thing
+(a local gesture), views may call it. Type-only imports are exempt from all of
+this — types are erased at build and carry no state or effects (`QuadrantCanvas`
+imports `ShareResult` from `useFrameworkSharing`).
 
 `src/types.ts`, `src/colors.ts`, and `src/templates.ts` are pure shared modules;
 they sit with the core ring and anything may import them.
@@ -68,6 +91,7 @@ flowchart TD
     useFrameworks["useFrameworks"]
     useFrameworkSharing["useFrameworkSharing"]
     useRouting["useRouting"]
+    interaction["interaction & browser-signal hooks<br/>useIsMobile · useDragAndDrop · useFocusTrap · …"]
   end
   subgraph views ["Views — components/"]
     components["Sidebar · QuadrantCanvas · FrameworkBuilder · …"]
@@ -85,6 +109,7 @@ flowchart TD
   App --> coordination
   coordination --> adapters
   coordination --> core
+  views -- "ephemeral interaction<br/>(view-ring hooks)" --> interaction
   views -- "pure construction/transforms" --> core
   adapters -- "validation, path↔id rules" --> core
 ```
@@ -92,6 +117,9 @@ flowchart TD
 A pure rule and its side-effecting counterpart may share a name across rings —
 `logic/routing.ts` owns the pathname↔id mapping, `routing.ts` applies it to
 `window.location` — the adapter delegates to the core, never the reverse.
+`hooks/` spans rings the same way: the state-owning hooks are coordination,
+while the interaction and browser-signal hooks belong to the view ring — the
+folder says what the code is (a hook), the ring says who may call it (ARCH-002).
 
 ### One-way data flow
 
@@ -112,11 +140,12 @@ whatever `present` becomes.
 
 ## Accepted decisions
 
-| Decision                                                                                                        | Decided    | Re-open when                                                                                                                                                                                                               |
-| --------------------------------------------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Layer-first folders** (`logic/`, `hooks/`, `components/`, adapters at `src/` root) rather than feature-first. | 2026-07-05 | The app grows a second feature domain, or a feature's files stop changing together — then reorganize by feature first, layer second.                                                                                       |
-| **Ambient `Date.now` / `crypto.randomUUID` / `Math.random` in the core** — no injected clock/id (RSRCH-001).    | RSRCH-001  | A real flaky test traced to time/randomness; a need to run the core outside vitest; or sync/CRDT-style features where deterministic replay becomes a product requirement.                                                  |
-| **A modal surface's focus is owned by one hook above it**, not split to match the DOM (RFCTR-008).              | RFCTR-008  | A third surface needs to inert something outside itself, or `ConflictDialog` and `EditModal` grow focus restore and all three turn out alike — then extract a shared modal-surface contract instead of repeating this one. |
+| Decision                                                                                                                                     | Decided    | Re-open when                                                                                                                                                                                                               |
+| -------------------------------------------------------------------------------------------------------------------------------------------- | ---------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| **Layer-first folders** (`logic/`, `hooks/`, `components/`, adapters at `src/` root) rather than feature-first.                              | 2026-07-05 | The app grows a second feature domain, or a feature's files stop changing together — then reorganize by feature first, layer second.                                                                                       |
+| **Ambient `Date.now` / `crypto.randomUUID` / `Math.random` in the core** — no injected clock/id (RSRCH-001).                                 | RSRCH-001  | A real flaky test traced to time/randomness; a need to run the core outside vitest; or sync/CRDT-style features where deterministic replay becomes a product requirement.                                                  |
+| **A modal surface's focus is owned by one hook above it**, not split to match the DOM (RFCTR-008).                                           | RFCTR-008  | A third surface needs to inert something outside itself, or `ConflictDialog` and `EditModal` grow focus restore and all three turn out alike — then extract a shared modal-surface contract instead of repeating this one. |
+| **Render unmemoized** — no `React.memo`; `useCallback` / `useMemo` only where a consumer structurally requires a stable identity (ARCH-002). | 2026-07-29 | Profiling on a real device traces jank to re-renders — then memoize that measured path, not broadly.                                                                                                                       |
 
 ### Modal surfaces
 
@@ -147,3 +176,18 @@ resolving close-focus per the rule above:
   exit through one mechanism. The target must be declared, not captured from
   `document.activeElement`, because the touch path opens the modal without ever
   focusing the trigger (pointerDown + preventDefault, RSRCH-002) (A11Y-022).
+
+### Memoization
+
+Components render unmemoized: there is no `React.memo` in the codebase, and
+`useCallback` / `useMemo` are never used for render performance. The app's state
+is a handful of frameworks with tens of items, so re-rendering a subtree costs
+less than the stale-closure bugs and reading overhead memoization would buy it.
+
+`useCallback` is reserved for consumers that structurally require a stable
+identity — a handler subscribed by an effect (`useClickOutside` and
+`useMenuKeyboardNav` re-subscribe whenever the handler changes) or a value in a
+dependency array whose effect must not re-fire every render. The test: if
+removing the wrapper would change behavior (an effect re-subscribes or
+re-fires), it stays; if it would only change render counts, it goes. RFCTR-021
+sweeps out the speculative call sites this rule forbids.
