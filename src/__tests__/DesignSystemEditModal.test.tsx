@@ -28,7 +28,7 @@ afterEach(() => {
 describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', () => {
   it('edits in place where a physical keyboard is expected', async () => {
     const user = userEvent.setup()
-    render(<DesignSystem />)
+    render(<DesignSystem themeMode="system" isDark={false} onCycleTheme={() => {}} />)
 
     expect(field()).not.toHaveAttribute('readonly')
     expect(field()).not.toHaveAttribute('aria-haspopup')
@@ -40,7 +40,7 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
   it('opens the modal where an on-screen keyboard is expected', async () => {
     simulate(PHONE)
     const user = userEvent.setup()
-    render(<DesignSystem />)
+    render(<DesignSystem themeMode="system" isDark={false} onCycleTheme={() => {}} />)
 
     expect(field()).toHaveAttribute('readonly')
     expect(field()).toHaveAttribute('aria-haspopup', 'dialog')
@@ -52,7 +52,7 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
   it('saves through the modal back into the field', async () => {
     simulate(PHONE)
     const user = userEvent.setup()
-    render(<DesignSystem />)
+    render(<DesignSystem themeMode="system" isDark={false} onCycleTheme={() => {}} />)
 
     await user.click(field())
     await user.clear(modal().getByRole('textbox', { name: 'Item text' }))
@@ -68,7 +68,7 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
   it('leaves the field untouched on cancel', async () => {
     simulate(PHONE)
     const user = userEvent.setup()
-    render(<DesignSystem />)
+    render(<DesignSystem themeMode="system" isDark={false} onCycleTheme={() => {}} />)
 
     await user.click(field())
     await user.type(modal().getByRole('textbox', { name: 'Item text' }), ' edited')
@@ -81,7 +81,7 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
   it('closes via the X, discarding the edit', async () => {
     simulate(PHONE)
     const user = userEvent.setup()
-    render(<DesignSystem />)
+    render(<DesignSystem themeMode="system" isDark={false} onCycleTheme={() => {}} />)
 
     await user.click(field())
     await user.click(modal().getByRole('button', { name: 'Close Edit item' }))
@@ -95,7 +95,7 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
     simulate(PHONE)
     const alert = vi.spyOn(window, 'alert').mockImplementation(() => {})
     const user = userEvent.setup()
-    render(<DesignSystem />)
+    render(<DesignSystem themeMode="system" isDark={false} onCycleTheme={() => {}} />)
 
     await user.click(field())
     await user.click(modal().getByRole('button', { name: 'Delete' }))
@@ -108,7 +108,7 @@ describe('DesignSystem — Edit Modal gated on on-screen-keyboard detection', ()
 
   it('lets a desktop reviewer preview the modal the verdict would withhold', async () => {
     const user = userEvent.setup()
-    render(<DesignSystem />)
+    render(<DesignSystem themeMode="system" isDark={false} onCycleTheme={() => {}} />)
 
     // Without this escape hatch the component is unreviewable on the machine
     // it is being designed on.

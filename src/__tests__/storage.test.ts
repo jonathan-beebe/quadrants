@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { loadFrameworks, saveFrameworks } from '../storage'
+import { loadFrameworks, saveFrameworks, loadThemeMode, saveThemeMode } from '../storage'
 import type { Framework } from '../types'
 
 beforeEach(() => {
@@ -124,5 +124,51 @@ describe('saveFrameworks', () => {
     expect(() => saveFrameworks(frameworks)).not.toThrow()
     expect(saveFrameworks(frameworks)).toBe(false)
     expect(errorSpy).toHaveBeenCalled()
+  })
+})
+
+// RFCTR-010: theme persistence goes through this adapter — the only
+// localStorage writer — including the legacy-key migration.
+
+describe('loadThemeMode', () => {
+  it('defaults to system when nothing is stored', () => {
+    expect(loadThemeMode()).toBe('system')
+  })
+
+  it('returns a previously saved mode', () => {
+    localStorage.setItem('quadrants_theme_mode', 'dark')
+    expect(loadThemeMode()).toBe('dark')
+  })
+
+  it('ignores invalid stored values and defaults to system', () => {
+    localStorage.setItem('quadrants_theme_mode', 'bogus')
+    expect(loadThemeMode()).toBe('system')
+  })
+
+  it('migrates legacy "true" to dark, writing the new key and removing the old', () => {
+    localStorage.setItem('quadrants_dark_mode', 'true')
+    expect(loadThemeMode()).toBe('dark')
+    expect(localStorage.getItem('quadrants_theme_mode')).toBe('dark')
+    expect(localStorage.getItem('quadrants_dark_mode')).toBeNull()
+  })
+
+  it('migrates legacy "false" to light', () => {
+    localStorage.setItem('quadrants_dark_mode', 'false')
+    expect(loadThemeMode()).toBe('light')
+    expect(localStorage.getItem('quadrants_theme_mode')).toBe('light')
+    expect(localStorage.getItem('quadrants_dark_mode')).toBeNull()
+  })
+
+  it('prefers the current key over a lingering legacy key', () => {
+    localStorage.setItem('quadrants_theme_mode', 'light')
+    localStorage.setItem('quadrants_dark_mode', 'true')
+    expect(loadThemeMode()).toBe('light')
+  })
+})
+
+describe('saveThemeMode', () => {
+  it('persists the mode under the current key', () => {
+    saveThemeMode('dark')
+    expect(localStorage.getItem('quadrants_theme_mode')).toBe('dark')
   })
 })

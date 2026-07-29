@@ -1,7 +1,7 @@
 ---
 id: RFCTR-010
 type: refactor
-status: open
+status: resolved
 created: 2026-07-28
 ---
 
@@ -94,6 +94,28 @@ split: the pure-rule cases in useDarkMode.test.ts move nearly verbatim to
 integration-style test cycling on the design system screen and asserting the
 sidebar toggle after returning. This is a factoring correction, not a redesign —
 do not change the cycle order, the resolved themes, or the migration semantics.
+
+## Working
+
+- New `logic/theme.ts` owns ThemeMode, `isThemeMode`, `resolveIsDark`,
+  `nextThemeMode` (the settled cycle order), `migrateLegacyDarkFlag` — tested in
+  the node core project.
+- Theme persistence joined `storage.ts` (the localStorage adapter):
+  `loadThemeMode` (validation + one-time legacy migration) and `saveThemeMode`.
+  `git grep localStorage src/hooks/` is empty.
+- `useDarkMode` is now a shell: state, matchMedia subscription, dark-class and
+  save effects; `cycleMode` is `setMode(nextThemeMode)`. The maker call on
+  matchMedia: it stays in the hook's `useSyncExternalStore` wiring — it is
+  already a subscription adapter in shape, and a separate module would add
+  indirection with one consumer.
+- DesignSystem now takes `themeMode`/`isDark`/`onCycleTheme` props (as Sidebar
+  does); App is the only `useDarkMode()` caller, so the two-owner stale toggle
+  is structurally impossible. Views import ThemeMode from `logic/theme`.
+- Red-first bug test in App.test.tsx: cycle on /design-system, popstate back,
+  sidebar toggle must show the new mode and continue the cycle from it — failed
+  against the old code at exactly the stale-owner point, passes now.
+- Old hook tests split: rules → theme.test.ts, persistence/migration →
+  storage.test.ts, hook file keeps shell wiring. Suite 518 green, tsc clean.
 
 ## Related work
 

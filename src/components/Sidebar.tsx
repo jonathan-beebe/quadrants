@@ -8,7 +8,7 @@ import { useMenuKeyboardNav } from '../hooks/useMenuKeyboardNav'
 import { useIsMobile } from '../hooks/useIsMobile'
 import { useFocusTrap } from '../hooks/useFocusTrap'
 import type { Framework } from '../types'
-import type { ThemeMode } from '../hooks/useDarkMode'
+import type { ThemeMode } from '../logic/theme'
 
 interface SidebarProps {
   frameworks: Framework[]

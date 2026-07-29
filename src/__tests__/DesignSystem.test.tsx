@@ -4,7 +4,7 @@ import DesignSystem from '../components/DesignSystem'
 
 describe('DesignSystem icon gallery (A11Y-020)', () => {
   it('names every gallery svg through an image role, with no half-exposed svgs', () => {
-    const { container } = render(<DesignSystem />)
+    const { container } = render(<DesignSystem themeMode="system" isDark={false} onCycleTheme={() => {}} />)
 
     const svgs = Array.from(container.querySelectorAll('svg'))
     expect(svgs.length).toBeGreaterThan(0)

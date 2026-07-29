@@ -159,7 +159,7 @@ export default function App() {
   }, [])
 
   if (activeId === 'design-system') {
-    return <DesignSystem />
+    return <DesignSystem themeMode={mode} isDark={isDark} onCycleTheme={cycleMode} />
   }
 
   return (

@@ -8,7 +8,7 @@ import DesignSystem from '../components/DesignSystem'
 describe('DesignSystem — shared Modal', () => {
   it('opens the demo modal from its trigger, content long enough to scroll', async () => {
     const user = userEvent.setup()
-    render(<DesignSystem />)
+    render(<DesignSystem themeMode="system" isDark={false} onCycleTheme={() => {}} />)
 
     await user.click(screen.getByRole('button', { name: 'Open Modal' }))
 
@@ -22,7 +22,7 @@ describe('DesignSystem — shared Modal', () => {
 
   it('closes from the title bar and returns focus to the trigger', async () => {
     const user = userEvent.setup()
-    render(<DesignSystem />)
+    render(<DesignSystem themeMode="system" isDark={false} onCycleTheme={() => {}} />)
 
     const trigger = screen.getByRole('button', { name: 'Open Modal' })
     await user.click(trigger)

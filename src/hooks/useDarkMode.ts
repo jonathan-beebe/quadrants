@@ -1,9 +1,7 @@
 import { useState, useEffect, useCallback, useSyncExternalStore } from 'react'
-
-export type ThemeMode = 'light' | 'dark' | 'system'
-
-const STORAGE_KEY = 'quadrants_theme_mode'
-const LEGACY_KEY = 'quadrants_dark_mode'
+import { resolveIsDark, nextThemeMode } from '../logic/theme'
+import { loadThemeMode, saveThemeMode } from '../storage'
+import type { ThemeMode } from '../logic/theme'
 
 const darkQuery = typeof window !== 'undefined' ? window.matchMedia('(prefers-color-scheme: dark)') : null
 
@@ -16,28 +14,13 @@ function getIsSystemDark() {
   return darkQuery?.matches ?? false
 }
 
-function getInitialMode(): ThemeMode {
-  if (typeof window === 'undefined') return 'system'
-  const saved = localStorage.getItem(STORAGE_KEY)
-  if (saved === 'light' || saved === 'dark' || saved === 'system') return saved
-  // Migrate from legacy boolean key
-  const legacy = localStorage.getItem(LEGACY_KEY)
-  if (legacy !== null) {
-    const migrated: ThemeMode = legacy === 'true' ? 'dark' : 'light'
-    localStorage.setItem(STORAGE_KEY, migrated)
-    localStorage.removeItem(LEGACY_KEY)
-    return migrated
-  }
-  return 'system'
-}
-
-function resolveIsDark(mode: ThemeMode, isSystemDark: boolean): boolean {
-  if (mode === 'system') return isSystemDark
-  return mode === 'dark'
-}
-
+/**
+ * The one owner of theme state, mounted once at the composition root (App).
+ * Views render from its props; rules live in logic/theme, persistence in
+ * storage.ts (RFCTR-010).
+ */
 export function useDarkMode() {
-  const [mode, setMode] = useState(getInitialMode)
+  const [mode, setMode] = useState<ThemeMode>(loadThemeMode)
   const isSystemDark = useSyncExternalStore(subscribeToSystemTheme, getIsSystemDark)
   const isDark = resolveIsDark(mode, isSystemDark)
 
@@ -46,15 +29,11 @@ export function useDarkMode() {
   }, [isDark])
 
   useEffect(() => {
-    localStorage.setItem(STORAGE_KEY, mode)
+    saveThemeMode(mode)
   }, [mode])
 
   const cycleMode = useCallback(() => {
-    setMode((m) => {
-      if (m === 'system') return 'light'
-      if (m === 'light') return 'dark'
-      return 'system'
-    })
+    setMode(nextThemeMode)
   }, [])
 
   return { isDark, mode, setMode, cycleMode }

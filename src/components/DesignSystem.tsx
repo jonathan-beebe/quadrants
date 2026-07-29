@@ -1,5 +1,5 @@
 import { useState, useRef, useSyncExternalStore } from 'react'
-import { useDarkMode } from '../hooks/useDarkMode'
+import type { ThemeMode } from '../logic/theme'
 import { useOnScreenKeyboardSignals } from '../hooks/useExpectsOnScreenKeyboard'
 import { expectsOnScreenKeyboard, decidingSignal } from '../logic/onScreenKeyboard'
 import { colorPresets, defaultColors } from '../colors'
@@ -486,8 +486,15 @@ const iconEntries = [
 
 /* ── Page ── */
 
-export default function DesignSystem() {
-  const { isDark, mode, cycleMode } = useDarkMode()
+interface DesignSystemProps {
+  themeMode: ThemeMode
+  isDark: boolean
+  onCycleTheme: () => void
+}
+
+// Theme state arrives as props from the app's single owner (RFCTR-010) — a
+// second useDarkMode() here would fork the mode from App's live instance.
+export default function DesignSystem({ themeMode, isDark, onCycleTheme }: DesignSystemProps) {
   const [pickerColor, setPickerColor] = useState('#60a5fa')
   const [showToast, setShowToast] = useState(false)
 
@@ -502,7 +509,7 @@ export default function DesignSystem() {
             Back to app
           </a>
         </div>
-        <ThemeToggleButton mode={mode} isDark={isDark} onCycleTheme={cycleMode} />
+        <ThemeToggleButton mode={themeMode} isDark={isDark} onCycleTheme={onCycleTheme} />
       </header>
 
       <main className="max-w-4xl mx-auto px-4 sm:px-8 py-8">
@@ -563,7 +570,7 @@ export default function DesignSystem() {
             <Button variant="icon" aria-label="Edit">
               <EditIcon size={18} />
             </Button>
-            <ThemeToggleButton mode={mode} isDark={isDark} onCycleTheme={cycleMode} />
+            <ThemeToggleButton mode={themeMode} isDark={isDark} onCycleTheme={onCycleTheme} />
           </DemoRow>
         </Subsection>
 
@@ -586,8 +593,8 @@ export default function DesignSystem() {
         </Subsection>
 
         <Subsection title="Theme Toggle" layout="inline">
-          <ThemeToggleButton mode={mode} isDark={isDark} onCycleTheme={cycleMode} />
-          <Caption>Current: {mode}</Caption>
+          <ThemeToggleButton mode={themeMode} isDark={isDark} onCycleTheme={onCycleTheme} />
+          <Caption>Current: {themeMode}</Caption>
         </Subsection>
 
         <Subsection title="Toast" layout="stack">

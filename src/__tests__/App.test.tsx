@@ -596,6 +596,36 @@ describe('App', () => {
     })
   })
 
+  describe('theme single owner (RFCTR-010)', () => {
+    it('keeps the sidebar toggle in sync after cycling the theme on the design system screen', async () => {
+      const user = userEvent.setup()
+      window.history.replaceState(null, '', '/design-system')
+      render(<App />)
+
+      // Fresh load is system mode (jsdom matchMedia reports light). Cycle
+      // once on the design system screen: system → light. The screen shows
+      // several ThemeToggleButton instances; all render the one app theme.
+      const toggles = screen.getAllByRole('button', { name: /following system theme \(light\), switch to light mode/i })
+      await user.click(toggles[0])
+      expect(screen.getAllByRole('button', { name: /using light theme, switch to dark mode/i }).length).toBeGreaterThan(
+        0,
+      )
+
+      // Simulate browser Back to the main app (MAINT-003 precedent).
+      window.history.replaceState(null, '', '/')
+      await waitFor(() => {
+        window.dispatchEvent(new PopStateEvent('popstate'))
+        expect(screen.getByText('No framework selected')).toBeInTheDocument()
+      })
+
+      // The sidebar toggle reflects the cycled mode, not a stale owner…
+      const sidebarToggle = screen.getByRole('button', { name: /using light theme, switch to dark mode/i })
+      // …and the next cycle continues from it: light → dark.
+      await user.click(sidebarToggle)
+      expect(screen.getByRole('button', { name: /using dark theme, switch to system theme/i })).toBeInTheDocument()
+    })
+  })
+
   describe('undo/redo keyboard shortcuts (FEAT-003)', () => {
     beforeEach(() => {
       localStorage.setItem(

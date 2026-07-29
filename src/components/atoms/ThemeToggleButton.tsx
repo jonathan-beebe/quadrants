@@ -1,6 +1,6 @@
 import { SunIcon, MoonIcon } from '../Icons'
 import Button from './Button'
-import type { ThemeMode } from '../../hooks/useDarkMode'
+import type { ThemeMode } from '../../logic/theme'
 
 interface ThemeToggleButtonProps {
   mode: ThemeMode
