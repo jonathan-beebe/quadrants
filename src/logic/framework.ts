@@ -198,3 +198,19 @@ export function createFramework(template: FrameworkTemplate): Framework {
     updatedAt: now,
   }
 }
+
+/**
+ * Download filename for an exported framework (RFCTR-012): strip characters
+ * that are illegal on any mainstream platform, collapse whitespace to
+ * hyphens, lowercase, and never yield an empty name — the browser's download
+ * sanitization varies too much to lean on.
+ */
+export function exportFilename(name: string): string {
+  const slug = name
+    // eslint-disable-next-line no-control-regex
+    .replace(/[/\\:*?"<>|\u0000-\u001f]/g, ' ')
+    .trim()
+    .replace(/\s+/g, '-')
+    .toLowerCase()
+  return `${slug || 'framework'}.json`
+}

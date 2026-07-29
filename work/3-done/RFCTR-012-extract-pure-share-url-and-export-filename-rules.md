@@ -1,7 +1,7 @@
 ---
 id: RFCTR-012
 type: refactor
-status: open
+status: resolved
 created: 2026-07-28
 ---
 
@@ -80,6 +80,20 @@ collapse + lowercase), the `Q3 / Roadmap?` repro, a name of only illegal
 characters, and a unicode name. Note the exported filename for names containing
 illegal characters will intentionally change — that is the fix, not a
 regression.
+
+## Working
+
+- `composeShareUrl(origin, base, hash)` added to `logic/sharePayload.ts` (base
+  stays an explicit argument, composing with RFCTR-011); shape pinned with
+  literal expectations under `/` and `/quadrants/`, plus a hook-level test
+  asserting `share()` emits exactly the core rule's URL.
+- `exportFilename(name)` added to `logic/framework.ts`: strips the
+  cross-platform illegal set + control chars, collapses whitespace to hyphens,
+  lowercases, falls back to `framework.json`. The `Q3 / Roadmap?` repro now
+  exports `q3-roadmap.json` — the intentional behavior change.
+- Hook now supplies environment inputs and performs effects only; no inline URL
+  or filename string logic remains.
+- Suite 531 green, tsc and eslint clean.
 
 ## Related work
 

@@ -18,6 +18,7 @@ vi.mock('../../io', () => ({
 }))
 
 import { useFrameworkSharing } from '../../hooks/useFrameworkSharing'
+import { composeShareUrl } from '../../logic/sharePayload'
 import type { Framework } from '../../types'
 
 function makeOptions() {
@@ -142,5 +143,18 @@ describe('useFrameworkSharing share clipboard feature detection (BUG-025)', () =
 
     expect(out.outcome).toBe('failed')
     expect(out.url).toContain('#encoded-hash-payload')
+  })
+  // RFCTR-012: the hook emits exactly the core rule's URL — origin and base
+  // are the only inputs it supplies.
+  it('produces the url the core share-url rule composes', async () => {
+    Object.defineProperty(navigator, 'clipboard', { configurable: true, value: undefined })
+    // @ts-expect-error -- test-only cleanup
+    delete (navigator as Navigator).share
+
+    const { result } = renderHook(() => useFrameworkSharing(makeOptions()))
+
+    const out = await result.current.share(makeFramework())
+
+    expect(out.url).toBe(composeShareUrl(window.location.origin, '/', 'encoded-hash-payload'))
   })
 })

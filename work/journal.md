@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-28:21:22:33 — RFCTR-012 — done: share-url and export-filename rules
+  extracted to the core; illegal-character filenames fixed
+- 2026-07-28:21:18:55 — RFCTR-012 — started
 - 2026-07-28:21:17:34 — RFCTR-011 — done: path-id rules take the base
   explicitly; non-root base pinned with literal tests
 - 2026-07-28:21:15:36 — RFCTR-011 — started

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest'
-import { toSharedPayload, isValidPayload } from '../../logic/sharePayload'
+import { toSharedPayload, isValidPayload, composeShareUrl } from '../../logic/sharePayload'
 import type { Framework, SharedPayload } from '../../types'
 
 function makeFramework(overrides: Partial<Framework> = {}): Framework {
@@ -118,5 +118,19 @@ describe('isValidPayload', () => {
       items: [{ text: 'ok', x: 'left', y: 2 }] as unknown as SharedPayload['quadrants'][number]['items'],
     }
     expect(isValidPayload(q)).toBe(false)
+  })
+})
+
+// RFCTR-012: the share link is the routing adapter's URL plus the payload
+// hash; its shape is pinned here with literals so it cannot silently regress.
+describe('composeShareUrl', () => {
+  it('composes origin, root base, and hash', () => {
+    expect(composeShareUrl('https://example.com', '/', 'abc123')).toBe('https://example.com/#abc123')
+  })
+
+  it('composes under a non-root base without doubling or dropping separators', () => {
+    expect(composeShareUrl('https://user.github.io', '/quadrants/', 'abc123')).toBe(
+      'https://user.github.io/quadrants/#abc123',
+    )
   })
 })

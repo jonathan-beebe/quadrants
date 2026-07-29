@@ -1,7 +1,8 @@
 import { useEffect, useRef, useState, useCallback, type RefObject } from 'react'
 import { encodeFramework, decodeSharedPayload } from '../sharing'
-import { repairImportedFramework } from '../logic/framework'
+import { repairImportedFramework, exportFilename } from '../logic/framework'
 import { resolveImportAction } from '../logic/shareImport'
+import { composeShareUrl } from '../logic/sharePayload'
 import { getHashFromUrl, replacePath } from '../routing'
 import { downloadJson, pickJsonFile } from '../io'
 import type { Framework } from '../types'
@@ -177,8 +178,7 @@ export function useFrameworkSharing({
 
   const share = useCallback(async (fw: Framework): Promise<ShareResult> => {
     const hash = await encodeFramework(fw)
-    const base = import.meta.env.BASE_URL ?? '/'
-    const url = `${window.location.origin}${base}#${hash}`
+    const url = composeShareUrl(window.location.origin, import.meta.env.BASE_URL ?? '/', hash)
 
     // Try clipboard first — quiet, in-place, lets us show "Link copied!".
     if (navigator.clipboard?.writeText) {
@@ -208,8 +208,7 @@ export function useFrameworkSharing({
   }, [])
 
   const exportJson = useCallback((fw: Framework) => {
-    const filename = `${fw.name.replace(/\s+/g, '-').toLowerCase()}.json`
-    downloadJson(filename, JSON.stringify(fw, null, 2))
+    downloadJson(exportFilename(fw.name), JSON.stringify(fw, null, 2))
   }, [])
 
   const importJson = useCallback(

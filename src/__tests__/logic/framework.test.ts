@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest'
 import {
+  exportFilename,
   frameworkFromPayload,
   updateFramework,
   deleteFramework,
@@ -547,5 +548,30 @@ describe('createFramework', () => {
     const fw = createFramework(template)
     expect(fw.axisX).toBe('')
     expect(fw.axisY).toBe('')
+  })
+})
+
+// RFCTR-012: export filenames must be safe on every platform, not left to
+// per-browser download sanitization.
+describe('exportFilename', () => {
+  it('lowercases and hyphenates whitespace', () => {
+    expect(exportFilename('My Decision Matrix')).toBe('my-decision-matrix.json')
+  })
+
+  it('drops path separators and illegal characters (the Q3 / Roadmap? repro)', () => {
+    expect(exportFilename('Q3 / Roadmap?')).toBe('q3-roadmap.json')
+  })
+
+  it('strips the full cross-platform illegal set', () => {
+    expect(exportFilename('a\\b:c*d?e"f<g>h|i')).toBe('a-b-c-d-e-f-g-h-i.json')
+  })
+
+  it('falls back to a fixed name when nothing safe remains', () => {
+    expect(exportFilename('***')).toBe('framework.json')
+    expect(exportFilename('   ')).toBe('framework.json')
+  })
+
+  it('keeps unicode names', () => {
+    expect(exportFilename('Über Matrix')).toBe('über-matrix.json')
   })
 })

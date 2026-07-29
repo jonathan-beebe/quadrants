@@ -35,3 +35,12 @@ export function isValidPayload(p: unknown): p is SharedPayload {
     })
   })
 }
+
+/**
+ * The share link (RFCTR-012): the app's URL — origin plus deploy base — with
+ * the encoded payload in the fragment. The shell supplies origin and base;
+ * base arrives with its trailing slash (Vite guarantees one).
+ */
+export function composeShareUrl(origin: string, base: string, hash: string): string {
+  return `${origin}${base}#${hash}`
+}
