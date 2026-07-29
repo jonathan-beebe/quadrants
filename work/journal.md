@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-28:21:07:35 — RFCTR-009 — done: drop-geometry rules moved to
+  logic/items beside the canonical envelope; hook is a thin shell
+- 2026-07-28:21:03:15 — RFCTR-009 — started
 - 2026-07-28:21:02:17 — MAINT-009 — done: error boundary fallback, reset, and
   App-level crash recovery covered by tests
 - 2026-07-28:20:58:54 — MAINT-009 — started

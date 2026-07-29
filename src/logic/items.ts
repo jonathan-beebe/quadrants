@@ -7,8 +7,57 @@ import type { Framework, Item } from '../types'
 export const POSITION_MIN = 0
 export const POSITION_MAX = 95
 
+// The other half of that decision (RFCTR-009): drop placement is intentionally
+// narrower than the canonical envelope so a dropped card lands fully inside
+// the quadrant. Positions outside [2,85] remain valid when produced by other
+// controls and must not be re-clamped on import.
+const DROP_POSITION_MIN = 2
+const DROP_POSITION_MAX = 85
+
 export function clampPosition(value: number): number {
   return Math.max(POSITION_MIN, Math.min(value, POSITION_MAX))
+}
+
+export interface QuadrantTarget {
+  index: number
+  rect: DOMRect
+}
+
+/**
+ * Given client (viewport-relative) coordinates and a bounding rect, returns
+ * clamped percentage coordinates within that rect.
+ *
+ * Uses clientX/clientY space to match getBoundingClientRect().
+ */
+export function clientToQuadrantPercent(clientX: number, clientY: number, rect: DOMRect): { x: number; y: number } {
+  const x = ((clientX - rect.left) / rect.width) * 100
+  const y = ((clientY - rect.top) / rect.height) * 100
+  return {
+    x: Math.max(DROP_POSITION_MIN, Math.min(x, DROP_POSITION_MAX)),
+    y: Math.max(DROP_POSITION_MIN, Math.min(y, DROP_POSITION_MAX)),
+  }
+}
+
+/**
+ * Given client (viewport-relative) coordinates and the quadrants' bounding
+ * rects, returns the quadrant whose box contains the point — carrying that
+ * quadrant's canvas rect (falling back to its own) — or null. Pure data in,
+ * data out: reading the rects from the DOM is the caller's job.
+ */
+export function getQuadrantAtPoint(
+  clientX: number,
+  clientY: number,
+  quadrantRects: (DOMRect | null)[],
+  canvasRects: (DOMRect | null)[],
+): QuadrantTarget | null {
+  for (let i = 0; i < quadrantRects.length; i++) {
+    const rect = quadrantRects[i]
+    if (!rect) continue
+    if (clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom) {
+      return { index: i, rect: canvasRects[i] ?? rect }
+    }
+  }
+  return null
 }
 
 export function addItem(framework: Framework, quadrantIndex: number, item: Item): Framework {

@@ -1,5 +1,14 @@
 import { describe, it, expect } from 'vitest'
-import { createItem, addItem, removeItem, updateItemText, moveItem, setQuadrantColor } from '../../logic/items'
+import {
+  createItem,
+  addItem,
+  removeItem,
+  updateItemText,
+  moveItem,
+  setQuadrantColor,
+  clientToQuadrantPercent,
+  getQuadrantAtPoint,
+} from '../../logic/items'
 import type { Framework, Item } from '../../types'
 
 function makeFramework(): Framework {
@@ -130,5 +139,96 @@ describe('createItem', () => {
     expect(item.x).toBeLessThanOrEqual(70)
     expect(item.y).toBeGreaterThanOrEqual(10)
     expect(item.y).toBeLessThanOrEqual(60)
+  })
+})
+
+// RFCTR-009: the drop-geometry rules moved here from useDragAndDrop so both
+// halves of the position-envelope decision live beside each other in the core.
+
+function rect(left: number, top: number, width: number, height: number): DOMRect {
+  return { left, top, right: left + width, bottom: top + height, width, height } as DOMRect
+}
+
+describe('clientToQuadrantPercent', () => {
+  const bounds = rect(100, 200, 400, 300)
+
+  it('converts client coordinates to percentage within the rect', () => {
+    const result = clientToQuadrantPercent(300, 350, bounds)
+    // (300-100)/400*100 = 50, (350-200)/300*100 = 50
+    expect(result.x).toBe(50)
+    expect(result.y).toBe(50)
+  })
+
+  it('clamps x to minimum of 2', () => {
+    const result = clientToQuadrantPercent(100, 350, bounds)
+    // (0)/400*100 = 0, clamped to 2
+    expect(result.x).toBe(2)
+  })
+
+  it('clamps x to maximum of 85', () => {
+    const result = clientToQuadrantPercent(600, 350, bounds)
+    // (500)/400*100 = 125, clamped to 85
+    expect(result.x).toBe(85)
+  })
+
+  it('clamps y to minimum of 2', () => {
+    const result = clientToQuadrantPercent(300, 200, bounds)
+    expect(result.y).toBe(2)
+  })
+
+  it('clamps y to maximum of 85', () => {
+    const result = clientToQuadrantPercent(300, 600, bounds)
+    expect(result.y).toBe(85)
+  })
+
+  it('handles exact boundary values', () => {
+    // At left+2% of width, top+2% of height
+    const result = clientToQuadrantPercent(108, 206, bounds)
+    expect(result.x).toBe(2)
+    expect(result.y).toBe(2)
+  })
+})
+
+describe('getQuadrantAtPoint', () => {
+  const quadrantRects = [rect(0, 0, 200, 200), rect(200, 0, 200, 200), rect(0, 200, 200, 200), rect(200, 200, 200, 200)]
+  const canvasRects = [rect(0, 30, 200, 170), rect(200, 30, 200, 170), rect(0, 230, 200, 170), rect(200, 230, 200, 170)]
+
+  it('returns the correct quadrant index for a point inside it', () => {
+    const result = getQuadrantAtPoint(100, 100, quadrantRects, canvasRects)
+    expect(result).not.toBeNull()
+    expect(result!.index).toBe(0)
+  })
+
+  it('returns the canvas rect (not the quadrant rect) for the hit', () => {
+    const result = getQuadrantAtPoint(100, 100, quadrantRects, canvasRects)
+    expect(result!.rect.top).toBe(30)
+    expect(result!.rect.height).toBe(170)
+  })
+
+  it('returns quadrant 1 for a point in the top-right', () => {
+    const result = getQuadrantAtPoint(300, 100, quadrantRects, canvasRects)
+    expect(result!.index).toBe(1)
+  })
+
+  it('returns quadrant 3 for a point in the bottom-right', () => {
+    const result = getQuadrantAtPoint(300, 300, quadrantRects, canvasRects)
+    expect(result!.index).toBe(3)
+  })
+
+  it('returns null when point is outside all quadrants', () => {
+    const result = getQuadrantAtPoint(500, 500, quadrantRects, canvasRects)
+    expect(result).toBeNull()
+  })
+
+  it('handles null rects gracefully', () => {
+    const result = getQuadrantAtPoint(100, 100, [null, null, null, null], canvasRects)
+    expect(result).toBeNull()
+  })
+
+  it('falls back to the quadrant rect when the canvas rect is null', () => {
+    const result = getQuadrantAtPoint(100, 100, quadrantRects, [null, null, null, null])
+    expect(result).not.toBeNull()
+    expect(result!.rect.top).toBe(0)
+    expect(result!.rect.height).toBe(200)
   })
 })

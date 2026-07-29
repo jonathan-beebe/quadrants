@@ -1,7 +1,7 @@
 ---
 id: RFCTR-009
 type: refactor
-status: open
+status: resolved
 created: 2026-07-28
 ---
 
@@ -64,6 +64,22 @@ touch elements. The existing pure-function tests (useDragAndDrop.test.ts lines
 9-111) can move nearly verbatim; the makeMockEl helper collapses to rect
 literals once elements leave the signature. This is a factoring correction, not
 a redesign — do not change the [2,85] envelope or any drop behavior.
+
+## Working
+
+- Both rules moved into `logic/items.ts` directly beside POSITION_MIN/MAX, with
+  the [2,85] envelope now named (DROP_POSITION_MIN/MAX, module-private) and the
+  cross-reference comments rewritten as one adjacent pair.
+- `getQuadrantAtPoint` now takes `(DOMRect | null)[]` for quadrants and
+  canvases; the hook maps refs → rects at the drop site. `QuadrantTarget` moved
+  with it.
+- Tests moved first (red), then the code: 13 pure-rule tests now run in the node
+  "core" project inside `logic/items.test.ts`; hook tests keep the shell
+  coverage plus `clientToContainerPoint`.
+- Deliberately left `clientToContainerPoint` in the hook: it is BUG-018's
+  client-space preview mapping used by Card, not a drop-domain rule, and the
+  ticket scopes exactly the two geometry rules.
+- Suite green at 501 (same count — tests moved, none lost).
 
 ## Related work
 

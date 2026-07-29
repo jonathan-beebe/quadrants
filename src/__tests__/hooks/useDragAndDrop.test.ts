@@ -1,54 +1,10 @@
 import { describe, it, expect, vi } from 'vitest'
 import { StrictMode } from 'react'
 import { renderHook, act } from '@testing-library/react'
-import useDragAndDrop, {
-  clientToContainerPoint,
-  clientToQuadrantPercent,
-  getQuadrantAtPoint,
-} from '../../hooks/useDragAndDrop'
+import useDragAndDrop, { clientToContainerPoint } from '../../hooks/useDragAndDrop'
 import type { Item } from '../../types'
 
-// --- Pure function tests ---
-
-describe('clientToQuadrantPercent', () => {
-  const rect = { left: 100, top: 200, width: 400, height: 300 } as DOMRect
-
-  it('converts page coordinates to percentage within the rect', () => {
-    const result = clientToQuadrantPercent(300, 350, rect)
-    // (300-100)/400*100 = 50, (350-200)/300*100 = 50
-    expect(result.x).toBe(50)
-    expect(result.y).toBe(50)
-  })
-
-  it('clamps x to minimum of 2', () => {
-    const result = clientToQuadrantPercent(100, 350, rect)
-    // (0)/400*100 = 0, clamped to 2
-    expect(result.x).toBe(2)
-  })
-
-  it('clamps x to maximum of 85', () => {
-    const result = clientToQuadrantPercent(600, 350, rect)
-    // (500)/400*100 = 125, clamped to 85
-    expect(result.x).toBe(85)
-  })
-
-  it('clamps y to minimum of 2', () => {
-    const result = clientToQuadrantPercent(300, 200, rect)
-    expect(result.y).toBe(2)
-  })
-
-  it('clamps y to maximum of 85', () => {
-    const result = clientToQuadrantPercent(300, 600, rect)
-    expect(result.y).toBe(85)
-  })
-
-  it('handles exact boundary values', () => {
-    // At left+2% of width, top+2% of height
-    const result = clientToQuadrantPercent(108, 206, rect)
-    expect(result.x).toBe(2)
-    expect(result.y).toBe(2)
-  })
-})
+// --- Pure function tests (the drop-geometry rules moved to logic/items — RFCTR-009) ---
 
 describe('clientToContainerPoint', () => {
   it('maps a client point into container-local coordinates', () => {
@@ -63,74 +19,6 @@ describe('clientToContainerPoint', () => {
 
   it('yields negative coordinates for points above/left of the container', () => {
     expect(clientToContainerPoint(10, 20, { left: 40, top: 60 })).toEqual({ x: -30, y: -40 })
-  })
-})
-
-describe('getQuadrantAtPoint', () => {
-  function makeMockEl(left: number, top: number, width: number, height: number) {
-    return {
-      getBoundingClientRect: () => ({
-        left,
-        top,
-        right: left + width,
-        bottom: top + height,
-        width,
-        height,
-      }),
-    } as HTMLDivElement
-  }
-
-  const quadrantEls = [
-    makeMockEl(0, 0, 200, 200),
-    makeMockEl(200, 0, 200, 200),
-    makeMockEl(0, 200, 200, 200),
-    makeMockEl(200, 200, 200, 200),
-  ]
-
-  const canvasEls = [
-    makeMockEl(0, 30, 200, 170),
-    makeMockEl(200, 30, 200, 170),
-    makeMockEl(0, 230, 200, 170),
-    makeMockEl(200, 230, 200, 170),
-  ]
-
-  it('returns the correct quadrant index for a point inside it', () => {
-    const result = getQuadrantAtPoint(100, 100, quadrantEls, canvasEls)
-    expect(result).not.toBeNull()
-    expect(result!.index).toBe(0)
-  })
-
-  it('returns the canvas rect (not the quadrant rect) for the hit', () => {
-    const result = getQuadrantAtPoint(100, 100, quadrantEls, canvasEls)
-    expect(result!.rect.top).toBe(30)
-    expect(result!.rect.height).toBe(170)
-  })
-
-  it('returns quadrant 1 for a point in the top-right', () => {
-    const result = getQuadrantAtPoint(300, 100, quadrantEls, canvasEls)
-    expect(result!.index).toBe(1)
-  })
-
-  it('returns quadrant 3 for a point in the bottom-right', () => {
-    const result = getQuadrantAtPoint(300, 300, quadrantEls, canvasEls)
-    expect(result!.index).toBe(3)
-  })
-
-  it('returns null when point is outside all quadrants', () => {
-    const result = getQuadrantAtPoint(500, 500, quadrantEls, canvasEls)
-    expect(result).toBeNull()
-  })
-
-  it('handles null elements gracefully', () => {
-    const result = getQuadrantAtPoint(100, 100, [null, null, null, null], canvasEls)
-    expect(result).toBeNull()
-  })
-
-  it('falls back to quadrant rect when canvas ref is null', () => {
-    const result = getQuadrantAtPoint(100, 100, quadrantEls, [null, null, null, null])
-    expect(result).not.toBeNull()
-    expect(result!.rect.top).toBe(0) // falls back to quadrant rect
-    expect(result!.rect.height).toBe(200)
   })
 })
 
