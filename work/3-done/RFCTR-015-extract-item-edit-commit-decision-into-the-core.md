@@ -1,7 +1,7 @@
 ---
 id: RFCTR-015
 type: refactor
-status: open
+status: abandoned
 created: 2026-07-29
 ---
 
