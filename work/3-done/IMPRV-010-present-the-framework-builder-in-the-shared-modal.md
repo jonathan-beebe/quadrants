@@ -1,7 +1,7 @@
 ---
 id: IMPRV-010
 type: improvement
-status: open
+status: resolved
 created: 2026-07-28
 ---
 
@@ -65,3 +65,38 @@ the maker decides how `App.tsx` routing reflects that.
 - A11Y-016 — template popover dialog semantics that must survive the move
 - RFCTR-008 — single-owner focus lesson for nested dialog surfaces
 - IMPRV-006 — EditModal precedent for modal-routed flows
+
+## Working
+
+- Re-validated: `FrameworkBuilder` was still a screen swapped into `<main>`
+  (App.tsx), header scrolling away with content in flow mode.
+- Tests first: `FrameworkBuilderModal.test.tsx` carries the full protected suite
+  from the old `FrameworkBuilder.test.tsx` (template picking, mobile popover,
+  DSGN-001 axes, IMPRV-005 arrow nav) plus the modal outcome — dialog titled
+  Create/Edit Framework, title-bar close and Escape report onCancel, no sidebar
+  toggle, `max-w-[860px]`, and the nested-dialog rule: Escape in the template
+  popover closes only the popover.
+- That last test exposed a real nested-dialog bug: the popover's Escape bubbled
+  to the modal's trap and would have closed both. Fixed in `useFocusTrap` — an
+  already-defaultPrevented Escape is ignored, so one press dismisses one
+  surface.
+- Built `FrameworkBuilderModal` (Modal + scroll-owner wrapper +
+  FrameworkBuilderContent). Desktop create pins content height so the template
+  list scrolls to the content area's bottom edge (BUG-003 re-anchored);
+  edit/mobile scroll the whole form. Modal gained `maxWidthClassName` for the
+  wide master-detail layout.
+- App.tsx: the builder overlays the current screen instead of replacing it,
+  rendered inside `<main>` so drawer modality still covers it; conflict keeps
+  precedence. Opener captured at open time (`document.activeElement`) since the
+  builder opens from sidebar, empty state, and canvas alike; Modal restores
+  focus to it on close (A11Y-022). Deleted the obsolete `FrameworkBuilder`
+  screen; sidebar-toggle chrome gone with it.
+- App tests: BUG-013's builder-trigger test re-premised (the modal brings no
+  sidebar trigger; the screen behind keeps the sole one); three submit clicks
+  dialog-scoped because the empty state's CTA now stays in the DOM behind the
+  modal. A failing submit had been leaking the BUG-010 storage spy into 27 later
+  tests — scoping fixed the cascade.
+- Verified in a real browser (Playwright headless, dev server): desktop create
+  centered with the title bar fixed while the list scrolls; desktop edit
+  centered over the dimmed canvas; mobile full screen. No console errors. Suite
+  green at 486; tsc clean.

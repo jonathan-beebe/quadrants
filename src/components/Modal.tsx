@@ -15,6 +15,8 @@ interface ModalProps {
    */
   openerRef?: RefObject<HTMLElement | null>
   onClose: () => void
+  /** Tailwind max-width utility for the centered presentation. */
+  maxWidthClassName?: string
   children: React.ReactNode
 }
 
@@ -25,7 +27,7 @@ interface ModalProps {
  * scrolling — which is what keeps the title bar in place at any content
  * length. Full screen on mobile, centered on wide screens.
  */
-export default function Modal({ title, openerRef, onClose, children }: ModalProps) {
+export default function Modal({ title, openerRef, onClose, maxWidthClassName = 'max-w-xl', children }: ModalProps) {
   const isMobile = useIsMobile()
   const dialogRef = useRef<HTMLDivElement>(null)
   const titleId = useId()
@@ -62,7 +64,7 @@ export default function Modal({ title, openerRef, onClose, children }: ModalProp
         className={`flex flex-col min-h-0 bg-surface outline-none ${
           isMobile
             ? 'w-full h-full'
-            : 'w-full max-w-xl max-h-full rounded-2xl border border-border shadow-[0_8px_32px_rgb(0_0_0/0.18)]'
+            : `w-full ${maxWidthClassName} max-h-full rounded-2xl border border-border shadow-[0_8px_32px_rgb(0_0_0/0.18)]`
         }`}>
         <div className="shrink-0 flex items-center justify-between gap-2 px-4 py-3 border-b border-border">
           <h2 id={titleId} className="text-base font-semibold text-text truncate">

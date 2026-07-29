@@ -118,16 +118,17 @@ describe('App', () => {
       expect(trigger.parentElement).toContainElement(screen.getByRole('heading', { name: 'Stored Framework' }))
     })
 
-    it('shows one in-flow trigger on the framework builder', async () => {
+    it('brings no sidebar trigger of its own on the framework builder modal (IMPRV-010)', async () => {
       const user = userEvent.setup()
       render(<App />)
       await user.click(screen.getByRole('button', { name: 'Create Framework' }))
 
-      const trigger = soleTrigger()
-      expect(trigger.parentElement).toContainElement(screen.getByRole('heading', { name: 'Create Framework' }))
-
-      await user.click(trigger)
-      expect(screen.getByRole('dialog', { name: /frameworks sidebar/i })).toBeInTheDocument()
+      // The builder is a modal over the screen, not a screen: the sole
+      // in-flow trigger belongs to the screen behind it, and the modal
+      // carries none — leaving it goes through the modal's own close.
+      const dialog = screen.getByRole('dialog', { name: 'Create Framework' })
+      expect(within(dialog).queryByRole('button', { name: /open sidebar/i })).not.toBeInTheDocument()
+      expect(dialog).not.toContainElement(soleTrigger())
     })
 
     it('keeps the floating opener outside the screen content on desktop', async () => {
@@ -339,8 +340,10 @@ describe('App', () => {
     await user.click(screen.getByText('Create Framework'))
     // Select a template
     await user.click(screen.getByRole('button', { name: /Start \/ Stop/ }))
-    // Submit
-    await user.click(screen.getByRole('button', { name: 'Create Framework' }))
+    // Submit — scoped to the dialog: the empty state's own "Create Framework"
+    // CTA stays in the DOM behind the modal (IMPRV-010).
+    const dialog = within(screen.getByRole('dialog', { name: 'Create Framework' }))
+    await user.click(dialog.getByRole('button', { name: 'Create Framework' }))
 
     // Should now show the canvas with quadrant labels
     expect(screen.getByRole('heading', { name: 'Start / Stop / Continue / Change' })).toBeInTheDocument()
@@ -366,7 +369,8 @@ describe('App', () => {
 
     await user.click(screen.getByText('Create Framework'))
     await user.click(screen.getByRole('button', { name: /Start \/ Stop/ }))
-    await user.click(screen.getByRole('button', { name: 'Create Framework' }))
+    const dialog = within(screen.getByRole('dialog', { name: 'Create Framework' }))
+    await user.click(dialog.getByRole('button', { name: 'Create Framework' }))
 
     expect(await screen.findByText(/could not be saved/i)).toBeInTheDocument()
 
@@ -379,7 +383,8 @@ describe('App', () => {
 
     await user.click(screen.getByText('Create Framework'))
     await user.click(screen.getByRole('button', { name: /Start \/ Stop/ }))
-    await user.click(screen.getByRole('button', { name: 'Create Framework' }))
+    const dialog = within(screen.getByRole('dialog', { name: 'Create Framework' }))
+    await user.click(dialog.getByRole('button', { name: 'Create Framework' }))
 
     const stored = JSON.parse(localStorage.getItem('quadrants_frameworks')!)
     expect(stored).toHaveLength(1)

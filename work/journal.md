@@ -14,6 +14,12 @@
 
 ## Log
 
+- 2026-07-28:19:01:45 — IMPRV-010 — done: builder presented in the shared Modal
+  overlaying the screen — fixed title bar, full-screen mobile / centered 860px
+  desktop, opener focus restore; nested-Escape bug fixed in useFocusTrap; old
+  FrameworkBuilder screen deleted; verified in a real browser; suite green at
+  486
+- 2026-07-28:18:48:05 — IMPRV-010 — started
 - 2026-07-28:18:45:20 — IMPRV-009 — done: shared Modal component generalized
   from EditModal's shell — fixed title bar with labeled close, content-owned
   scrolling, full-screen mobile / centered wide, A11Y-022 focus return; demoed

@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react'
+import { useState, useCallback, useEffect, useRef } from 'react'
 import { useFrameworks } from './hooks/useFrameworks'
 import { useRouting } from './hooks/useRouting'
 import { useDarkMode } from './hooks/useDarkMode'
@@ -9,7 +9,7 @@ import { isNamedRoute } from './logic/routing'
 import { replacePath } from './routing'
 import Sidebar from './components/Sidebar'
 import QuadrantCanvas from './components/QuadrantCanvas'
-import FrameworkBuilder from './components/FrameworkBuilder'
+import FrameworkBuilderModal from './components/FrameworkBuilderModal'
 import ConflictDialog from './components/ConflictDialog'
 import EmptyState from './components/EmptyState'
 import Toast from './components/Toast'
@@ -132,12 +132,23 @@ export default function App() {
     [editingFramework, editStructure, handleCreate],
   )
 
+  // The builder modal returns focus here on close (A11Y-022). Captured at
+  // open time rather than threaded as refs from every opener — the builder
+  // opens from the sidebar, the empty state, and the canvas alike.
+  const builderOpenerRef = useRef<HTMLElement | null>(null)
+
+  const captureBuilderOpener = () => {
+    builderOpenerRef.current = document.activeElement instanceof HTMLElement ? document.activeElement : null
+  }
+
   const openBuilder = useCallback(() => {
+    captureBuilderOpener()
     setEditingFramework(null)
     setShowBuilder(true)
   }, [])
 
   const openBuilderForEdit = useCallback((fw: Framework) => {
+    captureBuilderOpener()
     setEditingFramework(fw)
     setShowBuilder(true)
   }, [])
@@ -216,14 +227,6 @@ export default function App() {
             onDuplicate={handleConflictDuplicate}
             onCancel={handleConflictCancel}
           />
-        ) : showBuilder ? (
-          <FrameworkBuilder
-            editingFramework={editingFramework}
-            sidebarOpen={sidebarOpen}
-            onToggleSidebar={toggleSidebar}
-            onCreate={handleSaveEdit}
-            onCancel={closeBuilder}
-          />
         ) : activeFramework ? (
           <ErrorBoundary key={activeFramework.id}>
             <QuadrantCanvas
@@ -237,6 +240,18 @@ export default function App() {
           </ErrorBoundary>
         ) : (
           <EmptyState sidebarOpen={sidebarOpen} onToggleSidebar={toggleSidebar} onNew={openBuilder} />
+        )}
+        {/* Overlays the current screen rather than replacing it — the builder
+            is officially a modal (IMPRV-010). Inside <main> so the drawer's
+            modality (inert) still covers it. Conflict resolution keeps
+            precedence, exactly as the old branch order gave it. */}
+        {showBuilder && !conflict && (
+          <FrameworkBuilderModal
+            editingFramework={editingFramework}
+            openerRef={builderOpenerRef}
+            onCreate={handleSaveEdit}
+            onCancel={closeBuilder}
+          />
         )}
       </main>
       {error ? (

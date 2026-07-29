@@ -9,6 +9,10 @@ export function useFocusTrap(
   return useCallback(
     (e: React.KeyboardEvent) => {
       if (e.key === 'Escape') {
+        // A nested dialog (e.g. a popover inside a modal) that already
+        // consumed this Escape marked it defaultPrevented — one press
+        // dismisses one surface, not the whole stack.
+        if (e.defaultPrevented) return
         e.preventDefault()
         onEscape?.()
         return

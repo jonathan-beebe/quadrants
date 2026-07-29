@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import { render, screen, fireEvent, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import FrameworkBuilder from '../components/FrameworkBuilder'
+import FrameworkBuilderModal from '../components/FrameworkBuilderModal'
 import { useIsMobile } from '../hooks/useIsMobile'
 
 vi.mock('../hooks/useIsMobile', () => ({
@@ -10,8 +10,6 @@ vi.mock('../hooks/useIsMobile', () => ({
 
 const defaultProps = {
   editingFramework: null,
-  sidebarOpen: false,
-  onToggleSidebar: vi.fn(),
   onCreate: vi.fn(),
   onCancel: vi.fn(),
 }
@@ -31,35 +29,68 @@ const editingFramework = {
   updatedAt: 1000,
 }
 
-describe('FrameworkBuilder', () => {
+describe('FrameworkBuilderModal', () => {
   beforeEach(() => {
     vi.mocked(useIsMobile).mockReturnValue(false)
   })
 
-  it('shows "Create Framework" heading when not editing', () => {
-    render(<FrameworkBuilder {...defaultProps} />)
-    expect(screen.getByRole('heading', { name: 'Create Framework' })).toBeInTheDocument()
-  })
+  // IMPRV-010: the builder is officially a modal — titled dialog, fixed title
+  // bar, closable from the bar, wide enough for the master-detail layout.
+  describe('modal presentation', () => {
+    it('presents a dialog titled "Create Framework" when not editing', () => {
+      render(<FrameworkBuilderModal {...defaultProps} />)
+      const dialog = screen.getByRole('dialog', { name: 'Create Framework' })
+      expect(within(dialog).getByRole('heading', { name: 'Create Framework' })).toBeInTheDocument()
+    })
 
-  it('shows "Edit Framework" heading when editing', () => {
-    render(<FrameworkBuilder {...defaultProps} editingFramework={editingFramework} />)
-    expect(screen.getByRole('heading', { name: 'Edit Framework' })).toBeInTheDocument()
+    it('presents a dialog titled "Edit Framework" when editing', () => {
+      render(<FrameworkBuilderModal {...defaultProps} editingFramework={editingFramework} />)
+      expect(screen.getByRole('dialog', { name: 'Edit Framework' })).toBeInTheDocument()
+    })
+
+    it('reports the title-bar close button through onCancel', async () => {
+      const user = userEvent.setup()
+      const onCancel = vi.fn()
+      render(<FrameworkBuilderModal {...defaultProps} onCancel={onCancel} />)
+
+      await user.click(screen.getByRole('button', { name: 'Close Create Framework' }))
+      expect(onCancel).toHaveBeenCalledOnce()
+    })
+
+    it('reports Escape through onCancel', () => {
+      const onCancel = vi.fn()
+      render(<FrameworkBuilderModal {...defaultProps} onCancel={onCancel} />)
+
+      fireEvent.keyDown(screen.getByRole('dialog', { name: 'Create Framework' }), { key: 'Escape' })
+      expect(onCancel).toHaveBeenCalledOnce()
+    })
+
+    it('carries no sidebar toggle — the modal is not a screen', () => {
+      vi.mocked(useIsMobile).mockReturnValue(true)
+      render(<FrameworkBuilderModal {...defaultProps} />)
+      expect(screen.queryByRole('button', { name: /open sidebar/i })).not.toBeInTheDocument()
+    })
+
+    it('is wide enough for the desktop master-detail layout', () => {
+      render(<FrameworkBuilderModal {...defaultProps} />)
+      expect(screen.getByRole('dialog', { name: 'Create Framework' })).toHaveClass('max-w-[860px]')
+    })
   })
 
   it('shows the template list when not editing', () => {
-    render(<FrameworkBuilder {...defaultProps} />)
+    render(<FrameworkBuilderModal {...defaultProps} />)
     expect(screen.getByRole('button', { name: /Eisenhower Matrix/ })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /Blank \/ Custom/ })).toBeInTheDocument()
   })
 
   it('hides the template list when editing', () => {
-    render(<FrameworkBuilder {...defaultProps} editingFramework={editingFramework} />)
+    render(<FrameworkBuilderModal {...defaultProps} editingFramework={editingFramework} />)
     expect(screen.queryByRole('button', { name: /Eisenhower Matrix/ })).not.toBeInTheDocument()
     expect(screen.queryByRole('searchbox', { name: /filter templates/i })).not.toBeInTheDocument()
   })
 
   it('groups templates by category', () => {
-    render(<FrameworkBuilder {...defaultProps} />)
+    render(<FrameworkBuilderModal {...defaultProps} />)
     expect(screen.getByRole('heading', { name: 'Prioritize' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Strategize' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'Retrospect' })).toBeInTheDocument()
@@ -67,7 +98,7 @@ describe('FrameworkBuilder', () => {
 
   it('populates the detail form from a template when its list entry is clicked', async () => {
     const user = userEvent.setup()
-    render(<FrameworkBuilder {...defaultProps} />)
+    render(<FrameworkBuilderModal {...defaultProps} />)
 
     await user.click(screen.getByRole('button', { name: /Eisenhower Matrix/ }))
 
@@ -82,7 +113,7 @@ describe('FrameworkBuilder', () => {
 
   it('updates the detail in place when a different template is selected', async () => {
     const user = userEvent.setup()
-    render(<FrameworkBuilder {...defaultProps} />)
+    render(<FrameworkBuilderModal {...defaultProps} />)
 
     await user.click(screen.getByRole('button', { name: /Eisenhower Matrix/ }))
     expect(screen.getByDisplayValue('Eisenhower Matrix')).toBeInTheDocument()
@@ -96,7 +127,7 @@ describe('FrameworkBuilder', () => {
 
   it('marks the selected template entry as current', async () => {
     const user = userEvent.setup()
-    render(<FrameworkBuilder {...defaultProps} />)
+    render(<FrameworkBuilderModal {...defaultProps} />)
 
     const eisenhower = screen.getByRole('button', { name: /Eisenhower Matrix/ })
     await user.click(eisenhower)
@@ -105,7 +136,7 @@ describe('FrameworkBuilder', () => {
 
   it('the "Blank / Custom" entry yields an empty editable form', async () => {
     const user = userEvent.setup()
-    render(<FrameworkBuilder {...defaultProps} />)
+    render(<FrameworkBuilderModal {...defaultProps} />)
 
     // Pick a template first, then return to Custom.
     await user.click(screen.getByRole('button', { name: /Eisenhower Matrix/ }))
@@ -123,7 +154,7 @@ describe('FrameworkBuilder', () => {
 
   it('filters the list by name as the user types', async () => {
     const user = userEvent.setup()
-    render(<FrameworkBuilder {...defaultProps} />)
+    render(<FrameworkBuilderModal {...defaultProps} />)
 
     await user.type(screen.getByRole('searchbox', { name: /filter templates/i }), 'risk')
 
@@ -132,13 +163,13 @@ describe('FrameworkBuilder', () => {
   })
 
   it('disables submit when form is incomplete', () => {
-    render(<FrameworkBuilder {...defaultProps} />)
+    render(<FrameworkBuilderModal {...defaultProps} />)
     expect(screen.getByRole('button', { name: 'Create Framework' })).toBeDisabled()
   })
 
   it('enables submit when a template is selected', async () => {
     const user = userEvent.setup()
-    render(<FrameworkBuilder {...defaultProps} />)
+    render(<FrameworkBuilderModal {...defaultProps} />)
 
     await user.click(screen.getByRole('button', { name: /Start \/ Stop/ }))
 
@@ -148,7 +179,7 @@ describe('FrameworkBuilder', () => {
   it('calls onCreate with form data including colors on submit', async () => {
     const user = userEvent.setup()
     const onCreate = vi.fn()
-    render(<FrameworkBuilder {...defaultProps} onCreate={onCreate} />)
+    render(<FrameworkBuilderModal {...defaultProps} onCreate={onCreate} />)
 
     await user.click(screen.getByRole('button', { name: /Start \/ Stop/ }))
     await user.click(screen.getByRole('button', { name: 'Create Framework' }))
@@ -167,7 +198,7 @@ describe('FrameworkBuilder', () => {
   it('passes the template colors through to onCreate', async () => {
     const user = userEvent.setup()
     const onCreate = vi.fn()
-    render(<FrameworkBuilder {...defaultProps} onCreate={onCreate} />)
+    render(<FrameworkBuilderModal {...defaultProps} onCreate={onCreate} />)
 
     await user.click(screen.getByRole('button', { name: /Eisenhower Matrix/ }))
     await user.click(screen.getByRole('button', { name: 'Create Framework' }))
@@ -179,7 +210,7 @@ describe('FrameworkBuilder', () => {
   // colors, not the hardcoded defaults.
   it('previews the picked template colors on the quadrant boxes', async () => {
     const user = userEvent.setup()
-    render(<FrameworkBuilder {...defaultProps} />)
+    render(<FrameworkBuilderModal {...defaultProps} />)
 
     await user.click(screen.getByRole('button', { name: /Eisenhower Matrix/ }))
 
@@ -188,17 +219,17 @@ describe('FrameworkBuilder', () => {
     expect(scheduleInput.style.background).toBe('rgba(96, 165, 250, 0.08)')
   })
 
-  it('calls onCancel when cancel button is clicked', async () => {
+  it('calls onCancel when the form cancel button is clicked', async () => {
     const user = userEvent.setup()
     const onCancel = vi.fn()
-    render(<FrameworkBuilder {...defaultProps} onCancel={onCancel} />)
+    render(<FrameworkBuilderModal {...defaultProps} onCancel={onCancel} />)
 
-    await user.click(screen.getAllByText('Cancel')[0])
+    await user.click(screen.getByRole('button', { name: 'Cancel' }))
     expect(onCancel).toHaveBeenCalledOnce()
   })
 
   it('pre-fills form when editing an existing framework', () => {
-    render(<FrameworkBuilder {...defaultProps} editingFramework={editingFramework} />)
+    render(<FrameworkBuilderModal {...defaultProps} editingFramework={editingFramework} />)
 
     expect(screen.getByDisplayValue('My Framework')).toBeInTheDocument()
     expect(screen.getByDisplayValue('Alpha')).toBeInTheDocument()
@@ -212,7 +243,7 @@ describe('FrameworkBuilder', () => {
     })
 
     it('keeps the editable detail visible without opening the list', () => {
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
       // The detail form (preview) is present as main content.
       expect(screen.getAllByRole('textbox', { name: /Quadrant \d label/ })).toHaveLength(4)
       // The list is collapsed: template options are not in the DOM yet.
@@ -221,7 +252,7 @@ describe('FrameworkBuilder', () => {
 
     it('reveals the list when the dropdown trigger is clicked', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
 
       const trigger = screen.getByRole('button', { name: /choose a template/i })
       expect(trigger).toHaveAttribute('aria-expanded', 'false')
@@ -233,7 +264,7 @@ describe('FrameworkBuilder', () => {
 
     it('closes the open dropdown when its own trigger is clicked again (BUG-005)', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
 
       const trigger = screen.getByRole('button', { name: /choose a template/i })
       await user.click(trigger)
@@ -244,9 +275,10 @@ describe('FrameworkBuilder', () => {
       expect(screen.queryByRole('button', { name: /Eisenhower Matrix/ })).not.toBeInTheDocument()
     })
 
-    it('closes the dropdown on Escape', async () => {
+    it('closes the dropdown on Escape without closing the builder modal', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      const onCancel = vi.fn()
+      render(<FrameworkBuilderModal {...defaultProps} onCancel={onCancel} />)
 
       const trigger = screen.getByRole('button', { name: /choose a template/i })
       await user.click(trigger)
@@ -255,11 +287,14 @@ describe('FrameworkBuilder', () => {
       fireEvent.keyDown(screen.getByRole('searchbox', { name: /filter templates/i }), { key: 'Escape' })
       expect(trigger).toHaveAttribute('aria-expanded', 'false')
       expect(screen.queryByRole('button', { name: /Eisenhower Matrix/ })).not.toBeInTheDocument()
+      // The nested dialog consumed the Escape — the builder modal stays open.
+      expect(onCancel).not.toHaveBeenCalled()
+      expect(screen.getByRole('dialog', { name: 'Create Framework' })).toBeInTheDocument()
     })
 
     it('declares the popup type that actually opens (A11Y-016)', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
 
       const trigger = screen.getByRole('button', { name: /choose a template/i })
       await user.click(trigger)
@@ -270,7 +305,7 @@ describe('FrameworkBuilder', () => {
 
     it('restores focus to the trigger when dismissed by clicking outside (A11Y-016)', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
 
       const trigger = screen.getByRole('button', { name: /choose a template/i })
       await user.click(trigger)
@@ -287,7 +322,7 @@ describe('FrameworkBuilder', () => {
 
     it('restores focus to the trigger when dismissed via Escape (A11Y-016)', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
 
       const trigger = screen.getByRole('button', { name: /choose a template/i })
       await user.click(trigger)
@@ -297,7 +332,7 @@ describe('FrameworkBuilder', () => {
 
     it('selecting a template from the dropdown closes it and fills the detail', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
 
       const trigger = screen.getByRole('button', { name: /choose a template/i })
       await user.click(trigger)
@@ -319,7 +354,7 @@ describe('FrameworkBuilder', () => {
     }
 
     it('puts the Y axis input beside the quadrant grid and leaves the X axis below', () => {
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
       const row = axisRow()
 
       expect(row).toContainElement(screen.getByRole('textbox', { name: /y axis label/i }))
@@ -327,7 +362,7 @@ describe('FrameworkBuilder', () => {
     })
 
     it('rotates the Y axis input so it reads bottom-to-top', () => {
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
       // The visual orientation is the whole point of the ticket, and it is
       // carried by the rotation utility — jsdom computes no layout.
       expect(screen.getByRole('textbox', { name: /y axis label/i })).toHaveClass('-rotate-90')
@@ -336,7 +371,7 @@ describe('FrameworkBuilder', () => {
     it('keeps the Y axis input editable in place', async () => {
       const user = userEvent.setup()
       const onCreate = vi.fn()
-      render(<FrameworkBuilder {...defaultProps} onCreate={onCreate} />)
+      render(<FrameworkBuilderModal {...defaultProps} onCreate={onCreate} />)
 
       await user.type(screen.getByRole('textbox', { name: /framework name/i }), 'Mine')
       await user.type(screen.getByRole('textbox', { name: /y axis label/i }), 'Importance')
@@ -350,7 +385,7 @@ describe('FrameworkBuilder', () => {
 
     it('tabs through the axes in reading order: Y, quadrants, then X', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
 
       screen.getByRole('textbox', { name: /y axis label/i }).focus()
       await user.tab()
@@ -379,7 +414,7 @@ describe('FrameworkBuilder', () => {
 
     it('moves to the next and previous entry with ArrowDown and ArrowUp', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
       const [first, second] = entries()
 
       first.focus()
@@ -392,7 +427,7 @@ describe('FrameworkBuilder', () => {
 
     it('crosses category group boundaries', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
       const all = entries()
       // First pair split across two category groups. Index 0 is the ungrouped
       // "Blank / Custom" entry, so a boundary there is not a category change.
@@ -406,7 +441,7 @@ describe('FrameworkBuilder', () => {
 
     it('wraps around at both ends of the list', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
       const all = entries()
       const last = all[all.length - 1]
 
@@ -420,7 +455,7 @@ describe('FrameworkBuilder', () => {
 
     it('enters the list from the filter input', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
       const all = entries()
 
       screen.getByRole('searchbox', { name: /filter templates/i }).focus()
@@ -430,7 +465,7 @@ describe('FrameworkBuilder', () => {
 
     it('traverses only the entries left by the filter', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
 
       await user.type(screen.getByRole('searchbox', { name: /filter templates/i }), 'eisenhower')
       const filtered = entries()
@@ -443,7 +478,7 @@ describe('FrameworkBuilder', () => {
 
     it('leaves the form untouched until the focused entry is activated', async () => {
       const user = userEvent.setup()
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
       const nameField = screen.getByRole('textbox', { name: /framework name/i })
       await user.type(nameField, 'My own name')
 
@@ -461,7 +496,7 @@ describe('FrameworkBuilder', () => {
     it('navigates inside the mobile picker dialog', async () => {
       const user = userEvent.setup()
       vi.mocked(useIsMobile).mockReturnValue(true)
-      render(<FrameworkBuilder {...defaultProps} />)
+      render(<FrameworkBuilderModal {...defaultProps} />)
       await user.click(screen.getByRole('button', { name: /choose a template/i }))
 
       // The dialog opens with the filter input focused.
