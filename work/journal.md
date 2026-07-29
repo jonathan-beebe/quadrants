@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-28:21:02:17 — MAINT-009 — done: error boundary fallback, reset, and
+  App-level crash recovery covered by tests
+- 2026-07-28:20:58:54 — MAINT-009 — started
 - 2026-07-28:20:57:52 — IMPRV-011 — done: template name + doc summary shown
   above Customize, drift-guarded against docs/frameworks
 - 2026-07-28:20:46:50 — IMPRV-011 — started

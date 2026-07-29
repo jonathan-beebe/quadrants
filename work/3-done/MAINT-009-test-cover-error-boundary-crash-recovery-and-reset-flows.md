@@ -1,7 +1,7 @@
 ---
 id: MAINT-009
 type: maintenance
-status: open
+status: resolved
 created: 2026-07-28
 ---
 
@@ -61,6 +61,22 @@ a throw-once child (throws on first render, renders normally afterward) makes
 (MAINT-003 precedent) — a canvas crash can be induced by mocking QuadrantCanvas
 to throw for one framework, and the `key={activeFramework.id}` remount is then
 observable by selecting another framework in the sidebar.
+
+## Working
+
+- Re-validated: ErrorBoundary still mounted at root (main.tsx) and around
+  QuadrantCanvas keyed by `activeFramework.id` (App.tsx:231); no existing test
+  touches it.
+- Component cases in new `ErrorBoundary.test.tsx` (alert fallback + message
+  - Try again; throw-once child recovery; custom fallback branch), using the
+    documented `vi.spyOn(console, 'error')` opt-out.
+- App cases in `App.test.tsx`: a pass-through mock of QuadrantCanvas throws only
+  for a framework named 'Crashy Framework', so a crash is induced from seeded
+  localStorage; asserts the alert renders inside `<main>` with the sidebar still
+  usable, and that selecting the healthy framework replaces the fallback via the
+  key remount.
+- Mutation-verified: removing `key={activeFramework.id}` from App.tsx fails the
+  recovery test (then restored). Suite: 501 passing.
 
 ## Related work
 

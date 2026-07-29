@@ -10,6 +10,20 @@ vi.mock('../hooks/useIsMobile', () => ({
   useIsMobile: vi.fn(() => false),
 }))
 
+// Pass-through mock: real canvas everywhere, except a framework named
+// 'Crashy Framework' throws during render so the error-boundary tests
+// (MAINT-009) can induce a canvas crash from stored data alone.
+vi.mock('../components/QuadrantCanvas', async (importOriginal) => {
+  const actual = await importOriginal<typeof import('../components/QuadrantCanvas')>()
+  const Original = actual.default
+  return {
+    default: function CrashableQuadrantCanvas(props: Parameters<typeof Original>[0]) {
+      if (props.framework.name === 'Crashy Framework') throw new Error('Canvas exploded')
+      return <Original {...props} />
+    },
+  }
+})
+
 beforeEach(() => {
   localStorage.clear()
   // Reset URL. replaceState also clears any hash — assigning
@@ -521,6 +535,64 @@ describe('App', () => {
       expect(screen.getByRole('heading', { name: 'Framework Alpha' })).toBeInTheDocument()
       expect(screen.getByText('Renamed Quadrant')).toBeInTheDocument()
       expect(screen.queryByText('A1')).not.toBeInTheDocument()
+    })
+  })
+
+  describe('error boundary crash recovery (MAINT-009)', () => {
+    beforeEach(() => {
+      // The canvas mock at the top of this file throws for 'Crashy Framework'.
+      localStorage.setItem(
+        'quadrants_frameworks',
+        JSON.stringify(
+          [
+            ['fw-crash', 'Crashy Framework'],
+            ['fw-ok', 'Healthy Framework'],
+          ].map(([id, name]) => ({
+            id,
+            name,
+            axisX: '',
+            axisY: '',
+            quadrants: [
+              { label: 'A', color: '#fbbf24', items: [] },
+              { label: 'B', color: '#60a5fa', items: [] },
+              { label: 'C', color: '#34d399', items: [] },
+              { label: 'D', color: '#f472b6', items: [] },
+            ],
+            createdAt: 1000,
+            updatedAt: 1000,
+          })),
+        ),
+      )
+      // React logs the caught canvas crash via console.error; opt out of the
+      // suite-wide trap (test-setup.ts).
+      vi.spyOn(console, 'error').mockImplementation(() => {})
+    })
+
+    it('contains a canvas crash inside <main>, leaving the sidebar usable', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByRole('button', { name: /Crashy Framework.*items/ }))
+
+      const alert = within(screen.getByRole('main')).getByRole('alert')
+      expect(within(alert).getByText('Something went wrong')).toBeInTheDocument()
+      expect(within(alert).getByText('Canvas exploded')).toBeInTheDocument()
+      // The crash stays inside the boundary: the sidebar still lists both
+      // frameworks and remains interactive.
+      expect(screen.getByRole('button', { name: /Healthy Framework.*items/ })).toBeEnabled()
+    })
+
+    it('recovers by navigating to another framework (key remount)', async () => {
+      const user = userEvent.setup()
+      render(<App />)
+
+      await user.click(screen.getByRole('button', { name: /Crashy Framework.*items/ }))
+      expect(within(screen.getByRole('main')).getByRole('alert')).toBeInTheDocument()
+
+      await user.click(screen.getByRole('button', { name: /Healthy Framework.*items/ }))
+
+      expect(screen.getByRole('heading', { name: 'Healthy Framework' })).toBeInTheDocument()
+      expect(screen.queryByRole('alert')).not.toBeInTheDocument()
     })
   })
 
