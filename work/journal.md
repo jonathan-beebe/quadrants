@@ -14,6 +14,9 @@
 
 ## Log
 
+- 2026-07-28:21:17:34 — RFCTR-011 — done: path-id rules take the base
+  explicitly; non-root base pinned with literal tests
+- 2026-07-28:21:15:36 — RFCTR-011 — started
 - 2026-07-28:21:14:33 — RFCTR-010 — done: theme rules in logic/theme,
   persistence in the storage adapter, App the single owner; stale design-system
   toggle fixed

@@ -1,7 +1,7 @@
 ---
 id: RFCTR-011
 type: refactor
-status: open
+status: resolved
 created: 2026-07-28
 ---
 
@@ -56,6 +56,19 @@ outside the base (`slice(1)` fallback), and round-trips under both bases. The
 adapter's own jsdom tests (`src/__tests__/routing.test.ts`) may keep deriving
 BASE from the env — the prohibition on env-derived expectations applies to the
 core tests.
+
+## Working
+
+- `idFromPathname`/`pathForId` now take `base` as an explicit second argument;
+  `src/routing.ts` (the adapter) is the sole owner of the `BASE_URL ?? '/'`
+  read. `grep import.meta.env src/logic/` is empty.
+- Core tests rewritten with hard-coded literals under both `/` and `/quadrants/`
+  (the GitHub Pages base): subpath strip, base-only → null, outside-base
+  `slice(1)` fallback, and round-trips.
+- Left the shell-layer env reads in DesignSystem.tsx and useFrameworkSharing.ts
+  alone — ticket marks consolidation optional, and both are legal where they
+  are.
+- Suite 523 green, tsc clean.
 
 ## Related work
 

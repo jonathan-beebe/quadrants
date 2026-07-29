@@ -1,7 +1,10 @@
 import { idFromPathname, pathForId } from './logic/routing'
 
+// The one owner of the deploy base for routing (RFCTR-011).
+const BASE = import.meta.env.BASE_URL ?? '/'
+
 export function getIdFromPath(): string | null {
-  return idFromPathname(window.location.pathname)
+  return idFromPathname(window.location.pathname, BASE)
 }
 
 export function getHashFromUrl(): string {
@@ -9,12 +12,12 @@ export function getHashFromUrl(): string {
 }
 
 export function pushPath(id: string | null): void {
-  const target = pathForId(id)
+  const target = pathForId(id, BASE)
   if (window.location.pathname !== target) {
     history.pushState(null, '', target)
   }
 }
 
 export function replacePath(id: string | null): void {
-  history.replaceState(null, '', pathForId(id))
+  history.replaceState(null, '', pathForId(id, BASE))
 }
